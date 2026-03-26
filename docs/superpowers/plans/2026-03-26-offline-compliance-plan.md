@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Compliance Freeze Service [IN_PROGRESS]
+### Task 1: Compliance Freeze Service [DONE]
 
 **BDD Scenarios:** S8.1 (Terminal locked by backend), S8.2 (Local lockdown persistence)
 **BRD Requirements:** Fulfills FR-CA-8.1, FR-CA-8.2
@@ -21,16 +21,16 @@
 - Create: `lib/core/compliance/compliance_lock_screen.dart`
 - Test: `test/core/compliance/compliance_test.dart`
 
-- [ ] **Step 1: Implement ComplianceService**
+- [x] **Step 1: Implement ComplianceService**
   Service to track `isLocked` state and listen for `ERR_COMPLIANCE_FREEZE` from any API call.
 
-- [ ] **Step 2: Create Persistent Lock State**
+- [x] **Step 2: Create Persistent Lock State**
   Use `SecureStorageService` to persist the locked state across reboots.
 
-- [ ] **Step 3: Build ComplianceLockScreen**
+- [x] **Step 3: Build ComplianceLockScreen**
   A full-screen overlay that prevents any app interaction until an unlock code/biometric is provided (if permitted by policy).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit** [DONE]
 
 ---
 
@@ -57,7 +57,7 @@
 
 ---
 
-### Task 3: Background Sync Worker [IN_PROGRESS]
+### Task 3: Background Sync Worker [DONE]
 
 **BDD Scenarios:** S9.2 (Automatic sync when online)
 **BRD Requirements:** Fulfills FR-CA-9.3
@@ -67,17 +67,17 @@
 - Create: `lib/core/offline/sync_worker.dart`
 - Modify: `lib/core/network/dio_client.dart`
 
-- [ ] **Step 1: Implement Sync Logic**
+- [x] **Step 1: Implement Sync Logic**
   A loop that processes the S&F queue using `X-Idempotency-Key` for safety.
 
-- [ ] **Step 2: Setup WorkManager (Background Task)**
+- [x] **Step 2: Setup WorkManager (Background Task)**
   Register a periodic task to trigger sync when network is available.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit** [DONE]
 
 ---
 
-### Task 4: Offline UI/UX Indicators
+### Task 4: Offline UI/UX Indicators [IN_PROGRESS]
 
 **BDD Scenarios:** S9.1 (Visual indication of offline mode)
 **BRD Requirements:** Fulfills FR-CA-9.4
@@ -87,9 +87,8 @@
 - Create: `lib/core/offline/widgets/offline_indicator.dart`
 - Frontend Test: `test/core/offline/offline_ui_test.dart`
 
-- [ ] **Step 1: Build Connection Status Widget**
+- [x] **Step 1: Build Connection Status Widget**
   Shows "Offline Mode" and "Pending: X" count in the app header.
 
-- [ ] **Step 2: Add functional tests**
-
-- [ ] **Step 3: Commit**
+- [x] **Step 2: Add functional tests** [DONE]
+- [x] **Step 3: Commit** [DONE]
