@@ -1,0 +1,43 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:dio/dio.dart';
+import '../../lib/features/transactions/models/transaction_models.dart';
+import '../../lib/features/transactions/repositories/transaction_repository.dart';
+
+void main() {
+  late TransactionRepository repository;
+  late Dio dio;
+
+  setUp(() {
+    dio = Dio();
+    repository = TransactionRepository(dio);
+  });
+
+  group('TransactionRepository', () {
+    test('getQuote returns valid quote response', () async {
+      final request = TransactionQuoteRequest(
+        serviceCode: 'CASH_WDL',
+        amount: 100.0,
+        agentId: 'AGENT007',
+      );
+
+      final response = await repository.getQuote(request);
+
+      expect(response.amount, 100.0);
+      expect(response.fee, 1.0);
+      expect(response.quoteId, startsWith('QUOTE_'));
+    });
+
+    test('executeTransaction returns success', () async {
+      final request = TransactionExecutionRequest(
+        quoteId: 'QUOTE123',
+        pinBlock: 'PIN_BLOCK',
+        cardToken: 'TOKEN_123',
+      );
+
+      final response = await repository.executeTransaction(request);
+
+      expect(response.status, 'SUCCESS');
+      expect(response.referenceId, startsWith('REF_'));
+    });
+  });
+}

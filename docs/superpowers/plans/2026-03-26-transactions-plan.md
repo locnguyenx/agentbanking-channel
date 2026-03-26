@@ -21,14 +21,20 @@
 - Create: `lib/features/hardware/mock_hardware_impl.dart`
 - Test: `test/features/hardware/hardware_test.dart`
 
-- [x] **Step 1: Define Abstract Interfaces** [DONE]
-- [x] **Step 2: Implement Mock Implementations** [DONE]
-- [x] **Step 3: Write tests for Mock HAL** [DONE]
-- [x] **Step 4: Commit** [DONE]
+- [x] **Step 1: Define Abstract Interfaces**
+  Define `ICardReader`, `IPinPad`, and `IPrinter` contracts.
+
+- [x] **Step 2: Implement Mock Implementations**
+  Implement `MockCardReader` and `MockPinPad` that simulate hardware delays and returns success/fail states.
+
+- [x] **Step 3: Write tests for Mock HAL**
+  Verify mock behavior and state transitions.
+
+- [x] **Step 4: Commit**
 
 ---
 
-### Task 2: Transaction Repository & API Models
+### Task 2: Transaction Repository & API Models [IN_PROGRESS]
 
 **BDD Scenarios:** S3.1 (Fee Pricing Engine API Call)
 **BRD Requirements:** Fulfills FR-CA-2.1, FR-CA-7.1
