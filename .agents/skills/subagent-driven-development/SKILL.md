@@ -52,6 +52,8 @@ Plan progress MUST be persisted in the plan file itself so it survives session i
 2. After both reviews pass → mark task `[DONE]`
 3. If blocked → mark `[BLOCKED]` with brief reason
 
+> **Rules:** when updating the progress in plan, only mark the status, don't change/remove the task content if it's not changed
+
 **Format example:**
 ```markdown
 ### Task 1: Install hook script [DONE]

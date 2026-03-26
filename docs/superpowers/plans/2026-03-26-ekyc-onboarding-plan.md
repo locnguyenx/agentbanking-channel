@@ -39,14 +39,19 @@
 - Create: `lib/features/kyc/repositories/kyc_repository.dart`
 - Test: `test/features/kyc/kyc_repository_test.dart`
 
-- [x] **Step 1: Define KYC Request/Response Models** [DONE]
-- [x] **Step 2: Implement KycRepository** [DONE]
-- [x] **Step 3: Write unit tests** [DONE]
-- [x] **Step 4: Commit** [DONE]
+- [x] **Step 1: Define KYC Request/Response Models**
+  Include MyKad data and Face verification scores.
+
+- [x] **Step 2: Implement KycRepository**
+  Implement `/api/v1/kyc/validate` and `/api/v1/kyc/aml-check`.
+
+- [x] **Step 3: Write unit tests**
+
+- [x] **Step 4: Commit**
 
 ---
 
-### Task 3: Onboarding State Machine (Riverpod)
+### Task 3: Onboarding State Machine (Riverpod) [DONE]
 
 **BDD Scenarios:** S7.1 (Account type selection), S7.2 (Submit onboarding request)
 **BRD Requirements:** Fulfills FR-CA-7.1, FR-CA-7.2
@@ -56,19 +61,14 @@
 - Create: `lib/features/kyc/providers/onboarding_provider.dart`
 - Test: `test/features/kyc/onboarding_provider_test.dart`
 
-- [ ] **Step 1: Define OnboardingState Enum**
-  `IDLE`, `SCANNING_MYKAD`, `VALIDATING_KYC`, `SELECTING_PRODUCT`, `PROVISIONING`, `SUCCESS`, `FAILED`.
-
-- [ ] **Step 2: Implement OnboardingNotifier**
-  Manage lifecycle: Scan -> Verify -> Select -> Provision.
-
-- [ ] **Step 3: Write unit tests**
-
-- [ ] **Step 4: Commit**
+- [x] **Step 1: Define OnboardingState Enum** [DONE]
+- [x] **Step 2: Implement OnboardingNotifier** [DONE]
+- [x] **Step 3: Write unit tests** [DONE]
+- [x] **Step 4: Commit** [DONE]
 
 ---
 
-### Task 4: e-KYC UI Flow & Account Selection
+### Task 4: e-KYC UI Flow & Account Selection [IN_PROGRESS]
 
 **BDD Scenarios:** S5.1, S7.1, S7.3 (Onboarding success receipt)
 **BRD Requirements:** Fulfills FR-CA-7.3
