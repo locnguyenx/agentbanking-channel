@@ -1,5 +1,5 @@
 import 'dart:async';
-import '../security/secure_storage_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_service.dart';
 
 class ComplianceService {
   final SecureStorageService secureStorage;

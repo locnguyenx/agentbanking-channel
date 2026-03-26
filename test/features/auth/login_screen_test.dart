@@ -1,11 +1,21 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import '../../lib/features/auth/login_screen.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:agentbanking_channel/features/auth/login_screen.dart';
 
 void main() {
-  testWidgets('renders login screen with CTA button', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: LoginScreen()));
-    expect(find.byType(ElevatedButton), findsOneWidget);
+  testWidgets('renders login screen with Agent ID and Password fields', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: LoginScreen()),
+      ),
+    );
+
+    // Verify UI components
+    expect(find.text('AGENT BANKING'), findsOneWidget);
+    expect(find.text('Agent ID'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
+    expect(find.text('LOGIN'), findsOneWidget);
     expect(find.text('Login via Biometric'), findsOneWidget);
   });
 }

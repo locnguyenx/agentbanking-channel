@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/features/hardware/hardware_interfaces.dart';
-import '../../lib/features/hardware/mock_hardware_impl.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 
 void main() {
   group('IMyKadScanner Mock', () {

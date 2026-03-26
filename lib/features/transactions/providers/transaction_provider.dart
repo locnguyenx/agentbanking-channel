@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../repositories/transaction_repository.dart';
-import '../models/transaction_models.dart';
-import '../../hardware/hardware_interfaces.dart';
+import 'package:dio/dio.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 
 enum TransactionStatus {
   idle,
@@ -53,12 +55,12 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     required this.pinPad,
   }) : super(TransactionState(status: TransactionStatus.idle));
 
-  Future<void> startTransaction(double amount, String agentId) async {
+  Future<void> startTransaction(double amount, String agentId, {String serviceCode = 'CASH_WDL'}) async {
     state = state.copyWith(status: TransactionStatus.quoting, error: null);
     try {
       final quote = await repository.getQuote(TransactionQuoteRequest(
         amount: amount,
-        serviceCode: 'CASH_WDL',
+        serviceCode: serviceCode,
         agentId: agentId,
       ));
       state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
@@ -102,3 +104,14 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     state = TransactionState(status: TransactionStatus.idle);
   }
 }
+
+final transactionRepositoryProvider = Provider<TransactionRepository>((ref) => TransactionRepository(Dio()));
+
+final transactionProvider = StateNotifierProvider<TransactionNotifier, TransactionState>((ref) {
+  final repository = ref.watch(transactionRepositoryProvider);
+  return TransactionNotifier(
+    repository: repository,
+    cardReader: MockCardReader(),
+    pinPad: MockPinPad(),
+  );
+});

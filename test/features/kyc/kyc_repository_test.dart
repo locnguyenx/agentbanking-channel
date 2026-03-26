@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
-import '../../lib/features/kyc/models/kyc_models.dart';
-import '../../lib/features/kyc/repositories/kyc_repository.dart';
-import '../../lib/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
+import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 
 void main() {
   late KycRepository repository;

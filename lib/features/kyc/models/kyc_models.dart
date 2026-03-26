@@ -1,4 +1,4 @@
-import '../../hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 
 class KycValidationRequest {
   final MyKadData myKadData;

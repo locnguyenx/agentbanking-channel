@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
 
 void main() {
   test('OfflineQueueService initializes and enqueues data', () async {

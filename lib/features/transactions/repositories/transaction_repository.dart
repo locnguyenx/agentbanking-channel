@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
 class TransactionRepository {
   final Dio dio;

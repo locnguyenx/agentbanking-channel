@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/core/security/secure_storage_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_service.dart';
 
 void main() {
   test('SecureStorageService saves and clears token successfully', () async {

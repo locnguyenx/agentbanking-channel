@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import '../offline/offline_queue_service.dart';
-import '../../features/transactions/repositories/transaction_repository.dart';
-import '../../features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
 class SyncWorker {
   final OfflineQueueService queueService;

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/features/kyc/providers/onboarding_provider.dart';
+import 'package:agentbanking_channel/features/kyc/providers/onboarding_provider.dart';
 
 void main() {
   test('OnboardingState initial state is idle', () {

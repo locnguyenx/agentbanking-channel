@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/core/location/geofence_service.dart';
+import 'package:agentbanking_channel/core/location/geofence_service.dart';
 
 void main() {
   test('GeofenceService verifies if location is within boundaries', () {

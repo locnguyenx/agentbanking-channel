@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/kyc_models.dart';
+import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 
 class KycRepository {
   final Dio dio;

@@ -1,12 +1,33 @@
 import 'dart:convert';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:path/path.dart';
+import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final offlineQueueServiceProvider = Provider<OfflineQueueService>((ref) {
+  return OfflineQueueService('default_secure_passphrase');
+});
+
+final pendingQueueCountProvider = StreamProvider<int>((ref) {
+  final service = ref.watch(offlineQueueServiceProvider);
+  // Ensure init is called so count is emitted
+  service.init();
+  return service.queueCountStream;
+});
 
 class OfflineQueueService {
   Database? _db;
   final String _passphrase;
+  final StreamController<int> _countController = StreamController<int>.broadcast();
 
   OfflineQueueService(this._passphrase);
+
+  Stream<int> get queueCountStream => _countController.stream;
+
+  Future<void> _notifyCount() async {
+    final count = await getCount();
+    _countController.add(count);
+  }
 
   Future<void> init() async {
     if (_db != null) return;
@@ -29,6 +50,7 @@ class OfflineQueueService {
         ''');
       },
     );
+    _notifyCount();
   }
 
   Future<void> enqueue(Map<String, dynamic> payload, String idempotencyKey) async {
@@ -38,6 +60,7 @@ class OfflineQueueService {
       'idempotency_key': idempotencyKey,
       'created_at': DateTime.now().millisecondsSinceEpoch,
     });
+    _notifyCount();
   }
 
   Future<List<Map<String, dynamic>>> getPending() async {
@@ -53,6 +76,7 @@ class OfflineQueueService {
   Future<void> remove(int id) async {
     await init();
     await _db!.delete('queue', where: 'id = ?', whereArgs: [id]);
+    _notifyCount();
   }
 
   Future<int> getCount() async {

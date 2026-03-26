@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:dio/dio.dart';
-import '../../lib/features/transactions/providers/transaction_provider.dart';
-import '../../lib/features/transactions/repositories/transaction_repository.dart';
-import '../../lib/features/hardware/hardware_interfaces.dart';
-import '../../lib/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
 // Mocking classes for testing
 class MockTransactionRepository extends Mock implements TransactionRepository {}

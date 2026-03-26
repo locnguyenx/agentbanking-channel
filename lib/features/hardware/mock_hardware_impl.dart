@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 
 class MockCardReader implements ICardReader {
   @override

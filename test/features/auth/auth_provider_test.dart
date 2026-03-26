@@ -1,15 +1,44 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../lib/features/auth/auth_provider.dart';
+import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
+import 'package:agentbanking_channel/features/auth/repositories/auth_repository.dart';
 
 void main() {
-  test('AuthNotifier correctly transitions login and logout states', () {
-    final auth = AuthNotifier();
-    expect(auth.state, AuthState.unauthenticated);
-    
-    auth.login('mock-jwt');
-    expect(auth.state, AuthState.authenticated);
-    
+  late AuthNotifier auth;
+  late AuthRepository repository;
+
+  setUp(() {
+    repository = AuthRepository();
+    auth = AuthNotifier(repository: repository);
+  });
+
+  test('initial state is unauthenticated', () {
+    expect(auth.state.status, AuthStatus.unauthenticated);
+    expect(auth.state.user, isNull);
+  });
+
+  test('login updates state to authenticated with valid credentials', () async {
+    await auth.login('AGENT01', '123456');
+    expect(auth.state.status, AuthStatus.authenticated);
+    expect(auth.state.user?.agentId, 'AGENT01');
+  });
+
+  test('login updates state to failed with invalid credentials', () async {
+    await auth.login('AGENT01', 'wrong-pass');
+    expect(auth.state.status, AuthStatus.failed);
+    expect(auth.state.error, contains('Exception: Invalid Agent ID or Password'));
+  });
+
+  test('logout resets state to unauthenticated', () async {
+    await auth.login('AGENT01', '123456');
     auth.logout();
-    expect(auth.state, AuthState.unauthenticated);
+    expect(auth.state.status, AuthStatus.unauthenticated);
+    expect(auth.state.user, isNull);
+  });
+
+  test('loginBiometric updates state to authenticated', () async {
+    await auth.loginBiometric();
+    expect(auth.state.status, AuthStatus.authenticated);
+    expect(auth.state.user?.agentId, 'AGENT_BIO_01');
   });
 }

@@ -77,7 +77,7 @@
 
 ---
 
-### Task 4: Offline UI/UX Indicators [IN_PROGRESS]
+### Task 4: Offline UI/UX Indicators [DONE]
 
 **BDD Scenarios:** S9.1 (Visual indication of offline mode)
 **BRD Requirements:** Fulfills FR-CA-9.4

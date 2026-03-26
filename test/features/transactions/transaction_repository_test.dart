@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
-import '../../lib/features/transactions/models/transaction_models.dart';
-import '../../lib/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 
 void main() {
   late TransactionRepository repository;
