@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Compliance Freeze Service [DONE]
+### Task 1: Compliance Freeze Service [IN_PROGRESS]
 
 **BDD Scenarios:** S8.1 (Terminal locked by backend), S8.2 (Local lockdown persistence)
 **BRD Requirements:** Fulfills FR-CA-8.1, FR-CA-8.2
@@ -21,14 +21,20 @@
 - Create: `lib/core/compliance/compliance_lock_screen.dart`
 - Test: `test/core/compliance/compliance_test.dart`
 
-- [x] **Step 1: Implement ComplianceService** [DONE]
-- [x] **Step 2: Create Persistent Lock State** [DONE]
-- [x] **Step 3: Build ComplianceLockScreen** [DONE]
-- [x] **Step 4: Commit** [DONE]
+- [ ] **Step 1: Implement ComplianceService**
+  Service to track `isLocked` state and listen for `ERR_COMPLIANCE_FREEZE` from any API call.
+
+- [ ] **Step 2: Create Persistent Lock State**
+  Use `SecureStorageService` to persist the locked state across reboots.
+
+- [ ] **Step 3: Build ComplianceLockScreen**
+  A full-screen overlay that prevents any app interaction until an unlock code/biometric is provided (if permitted by policy).
+
+- [ ] **Step 4: Commit**
 
 ---
 
-### Task 2: Encrypted Store & Forward Queue
+### Task 2: Encrypted Store & Forward Queue [DONE]
 
 **BDD Scenarios:** S9.1 (Transaction queued offline)
 **BRD Requirements:** Fulfills FR-CA-9.1, FR-CA-9.2
@@ -38,20 +44,20 @@
 - Create: `lib/core/offline/offline_queue_service.dart`
 - Test: `test/core/offline/offline_queue_test.dart`
 
-- [ ] **Step 1: Setup SQLCipher Database**
+- [x] **Step 1: Setup SQLCipher Database**
   Initialize encrypted SQLite for local storage of transaction payloads.
 
-- [ ] **Step 2: Implement S&F Queue Logic**
+- [x] **Step 2: Implement S&F Queue Logic**
   Persistence methods: `enqueue()`, `dequeue()`, `getPendingCount()`.
 
-- [ ] **Step 3: Write Unit Tests**
+- [x] **Step 3: Write Unit Tests**
   Verify data encryption and FIFO order.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit** [DONE]
 
 ---
 
-### Task 3: Background Sync Worker
+### Task 3: Background Sync Worker [IN_PROGRESS]
 
 **BDD Scenarios:** S9.2 (Automatic sync when online)
 **BRD Requirements:** Fulfills FR-CA-9.3
