@@ -73,7 +73,7 @@
 
 ---
 
-### Task 4: e-KYC UI Flow & Account Selection
+### Task 4: e-KYC UI Flow & Account Selection [DONE]
 
 **BDD Scenarios:** S5.1, S7.1, S7.3 (Onboarding success receipt)
 **BRD Requirements:** Fulfills FR-CA-7.3
@@ -84,7 +84,7 @@
 - Create: `lib/features/kyc/screens/account_selection_screen.dart`
 - Frontend Test: `test/features/kyc/kyc_ui_test.dart`
 
-- [ ] **Step 5: Implement UI components matching state machine** [DONE]
-- [ ] **Step 6: Integrate with hardware mocks** [DONE]
-- [ ] **Step 7: Add widget tests** [DONE]
-- [ ] **Step 8: Commit** [DONE]
+- [x] **Step 5: Implement UI components matching state machine**
+- [x] **Step 6: Integrate with hardware mocks**
+- [x] **Step 1: Add widget tests**
+- [x] **Step 2: Commit** [DONE]
