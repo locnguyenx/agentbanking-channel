@@ -34,7 +34,7 @@
 
 ---
 
-### Task 2: Transaction Repository & API Models [IN_PROGRESS]
+### Task 2: Transaction Repository & API Models [DONE]
 
 **BDD Scenarios:** S3.1 (Fee Pricing Engine API Call)
 **BRD Requirements:** Fulfills FR-CA-2.1, FR-CA-7.1
@@ -45,20 +45,20 @@
 - Create: `lib/features/transactions/repositories/transaction_repository.dart`
 - Test: `test/features/transactions/transaction_repository_test.dart`
 
-- [ ] **Step 1: Define JSON Models**
+- [x] **Step 1: Define JSON Models**
   Create `TransactionQuoteRequest/Response` and `TransactionExecutionRequest/Response` models.
 
-- [ ] **Step 2: Implement TransactionRepository**
+- [x] **Step 2: Implement TransactionRepository**
   Implement methods for `getQuote()` and `executeTransaction()`.
 
-- [ ] **Step 3: Write tests for Repository**
+- [x] **Step 3: Write tests for Repository**
   Mock API responses using `dio_logger` or similar.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ---
 
-### Task 3: Transaction State Machine (Riverpod)
+### Task 3: Transaction State Machine (Riverpod) [IN_PROGRESS]
 
 **BDD Scenarios:** S4.3 (Customer confirms amount), S4.5 (Transaction state progression)
 **BRD Requirements:** Fulfills FR-CA-4.5
