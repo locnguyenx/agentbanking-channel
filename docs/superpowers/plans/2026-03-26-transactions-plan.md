@@ -58,7 +58,7 @@
 
 ---
 
-### Task 3: Transaction State Machine (Riverpod) [IN_PROGRESS]
+### Task 3: Transaction State Machine (Riverpod) [DONE]
 
 **BDD Scenarios:** S4.3 (Customer confirms amount), S4.5 (Transaction state progression)
 **BRD Requirements:** Fulfills FR-CA-4.5
@@ -68,20 +68,20 @@
 - Create: `lib/features/transactions/providers/transaction_provider.dart`
 - Test: `test/features/transactions/transaction_provider_test.dart`
 
-- [ ] **Step 1: Define TransactionState Enum**
+- [x] **Step 1: Define TransactionState Enum**
   `IDLE`, `QUOTING`, `WAITING_CONSENT`, `WAITING_CARD`, `WAITING_PIN`, `PROCESSING`, `SUCCESS`, `FAILED`.
 
-- [ ] **Step 2: Implement TransactionNotifier**
+- [x] **Step 2: Implement TransactionNotifier**
   Manage the lifecycle: Fetch Quote -> Await Consent -> Await Hardware -> Execute -> Show Result.
 
-- [ ] **Step 3: Write Unit Tests for the State Machine**
+- [x] **Step 3: Write Unit Tests for the State Machine**
   Verify state transitions for both Happy Paths and Error Paths.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit** [DONE]
 
 ---
 
-### Task 4: Dual-Handshake UI Orchestration
+### Task 4: Dual-Handshake UI Orchestration [DONE]
 
 **BDD Scenarios:** S4.1, S4.2, S4.4 (Successful transaction triggers SMS)
 **BRD Requirements:** Fulfills FR-CA-4.1, FR-CA-4.6
@@ -91,8 +91,8 @@
 - Create: `lib/features/transactions/screens/transaction_flow_screen.dart`
 - Frontend Test: `test/features/transactions/transaction_flow_screen_test.dart`
 
-- [ ] **Step 5: Write failing frontend test for dual-display**
-- [ ] **Step 6: Run frontend test to verify it fails**
-- [ ] **Step 7: Implement UI matching State Machine**
-- [ ] **Step 8: Run frontend test to verify it passes**
-- [ ] **Step 9: Commit**
+- [x] **Step 5: Write failing frontend test for dual-display** [DONE]
+- [x] **Step 6: Run frontend test to verify it fails** [DONE]
+- [x] **Step 7: Implement UI matching State Machine** [DONE]
+- [x] **Step 8: Run frontend test to verify it passes** [DONE]
+- [x] **Step 9: Commit** [DONE]
