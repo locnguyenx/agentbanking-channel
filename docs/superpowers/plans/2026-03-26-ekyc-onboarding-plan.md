@@ -28,7 +28,7 @@
 
 ---
 
-### Task 2: KYC API Service (KYC/AML Proxy)
+### Task 2: KYC API Service (KYC/AML Proxy) [DONE]
 
 **BDD Scenarios:** S6.1 (Submit KYC for approval), S6.2 (AML check pass/fail)
 **BRD Requirements:** Fulfills FR-CA-6.1, FR-CA-6.2
@@ -39,15 +39,10 @@
 - Create: `lib/features/kyc/repositories/kyc_repository.dart`
 - Test: `test/features/kyc/kyc_repository_test.dart`
 
-- [ ] **Step 1: Define KYC Request/Response Models**
-  Include MyKad data and Face verification scores.
-
-- [ ] **Step 2: Implement KycRepository**
-  Implement `/api/v1/kyc/validate` and `/api/v1/kyc/aml-check`.
-
-- [ ] **Step 3: Write unit tests**
-
-- [ ] **Step 4: Commit**
+- [x] **Step 1: Define KYC Request/Response Models** [DONE]
+- [x] **Step 2: Implement KycRepository** [DONE]
+- [x] **Step 3: Write unit tests** [DONE]
+- [x] **Step 4: Commit** [DONE]
 
 ---
 
