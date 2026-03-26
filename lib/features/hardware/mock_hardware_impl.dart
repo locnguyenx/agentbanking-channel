@@ -38,3 +38,19 @@ class MockPrinter implements IPrinter {
     return true;
   }
 }
+
+class MockMyKadScanner implements IMyKadScanner {
+  @override
+  Future<bool> isAvailable() async => true;
+
+  @override
+  Future<MyKadData?> scanMyKad() async {
+    // Simulate chip reading latency
+    await Future.delayed(const Duration(seconds: 3));
+    return MyKadData(
+      fullName: 'AHMAD BIN ABDULLAH',
+      icNumber: '850101-01-5678',
+      address: 'LOT 123, JALAN AMPANG, 50450 KUALA LUMPUR',
+    );
+  }
+}

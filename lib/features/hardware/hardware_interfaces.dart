@@ -18,6 +18,25 @@ abstract class IPrinter {
   Future<bool> printReceipt(String document);
 }
 
+abstract class IMyKadScanner {
+  Future<bool> isAvailable();
+  Future<MyKadData?> scanMyKad();
+}
+
+class MyKadData {
+  final String fullName;
+  final String icNumber;
+  final String address;
+  final String? photoBase64;
+
+  MyKadData({
+    required this.fullName,
+    required this.icNumber,
+    required this.address,
+    this.photoBase64,
+  });
+}
+
 class CardData {
   final String maskedPan;
   final String cardToken; // Provided by Secure Element/HSM
