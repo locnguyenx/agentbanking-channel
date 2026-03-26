@@ -162,7 +162,10 @@ class KycFlowScreen extends ConsumerWidget {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: () => ref.read(onboardingProvider.notifier).reset(),
+                onPressed: () {
+                  ref.read(onboardingProvider.notifier).reset();
+                  Navigator.pop(context);
+                },
                 child: const Text('BACK TO DASHBOARD'),
               ),
             ),

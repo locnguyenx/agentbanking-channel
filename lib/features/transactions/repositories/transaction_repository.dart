@@ -30,4 +30,11 @@ class TransactionRepository {
       referenceId: 'REF_${DateTime.now().millisecondsSinceEpoch}',
     );
   }
+  Future<String> performProxyEnquiry(String proxyId, String proxyType) async {
+    // Simulated API call to /api/v1/transactions/proxy-enquiry
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    // Mock masked response
+    return 'MOHD A***D BIN AL*';
+  }
 }

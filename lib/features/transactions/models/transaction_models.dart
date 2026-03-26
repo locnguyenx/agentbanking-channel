@@ -1,21 +1,26 @@
 /// Models for the Fee Pricing Engine and Transaction Execution
 /// Mapped to BDD Scenario S3.1
 
+enum FundingSource { CASH, DIGITAL_DUITNOW, CARD }
+
 class TransactionQuoteRequest {
   final String serviceCode;
   final double amount;
   final String agentId;
+  final FundingSource fundingSource;
 
   TransactionQuoteRequest({
     required this.serviceCode,
     required this.amount,
     required this.agentId,
+    required this.fundingSource,
   });
 
   Map<String, dynamic> toJson() => {
     'serviceCode': serviceCode,
     'amount': amount,
     'agentId': agentId,
+    'fundingSource': fundingSource.name,
   };
 }
 
@@ -46,19 +51,25 @@ class TransactionQuoteResponse {
 
 class TransactionExecutionRequest {
   final String quoteId;
-  final String pinBlock;
-  final String cardToken;
+  final FundingSource fundingSource;
+  final String? pinBlock;
+  final String? cardToken;
+  final String? duitNowProxyId;
 
   TransactionExecutionRequest({
     required this.quoteId,
-    required this.pinBlock,
-    required this.cardToken,
+    required this.fundingSource,
+    this.pinBlock,
+    this.cardToken,
+    this.duitNowProxyId,
   });
 
   Map<String, dynamic> toJson() => {
     'quoteId': quoteId,
+    'fundingSource': fundingSource.name,
     'pinBlock': pinBlock,
     'cardToken': cardToken,
+    'duitNowProxyId': duitNowProxyId,
   };
 }
 

@@ -40,6 +40,15 @@ Before deploying, ensure all tests pass:
 flutter test
 ```
 
+### 3.1 End-to-End Integration Testing
+The project includes a full lifecycle integration test suite located at `test/integration/app_test.dart`. This test covers:
+- Complete Login -> Onboarding (e-KYC) -> Bill Payment -> Float Reconciliation.
+- **Run Command**:
+    ```bash
+    flutter test test/integration/app_test.dart
+    ```
+- **Note**: This test is sensitive to hardware simulation latencies. Ensure your machine has sufficient resources to process the `pumpAndSettle` durations.
+
 ---
 
 ## 📱 3. Testing on a Physical Android Phone
@@ -130,8 +139,12 @@ final dioProvider = Provider<Dio>((ref) {
 ```
 
 ## ⚠️ Known Implementation Details
-- **Hardware Simulation**: The app uses HAL mocks for card reading and MyKad scanning. No physical POS peripheral drivers are included in this codebase yet.
+- **Hardware Simulation**: The app uses HAL mocks for card reading and MyKad scanning.
+    - **MyKad Scan**: 3 seconds latency (simulates chip reading).
+    - **KYC Validation**: 1 second latency.
+    - **Transaction Execution**: 2 seconds latency.
 - **Backend Connection & Auth**: The app defaults to **Mock Repositories**. For testing, use **Agent ID**: `AGENT01` and **Password**: `123456`.
+- **Transaction Metadata**: Specialized transactions (Bills/Top-ups) pass metadata via the `TransactionProvider.startTransaction()` method. Use the `metadata` parameter to include biller-specific data required by the API.
 - **Database**: Uses SQLCipher for secure offline storage.
 
 ---

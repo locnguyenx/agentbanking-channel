@@ -1,4 +1,4 @@
-# e-KYC & Onboarding Implementation Plan
+# e-KYC & Onboarding Implementation Plan [DONE]
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -51,7 +51,7 @@
 
 ---
 
-### Task 3: Onboarding State Machine (Riverpod) [IN_PROGRESS]
+### Task 3: Onboarding State Machine (Riverpod) [DONE]
 
 **BDD Scenarios:** S7.1 (Account type selection), S7.2 (Submit onboarding request)
 **BRD Requirements:** Fulfills FR-CA-7.1, FR-CA-7.2
@@ -61,15 +61,10 @@
 - Create: `lib/features/kyc/providers/onboarding_provider.dart`
 - Test: `test/features/kyc/onboarding_provider_test.dart`
 
-- [ ] **Step 1: Define OnboardingState Enum**
-  `IDLE`, `SCANNING_MYKAD`, `VALIDATING_KYC`, `SELECTING_PRODUCT`, `PROVISIONING`, `SUCCESS`, `FAILED`.
-
-- [ ] **Step 2: Implement OnboardingNotifier**
-  Manage lifecycle: Scan -> Verify -> Select -> Provision.
-
-- [ ] **Step 3: Write unit tests**
-
-- [ ] **Step 4: Commit**
+- [x] **Step 1: Define OnboardingState Enum**
+- [x] **Step 2: Implement OnboardingNotifier**
+- [x] **Step 3: Write unit tests**
+- [x] **Step 4: Commit**
 
 ---
 

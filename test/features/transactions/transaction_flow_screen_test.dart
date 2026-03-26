@@ -10,6 +10,8 @@ import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/core/settlement/settlement_service.dart';
 import 'package:dio/dio.dart';
 
 // Mocks
@@ -20,6 +22,8 @@ class FakeTransactionRepository implements TransactionRepository {
   Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request) async => throw UnimplementedError();
   @override
   Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async => throw UnimplementedError();
+  @override
+  Future<String> performProxyEnquiry(String proxyId, String proxyType) async => throw UnimplementedError();
 }
 
 class FakeCardReader implements ICardReader {
@@ -41,6 +45,7 @@ class MockTransactionNotifier extends TransactionNotifier {
     repository: FakeTransactionRepository(),
     cardReader: FakeCardReader(),
     pinPad: FakePinPad(),
+    floatNotifier: FloatNotifier(), // Using real notifier as mock here for simplicity
   );
 }
 

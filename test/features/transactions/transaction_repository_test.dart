@@ -18,6 +18,7 @@ void main() {
         serviceCode: 'CASH_WDL',
         amount: 100.0,
         agentId: 'AGENT007',
+        fundingSource: FundingSource.CARD,
       );
 
       final response = await repository.getQuote(request);
@@ -30,6 +31,7 @@ void main() {
     test('executeTransaction returns success', () async {
       final request = TransactionExecutionRequest(
         quoteId: 'QUOTE123',
+        fundingSource: FundingSource.CARD,
         pinBlock: 'PIN_BLOCK',
         cardToken: 'TOKEN_123',
       );
@@ -38,6 +40,11 @@ void main() {
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, startsWith('REF_'));
+    });
+    test('performProxyEnquiry returns masked name', () async {
+      final name = await repository.performProxyEnquiry('0123456789', 'NRIC');
+      
+      expect(name, contains('***'));
     });
   });
 }

@@ -3,9 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/core/offline/widgets/offline_indicator.dart';
+import 'package:agentbanking_channel/features/transactions/screens/bill_payment_form.dart';
+import 'package:agentbanking_channel/features/transactions/screens/topup_form.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/screens/cashless_payment_form.dart';
+import 'package:agentbanking_channel/features/transactions/screens/special_services_form.dart';
+import 'package:agentbanking_channel/features/transactions/screens/ewallet_form.dart';
+import 'package:agentbanking_channel/features/transactions/widgets/funding_source_selector.dart';
 
 // Provider for the amount input
 final transactionAmountProvider = StateProvider.autoDispose<String>((ref) => '100.00');
+
+// Provider for the selected funding source
+final fundingSourceProvider = StateProvider.autoDispose<FundingSource>((ref) => FundingSource.CASH);
+
+// Provider for DuitNow Proxy ID
+final duitNowProxyProvider = StateProvider.autoDispose<String>((ref) => '0123456789');
 
 class TransactionFlowScreen extends ConsumerWidget {
   final String title;
@@ -23,6 +36,7 @@ class TransactionFlowScreen extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final agentId = authState.user?.agentId ?? 'AGENT_UNKNOWN';
     final amountText = ref.watch(transactionAmountProvider);
+    final selectedSource = ref.watch(fundingSourceProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -50,7 +64,7 @@ class TransactionFlowScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildStateView(context, ref, state, agentId, amountText),
+                    _buildStateView(context, ref, state, agentId, amountText, selectedSource),
                     if (state.status == TransactionStatus.failed)
                       Padding(
                         padding: const EdgeInsets.only(top: 24),
@@ -70,75 +84,37 @@ class TransactionFlowScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStateView(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText) {
+  Widget _buildStateView(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText, FundingSource selectedSource) {
     switch (state.status) {
       case TransactionStatus.idle:
-        final bool needsAmount = serviceCode != 'BAL_INQ';
+        final bool supportsMultiSource = ['BILL_PAY', 'TOP_UP', 'CASH_DEP', 'ESSP_PURCHASE', 'PIN_PURCHASE', 'SARAWAK_PAY', 'CASHLESS_PAY'].contains(serviceCode);
         
         return Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                shape: BoxShape.circle,
+            if (supportsMultiSource) ...[
+              FundingSourceSelector(
+                key: const Key('funding_selector'),
+                selectedSource: selectedSource,
+                onSourceChanged: (source) => ref.read(fundingSourceProvider.notifier).state = source,
               ),
-              child: Icon(
-                needsAmount ? Icons.payments_outlined : Icons.account_balance_wallet_outlined,
-                size: 32,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            if (needsAmount) ...[
-              const Text('Enter Amount', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const Text('Enter amount to continue', style: TextStyle(color: Colors.grey, fontSize: 12)),
-              const SizedBox(height: 32),
-              TextField(
-                onChanged: (value) => ref.read(transactionAmountProvider.notifier).state = value,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                textAlign: TextAlign.center,
-                controller: TextEditingController.fromValue(
-                  TextEditingValue(
-                    text: amountText,
-                    selection: TextSelection.collapsed(offset: amountText.length),
+              const SizedBox(height: 16),
+              if (selectedSource == FundingSource.DIGITAL_DUITNOW) ...[
+                TextField(
+                  onChanged: (v) => ref.read(duitNowProxyProvider.notifier).state = v,
+                  decoration: InputDecoration(
+                    labelText: 'DuitNow Proxy ID (Mobile/IC)',
+                    hintText: 'e.g. 0123456789',
+                    prefixIcon: const Icon(Icons.perm_identity),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                decoration: InputDecoration(
-                  prefixText: 'RM ',
-                  prefixStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
-                ),
-              ),
-              const SizedBox(height: 32),
-            ] else 
-              const Column(
-                children: [
-                  Text('Balance Inquiry', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  SizedBox(height: 8),
-                  Text('Check customer account balance securely', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 13)),
-                  SizedBox(height: 32),
-                ],
-              ),
-              
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {
-                  final amount = needsAmount ? (double.tryParse(amountText) ?? 0.0) : 0.0;
-                  if (needsAmount && amount <= 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
-                    return;
-                  }
-                  ref.read(transactionProvider.notifier).startTransaction(amount, agentId, serviceCode: serviceCode);
-                },
-                child: Text(needsAmount ? 'GET QUOTE' : 'PROCEED'),
-              ),
-            ),
+                const SizedBox(height: 24),
+              ],
+              const SizedBox(height: 16),
+            ],
+            _buildServiceSpecificInput(context, ref, agentId, amountText, selectedSource),
           ],
         );
       case TransactionStatus.quoting:
@@ -164,6 +140,37 @@ class TransactionFlowScreen extends ConsumerWidget {
               _buildSummaryRow('Transaction Fee', 'RM ${state.quote?.fee}'),
               const Divider(height: 24),
               _buildSummaryRow('Total to Charged', 'RM ${state.quote?.total}', isBold: true),
+              const SizedBox(height: 32),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue.shade100),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'AGENT COMMISSION',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    Text(
+                      'RM ${state.quote?.commission}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ] else 
               const Text('Secure balance check initiated.', style: TextStyle(fontSize: 14)),
               
@@ -179,7 +186,9 @@ class TransactionFlowScreen extends ConsumerWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => ref.read(transactionProvider.notifier).confirmConsent(),
+                    onPressed: () => ref.read(transactionProvider.notifier).confirmConsent(
+                      duitNowProxyId: ref.read(duitNowProxyProvider),
+                    ),
                     child: const Text('Confirm'),
                   ),
                 ),
@@ -232,7 +241,10 @@ class TransactionFlowScreen extends ConsumerWidget {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: () => ref.read(transactionProvider.notifier).reset(),
+                onPressed: () {
+                  ref.read(transactionProvider.notifier).reset();
+                  Navigator.pop(context);
+                },
                 child: const Text('DONE'),
               ),
             ),
@@ -258,13 +270,161 @@ class TransactionFlowScreen extends ConsumerWidget {
     }
   }
 
+  Widget _buildServiceSpecificInput(BuildContext context, WidgetRef ref, String agentId, String amountText, FundingSource selectedSource) {
+    if (serviceCode == 'BILL_PAY') {
+      return BillPaymentForm(
+        onSubmit: (biller, ref1, amount) {
+          ref.read(transactionProvider.notifier).startTransaction(
+            amount, 
+            agentId, 
+            serviceCode: serviceCode,
+            fundingSource: ref.read(fundingSourceProvider),
+            metadata: {'billerCode': biller, 'ref1': ref1},
+          );
+        },
+      );
+    } else if (serviceCode == 'TOP_UP') {
+      return TopUpForm(
+        onSubmit: (telco, mobile, amount) {
+          ref.read(transactionProvider.notifier).startTransaction(
+            amount, 
+            agentId, 
+            serviceCode: serviceCode,
+            fundingSource: ref.read(fundingSourceProvider),
+            metadata: {'telco': telco, 'mobileNumber': mobile},
+          );
+        },
+      );
+    } else if (serviceCode == 'SARAWAK_PAY') {
+      return EWalletForm(
+        onSubmit: (type, mobile, amount) {
+          ref.read(transactionProvider.notifier).startTransaction(
+            amount, 
+            agentId, 
+            serviceCode: serviceCode,
+            fundingSource: ref.read(fundingSourceProvider),
+            metadata: {'ewalletType': 'SARAWAK_PAY', 'subType': type, 'mobile': mobile},
+          );
+        },
+      );
+    } else if (serviceCode == 'CASHLESS_PAY') {
+      return CashlessPaymentForm(
+        onSubmit: (method, amount) {
+          ref.read(transactionProvider.notifier).startTransaction(
+            amount, 
+            agentId, 
+            serviceCode: serviceCode,
+            fundingSource: ref.read(fundingSourceProvider),
+            metadata: {'paymentMethod': method},
+          );
+        },
+      );
+    } else if (serviceCode == 'ESSP_PURCHASE' || serviceCode == 'PIN_PURCHASE') {
+      return SpecialServicesForm(
+        serviceType: serviceCode == 'ESSP_PURCHASE' ? 'ESSP' : 'PIN',
+        onSubmit: (metadata, amount) {
+          ref.read(transactionProvider.notifier).startTransaction(
+            amount, 
+            agentId, 
+            serviceCode: serviceCode,
+            fundingSource: ref.read(fundingSourceProvider),
+            metadata: metadata,
+          );
+        },
+      );
+    }
+
+    final bool needsAmount = serviceCode != 'BAL_INQ';
+    
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            needsAmount ? Icons.payments_outlined : Icons.account_balance_wallet_outlined,
+            size: 32,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 24),
+        if (needsAmount) ...[
+          const Text('Enter Amount', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Enter amount to continue', style: TextStyle(color: Colors.grey, fontSize: 12)),
+          const SizedBox(height: 32),
+          TextField(
+            onChanged: (value) => ref.read(transactionAmountProvider.notifier).state = value,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textAlign: TextAlign.center,
+            controller: TextEditingController.fromValue(
+              TextEditingValue(
+                text: amountText,
+                selection: TextSelection.collapsed(offset: amountText.length),
+              ),
+            ),
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+              prefixText: 'RM ',
+              prefixStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+            ),
+          ),
+          const SizedBox(height: 32),
+        ] else 
+          const Column(
+            children: [
+              Text('Balance Inquiry', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              SizedBox(height: 8),
+              Text('Check customer account balance securely', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 13)),
+              SizedBox(height: 32),
+            ],
+          ),
+          
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: () {
+              final amount = needsAmount ? (double.tryParse(amountText) ?? 0.0) : 0.0;
+              if (needsAmount && amount <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
+                return;
+              }
+              ref.read(transactionProvider.notifier).startTransaction(
+                amount, 
+                agentId, 
+                serviceCode: serviceCode,
+                fundingSource: selectedSource,
+              );
+            },
+            child: Text(needsAmount ? 'GET QUOTE' : 'PROCEED'),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSummaryRow(String label, String value, {bool isBold = false, Color? color, bool small = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey, fontSize: small ? 11 : 14)),
+        Expanded(
+          child: Text(
+            label, 
+            style: TextStyle(color: Colors.grey, fontSize: small ? 11 : 14),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: 8),
         Text(
           value, 
+          textAlign: TextAlign.right,
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
             fontSize: small ? 11 : (isBold ? 18 : 14),
