@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/services/validation_service.dart';
 
 class BillPaymentForm extends StatefulWidget {
-  final Function(String billerCode, String ref1, double amount) onSubmit;
+  final Function(String billerCode, String ref1, Decimal amount) onSubmit;
 
   const BillPaymentForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -42,8 +43,8 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
               decoration: const InputDecoration(labelText: 'Amount (RM)'),
               keyboardType: TextInputType.number,
               validator: (v) {
-                final amount = double.tryParse(v ?? '');
-                return (amount != null && amount > 0) ? null : 'Invalid Amount';
+                final amount = Decimal.tryParse(v ?? '');
+                return (amount != null && amount > Decimal.zero) ? null : 'Invalid Amount';
               },
             ),
             const SizedBox(height: 24),
@@ -53,7 +54,7 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
                   widget.onSubmit(
                     _billerController.text,
                     _refController.text,
-                    double.parse(_amountController.text),
+                    Decimal.parse(_amountController.text),
                   );
                 }
               },

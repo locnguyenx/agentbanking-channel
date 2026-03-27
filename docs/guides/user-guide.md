@@ -26,7 +26,16 @@ All financial services follow a standardized confirmation and funding process:
     - **If CASH**: Collect physical cash from the customer.
 6.  **Navigation**: Wait for **Success!** and tap **DONE**.
 
-### 2.1 Services & Integrated Partners
+### 2.1 Balance Inquiry (New)
+To check a customer's account balance securely:
+1.  Tap **Inquiry** from the dashboard.
+2.  No amount entry is required. Tap **PROCEED**.
+3.  Confirm the inquiry request.
+4.  **Security Masking**: The balance is initially hidden as `******` to protect customer privacy in public retail spaces.
+5.  **Reveal**: Tap the **Eye Icon** next to the masked balance to display the actual amount.
+6.  Tap **DONE** to return to the dashboard.
+
+### 2.2 Services & Integrated Partners
 - **Utilities (Bills)**: Pay electricity, water, or telecommunications fees.
 - **Mobile (Top-up)**: Instant reloads for Maxis, Digi, and Celcom.
 - **e-Wallets**: Full integration with **Sarawak Pay** for top-ups.

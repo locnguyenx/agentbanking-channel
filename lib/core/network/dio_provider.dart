@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/core/network/timeout_interceptor.dart';
+import 'package:agentbanking_channel/core/network/gps_interceptor.dart';
+import 'package:agentbanking_channel/core/network/idempotency_interceptor.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final reversalService = ref.watch(reversalServiceProvider);

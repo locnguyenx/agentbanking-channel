@@ -23,3 +23,4 @@ class SecureStorageManager {
     final random = Random.secure();
     return List.generate(32, (index) => chars[random.nextInt(chars.length)]).join();
   }
+}

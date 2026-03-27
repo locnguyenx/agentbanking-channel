@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 
 class SpecialServicesForm extends StatefulWidget {
   final String serviceType; // 'ESSP' or 'PIN'
-  final Function(Map<String, dynamic> metadata, double amount) onSubmit;
+  final Function(Map<String, dynamic> metadata, Decimal amount) onSubmit;
 
   const SpecialServicesForm({Key? key, required this.serviceType, required this.onSubmit}) : super(key: key);
 
@@ -50,7 +51,7 @@ class _SpecialServicesFormState extends State<SpecialServicesForm> {
           height: 56,
           child: ElevatedButton(
             onPressed: () {
-              final amount = double.tryParse(_amountController.text) ?? 0.0;
+              final amount = Decimal.tryParse(_amountController.text) ?? Decimal.zero;
               widget.onSubmit({
                 'identifier': _idController.text,
                 'serviceSubtype': widget.serviceType,

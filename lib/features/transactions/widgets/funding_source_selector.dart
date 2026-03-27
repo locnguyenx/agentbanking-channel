@@ -34,6 +34,7 @@ class FundingSourceSelector extends StatelessWidget {
             final isSelected = source == selectedSource;
             return Expanded(
               child: GestureDetector(
+                key: Key('funding_source_${source.name}'),
                 onTap: () => onSourceChanged(source),
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -77,10 +78,14 @@ class FundingSourceSelector extends StatelessWidget {
     switch (source) {
       case FundingSource.CASH:
         return Icons.money;
-      case FundingSource.CARD:
+      case FundingSource.CARD_EMV:
         return Icons.credit_card;
-      case FundingSource.DIGITAL_DUITNOW:
+      case FundingSource.DUITNOW_MOBILE:
+      case FundingSource.DUITNOW_MYKAD:
+      case FundingSource.DUITNOW_BRN:
         return Icons.qr_code;
+      case FundingSource.MYKAD_BIOMETRIC:
+        return Icons.fingerprint;
     }
   }
 
@@ -88,10 +93,16 @@ class FundingSourceSelector extends StatelessWidget {
     switch (source) {
       case FundingSource.CASH:
         return 'CASH';
-      case FundingSource.CARD:
+      case FundingSource.CARD_EMV:
         return 'CARD';
-      case FundingSource.DIGITAL_DUITNOW:
-        return 'DUITNOW';
+      case FundingSource.DUITNOW_MOBILE:
+        return 'DUITNOW (TEL)';
+      case FundingSource.DUITNOW_MYKAD:
+        return 'DUITNOW (IC)';
+      case FundingSource.DUITNOW_BRN:
+        return 'DUITNOW (BRN)';
+      case FundingSource.MYKAD_BIOMETRIC:
+        return 'MYKAD';
     }
   }
 }

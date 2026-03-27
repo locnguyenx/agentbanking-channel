@@ -92,11 +92,15 @@ class TransactionExecutionResponse {
   final String status; // SUCCESS, FAILED
   final String referenceId;
   final String? errorMessage;
+  final Decimal? balance;
+  final String? currency;
 
   TransactionExecutionResponse({
     required this.status,
     required this.referenceId,
     this.errorMessage,
+    this.balance,
+    this.currency,
   });
 
   factory TransactionExecutionResponse.fromJson(Map<String, dynamic> json) =>
@@ -104,5 +108,7 @@ class TransactionExecutionResponse {
         status: json['status'],
         referenceId: json['referenceId'],
         errorMessage: json['errorMessage'],
+        balance: json['balance'] != null ? Decimal.parse(json['balance'].toString()) : null,
+        currency: json['currency'],
       );
 }

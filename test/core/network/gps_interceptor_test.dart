@@ -31,7 +31,7 @@ void main() {
 
     await interceptor.onRequest(options, handler);
 
-    expect(options.headers['X-GPS-Latitude'], equals('3.139'));
+    expect(options.headers['X-GPS-Latitude'], equals('3.1390'));
     expect(options.headers['X-GPS-Longitude'], equals('101.6869'));
   });
 }

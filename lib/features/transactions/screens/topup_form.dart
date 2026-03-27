@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/services/validation_service.dart';
 
 class TopUpForm extends StatefulWidget {
-  final Function(String telco, String phoneNumber, double amount) onSubmit;
+  final Function(String telco, String phoneNumber, Decimal amount) onSubmit;
 
   const TopUpForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -45,8 +46,8 @@ class _TopUpFormState extends State<TopUpForm> {
               decoration: const InputDecoration(labelText: 'Amount (RM)'),
               keyboardType: TextInputType.number,
               validator: (v) {
-                final amount = double.tryParse(v ?? '');
-                return (amount != null && amount > 0) ? null : 'Invalid Amount';
+                final amount = Decimal.tryParse(v ?? '');
+                return (amount != null && amount > Decimal.zero) ? null : 'Invalid Amount';
               },
             ),
             const SizedBox(height: 24),
@@ -56,7 +57,7 @@ class _TopUpFormState extends State<TopUpForm> {
                   widget.onSubmit(
                     _selectedTelco!,
                     _phoneController.text,
-                    double.parse(_amountController.text),
+                    Decimal.parse(_amountController.text),
                   );
                 }
               },

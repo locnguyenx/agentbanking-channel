@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
@@ -10,6 +11,7 @@ import 'package:agentbanking_channel/features/transactions/screens/cashless_paym
 import 'package:agentbanking_channel/features/transactions/screens/special_services_form.dart';
 import 'package:agentbanking_channel/features/transactions/screens/ewallet_form.dart';
 import 'package:agentbanking_channel/features/transactions/widgets/funding_source_selector.dart';
+import 'package:agentbanking_channel/features/transactions/widgets/balance_inquiry_result.dart';
 
 // Provider for the amount input
 final transactionAmountProvider = StateProvider.autoDispose<String>((ref) => '100.00');
@@ -98,7 +100,7 @@ class TransactionFlowScreen extends ConsumerWidget {
                 onSourceChanged: (source) => ref.read(fundingSourceProvider.notifier).state = source,
               ),
               const SizedBox(height: 16),
-              if (selectedSource == FundingSource.DIGITAL_DUITNOW) ...[
+              if (selectedSource == FundingSource.DUITNOW_MOBILE) ...[
                 TextField(
                   onChanged: (v) => ref.read(duitNowProxyProvider.notifier).state = v,
                   decoration: InputDecoration(
@@ -134,7 +136,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             const Text('Confirm Details', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 24),
-            if (serviceCode != 'BAL_INQ') ...[
+            if (serviceCode != 'BALANCE_INQUIRY') ...[
               _buildSummaryRow('Amount', 'RM ${state.quote?.amount}'),
               const Divider(height: 24),
               _buildSummaryRow('Transaction Fee', 'RM ${state.quote?.fee}'),
@@ -196,6 +198,28 @@ class TransactionFlowScreen extends ConsumerWidget {
             ),
           ],
         );
+      case TransactionStatus.reversalQueued:
+        return Column(
+          children: [
+            const Icon(Icons.history, color: Colors.orange, size: 80),
+            const SizedBox(height: 24),
+            const Text('Request Timeout', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text('A reversal has been queued for offline processing.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 48),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  ref.read(transactionProvider.notifier).reset();
+                  Navigator.pop(context);
+                },
+                child: const Text('DONE'),
+              ),
+            ),
+          ],
+        );
       case TransactionStatus.waitingCard:
         return const Column(
           children: [
@@ -217,6 +241,16 @@ class TransactionFlowScreen extends ConsumerWidget {
           ],
         );
       case TransactionStatus.success:
+        if (serviceCode == 'BALANCE_INQUIRY' && state.result?.balance != null) {
+          return BalanceInquiryResult(
+            balance: state.result!.balance!,
+            referenceId: state.result!.referenceId,
+            onDone: () {
+              ref.read(transactionProvider.notifier).reset();
+              Navigator.pop(context);
+            },
+          );
+        }
         return Column(
           children: [
             const Icon(Icons.check_circle, color: Colors.green, size: 80),
@@ -334,7 +368,7 @@ class TransactionFlowScreen extends ConsumerWidget {
       );
     }
 
-    final bool needsAmount = serviceCode != 'BAL_INQ';
+    final bool needsAmount = serviceCode != 'BALANCE_INQUIRY';
     
     return Column(
       children: [
@@ -390,8 +424,8 @@ class TransactionFlowScreen extends ConsumerWidget {
           height: 56,
           child: ElevatedButton(
             onPressed: () {
-              final amount = needsAmount ? (double.tryParse(amountText) ?? 0.0) : 0.0;
-              if (needsAmount && amount <= 0) {
+              final amount = Decimal.tryParse(amountText) ?? Decimal.zero;
+              if (needsAmount && amount <= Decimal.zero) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
                 return;
               }

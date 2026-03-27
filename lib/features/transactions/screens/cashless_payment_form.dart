@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 
 class CashlessPaymentForm extends StatefulWidget {
-  final Function(String method, double amount) onSubmit;
+  final Function(String method, Decimal amount) onSubmit;
 
   const CashlessPaymentForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -51,7 +52,7 @@ class _CashlessPaymentFormState extends State<CashlessPaymentForm> {
           height: 56,
           child: ElevatedButton(
             onPressed: () {
-              final amount = double.tryParse(_amountController.text) ?? 0.0;
+              final amount = Decimal.tryParse(_amountController.text) ?? Decimal.zero;
               widget.onSubmit(_selectedMethod, amount);
             },
             child: const Text('PROCEED'),

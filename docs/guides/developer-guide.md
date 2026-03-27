@@ -40,18 +40,44 @@ Before deploying, ensure all tests pass:
 flutter test
 ```
 
-### 3.1 End-to-End Integration Testing
-The project includes a full lifecycle integration test suite located at `test/integration/app_test.dart`. This test covers:
-- Complete Login -> Onboarding (e-KYC) -> Bill Payment -> Float Reconciliation.
-- **Run Command**:
-    ```bash
-    flutter test test/integration/app_test.dart
-    ```
-- **Note**: This test is sensitive to hardware simulation latencies. Ensure your machine has sufficient resources to process the `pumpAndSettle` durations.
+## 📏 3. Architectural Standards
 
----
+### 3.1 Financial Precision (Decimal)
+All monetary values **MUST** use the `Decimal` type from the `decimal` package. **NEVER** use `double` or `float` for currency as they suffer from binary floating-point inaccuracies.
+- **Rounding**: Use `HALF_UP` to 2 decimal places when displaying to users.
+- **Validation**: Use `Decimal.tryParse()` for user input.
 
-## 📱 3. Testing on a Physical Android Phone
+### 3.2 Service Code Standardization
+Service identifiers must be consistent across the Dashboard, Transaction Provider, and Backend.
+- **Standard Code**: `BALANCE_INQUIRY`
+- **Standard Code**: `CASH_WDL` (Withdrawal)
+- **Standard Code**: `BILL_PAY` (Bill Payment)
+
+## 🧪 4. Testing Strategy
+
+### 4.1 Unit Testing with FakeDio
+When testing repositories, avoid using real network calls or complex `mockito` setups for `Dio`. Instead, use a `Fake` or `Mock` implementation that mimics the `Dio` interface.
+- **Pattern**: Create a `FakeDio` class that implements `Dio` but returns pre-defined response objects.
+- **Location**: See `test/features/transactions/transaction_repository_test.dart` for examples.
+
+### 4.2 Widget Testing (Provider Overrides)
+Use `ProviderScope` overrides to isolate widgets from real business logic:
+```dart
+await tester.pumpWidget(
+  ProviderScope(
+    overrides: [
+      transactionProvider.overrideWith((ref) => MockTransactionNotifier()),
+    ],
+    child: const MaterialApp(home: TransactionFlowScreen(...)),
+  ),
+);
+```
+
+### 4.3 End-to-End Integration Testing
+The project includes a full lifecycle integration test suite located at `test/integration/app_test.dart`.
+- **Note**: This test is sensitive to hardware simulation latencies. Use `tester.pump(Duration)` explicitly when waiting for hardware timers (e.g., MyKad 3s scan).
+
+## 📱 5. Testing on a Physical Android Phone
 
 ### Step 1: Enable USB Debugging
 1.  Go to your phone **Settings** -> **About Phone**.
@@ -59,16 +85,13 @@ The project includes a full lifecycle integration test suite located at `test/in
 3.  Go to **Developer Options** -> Enable **USB Debugging**.
 
 ### Step 2: Connect Phone to Laptop
-1.  Connect your phone via USB.
-2.  When the "Allow USB Debugging?" prompt appears on your phone, tap **Allow**.
-3.  Verify the connection by running:
+1.  Connect your phone via USB and verify by running:
     ```bash
     flutter devices
     ```
     You should see your phone listed in the output.
 
 ### Step 3: Deployment (Debug Mode)
-To test with hot reload and console logs:
 ```bash
 flutter run
 ```
@@ -76,16 +99,16 @@ flutter run
 ### Step 4: Deployment (Release APK)
 To build a standalone installable file:
 1.  Generate the APK:
-    ```bash
-    flutter build apk --release
-    ```
+```bash
+flutter build apk --release
+```
 2.  The file will be located at:
     `build/app/outputs/flutter-apk/app-release.apk`
 3.  You can copy this file to your phone and install it manually.
 
-## 🔌 4. Switching to Real APIs (Dio Integration)
+## 🔌 6. Switching to Real APIs (Dio Integration)
 
-To transition from the current mock implementations to real backend services, follow these steps:
+To transition from mock implementations to real backend services:
 
 ### Step 1: Update Repository Logic
 Replace the `Future.delayed` mocks in your repositories with `Dio` HTTP calls.
@@ -97,55 +120,23 @@ class AuthRepository {
   AuthRepository(this.dio);
 
   Future<AuthUser> login(String agentId, String password) async {
-    final response = await dio.post(
-      '/api/v1/auth/login',
-      data: {
-        'agentId': agentId,
-        'password': password,
-      },
-    );
-
+    final response = await dio.post('/api/v1/auth/login', data: {'agentId': agentId, 'password': password});
     if (response.statusCode == 200) {
-      return AuthUser(
-        agentId: response.data['agentId'],
-        name: response.data['name'],
-        tier: response.data['tier'],
-      );
+      return AuthUser(agentId: response.data['agentId'], name: response.data['name'], tier: response.data['tier']);
     } else {
-      throw Exception('Login Failed: ${response.data['message']}');
+      throw Exception('Login Failed');
     }
   }
 }
 ```
 
 ### Step 2: Configure Base URL and Interceptors
-In your `providers`, configure the `Dio` instance with the API Gateway's base URL and authentication interceptors.
+In your `providers`, configure the `Dio` instance with the API Gateway's base URL and authentication interceptors (e.g., for `X-Idempotency-Key`).
 
-```dart
-final dioProvider = Provider<Dio>((ref) {
-  return Dio(BaseOptions(
-    baseUrl: 'https://gateway.bank.my',
-    connectTimeout: const Duration(seconds: 5),
-  ))..interceptors.add(InterceptorsWrapper(
-    onRequest: (options, handler) {
-      // Add X-Idempotency-Key for all POST requests
-      if (options.method == 'POST') {
-        options.headers['X-Idempotency-Key'] = DateTime.now().millisecondsSinceEpoch.toString();
-      }
-      return handler.next(options);
-    },
-  ));
-});
-```
-
-## ⚠️ Known Implementation Details
-- **Hardware Simulation**: The app uses HAL mocks for card reading and MyKad scanning.
-    - **MyKad Scan**: 3 seconds latency (simulates chip reading).
-    - **KYC Validation**: 1 second latency.
-    - **Transaction Execution**: 2 seconds latency.
-- **Backend Connection & Auth**: The app defaults to **Mock Repositories**. For testing, use **Agent ID**: `AGENT01` and **Password**: `123456`.
-- **Transaction Metadata**: Specialized transactions (Bills/Top-ups) pass metadata via the `TransactionProvider.startTransaction()` method. Use the `metadata` parameter to include biller-specific data required by the API.
+## ⚠️ 7. Known Implementation Details
+- **Hardware Simulation**: HAL mocks have latencies: MyKad Scan (3s), KYC Validation (1s), Transaction Execution (2s).
+- **Backend Connection**: Defaults to **Mock Repositories** (Agent ID: `AGENT01`, Password: `123456`).
 - **Database**: Uses SQLCipher for secure offline storage.
 
 ---
-**Troubleshooting**: If you encounter dependency issues, run `flutter clean` then `flutter pub get`.
+**Troubleshooting**: Run `flutter clean` then `flutter pub get`.

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 
 class EWalletForm extends StatefulWidget {
-  final Function(String type, String mobile, double amount) onSubmit;
+  final Function(String type, String mobile, Decimal amount) onSubmit;
 
   const EWalletForm({Key? key, required this.onSubmit}) : super(key: key);
 
@@ -70,7 +71,7 @@ class _EWalletFormState extends State<EWalletForm> {
           height: 56,
           child: ElevatedButton(
             onPressed: () {
-              final amount = double.tryParse(_amountController.text) ?? 0.0;
+              final amount = Decimal.tryParse(_amountController.text) ?? Decimal.zero;
               widget.onSubmit(_type, _mobileController.text, amount);
             },
             child: Text(_type == 'TOPUP' ? 'TOP-UP NOW' : 'WITHDRAW NOW'),

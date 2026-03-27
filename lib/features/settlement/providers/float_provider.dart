@@ -1,16 +1,35 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
+
+final floatRepositoryProvider = Provider<FloatRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  return FloatRepository(dio);
+});
 
 final floatProvider = StateNotifierProvider<FloatNotifier, FloatLedger>((ref) {
-  return FloatNotifier();
+  final repository = ref.watch(floatRepositoryProvider);
+  return FloatNotifier(repository);
 });
 
 class FloatNotifier extends StateNotifier<FloatLedger> {
-  FloatNotifier() : super(FloatLedger(
+  final FloatRepository _repository;
+
+  FloatNotifier(this._repository) : super(FloatLedger(
     currentBalance: Decimal.parse('5000.0'),
     limit: Decimal.parse('10000.0'),
   ));
+
+  Future<void> fetchLatestBalance() async {
+    try {
+      final ledger = await _repository.getFloatStatus();
+      state = ledger;
+    } catch (e) {
+      // Handle error
+    }
+  }
 
   /// Credits float (Increases balance), e.g. on Cash Withdrawal
   void creditFloat(Decimal amount, String transactionId) {

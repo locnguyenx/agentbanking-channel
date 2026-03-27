@@ -21,7 +21,7 @@ class DashboardScreen extends ConsumerWidget {
     final agentTier = authState.user?.tier ?? 'Silver';
     
     final currencyFormat = NumberFormat.currency(symbol: 'RM ', decimalDigits: 2);
-    final balanceStr = currencyFormat.format(floatState.currentBalance);
+    final balanceStr = currencyFormat.format(floatState.currentBalance.toDouble());
     
     final bool isTablet = MediaQuery.of(context).size.width >= 600;
     final double horizontalPadding = isTablet ? 40.0 : 24.0;
@@ -196,7 +196,7 @@ class DashboardScreen extends ConsumerWidget {
               'Inquiry',
               Icons.search,
               Colors.blue,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Balance Inquiry', serviceCode: 'BAL_INQ'))),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Balance Inquiry', serviceCode: 'BALANCE_INQUIRY'))),
               isTablet,
             ),
             _buildCircularService(
@@ -350,12 +350,6 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('This feature is coming in Phase 2')),
     );
   }
 }

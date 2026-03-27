@@ -178,12 +178,42 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     state = state.copyWith(status: TransactionStatus.success);
   }
 
+  Future<void> balanceInquiry(String agentId, {
+    FundingSource fundingSource = FundingSource.CARD_EMV,
+  }) async {
+    state = state.copyWith(
+      status: TransactionStatus.quoting, 
+      fundingSource: fundingSource,
+      error: null,
+    );
+    try {
+      // Balance inquiry doesn't need a quote in some systems, 
+      // but here we might still call getQuote if the flow requires it.
+      // BRD §3.1 US-CA-23 suggests it's a direct execution or a zero-amount quote.
+      final quote = await repository.getQuote(TransactionQuoteRequest(
+        amount: Decimal.zero,
+        serviceCode: 'BALANCE_INQUIRY',
+        agentId: agentId,
+        fundingSource: fundingSource,
+      ));
+      state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
+      
+      // Auto-confirm for balance inquiry if it's card-based
+      if (fundingSource == FundingSource.CARD_EMV) {
+        await confirmConsent();
+      }
+    } catch (e) {
+      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+    }
+  }
+
   Future<void> _execute(TransactionExecutionRequest request) async {
     try {
       final result = await repository.executeTransaction(request);
       if (result.status == 'SUCCESS') {
-        _updateFloat(request);
         state = state.copyWith(status: TransactionStatus.success, result: result);
+        // Refresh float balance from backend
+        await floatNotifier.fetchLatestBalance();
       } else {
         state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
       }
@@ -196,23 +226,6 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       } else {
         state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
       }
-    }
-  }
-
-  void _updateFloat(TransactionExecutionRequest request) {
-    // Logic: In agent banking, "Cash-In" (client gives agent cash, agent gives client float/digital money)
-    // means Agent's float is DEBITED (decreased).
-    // "Cash-Out" (Withdrawal) means Agent's float is CREDITED (increased).
-    
-    final quote = state.quote;
-    if (quote == null) return;
-
-    if (request.fundingSource == FundingSource.CASH) {
-      // Typically Cash-In or Bill Payment
-      floatNotifier.debitFloat(quote.amount, request.quoteId);
-    } else if (request.fundingSource == FundingSource.CARD_EMV) {
-      // Typically Cash Withdrawal
-      floatNotifier.creditFloat(quote.amount, request.quoteId);
     }
   }
 
