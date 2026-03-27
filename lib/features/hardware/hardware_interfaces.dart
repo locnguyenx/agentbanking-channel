@@ -23,6 +23,11 @@ abstract class IMyKadScanner {
   Future<MyKadData?> scanMyKad();
 }
 
+abstract class IMerchantTerminal {
+  Future<String> getTerminalId();
+  Future<String> getMerchantId();
+}
+
 class MyKadData {
   final String fullName;
   final String icNumber;

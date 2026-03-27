@@ -54,3 +54,11 @@ class MockMyKadScanner implements IMyKadScanner {
     );
   }
 }
+
+class MockMerchantTerminal implements IMerchantTerminal {
+  @override
+  Future<String> getTerminalId() async => 'TM-99887766';
+
+  @override
+  Future<String> getMerchantId() async => 'MC-11223344';
+}
