@@ -98,25 +98,12 @@ Every transaction must consult the **Rules Service** for the following:
 * **Cut-off:** 23:59:59 MYT.
 * **Net Settlement:** Agents are settled "Net." (Total Deposits - Total Withdrawals + Total Commissions).
 * **Output:** The system must generate a CSV/Flat-file for the Core Banking System (CBS) upload by 02:00 AM.
+Refer to `./BRD-supplementary/Net-settlement-EOD.md` for more details and explanation
 
 ## 6. STRAIGHT-THROUGH PROCESSING (STP)
-Refer to ./STP-rules.md
+Refer to `./BRD-supplementary/STP-rules.md` for more details and explanation
 
 ## 7. Security & Fraud (EFM)
 * **Velocity Checks:** Limit the number of transactions per MyKad per day to prevent "Smurfing."
 * **Geofencing:** Transactions must only be allowed within 100 meters of the registered Merchant GPS coordinate.
 * **Encryption:** PINs must never be logged. Card numbers (PAN) must be masked (e.g., `4111********1111`).
-
-# UI/UX
-
-## Modern Banking UI with Light-Themed
-
-**Key Design:**
-
-Premium Light Theme: clean, professional white/off-white background with deep indigo accents.
-Dashboard Design: Introducing a high-fidelity dashboard layout (inspired by modern FinTech apps) with circular service icons, a balance summary card, and a recent transactions list.
-    Implement a Premium Header with Agent stats (Balance, Commission).
-    Use Circular Service Icons for core functions.
-    Add a Recent Transactions section to the dashboard.
-    Redesign service list into a modern "Quick Actions" grid + "Services" row.
-Soft Aesthetics: Using 24px corner rounding, soft shadows, and improved typography to create a premium, "wow" factor experience.

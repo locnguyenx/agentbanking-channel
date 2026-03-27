@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
@@ -66,9 +67,9 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     required this.floatNotifier,
   }) : super(TransactionState(status: TransactionStatus.idle));
 
-  Future<void> startTransaction(double amount, String agentId, {
+  Future<void> startTransaction(Decimal amount, String agentId, {
     String serviceCode = 'CASH_WDL',
-    FundingSource fundingSource = FundingSource.CARD,
+    FundingSource fundingSource = FundingSource.CARD_EMV,
     Map<String, dynamic>? metadata,
   }) async {
     state = state.copyWith(
@@ -94,14 +95,20 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     if (state.quote == null || state.fundingSource == null) return;
     
     switch (state.fundingSource!) {
-      case FundingSource.CARD:
+      case FundingSource.CARD_EMV:
         await _handleCardTransaction();
         break;
       case FundingSource.CASH:
         await _handleCashTransaction();
         break;
-      case FundingSource.DIGITAL_DUITNOW:
-        await _handleDuitNowTransaction(duitNowProxyId);
+      case FundingSource.DUITNOW_MOBILE:
+      case FundingSource.DUITNOW_MYKAD:
+      case FundingSource.DUITNOW_BRN:
+        await _handleDuitNowTransaction(duitNowProxyId, state.fundingSource!);
+        break;
+      case FundingSource.MYKAD_BIOMETRIC:
+        // TODO: Implement MyKad Biometric withdrawal flow in Phase 2
+        state = state.copyWith(status: TransactionStatus.failed, error: 'MyKad Biometric not yet implemented');
         break;
     }
   }
@@ -124,7 +131,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     state = state.copyWith(status: TransactionStatus.processing);
     await _execute(TransactionExecutionRequest(
       quoteId: state.quote!.quoteId,
-      fundingSource: FundingSource.CARD,
+      fundingSource: FundingSource.CARD_EMV,
       pinBlock: pinBlock,
       cardToken: cardData.cardToken,
     ));
@@ -138,7 +145,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     ));
   }
 
-  Future<void> _handleDuitNowTransaction(String? proxyId) async {
+  Future<void> _handleDuitNowTransaction(String? proxyId, FundingSource source) async {
     if (proxyId == null) {
       state = state.copyWith(status: TransactionStatus.failed, error: 'Proxy ID required for DuitNow');
       return;
@@ -148,7 +155,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     // Trigger Request for Payment (RTP)
     final result = await repository.executeTransaction(TransactionExecutionRequest(
       quoteId: state.quote!.quoteId,
-      fundingSource: FundingSource.DIGITAL_DUITNOW,
+      fundingSource: source,
       duitNowProxyId: proxyId,
     ));
 
@@ -194,7 +201,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     if (request.fundingSource == FundingSource.CASH) {
       // Typically Cash-In or Bill Payment
       floatNotifier.debitFloat(quote.amount, request.quoteId);
-    } else if (request.fundingSource == FundingSource.CARD) {
+    } else if (request.fundingSource == FundingSource.CARD_EMV) {
       // Typically Cash Withdrawal
       floatNotifier.creditFloat(quote.amount, request.quoteId);
     }

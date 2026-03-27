@@ -1,6 +1,8 @@
+import 'package:decimal/decimal.dart';
+
 class FloatLedger {
-  final double currentBalance;
-  final double limit;
+  final Decimal currentBalance;
+  final Decimal limit;
   final List<FloatEntry> entries;
 
   FloatLedger({
@@ -10,8 +12,8 @@ class FloatLedger {
   });
 
   FloatLedger copyWith({
-    double? currentBalance,
-    double? limit,
+    Decimal? currentBalance,
+    Decimal? limit,
     List<FloatEntry>? entries,
   }) {
     return FloatLedger(
@@ -25,7 +27,7 @@ class FloatLedger {
 class FloatEntry {
   final String id;
   final String transactionId;
-  final double amount;
+  final Decimal amount;
   final FloatEntryType type;
   final DateTime timestamp;
 

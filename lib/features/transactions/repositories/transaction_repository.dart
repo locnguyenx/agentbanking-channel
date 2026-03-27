@@ -12,11 +12,15 @@ class TransactionRepository {
     await Future.delayed(const Duration(milliseconds: 800));
     
     // Mock response
+    final amount = request.amount;
+    final fee = Decimal.parse('1.00');
+    final commission = Decimal.parse('0.50');
+    
     return TransactionQuoteResponse(
-      amount: request.amount,
-      fee: 1.00,
-      commission: 0.50,
-      total: request.amount + 1.00,
+      amount: amount,
+      fee: fee,
+      commission: commission,
+      total: amount + fee,
       quoteId: 'QUOTE_${DateTime.now().millisecondsSinceEpoch}',
     );
   }

@@ -18,6 +18,7 @@ dependencies:
   intl: ^0.18.1
   logger: ^2.0.1
   workmanager: ^0.5.1
+  decimal: ^2.3.3
   mockito: ^5.4.2
 
 dev_dependencies:
