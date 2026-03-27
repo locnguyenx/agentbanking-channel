@@ -6,6 +6,7 @@ import 'package:agentbanking_channel/features/transactions/models/transaction_mo
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
 
 enum TransactionStatus {
   idle,
@@ -212,7 +213,10 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
   }
 }
 
-final transactionRepositoryProvider = Provider<TransactionRepository>((ref) => TransactionRepository(Dio()));
+final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
+  final dio = ref.watch(dioProvider);
+  return TransactionRepository(dio);
+});
 
 final transactionProvider = StateNotifierProvider<TransactionNotifier, TransactionState>((ref) {
   final repository = ref.watch(transactionRepositoryProvider);
