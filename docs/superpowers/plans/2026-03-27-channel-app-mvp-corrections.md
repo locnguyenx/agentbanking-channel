@@ -65,7 +65,7 @@
 
 ---
 
-## Task 1: Add `decimal` Dependency & Fix Monetary Types [IN_PROGRESS]
+## Task 1: Add `decimal` Dependency & Fix Monetary Types [DONE]
 
 **BDD Scenarios:** BDD Feature 3 (S3.2 — quote shows exact fee amounts); AGENTS.md "All monetary values use BigDecimal — NEVER use float or double"  
 **BRD Requirements:** BRD NFR-CA-2; FR-CA-2.2  
@@ -220,7 +220,7 @@ git commit -m "fix: replace double with Decimal for monetary types (AGENTS.md co
 
 ---
 
-## Task 2: Fix `OfflineQueueService` — Load Passphrase from Secure Storage [PENDING]
+## Task 2: Fix `OfflineQueueService` — Load Passphrase from Secure Storage [DONE]
 
 **BDD Scenarios:** BDD Feature 8 S8.3 — SAF queue persists with encryption  
 **BRD Requirements:** BRD NFR-CA-2 ("Encrypted Local DB … key in Android Keystore")  
@@ -348,7 +348,7 @@ git commit -m "fix: load SQLCipher passphrase from Flutter secure storage (BRD N
 
 ---
 
-## Task 3: Add GPS & Idempotency Dio Interceptors [PENDING]
+## Task 3: Add GPS & Idempotency Dio Interceptors [IN_PROGRESS]
 
 **BDD Scenarios:** BDD Feature 2 S2.3 — GPS headers present in all API requests  
 **BRD Requirements:** BRD FR-CA-1.2, NFR-CA-4  

@@ -4,8 +4,21 @@ import 'package:path/path.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
+});
+
+final secureStorageManagerProvider = Provider<SecureStorageManager>((ref) {
+  final storage = ref.watch(secureStorageProvider);
+  return SecureStorageManager(storage);
+});
+
 final offlineQueueServiceProvider = Provider<OfflineQueueService>((ref) {
-  return OfflineQueueService('default_secure_passphrase');
+  final manager = ref.watch(secureStorageManagerProvider);
+  return OfflineQueueService(manager);
 });
 
 final pendingQueueCountProvider = StreamProvider<int>((ref) {
@@ -17,10 +30,10 @@ final pendingQueueCountProvider = StreamProvider<int>((ref) {
 
 class OfflineQueueService {
   Database? _db;
-  final String _passphrase;
+  final SecureStorageManager _storage;
   final StreamController<int> _countController = StreamController<int>.broadcast();
 
-  OfflineQueueService(this._passphrase);
+  OfflineQueueService(this._storage);
 
   Stream<int> get queueCountStream => _countController.stream;
 
@@ -35,9 +48,11 @@ class OfflineQueueService {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'offline_queue.db');
 
+    final passphrase = await _storage.getSqlCipherPassphrase();
+
     _db = await openDatabase(
       path,
-      password: _passphrase,
+      password: passphrase,
       version: 1,
       onCreate: (db, version) async {
         await db.execute('''
