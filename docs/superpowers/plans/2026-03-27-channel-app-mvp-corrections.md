@@ -348,7 +348,7 @@ git commit -m "fix: load SQLCipher passphrase from Flutter secure storage (BRD N
 
 ---
 
-## Task 3: Add GPS & Idempotency Dio Interceptors [IN_PROGRESS]
+## Task 3: Add GPS & Idempotency Dio Interceptors [DONE]
 
 **BDD Scenarios:** BDD Feature 2 S2.3 — GPS headers present in all API requests  
 **BRD Requirements:** BRD FR-CA-1.2, NFR-CA-4  
@@ -479,7 +479,7 @@ git commit -m "feat: add GPS and Idempotency Dio interceptors (BRD FR-CA-1.2, FR
 
 ---
 
-## Task 4: Enforce Zero-Retry Timeout + MTI 0400 Auto-Reversal [PENDING]
+## Task 4: Enforce Zero-Retry Timeout + MTI 0400 Auto-Reversal [DONE]
 
 **BDD Scenarios:** BDD Feature 8 S8.1 — ZERO retries; timeout queues MTI 0400; S8.2 — printer jam queues reversal  
 **BRD Requirements:** BRD FR-CA-7.2, FR-CA-7.3, FR-CA-7.4; Design §4.2  

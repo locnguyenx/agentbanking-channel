@@ -7,38 +7,45 @@ class TransactionRepository {
   TransactionRepository(this.dio);
 
   Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async {
-    // Simulated API call to /api/v1/transactions/quote
-    // In real implementation, this would use dio.post
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    // Mock response
-    final amount = request.amount;
-    final fee = Decimal.parse('1.00');
-    final commission = Decimal.parse('0.50');
-    
-    return TransactionQuoteResponse(
-      amount: amount,
-      fee: fee,
-      commission: commission,
-      total: amount + fee,
-      quoteId: 'QUOTE_${DateTime.now().millisecondsSinceEpoch}',
-    );
+    try {
+      final response = await dio.post(
+        '/api/v1/transactions/quote',
+        data: request.toJson(),
+      );
+      return TransactionQuoteResponse.fromJson(response.data);
+    } catch (e) {
+      if (e is DioException && e.response?.statusCode == 200) {
+        return TransactionQuoteResponse.fromJson(e.response!.data);
+      }
+      rethrow;
+    }
   }
 
   Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request) async {
-    // Simulated API call to /api/v1/transactions/execute
-    await Future.delayed(const Duration(seconds: 2));
-
-    return TransactionExecutionResponse(
-      status: 'SUCCESS',
-      referenceId: 'REF_${DateTime.now().millisecondsSinceEpoch}',
-    );
+    try {
+      final response = await dio.post(
+        '/api/v1/transactions/execute',
+        data: request.toJson(),
+        options: Options(extra: {'requiresReversal': true}),
+      );
+      return TransactionExecutionResponse.fromJson(response.data);
+    } catch (e) {
+      if (e is DioException && e.response?.statusCode == 200) {
+        return TransactionExecutionResponse.fromJson(e.response!.data);
+      }
+      rethrow;
+    }
   }
+
   Future<String> performProxyEnquiry(String proxyId, String proxyType) async {
-    // Simulated API call to /api/v1/transactions/proxy-enquiry
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Mock masked response
-    return 'MOHD A***D BIN AL*';
+    try {
+      final response = await dio.get(
+        '/api/v1/transactions/proxy-enquiry',
+        queryParameters: {'proxyId': proxyId, 'proxyType': proxyType},
+      );
+      return response.data['displayName'] ?? 'UNKNOWN';
+    } catch (e) {
+      rethrow;
+    }
   }
 }

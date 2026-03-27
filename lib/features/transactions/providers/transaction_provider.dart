@@ -15,6 +15,7 @@ enum TransactionStatus {
   waitingCard,
   waitingPin,
   processing,
+  reversalQueued,
   success,
   failed,
 }
@@ -187,7 +188,14 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
         state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
       }
     } catch (e) {
-      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+      if (e is DioException && (e.type == DioExceptionType.receiveTimeout || e.type == DioExceptionType.connectionTimeout)) {
+        state = state.copyWith(
+          status: TransactionStatus.reversalQueued,
+          error: 'Connection Timeout. A reversal has been queued. Please check status later.',
+        );
+      } else {
+        state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+      }
     }
   }
 
