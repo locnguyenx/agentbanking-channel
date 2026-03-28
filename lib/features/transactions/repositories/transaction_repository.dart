@@ -48,4 +48,54 @@ class TransactionRepository {
       rethrow;
     }
   }
+
+  Future<TransactionExecutionResponse> balanceInquiry(TransactionExecutionRequest request) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/transactions/balance-inquiry',
+        data: request.toJson(),
+      );
+      return TransactionExecutionResponse.fromJson(response.data);
+    } catch (e) {
+      if (e is DioException && e.response?.statusCode == 200) {
+        return TransactionExecutionResponse.fromJson(e.response!.data);
+      }
+      rethrow;
+    }
+  }
+
+  Future<TransactionExecutionResponse> initiateDuitNow({
+    required String quoteId,
+    required String proxyId,
+    required String proxyType,
+  }) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/transfer/duitnow',
+        data: {
+          'quoteId': quoteId,
+          'proxyId': proxyId,
+          'proxyType': proxyType,
+        },
+      );
+      return TransactionExecutionResponse.fromJson(response.data);
+    } catch (e) {
+      if (e is DioException && e.response?.statusCode == 200) {
+        return TransactionExecutionResponse.fromJson(e.response!.data);
+      }
+      rethrow;
+    }
+  }
+
+  Future<String> getDuitNowStatus(String referenceId) async {
+    try {
+      final response = await dio.get(
+        '/api/v1/transfer/duitnow/status',
+        queryParameters: {'referenceId': referenceId},
+      );
+      return response.data['status'] ?? 'PENDING';
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
