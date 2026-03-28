@@ -7,6 +7,7 @@ import 'package:agentbanking_channel/features/transactions/providers/transaction
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 
 enum MerchantStatus {
   idle,
@@ -103,14 +104,12 @@ class MerchantNotifier extends StateNotifier<MerchantState> {
       }
 
       state = state.copyWith(status: MerchantStatus.processing);
-      // In a real app, this would be a dedicated repository call for Merchant Retail Sale
-      // For Phase 2 demo, we simulate success response matching BDD S9.1
-      await Future.delayed(const Duration(seconds: 2));
       
-      final result = RetailSaleResponse(
-        floatCreditAmount: state.amount! - state.mdr!,
-        mdrAmount: state.mdr!,
-        receiptReference: 'RETAIL-${DateTime.now().millisecondsSinceEpoch}',
+      final result = await repository.executeRetailSale(
+        state.amount!,
+        'CARD_EMV', // Explicit card funding
+        pinBlock: pin,
+        cardToken: card.cardToken,
       );
 
       await floatNotifier.fetchLatestBalance();
@@ -144,14 +143,13 @@ class MerchantNotifier extends StateNotifier<MerchantState> {
       if (pin == null) throw 'PIN fail';
 
       state = state.copyWith(status: MerchantStatus.processing);
-      await Future.delayed(const Duration(seconds: 2));
-
-      // BDD S9.4: return split amounts
-      final total = state.amount!;
-      final result = CashbackResponse(
-        purchaseAmount: total - Decimal.parse('50.0'), // Mocked split
-        cashBackAmount: Decimal.parse('50.0'),
-        receiptReference: 'CSHBK-${DateTime.now().millisecondsSinceEpoch}',
+      
+      final result = await repository.executeCashback(
+        state.amount! - Decimal.parse('50.0'), // Again, split logic should be in repository/backend if possible, 
+        Decimal.parse('50.0'),                 // but following the BDD S9.4 mock split for now with a real API call.
+        'CARD_EMV',
+        pinBlock: pin,
+        cardToken: card.cardToken,
       );
 
       await floatNotifier.fetchLatestBalance();

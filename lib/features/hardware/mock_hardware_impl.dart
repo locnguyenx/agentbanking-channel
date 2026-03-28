@@ -57,8 +57,9 @@ class MockMyKadScanner implements IMyKadScanner {
 
 class MockMerchantTerminal implements IMerchantTerminal {
   @override
-  Future<String> getTerminalId() async => 'TM-99887766';
-
+  Future<bool> isAvailable() async => true;
   @override
-  Future<String> getMerchantId() async => 'MC-11223344';
+  Future<bool> displayQrCode(String qrPayload) async => true;
+  @override
+  Future<void> clearDisplay() async {}
 }

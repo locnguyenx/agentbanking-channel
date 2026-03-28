@@ -301,6 +301,8 @@ class TransactionFlowScreen extends ConsumerWidget {
             ),
           ],
         );
+      default:
+        return const SizedBox.shrink();
     }
   }
 
@@ -362,7 +364,7 @@ class TransactionFlowScreen extends ConsumerWidget {
             agentId, 
             serviceCode: serviceCode,
             fundingSource: ref.read(fundingSourceProvider),
-            metadata: metadata,
+            metadata: metadata.map((k, v) => MapEntry(k, v.toString())),
           );
         },
       );

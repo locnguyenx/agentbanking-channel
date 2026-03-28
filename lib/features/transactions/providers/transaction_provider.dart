@@ -337,6 +337,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       }
     } catch (e) {
       if (e is DioException && (e.type == DioExceptionType.receiveTimeout || e.type == DioExceptionType.connectionTimeout)) {
+        await _queueReversal();
         state = state.copyWith(
           status: TransactionStatus.reversalQueued,
           error: 'Connection Timeout. A reversal has been queued. Please check status later.',

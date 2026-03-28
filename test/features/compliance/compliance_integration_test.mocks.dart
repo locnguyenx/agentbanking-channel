@@ -3,25 +3,28 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i7;
 
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart'
-    as _i8;
-import 'package:agentbanking_channel/features/settlement/models/float_models.dart'
+    as _i10;
+import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart'
     as _i4;
+import 'package:agentbanking_channel/features/settlement/models/float_models.dart'
+    as _i5;
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart'
-    as _i9;
+    as _i11;
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart'
     as _i3;
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart'
-    as _i5;
+    as _i6;
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart'
-    as _i12;
+    as _i14;
+import 'package:decimal/decimal.dart' as _i9;
 import 'package:dio/dio.dart' as _i2;
-import 'package:flutter_riverpod/flutter_riverpod.dart' as _i10;
+import 'package:flutter_riverpod/flutter_riverpod.dart' as _i12;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
-import 'package:state_notifier/state_notifier.dart' as _i11;
+import 'package:mockito/src/dummies.dart' as _i8;
+import 'package:state_notifier/state_notifier.dart' as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -70,8 +73,30 @@ class _FakeTransactionExecutionResponse_2 extends _i1.SmartFake
         );
 }
 
-class _FakeFloatLedger_3 extends _i1.SmartFake implements _i4.FloatLedger {
-  _FakeFloatLedger_3(
+class _FakeRetailSaleResponse_3 extends _i1.SmartFake
+    implements _i4.RetailSaleResponse {
+  _FakeRetailSaleResponse_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeCashbackResponse_4 extends _i1.SmartFake
+    implements _i4.CashbackResponse {
+  _FakeCashbackResponse_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFloatLedger_5 extends _i1.SmartFake implements _i5.FloatLedger {
+  _FakeFloatLedger_5(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -84,7 +109,7 @@ class _FakeFloatLedger_3 extends _i1.SmartFake implements _i4.FloatLedger {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionRepository extends _i1.Mock
-    implements _i5.TransactionRepository {
+    implements _i6.TransactionRepository {
   MockTransactionRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -99,14 +124,14 @@ class MockTransactionRepository extends _i1.Mock
       ) as _i2.Dio);
 
   @override
-  _i6.Future<_i3.TransactionQuoteResponse> getQuote(
+  _i7.Future<_i3.TransactionQuoteResponse> getQuote(
           _i3.TransactionQuoteRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #getQuote,
           [request],
         ),
-        returnValue: _i6.Future<_i3.TransactionQuoteResponse>.value(
+        returnValue: _i7.Future<_i3.TransactionQuoteResponse>.value(
             _FakeTransactionQuoteResponse_1(
           this,
           Invocation.method(
@@ -114,17 +139,17 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i6.Future<_i3.TransactionQuoteResponse>);
+      ) as _i7.Future<_i3.TransactionQuoteResponse>);
 
   @override
-  _i6.Future<_i3.TransactionExecutionResponse> executeTransaction(
+  _i7.Future<_i3.TransactionExecutionResponse> executeTransaction(
           _i3.TransactionExecutionRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #executeTransaction,
           [request],
         ),
-        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i7.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -132,10 +157,10 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i6.Future<_i3.TransactionExecutionResponse>);
+      ) as _i7.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i6.Future<String> performProxyEnquiry(
+  _i7.Future<String> performProxyEnquiry(
     String? proxyId,
     String? proxyType,
   ) =>
@@ -147,7 +172,7 @@ class MockTransactionRepository extends _i1.Mock
             proxyType,
           ],
         ),
-        returnValue: _i6.Future<String>.value(_i7.dummyValue<String>(
+        returnValue: _i7.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #performProxyEnquiry,
@@ -157,17 +182,17 @@ class MockTransactionRepository extends _i1.Mock
             ],
           ),
         )),
-      ) as _i6.Future<String>);
+      ) as _i7.Future<String>);
 
   @override
-  _i6.Future<_i3.TransactionExecutionResponse> balanceInquiry(
+  _i7.Future<_i3.TransactionExecutionResponse> balanceInquiry(
           _i3.TransactionExecutionRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #balanceInquiry,
           [request],
         ),
-        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i7.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -175,10 +200,10 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i6.Future<_i3.TransactionExecutionResponse>);
+      ) as _i7.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i6.Future<_i3.TransactionExecutionResponse> initiateDuitNow({
+  _i7.Future<_i3.TransactionExecutionResponse> initiateDuitNow({
     required String? quoteId,
     required String? proxyId,
     required String? proxyType,
@@ -193,7 +218,7 @@ class MockTransactionRepository extends _i1.Mock
             #proxyType: proxyType,
           },
         ),
-        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i7.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -206,83 +231,173 @@ class MockTransactionRepository extends _i1.Mock
             },
           ),
         )),
-      ) as _i6.Future<_i3.TransactionExecutionResponse>);
+      ) as _i7.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i6.Future<String> getDuitNowStatus(String? referenceId) =>
+  _i7.Future<String> getDuitNowStatus(String? referenceId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getDuitNowStatus,
           [referenceId],
         ),
-        returnValue: _i6.Future<String>.value(_i7.dummyValue<String>(
+        returnValue: _i7.Future<String>.value(_i8.dummyValue<String>(
           this,
           Invocation.method(
             #getDuitNowStatus,
             [referenceId],
           ),
         )),
-      ) as _i6.Future<String>);
+      ) as _i7.Future<String>);
+
+  @override
+  _i7.Future<_i4.RetailSaleResponse> executeRetailSale(
+    _i9.Decimal? amount,
+    String? fundingSource, {
+    String? pinBlock,
+    String? cardToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #executeRetailSale,
+          [
+            amount,
+            fundingSource,
+          ],
+          {
+            #pinBlock: pinBlock,
+            #cardToken: cardToken,
+          },
+        ),
+        returnValue:
+            _i7.Future<_i4.RetailSaleResponse>.value(_FakeRetailSaleResponse_3(
+          this,
+          Invocation.method(
+            #executeRetailSale,
+            [
+              amount,
+              fundingSource,
+            ],
+            {
+              #pinBlock: pinBlock,
+              #cardToken: cardToken,
+            },
+          ),
+        )),
+      ) as _i7.Future<_i4.RetailSaleResponse>);
+
+  @override
+  _i7.Future<_i4.CashbackResponse> executeCashback(
+    _i9.Decimal? purchaseAmount,
+    _i9.Decimal? cashbackAmount,
+    String? fundingSource, {
+    String? pinBlock,
+    String? cardToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #executeCashback,
+          [
+            purchaseAmount,
+            cashbackAmount,
+            fundingSource,
+          ],
+          {
+            #pinBlock: pinBlock,
+            #cardToken: cardToken,
+          },
+        ),
+        returnValue:
+            _i7.Future<_i4.CashbackResponse>.value(_FakeCashbackResponse_4(
+          this,
+          Invocation.method(
+            #executeCashback,
+            [
+              purchaseAmount,
+              cashbackAmount,
+              fundingSource,
+            ],
+            {
+              #pinBlock: pinBlock,
+              #cardToken: cardToken,
+            },
+          ),
+        )),
+      ) as _i7.Future<_i4.CashbackResponse>);
+
+  @override
+  _i7.Future<String> getComplianceStatus() => (super.noSuchMethod(
+        Invocation.method(
+          #getComplianceStatus,
+          [],
+        ),
+        returnValue: _i7.Future<String>.value(_i8.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getComplianceStatus,
+            [],
+          ),
+        )),
+      ) as _i7.Future<String>);
 }
 
 /// A class which mocks [ICardReader].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockICardReader extends _i1.Mock implements _i8.ICardReader {
+class MockICardReader extends _i1.Mock implements _i10.ICardReader {
   MockICardReader() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<bool> isAvailable() => (super.noSuchMethod(
+  _i7.Future<bool> isAvailable() => (super.noSuchMethod(
         Invocation.method(
           #isAvailable,
           [],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
 
   @override
-  _i6.Future<_i8.CardData?> readCard() => (super.noSuchMethod(
+  _i7.Future<_i10.CardData?> readCard() => (super.noSuchMethod(
         Invocation.method(
           #readCard,
           [],
         ),
-        returnValue: _i6.Future<_i8.CardData?>.value(),
-      ) as _i6.Future<_i8.CardData?>);
+        returnValue: _i7.Future<_i10.CardData?>.value(),
+      ) as _i7.Future<_i10.CardData?>);
 }
 
 /// A class which mocks [IPinPad].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockIPinPad extends _i1.Mock implements _i8.IPinPad {
+class MockIPinPad extends _i1.Mock implements _i10.IPinPad {
   MockIPinPad() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<bool> isAvailable() => (super.noSuchMethod(
+  _i7.Future<bool> isAvailable() => (super.noSuchMethod(
         Invocation.method(
           #isAvailable,
           [],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i7.Future<bool>.value(false),
+      ) as _i7.Future<bool>);
 
   @override
-  _i6.Future<String?> capturePin() => (super.noSuchMethod(
+  _i7.Future<String?> capturePin() => (super.noSuchMethod(
         Invocation.method(
           #capturePin,
           [],
         ),
-        returnValue: _i6.Future<String?>.value(),
-      ) as _i6.Future<String?>);
+        returnValue: _i7.Future<String?>.value(),
+      ) as _i7.Future<String?>);
 }
 
 /// A class which mocks [FloatNotifier].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
+class MockFloatNotifier extends _i1.Mock implements _i11.FloatNotifier {
   MockFloatNotifier() {
     _i1.throwOnMissingStub(this);
   }
@@ -294,28 +409,28 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
       ) as bool);
 
   @override
-  _i6.Stream<_i4.FloatLedger> get stream => (super.noSuchMethod(
+  _i7.Stream<_i5.FloatLedger> get stream => (super.noSuchMethod(
         Invocation.getter(#stream),
-        returnValue: _i6.Stream<_i4.FloatLedger>.empty(),
-      ) as _i6.Stream<_i4.FloatLedger>);
+        returnValue: _i7.Stream<_i5.FloatLedger>.empty(),
+      ) as _i7.Stream<_i5.FloatLedger>);
 
   @override
-  _i4.FloatLedger get state => (super.noSuchMethod(
+  _i5.FloatLedger get state => (super.noSuchMethod(
         Invocation.getter(#state),
-        returnValue: _FakeFloatLedger_3(
+        returnValue: _FakeFloatLedger_5(
           this,
           Invocation.getter(#state),
         ),
-      ) as _i4.FloatLedger);
+      ) as _i5.FloatLedger);
 
   @override
-  _i4.FloatLedger get debugState => (super.noSuchMethod(
+  _i5.FloatLedger get debugState => (super.noSuchMethod(
         Invocation.getter(#debugState),
-        returnValue: _FakeFloatLedger_3(
+        returnValue: _FakeFloatLedger_5(
           this,
           Invocation.getter(#debugState),
         ),
-      ) as _i4.FloatLedger);
+      ) as _i5.FloatLedger);
 
   @override
   bool get hasListeners => (super.noSuchMethod(
@@ -324,7 +439,7 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
       ) as bool);
 
   @override
-  set onError(_i10.ErrorListener? value) => super.noSuchMethod(
+  set onError(_i12.ErrorListener? value) => super.noSuchMethod(
         Invocation.setter(
           #onError,
           value,
@@ -333,7 +448,7 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
       );
 
   @override
-  set state(_i4.FloatLedger? value) => super.noSuchMethod(
+  set state(_i5.FloatLedger? value) => super.noSuchMethod(
         Invocation.setter(
           #state,
           value,
@@ -342,19 +457,19 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
       );
 
   @override
-  _i6.Future<void> fetchLatestBalance() => (super.noSuchMethod(
+  _i7.Future<void> fetchLatestBalance() => (super.noSuchMethod(
         Invocation.method(
           #fetchLatestBalance,
           [],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 
   @override
   bool updateShouldNotify(
-    _i4.FloatLedger? old,
-    _i4.FloatLedger? current,
+    _i5.FloatLedger? old,
+    _i5.FloatLedger? current,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -368,8 +483,8 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
       ) as bool);
 
   @override
-  _i10.RemoveListener addListener(
-    _i11.Listener<_i4.FloatLedger>? listener, {
+  _i12.RemoveListener addListener(
+    _i13.Listener<_i5.FloatLedger>? listener, {
     bool? fireImmediately = true,
   }) =>
       (super.noSuchMethod(
@@ -379,7 +494,7 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
           {#fireImmediately: fireImmediately},
         ),
         returnValue: () {},
-      ) as _i10.RemoveListener);
+      ) as _i12.RemoveListener);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -394,19 +509,19 @@ class MockFloatNotifier extends _i1.Mock implements _i9.FloatNotifier {
 /// A class which mocks [ReversalService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockReversalService extends _i1.Mock implements _i12.ReversalService {
+class MockReversalService extends _i1.Mock implements _i14.ReversalService {
   MockReversalService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<void> queueReversal(Map<String, dynamic>? originalRequest) =>
+  _i7.Future<void> queueReversal(Map<String, dynamic>? originalRequest) =>
       (super.noSuchMethod(
         Invocation.method(
           #queueReversal,
           [originalRequest],
         ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }

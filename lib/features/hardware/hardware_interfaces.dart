@@ -23,9 +23,16 @@ abstract class IMyKadScanner {
   Future<MyKadData?> scanMyKad();
 }
 
+/// Merchant Terminal Display — renders Dynamic DuitNow QR codes for customer scanning.
+/// Phase 2 only. HAL contract isolates Flutter from vendor QR SDK.
+/// Design §3.1 IMerchantTerminal
 abstract class IMerchantTerminal {
-  Future<String> getTerminalId();
-  Future<String> getMerchantId();
+  Future<bool> isAvailable();
+  /// Renders a DuitNow QR payload string on the merchant display.
+  /// Returns true if displayed successfully.
+  Future<bool> displayQrCode(String qrPayload);
+  /// Clears the QR display after payment confirmed or timed out.
+  Future<void> clearDisplay();
 }
 
 class MyKadData {

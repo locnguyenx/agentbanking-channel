@@ -7,12 +7,13 @@ import 'package:agentbanking_channel/features/transactions/repositories/transact
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 
 import 'duitnow_test.mocks.dart';
 
-@GenerateMocks([TransactionRepository, ICardReader, IPinPad, FloatNotifier, ReversalService, IMyKadScanner])
+@GenerateMocks([TransactionRepository, ICardReader, IPinPad, FloatNotifier, ReversalService, IMyKadScanner, ComplianceNotifier])
 void main() {
   late TransactionNotifier notifier;
   late MockTransactionRepository mockRepo;
@@ -21,6 +22,7 @@ void main() {
   late MockFloatNotifier mockFloatNotifier;
   late MockReversalService mockReversalService;
   late MockIMyKadScanner mockMyKadScanner;
+  late MockComplianceNotifier mockComplianceNotifier;
 
   setUp(() {
     mockRepo = MockTransactionRepository();
@@ -29,6 +31,10 @@ void main() {
     mockFloatNotifier = MockFloatNotifier();
     mockReversalService = MockReversalService();
     mockMyKadScanner = MockIMyKadScanner();
+    mockComplianceNotifier = MockComplianceNotifier();
+
+    // Default compliance state: not frozen
+    when(mockComplianceNotifier.state).thenReturn(ComplianceState(isFrozen: false));
 
     notifier = TransactionNotifier(
       repository: mockRepo,
@@ -37,6 +43,7 @@ void main() {
       floatNotifier: mockFloatNotifier,
       reversalService: mockReversalService,
       myKadScanner: mockMyKadScanner,
+      complianceNotifier: mockComplianceNotifier,
       pollingInterval: const Duration(milliseconds: 1),
     );
   });

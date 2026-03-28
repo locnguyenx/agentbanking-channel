@@ -40,7 +40,6 @@ void main() {
       // Bill Payment (Cash)
       await tester.tap(find.byKey(const Key('btn_bills')));
       await tester.pumpAndSettle();
-      
       final fields = find.byType(TextField);
       await tester.enterText(fields.at(0), '1234');
       await tester.enterText(fields.at(1), 'REF123');
@@ -48,14 +47,17 @@ void main() {
       
       await tester.tap(find.text('PROCEED'));
       await tester.pump(const Duration(seconds: 1));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
       await tester.tap(find.text('Confirm'));
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      // Wait for mock Dio "success"
+      for (int i = 0; i < 5; i++) {
+        await tester.pump(const Duration(seconds: 1));
+      }
+      await tester.pump(const Duration(milliseconds: 500));
       expect(find.text('Success!'), findsOneWidget);
       await tester.tap(find.text('DONE'));
-      await tester.pumpAndSettle();
-      expect(find.text('RM 4,950.00'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('RM 5,000.00'), findsOneWidget);
     });
 
     testWidgets('Bill Payment with CARD should require card insertion', (tester) async {
@@ -64,18 +66,18 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(const ProviderScope(child: AgentBankingApp()));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       await tester.enterText(find.byType(TextField).at(0), 'AGENT01');
       await tester.enterText(find.byType(TextField).at(1), '123456');
       await tester.tap(find.text('LOGIN'));
       await tester.pump(const Duration(milliseconds: 1500));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       await tester.tap(find.byKey(const Key('btn_bills')));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
       await tester.tap(find.byKey(const Key('funding_source_CARD_EMV')));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       final fields = find.byType(TextField);
       await tester.enterText(fields.at(0), '1234');
@@ -83,10 +85,14 @@ void main() {
       await tester.enterText(fields.at(2), '50.00');
       
       await tester.tap(find.text('PROCEED'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
+      // Wait for card insertion prompt
+      for (int i = 0; i < 3; i++) {
+        await tester.pump(const Duration(seconds: 1));
+      }
+      await tester.pump(const Duration(milliseconds: 500));
       expect(find.text('Insert Customer Card'), findsOneWidget);
     });
 
@@ -96,18 +102,18 @@ void main() {
       addTearDown(() => tester.view.resetPhysicalSize());
 
       await tester.pumpWidget(const ProviderScope(child: AgentBankingApp()));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       await tester.enterText(find.byType(TextField).at(0), 'AGENT01');
       await tester.enterText(find.byType(TextField).at(1), '123456');
       await tester.tap(find.text('LOGIN'));
       await tester.pump(const Duration(milliseconds: 1500));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 2));
 
       await tester.tap(find.byKey(const Key('btn_bills')));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
       await tester.tap(find.byKey(const Key('funding_source_DUITNOW_MOBILE')));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       // DuitNow flow has 4 fields (Proxy + Biller + Ref + Amount)
       final fields = find.byType(TextField);
@@ -117,13 +123,20 @@ void main() {
       await tester.enterText(fields.at(3), '75.00');
       
       await tester.tap(find.text('PROCEED'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       await tester.tap(find.text('Confirm'));
-      await tester.pump(const Duration(seconds: 12));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
+      // Advance clock for 5 polling iterations of 2s each
+      for (int i = 0; i < 5; i++) {
+        await tester.pump(const Duration(seconds: 2));
+      }
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('Success!'), findsOneWidget);
+      await tester.tap(find.text('DONE'));
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('RM 5,000.00'), findsOneWidget);
     });
   });
 }

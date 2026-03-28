@@ -3,15 +3,18 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
+import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart'
+    as _i4;
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart'
     as _i3;
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart'
-    as _i4;
+    as _i5;
+import 'package:decimal/decimal.dart' as _i8;
 import 'package:dio/dio.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -60,11 +63,33 @@ class _FakeTransactionExecutionResponse_2 extends _i1.SmartFake
         );
 }
 
+class _FakeRetailSaleResponse_3 extends _i1.SmartFake
+    implements _i4.RetailSaleResponse {
+  _FakeRetailSaleResponse_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeCashbackResponse_4 extends _i1.SmartFake
+    implements _i4.CashbackResponse {
+  _FakeCashbackResponse_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [TransactionRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockTransactionRepository extends _i1.Mock
-    implements _i4.TransactionRepository {
+    implements _i5.TransactionRepository {
   MockTransactionRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -79,14 +104,14 @@ class MockTransactionRepository extends _i1.Mock
       ) as _i2.Dio);
 
   @override
-  _i5.Future<_i3.TransactionQuoteResponse> getQuote(
+  _i6.Future<_i3.TransactionQuoteResponse> getQuote(
           _i3.TransactionQuoteRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #getQuote,
           [request],
         ),
-        returnValue: _i5.Future<_i3.TransactionQuoteResponse>.value(
+        returnValue: _i6.Future<_i3.TransactionQuoteResponse>.value(
             _FakeTransactionQuoteResponse_1(
           this,
           Invocation.method(
@@ -94,17 +119,17 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i5.Future<_i3.TransactionQuoteResponse>);
+      ) as _i6.Future<_i3.TransactionQuoteResponse>);
 
   @override
-  _i5.Future<_i3.TransactionExecutionResponse> executeTransaction(
+  _i6.Future<_i3.TransactionExecutionResponse> executeTransaction(
           _i3.TransactionExecutionRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #executeTransaction,
           [request],
         ),
-        returnValue: _i5.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -112,10 +137,10 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i5.Future<_i3.TransactionExecutionResponse>);
+      ) as _i6.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i5.Future<String> performProxyEnquiry(
+  _i6.Future<String> performProxyEnquiry(
     String? proxyId,
     String? proxyType,
   ) =>
@@ -127,7 +152,7 @@ class MockTransactionRepository extends _i1.Mock
             proxyType,
           ],
         ),
-        returnValue: _i5.Future<String>.value(_i6.dummyValue<String>(
+        returnValue: _i6.Future<String>.value(_i7.dummyValue<String>(
           this,
           Invocation.method(
             #performProxyEnquiry,
@@ -137,17 +162,17 @@ class MockTransactionRepository extends _i1.Mock
             ],
           ),
         )),
-      ) as _i5.Future<String>);
+      ) as _i6.Future<String>);
 
   @override
-  _i5.Future<_i3.TransactionExecutionResponse> balanceInquiry(
+  _i6.Future<_i3.TransactionExecutionResponse> balanceInquiry(
           _i3.TransactionExecutionRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #balanceInquiry,
           [request],
         ),
-        returnValue: _i5.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -155,10 +180,10 @@ class MockTransactionRepository extends _i1.Mock
             [request],
           ),
         )),
-      ) as _i5.Future<_i3.TransactionExecutionResponse>);
+      ) as _i6.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i5.Future<_i3.TransactionExecutionResponse> initiateDuitNow({
+  _i6.Future<_i3.TransactionExecutionResponse> initiateDuitNow({
     required String? quoteId,
     required String? proxyId,
     required String? proxyType,
@@ -173,7 +198,7 @@ class MockTransactionRepository extends _i1.Mock
             #proxyType: proxyType,
           },
         ),
-        returnValue: _i5.Future<_i3.TransactionExecutionResponse>.value(
+        returnValue: _i6.Future<_i3.TransactionExecutionResponse>.value(
             _FakeTransactionExecutionResponse_2(
           this,
           Invocation.method(
@@ -186,21 +211,111 @@ class MockTransactionRepository extends _i1.Mock
             },
           ),
         )),
-      ) as _i5.Future<_i3.TransactionExecutionResponse>);
+      ) as _i6.Future<_i3.TransactionExecutionResponse>);
 
   @override
-  _i5.Future<String> getDuitNowStatus(String? referenceId) =>
+  _i6.Future<String> getDuitNowStatus(String? referenceId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getDuitNowStatus,
           [referenceId],
         ),
-        returnValue: _i5.Future<String>.value(_i6.dummyValue<String>(
+        returnValue: _i6.Future<String>.value(_i7.dummyValue<String>(
           this,
           Invocation.method(
             #getDuitNowStatus,
             [referenceId],
           ),
         )),
-      ) as _i5.Future<String>);
+      ) as _i6.Future<String>);
+
+  @override
+  _i6.Future<_i4.RetailSaleResponse> executeRetailSale(
+    _i8.Decimal? amount,
+    String? fundingSource, {
+    String? pinBlock,
+    String? cardToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #executeRetailSale,
+          [
+            amount,
+            fundingSource,
+          ],
+          {
+            #pinBlock: pinBlock,
+            #cardToken: cardToken,
+          },
+        ),
+        returnValue:
+            _i6.Future<_i4.RetailSaleResponse>.value(_FakeRetailSaleResponse_3(
+          this,
+          Invocation.method(
+            #executeRetailSale,
+            [
+              amount,
+              fundingSource,
+            ],
+            {
+              #pinBlock: pinBlock,
+              #cardToken: cardToken,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i4.RetailSaleResponse>);
+
+  @override
+  _i6.Future<_i4.CashbackResponse> executeCashback(
+    _i8.Decimal? purchaseAmount,
+    _i8.Decimal? cashbackAmount,
+    String? fundingSource, {
+    String? pinBlock,
+    String? cardToken,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #executeCashback,
+          [
+            purchaseAmount,
+            cashbackAmount,
+            fundingSource,
+          ],
+          {
+            #pinBlock: pinBlock,
+            #cardToken: cardToken,
+          },
+        ),
+        returnValue:
+            _i6.Future<_i4.CashbackResponse>.value(_FakeCashbackResponse_4(
+          this,
+          Invocation.method(
+            #executeCashback,
+            [
+              purchaseAmount,
+              cashbackAmount,
+              fundingSource,
+            ],
+            {
+              #pinBlock: pinBlock,
+              #cardToken: cardToken,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i4.CashbackResponse>);
+
+  @override
+  _i6.Future<String> getComplianceStatus() => (super.noSuchMethod(
+        Invocation.method(
+          #getComplianceStatus,
+          [],
+        ),
+        returnValue: _i6.Future<String>.value(_i7.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getComplianceStatus,
+            [],
+          ),
+        )),
+      ) as _i6.Future<String>);
 }

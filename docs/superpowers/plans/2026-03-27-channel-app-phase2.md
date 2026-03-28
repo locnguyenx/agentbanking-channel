@@ -61,7 +61,7 @@
 
 ---
 
-## Task 1: DuitNow Transfer — 3-Proxy Support & Status Polling
+## Task 1: DuitNow Transfer — 3-Proxy Support & Status Polling [IN_PROGRESS]
 
 **BDD Scenarios:** BDD Feature 4 S4.4 (Mobile Number proxy), S4.5 (MyKad proxy), S4.6 (BRN proxy)  
 **BRD Requirements:** BRD US-CA-05; FR-CA-3.3; FR-CA-3.4  

@@ -9,7 +9,7 @@ class IdempotencyInterceptor extends Interceptor {
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final method = options.method.toUpperCase();
     if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') {
-      options.headers['X-Idempotency-Key'] = _uuid.v4();
+      options.headers.putIfAbsent('X-Idempotency-Key', () => _uuid.v4());
     }
     super.onRequest(options, handler);
   }

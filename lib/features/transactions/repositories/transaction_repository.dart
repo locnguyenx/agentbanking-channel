@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart';
 
 class TransactionRepository {
   final Dio dio;
@@ -97,5 +99,37 @@ class TransactionRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<RetailSaleResponse> executeRetailSale(Decimal amount, String fundingSource, {String? pinBlock, String? cardToken}) async {
+    final response = await dio.post(
+      '/api/v1/merchant/retail-sale',
+      data: {
+        'amount': amount.toString(),
+        'fundingSource': fundingSource,
+        'pinBlock': pinBlock,
+        'cardToken': cardToken,
+      },
+    );
+    return RetailSaleResponse.fromJson(response.data);
+  }
+
+  Future<CashbackResponse> executeCashback(Decimal purchaseAmount, Decimal cashbackAmount, String fundingSource, {String? pinBlock, String? cardToken}) async {
+    final response = await dio.post(
+      '/api/v1/merchant/cashback',
+      data: {
+        'purchaseAmount': purchaseAmount.toString(),
+        'cashbackAmount': cashbackAmount.toString(),
+        'fundingSource': fundingSource,
+        'pinBlock': pinBlock,
+        'cardToken': cardToken,
+      },
+    );
+    return CashbackResponse.fromJson(response.data);
+  }
+
+  Future<String> getComplianceStatus() async {
+    final response = await dio.get('/api/v1/compliance/status');
+    return response.data['status']; // 'LOCKED' or 'UNLOCKED'
   }
 }

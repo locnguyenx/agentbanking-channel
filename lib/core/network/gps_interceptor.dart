@@ -15,8 +15,8 @@ class GpsInterceptor extends Interceptor {
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
       );
       
-      options.headers['X-GPS-Latitude'] = position.latitude.toStringAsFixed(4);
-      options.headers['X-GPS-Longitude'] = position.longitude.toStringAsFixed(4);
+      options.headers['X-GPS-Latitude'] = position.latitude.toStringAsFixed(6);
+      options.headers['X-GPS-Longitude'] = position.longitude.toStringAsFixed(6);
     } catch (e) {
       // If GPS fails, we still proceed but without headers, 
       // or we could throw an error if mandatory.

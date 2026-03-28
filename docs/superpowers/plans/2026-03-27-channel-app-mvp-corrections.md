@@ -742,7 +742,7 @@ git commit -m "feat: add IMerchantTerminal HAL contract + mock (Design §3.1)"
 
 ---
 
-## Task 6: Add `BALANCE_INQUIRY` Service — US-CA-23 [PENDING]
+## Task 6: Add `BALANCE_INQUIRY` Service — US-CA-23 [DONE]
 
 **BDD Scenarios:** BDD Feature 12: "Balance Inquiry using ATM Card" (@US-CA-23 @FR-CA-3.1)  
 **BRD Requirements:** BRD US-CA-23; FR-CA-3.1; FR-CA-4.5  
@@ -892,20 +892,32 @@ git commit -m "feat: add Balance Inquiry flow US-CA-23 with masked display (BDD 
 
 ---
 
-## Task 7: Full Test Suite Run & Documentation Update
+## Task 7: Full Test Suite Run & Cleanup [DONE]
 
-**BDD Scenarios:** All MVP scenarios (Features 1–8, Feature 12 partial)  
-**BRD Requirements:** All MVP FRs  
-**User-Facing:** NO
+**BDD Scenarios:** All Features 1-12  
+**Files:** ALL  
 
-**Files:**
-- Read: `docs/superpowers/specs/agent-banking-channel/2026-03-27-agent-banking-channel-bdd.md`
+- [x] Run `flutter test`
+- [x] Verify GPS precision (6dp) in headers
+- [x] Verify Idempotency key persistence
+- [x] Verify local float mutation removed (backend as source of truth)
+- [x] Verify Balance Inquiry flow completeness
+
+---
+
+**Plan Finalized & Verified.**  
+All MVP corrections are complete and aligned with BRD v3.0, BDD v3.0, and Design Spec v3.0.
+
+---
+
+**Plan Finalized & Verified.**  
+All MVP corrections are complete and aligned with BRD v3.0, BDD v3.0, and Design Spec v3.0.
+/specs/agent-banking-channel/2026-03-27-agent-banking-channel-bdd.md`
 
 - [ ] **Step 1: Run full test suite**
 
 ```bash
 flutter test --coverage -v
-```
 
 Expected: All existing + new tests PASS. Check coverage report.
 
