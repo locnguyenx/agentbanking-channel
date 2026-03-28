@@ -59,15 +59,21 @@ class MerchantNotifier extends StateNotifier<MerchantState> {
   final ICardReader cardReader;
   final IPinPad pinPad;
   final FloatNotifier floatNotifier;
+  final ComplianceNotifier complianceNotifier;
 
   MerchantNotifier({
     required this.repository,
     required this.cardReader,
     required this.pinPad,
     required this.floatNotifier,
+    required this.complianceNotifier,
   }) : super(MerchantState(status: MerchantStatus.idle));
 
   Future<void> startRetailSale(Decimal amount, FundingSource funding) async {
+    if (complianceNotifier.state.isFrozen) {
+      state = state.copyWith(status: MerchantStatus.failed, error: 'ERR_COMPLIANCE_FROZEN');
+      return;
+    }
     state = state.copyWith(
       status: MerchantStatus.quoting,
       type: MerchantTransactionType.RETAIL_SALE,
@@ -115,6 +121,10 @@ class MerchantNotifier extends StateNotifier<MerchantState> {
   }
 
   Future<void> startCashback(Decimal purchaseAmount, Decimal cashbackAmount) async {
+    if (complianceNotifier.state.isFrozen) {
+      state = state.copyWith(status: MerchantStatus.failed, error: 'ERR_COMPLIANCE_FROZEN');
+      return;
+    }
     state = state.copyWith(
       status: MerchantStatus.quoting,
       type: MerchantTransactionType.CASHBACK_HYBRID,
@@ -159,10 +169,12 @@ class MerchantNotifier extends StateNotifier<MerchantState> {
 final merchantProvider = StateNotifierProvider<MerchantNotifier, MerchantState>((ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   final floatNotifier = ref.watch(floatProvider.notifier);
+  final compliance = ref.watch(complianceProvider.notifier);
   return MerchantNotifier(
     repository: repository,
     cardReader: MockCardReader(),
     pinPad: MockPinPad(),
     floatNotifier: floatNotifier,
+    complianceNotifier: compliance,
   );
 });

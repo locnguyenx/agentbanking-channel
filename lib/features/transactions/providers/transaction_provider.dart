@@ -8,6 +8,7 @@ import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
 import 'package:agentbanking_channel/core/network/dio_provider.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 
 enum TransactionStatus {
   idle,
@@ -67,6 +68,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
   final FloatNotifier floatNotifier;
   final ReversalService reversalService;
   final IMyKadScanner myKadScanner;
+  final ComplianceNotifier complianceNotifier;
   final Duration pollingInterval;
 
   TransactionNotifier({
@@ -76,14 +78,26 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     required this.floatNotifier,
     required this.reversalService,
     required this.myKadScanner,
+    required this.complianceNotifier,
     this.pollingInterval = const Duration(seconds: 5),
   }) : super(TransactionState(status: TransactionStatus.idle));
 
-  Future<void> startTransaction(Decimal amount, String agentId, {
-    String serviceCode = 'CASH_WDL',
-    FundingSource fundingSource = FundingSource.CARD_EMV,
-    Map<String, dynamic>? metadata,
+  Future<void> startTransaction(
+    Decimal amount,
+    String merchantId, {
+    required String serviceCode,
+    required FundingSource fundingSource,
+    Map<String, String>? metadata,
   }) async {
+    // Check Compliance Freeze (Task 4)
+    if (complianceNotifier.state.isFrozen) {
+      state = state.copyWith(
+        status: TransactionStatus.failed,
+        error: 'ERR_COMPLIANCE_FROZEN: Terminal is locked for review.',
+      );
+      return;
+    }
+
     state = state.copyWith(
       status: TransactionStatus.quoting, 
       fundingSource: fundingSource,
@@ -94,7 +108,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       final quote = await repository.getQuote(TransactionQuoteRequest(
         amount: amount,
         serviceCode: serviceCode,
-        agentId: agentId,
+        agentId: merchantId,
         fundingSource: fundingSource,
       ));
       state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
@@ -347,12 +361,16 @@ final transactionProvider = StateNotifierProvider<TransactionNotifier, Transacti
   final repository = ref.watch(transactionRepositoryProvider);
   final floatNotifier = ref.watch(floatProvider.notifier);
   final reversalService = ref.watch(reversalServiceProvider);
+  final myKadScanner = MockMyKadScanner();
+  final compliance = ref.watch(complianceProvider.notifier);
+
   return TransactionNotifier(
     repository: repository,
     cardReader: MockCardReader(),
     pinPad: MockPinPad(),
     floatNotifier: floatNotifier,
     reversalService: reversalService,
-    myKadScanner: MockMyKadScanner(),
+    myKadScanner: myKadScanner,
+    complianceNotifier: compliance,
   );
 });
