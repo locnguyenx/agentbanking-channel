@@ -1,20 +1,22 @@
-# OpenAPI Client Generation & Contract Enforcement BRD
+# OpenAPI Client Generation & Full Contract Enforcement BRD
 
 ## 1. Business Goal
-Ensure strict API contract adherence by aligning the Agent Banking Channel frontend with the new v1.0.0 Backend OpenAPI specifications, permanently eliminating integration drift.
+Achieve 100% compliance with the Agent Banking Platform v1.0.0 OpenAPI specifications. Eliminate all API contract drift by entirely deprecating handwritten API models and manual endpoint mappings across the channel application in favor of a universally generated API client.
 
 ## 2. User Stories & Functional Requirements
 
-### 2.1 API Generation
-* **US-01:** As a developer, I want the channel app build process to use an OpenAPI generator (like `openapi-generator-cli` with `dart-dio`) to automatically generate API clients and Data Models from `docs/api/openapi.yaml`.
-* **FR-01:** Integrate `openapi-generator-cli` into the Flutter project (via a script or build tools).
-* **FR-02:** Generate Dart data classes and Dio API client services based on `docs/api/openapi.yaml`.
+### 2.1 Complete API Generation & Deprecation
+* **US-01:** As a developer, I want all frontend interactions to be exclusively driven by the `openapi.yaml` file so there are zero manual network DTOs in the codebase.
+* **FR-01:** Integrate `openapi-generator-cli` (dart-dio) to generate the full suite of API clients.
+* **FR-02:** Deprecate and remove all handwritten response and request models across `features/transactions`, `features/kyc`, `features/merchant`, and `features/biller`.
 
-### 2.2 Adapter Refactoring
-* **US-02:** As a developer, I want the manually written REST calls in the application to be replaced with calls to the generated API endpoints so that we rely entirely on the generated contract.
-* **FR-03:** Refactor `TransactionRepository` endpoints (e.g., `/api/v1/withdrawal`, `/api/v1/deposit`) to use the new generated API client.
+### 2.2 Ledger Service Synchronization
+* **US-02:** As an agent processing financial movements, I want the channel app to use the officially generated schemas so that all required validations (like location routing or fees) are met.
+* **FR-03:** Refactor Withdrawals, Deposits, Balance Inquiries, and Agent Balance retrieval to strictly adopt the generated models (e.g., `WithdrawalRequest` requiring `geofenceLat`, `customerCardMasked`, `idempotencyKey`).
+* **FR-04:** Refactor Retail Services (Retail Sale, Pin Purchase, Cashback) to utilize the new OpenAPI-defined endpoints instead of custom paths.
 
-### 2.3 Data Alignment
-* **US-03:** As an agent, I want the channel app's transaction execution logic to capture and supply the new required fields required by the updated backend API specs so that transactions do not fail validation.
-* **FR-04:** For Withdrawals (`CASH_WITHDRAWAL`), capture and pass `geofenceLat`, `geofenceLng`, and `customerCardMasked` values to the generated `WithdrawalRequest`.
-* **FR-05:** For Deposits (`CASH_DEPOSIT`), capture and pass `destinationAccount` to the generated `DepositRequest`.
+### 2.3 Biller, Switch & Onboarding Service Integration
+* **US-03:** As an agent providing third-party services, I want all biller and onboarding interactions to seamlessly follow the unified OpenAPI definitions.
+* **FR-05:** Refactor Biller services (Bill Pay, Transferred Topups, eWallet Withdraw/Topup, ESSP purchase) using the generated client.
+* **FR-06:** Refactor DuitNow (Switch) services using the generated client.
+* **FR-07:** Refactor Onboarding logic (KYC verification, Biometric checks) using the generated client.
