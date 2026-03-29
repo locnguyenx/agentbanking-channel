@@ -4,7 +4,7 @@
 
 **Goal:** Generate 100% of the channel application's API contracts from `docs/api/openapi.yaml` and refactor existing repositories to enforce zero contract drift.
 
-**Architecture:** We will run `openapi-generator-cli` to build a `dart-dio` client into `lib/api/generated/`. We will then inject these strongly-typed APIs into the Hexagonal Architecture repositories (Ledger, Biller, Switch, Onboarding) and systematically map domain objects to the new DTOs, culminating in the complete deletion of legacy handwritten models.
+**Architecture:** We will run `openapi-generator-cli` to build a `dart-dio` client into `lib/api/generated/`. We will then inject these strongly-typed APIs into the standard Flutter repositories (Ledger, Biller, Switch, Onboarding) and systematically map domain objects to the new DTOs, culminating in the complete deletion of legacy handwritten models.
 
 **Tech Stack:** Dart, Flutter, Dio, OpenAPI Generator, Riverpod, BuiltValue.
 

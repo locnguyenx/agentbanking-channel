@@ -4,22 +4,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 enum SettlementStatus { open, warning, blocked }
 
 final settlementProvider = StateNotifierProvider<SettlementNotifier, SettlementStatus>((ref) {
-  return SettlementNotifier();
+  return SettlementNotifier(startMonitor: true);
 });
 
 class SettlementNotifier extends StateNotifier<SettlementStatus> {
   Timer? _timer;
 
-  SettlementNotifier() : super(SettlementStatus.open) {
-    _startMonitor();
+  SettlementNotifier({bool startMonitor = false}) : super(SettlementStatus.open) {
+    if (startMonitor) {
+      _startMonitor();
+    }
   }
 
   void _startMonitor() {
-    _timer = Timer.periodic(const Duration(seconds: 30), (_) => _checkTime());
-    _checkTime();
+    _timer = Timer.periodic(const Duration(seconds: 30), (_) => checkTime());
+    checkTime();
   }
 
-  void _checkTime() {
+  void checkTime() {
     final now = DateTime.now(); // In production, force MYT timezone
     final hour = now.hour;
     final minute = now.minute;

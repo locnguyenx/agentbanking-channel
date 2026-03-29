@@ -40,6 +40,32 @@ Before deploying, ensure all tests pass:
 flutter test
 ```
 
+### Troubleshooting
+
+To run the tests or the application while avoiding the codesign error (caused by the Miniconda conflict), use the following commands:
+
+**Running Tests**
+Execute the full test suite with the PATH override:
+
+```bash
+PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH" flutter test
+```
+**Running the Application**
+When running on a macOS desktop or a Simulator, the same PATH override is required for code signing:
+```bash
+PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH" flutter run
+```
+**Pro-Tip: Permanent Fix**
+To avoid typing the long prefix every time, add this alias to your shell configuration (e.g., ~/.zshrc):
+  
+Open your config: `nano ~/.zshrc`
+Add this line:
+```bash
+alias flutter='PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH" flutter'
+```
+Save and reload: `source ~/.zshrc`
+Now you can just run flutter test or flutter run normally!
+
 ## 📏 3. Architectural Standards
 
 ### 3.1 Financial Precision (Decimal)

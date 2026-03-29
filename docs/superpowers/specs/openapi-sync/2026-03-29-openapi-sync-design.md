@@ -5,7 +5,7 @@
 * **Dependencies:** Update `pubspec.yaml` to include backend API validation dependencies such as `built_value`, `built_collection`, and `dio` if missing.
 
 ## 2. Adapter Layer Refactoring
-* **Hexagonal Architecture Preservation:** The UI layer will continue communicating with standard domain repositories (`TransactionRepository`, `BillerRepository`, etc.).
+* **Standard Repository Pattern:** The UI layer will continue communicating with standard domain repositories (`TransactionRepository`, `BillerRepository`, etc.).
 * **Dependency Injection:** Inject generated API classes (e.g., `LedgerApi`, `BillerApi`, `SwitchApi`) into the respective domain repositories via Riverpod providers.
 * **Mapping Strategy:** The repositories must dynamically map the application's internal domain state to the strongly-typed Request DTOs (like `WithdrawalRequest`, `DepositRequest`) and map the network responses back.
 

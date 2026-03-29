@@ -4,8 +4,9 @@ import 'package:agentbanking_channel/core/settlement/settlement_service.dart';
 void main() {
   group('SettlementNotifier', () {
     test('initial status is likely open if run during day', () {
-      final notifier = SettlementNotifier();
-      // This test is flaky if run near midnight, but for now we expect OPEN
+      final notifier = SettlementNotifier(startMonitor: false);
+      // Explicitly check time once for the test
+      notifier.checkTime(); 
       expect(notifier.state, anyOf(SettlementStatus.open, SettlementStatus.blocked, SettlementStatus.warning));
     });
 

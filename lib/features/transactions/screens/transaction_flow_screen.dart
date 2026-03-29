@@ -188,6 +188,7 @@ class TransactionFlowScreen extends ConsumerWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
+                    key: const Key('btn_confirm'),
                     onPressed: () => ref.read(transactionProvider.notifier).confirmConsent(
                       duitNowProxyId: ref.read(duitNowProxyProvider),
                     ),
@@ -225,7 +226,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             Icon(Icons.credit_card_outlined, size: 80, color: Colors.indigo),
             SizedBox(height: 24),
-            Text('Insert Customer Card', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Insert Customer Card', key: const Key('status_waiting_card'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             SizedBox(height: 8),
             Text('Please use the attached card reader', style: TextStyle(color: Colors.grey, fontSize: 13)),
           ],
@@ -235,7 +236,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             Icon(Icons.pin_outlined, size: 80, color: Colors.indigo),
             SizedBox(height: 24),
-            Text('Enter Secure PIN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Enter Secure PIN', key: const Key('status_waiting_pin'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             SizedBox(height: 8),
             Text('Customer should enter PIN on the PinPad', style: TextStyle(color: Colors.grey, fontSize: 13)),
           ],
@@ -255,7 +256,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             const Icon(Icons.check_circle, color: Colors.green, size: 80),
             const SizedBox(height: 24),
-            Text('Success!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green.shade700)),
+            Text('Success!', key: const Key('status_success'), style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green.shade700)),
             const SizedBox(height: 8),
             Text('${title.toUpperCase()} COMPLETED', style: const TextStyle(fontSize: 12, color: Colors.grey, letterSpacing: 1)),
             const SizedBox(height: 24),

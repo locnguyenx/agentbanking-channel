@@ -9,6 +9,7 @@ final dioProvider = Provider<Dio>((ref) {
   final reversalService = ref.watch(reversalServiceProvider);
   
   final dio = Dio(BaseOptions(
+    baseUrl: 'http://localhost:8080',
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 25), // Design §4.2 25s limit
   ));

@@ -70,6 +70,8 @@ class TransactionExecutionRequest {
   final String? pinBlock;
   final String? cardToken;
   final String? duitNowProxyId;
+  final String? serviceCode;
+  final Decimal? amount;
 
   TransactionExecutionRequest({
     required this.quoteId,
@@ -77,6 +79,8 @@ class TransactionExecutionRequest {
     this.pinBlock,
     this.cardToken,
     this.duitNowProxyId,
+    this.serviceCode,
+    this.amount,
   });
 
   Map<String, dynamic> toJson() => {
@@ -85,6 +89,8 @@ class TransactionExecutionRequest {
     'pinBlock': pinBlock,
     'cardToken': cardToken,
     'duitNowProxyId': duitNowProxyId,
+    'serviceCode': serviceCode,
+    'amount': amount?.toString(),
   };
 }
 

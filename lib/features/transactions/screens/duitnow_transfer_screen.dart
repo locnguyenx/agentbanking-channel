@@ -133,6 +133,7 @@ class _DuitNowTransferScreenState extends ConsumerState<DuitNowTransferScreen> {
   Widget _proxyOption(String label, FundingSource source) {
     final isSelected = _selectedSource == source;
     return ChoiceChip(
+      key: Key('funding_source_${source.name}'),
       label: Text(label),
       selected: isSelected,
       onSelected: (val) {
@@ -204,7 +205,7 @@ class _DuitNowTransferScreenState extends ConsumerState<DuitNowTransferScreen> {
         ),
         child: state.status == TransactionStatus.processing
             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-            : const Text('CONFIRM TRANSFER', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            : const Text('Confirm', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       ),
     );
   }

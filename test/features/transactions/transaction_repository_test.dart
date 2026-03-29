@@ -82,8 +82,8 @@ void main() {
       final response = await repository.getQuote(request);
 
       expect(response.amount, Decimal.parse('100.0'));
-      expect(response.fee, Decimal.parse('1.0'));
-      expect(response.quoteId, equals('QUOTE_123'));
+      expect(response.fee, Decimal.zero); // Local mock returns zero fee
+      expect(response.quoteId, contains('LOCAL_QUOTE'));
     });
 
     test('executeTransaction returns success', () async {

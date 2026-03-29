@@ -32,6 +32,8 @@ class TransactionState {
   final TransactionExecutionResponse? result;
   final String? error;
   final Map<String, dynamic>? metadata;
+  final String? serviceCode;
+  final Decimal? amount;
 
   TransactionState({
     required this.status,
@@ -40,6 +42,8 @@ class TransactionState {
     this.result,
     this.error,
     this.metadata,
+    this.serviceCode,
+    this.amount,
   });
 
   TransactionState copyWith({
@@ -49,6 +53,8 @@ class TransactionState {
     TransactionExecutionResponse? result,
     String? error,
     Map<String, dynamic>? metadata,
+    String? serviceCode,
+    Decimal? amount,
   }) {
     return TransactionState(
       status: status ?? this.status,
@@ -57,6 +63,8 @@ class TransactionState {
       result: result ?? this.result,
       error: error ?? this.error,
       metadata: metadata ?? this.metadata,
+      serviceCode: serviceCode ?? this.serviceCode,
+      amount: amount ?? this.amount,
     );
   }
 }
@@ -103,6 +111,8 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       fundingSource: fundingSource,
       error: null,
       metadata: metadata,
+      serviceCode: serviceCode,
+      amount: amount,
     );
     try {
       final quote = await repository.getQuote(TransactionQuoteRequest(
@@ -159,6 +169,8 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       fundingSource: FundingSource.CARD_EMV,
       pinBlock: pinBlock,
       cardToken: cardData.cardToken,
+      serviceCode: state.serviceCode,
+      amount: state.amount,
     ));
   }
 
@@ -190,8 +202,9 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       final result = await repository.executeTransaction(TransactionExecutionRequest(
         quoteId: state.quote!.quoteId,
         fundingSource: FundingSource.CASH,
+        serviceCode: state.serviceCode,
+        amount: state.amount,
       ));
-      
       if (result.status == 'SUCCESS') {
         await floatNotifier.fetchLatestBalance();
         state = state.copyWith(status: TransactionStatus.success, result: result);

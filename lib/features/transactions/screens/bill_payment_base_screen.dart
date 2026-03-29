@@ -55,7 +55,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
             children: [
               const Icon(Icons.check_circle, color: Colors.green, size: 100),
               const SizedBox(height: 24),
-              Text('Transaction Successful', style: Theme.of(context).textTheme.headlineMedium),
+              Text('Success!', style: Theme.of(context).textTheme.headlineMedium),
               const SizedBox(height: 16),
               Text('Reference: ${trState.result?.referenceId}'),
               const SizedBox(height: 32),
@@ -64,7 +64,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                   trNotifier.reset();
                   Navigator.of(context).pop();
                 },
-                child: const Text('Return to Home'),
+                child: const Text('DONE'),
               ),
             ],
           ),
@@ -154,6 +154,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                 children: [
                   Expanded(
                     child: RadioListTile<FundingSource>(
+                      key: const Key('funding_source_CASH'),
                       title: const Text('Cash'),
                       value: FundingSource.CASH,
                       groupValue: _fundingSource,
@@ -162,6 +163,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                   ),
                   Expanded(
                     child: RadioListTile<FundingSource>(
+                      key: const Key('funding_source_CARD_EMV'),
                       title: const Text('Card'),
                       value: FundingSource.CARD_EMV,
                       groupValue: _fundingSource,
@@ -181,8 +183,8 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                   ),
                 ElevatedButton(
                   onPressed: _submit,
-                  style: ElevatedButton.懇yleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-                  child: const Text('Get Quote'),
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+                  child: const Text('PROCEED'),
                 ),
               ],
 
@@ -198,7 +200,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                 ElevatedButton(
                   onPressed: () => trNotifier.confirmConsent(),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-                  child: Text(_fundingSource == FundingSource.CASH ? 'Confirm Cash Collected' : 'Proceed to Card Payment'),
+                  child: const Text('Confirm'),
                 ),
               ],
 
