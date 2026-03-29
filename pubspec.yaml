@@ -21,6 +21,8 @@ dependencies:
   decimal: ^3.2.4
   uuid: ^4.3.3
   mockito: ^5.4.2
+  built_value: ^8.8.1
+  built_collection: ^5.1.1
 
 dev_dependencies:
   integration_test:
@@ -29,6 +31,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   build_runner: ^2.4.6
+  built_value_generator: ^8.8.1
 
 flutter:
   uses-material-design: true

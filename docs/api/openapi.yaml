@@ -166,6 +166,13 @@ paths:
       tags:
       - reconciliation-controller (ledger-service)
       operationId: makerPropose
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       requestBody:
         content:
           application/json:
@@ -188,6 +195,13 @@ paths:
       tags:
       - reconciliation-controller (ledger-service)
       operationId: checkerReject
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       requestBody:
         content:
           application/json:
@@ -210,6 +224,13 @@ paths:
       tags:
       - reconciliation-controller (ledger-service)
       operationId: checkerApprove
+      parameters:
+      - name: caseId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       requestBody:
         content:
           application/json:
