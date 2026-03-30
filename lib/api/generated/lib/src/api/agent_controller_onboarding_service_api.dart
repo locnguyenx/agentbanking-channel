@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -11,7 +10,8 @@ import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
 import 'package:agent_api/src/model/agent_response.dart';
-import 'package:agent_api/src/model/create_agent_request.dart';
+import 'package:agent_api/src/model/create_agent_external_request.dart';
+import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/update_agent_request.dart';
 import 'package:built_collection/built_collection.dart';
 
@@ -27,7 +27,7 @@ class AgentControllerOnboardingServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [createAgentRequest] 
+  /// * [createAgentExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -38,7 +38,7 @@ class AgentControllerOnboardingServiceApi {
   /// Returns a [Future] containing a [Response] with a [AgentResponse] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AgentResponse>> createAgent({ 
-    required CreateAgentRequest createAgentRequest,
+    required CreateAgentExternalRequest createAgentExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -63,8 +63,8 @@ class AgentControllerOnboardingServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(CreateAgentRequest);
-      _bodyData = _serializers.serialize(createAgentRequest, specifiedType: _type);
+      const _type = FullType(CreateAgentExternalRequest);
+      _bodyData = _serializers.serialize(createAgentExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(

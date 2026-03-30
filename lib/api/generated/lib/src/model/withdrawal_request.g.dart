@@ -1,5 +1,5 @@
-// @dart=2.19
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// @dart=2.19
 
 part of 'withdrawal_request.dart';
 

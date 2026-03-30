@@ -1,4 +1,3 @@
-// @dart=2.19
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'update_agent_request.dart';
@@ -7,8 +6,8 @@ part of 'update_agent_request.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_BASIC =
-    const UpdateAgentRequestTierEnum._('BASIC');
+const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_MICRO =
+    const UpdateAgentRequestTierEnum._('MICRO');
 const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_STANDARD =
     const UpdateAgentRequestTierEnum._('STANDARD');
 const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_PREMIUM =
@@ -16,8 +15,8 @@ const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_PREMIUM =
 
 UpdateAgentRequestTierEnum _$updateAgentRequestTierEnumValueOf(String name) {
   switch (name) {
-    case 'BASIC':
-      return _$updateAgentRequestTierEnum_BASIC;
+    case 'MICRO':
+      return _$updateAgentRequestTierEnum_MICRO;
     case 'STANDARD':
       return _$updateAgentRequestTierEnum_STANDARD;
     case 'PREMIUM':
@@ -29,23 +28,55 @@ UpdateAgentRequestTierEnum _$updateAgentRequestTierEnumValueOf(String name) {
 
 final BuiltSet<UpdateAgentRequestTierEnum> _$updateAgentRequestTierEnumValues =
     BuiltSet<UpdateAgentRequestTierEnum>(const <UpdateAgentRequestTierEnum>[
-  _$updateAgentRequestTierEnum_BASIC,
+  _$updateAgentRequestTierEnum_MICRO,
   _$updateAgentRequestTierEnum_STANDARD,
   _$updateAgentRequestTierEnum_PREMIUM,
 ]);
 
+const UpdateAgentRequestStatusEnum _$updateAgentRequestStatusEnum_ACTIVE =
+    const UpdateAgentRequestStatusEnum._('ACTIVE');
+const UpdateAgentRequestStatusEnum _$updateAgentRequestStatusEnum_INACTIVE =
+    const UpdateAgentRequestStatusEnum._('INACTIVE');
+const UpdateAgentRequestStatusEnum _$updateAgentRequestStatusEnum_SUSPENDED =
+    const UpdateAgentRequestStatusEnum._('SUSPENDED');
+
+UpdateAgentRequestStatusEnum _$updateAgentRequestStatusEnumValueOf(
+    String name) {
+  switch (name) {
+    case 'ACTIVE':
+      return _$updateAgentRequestStatusEnum_ACTIVE;
+    case 'INACTIVE':
+      return _$updateAgentRequestStatusEnum_INACTIVE;
+    case 'SUSPENDED':
+      return _$updateAgentRequestStatusEnum_SUSPENDED;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<UpdateAgentRequestStatusEnum>
+    _$updateAgentRequestStatusEnumValues =
+    BuiltSet<UpdateAgentRequestStatusEnum>(const <UpdateAgentRequestStatusEnum>[
+  _$updateAgentRequestStatusEnum_ACTIVE,
+  _$updateAgentRequestStatusEnum_INACTIVE,
+  _$updateAgentRequestStatusEnum_SUSPENDED,
+]);
+
 Serializer<UpdateAgentRequestTierEnum> _$updateAgentRequestTierEnumSerializer =
     _$UpdateAgentRequestTierEnumSerializer();
+Serializer<UpdateAgentRequestStatusEnum>
+    _$updateAgentRequestStatusEnumSerializer =
+    _$UpdateAgentRequestStatusEnumSerializer();
 
 class _$UpdateAgentRequestTierEnumSerializer
     implements PrimitiveSerializer<UpdateAgentRequestTierEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
-    'BASIC': 'BASIC',
+    'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
     'PREMIUM': 'PREMIUM',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
-    'BASIC': 'BASIC',
+    'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
     'PREMIUM': 'PREMIUM',
   };
@@ -68,6 +99,37 @@ class _$UpdateAgentRequestTierEnumSerializer
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
+class _$UpdateAgentRequestStatusEnumSerializer
+    implements PrimitiveSerializer<UpdateAgentRequestStatusEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'ACTIVE': 'ACTIVE',
+    'INACTIVE': 'INACTIVE',
+    'SUSPENDED': 'SUSPENDED',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'ACTIVE': 'ACTIVE',
+    'INACTIVE': 'INACTIVE',
+    'SUSPENDED': 'SUSPENDED',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[UpdateAgentRequestStatusEnum];
+  @override
+  final String wireName = 'UpdateAgentRequestStatusEnum';
+
+  @override
+  Object serialize(Serializers serializers, UpdateAgentRequestStatusEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  UpdateAgentRequestStatusEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UpdateAgentRequestStatusEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
 class _$UpdateAgentRequest extends UpdateAgentRequest {
   @override
   final String businessName;
@@ -79,6 +141,12 @@ class _$UpdateAgentRequest extends UpdateAgentRequest {
   final num merchantGpsLng;
   @override
   final String phoneNumber;
+  @override
+  final String? email;
+  @override
+  final String? address;
+  @override
+  final UpdateAgentRequestStatusEnum? status;
 
   factory _$UpdateAgentRequest(
           [void Function(UpdateAgentRequestBuilder)? updates]) =>
@@ -89,7 +157,10 @@ class _$UpdateAgentRequest extends UpdateAgentRequest {
       required this.tier,
       required this.merchantGpsLat,
       required this.merchantGpsLng,
-      required this.phoneNumber})
+      required this.phoneNumber,
+      this.email,
+      this.address,
+      this.status})
       : super._();
   @override
   UpdateAgentRequest rebuild(
@@ -108,7 +179,10 @@ class _$UpdateAgentRequest extends UpdateAgentRequest {
         tier == other.tier &&
         merchantGpsLat == other.merchantGpsLat &&
         merchantGpsLng == other.merchantGpsLng &&
-        phoneNumber == other.phoneNumber;
+        phoneNumber == other.phoneNumber &&
+        email == other.email &&
+        address == other.address &&
+        status == other.status;
   }
 
   @override
@@ -119,6 +193,9 @@ class _$UpdateAgentRequest extends UpdateAgentRequest {
     _$hash = $jc(_$hash, merchantGpsLat.hashCode);
     _$hash = $jc(_$hash, merchantGpsLng.hashCode);
     _$hash = $jc(_$hash, phoneNumber.hashCode);
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, address.hashCode);
+    _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -130,7 +207,10 @@ class _$UpdateAgentRequest extends UpdateAgentRequest {
           ..add('tier', tier)
           ..add('merchantGpsLat', merchantGpsLat)
           ..add('merchantGpsLng', merchantGpsLng)
-          ..add('phoneNumber', phoneNumber))
+          ..add('phoneNumber', phoneNumber)
+          ..add('email', email)
+          ..add('address', address)
+          ..add('status', status))
         .toString();
   }
 }
@@ -161,6 +241,18 @@ class UpdateAgentRequestBuilder
   String? get phoneNumber => _$this._phoneNumber;
   set phoneNumber(String? phoneNumber) => _$this._phoneNumber = phoneNumber;
 
+  String? _email;
+  String? get email => _$this._email;
+  set email(String? email) => _$this._email = email;
+
+  String? _address;
+  String? get address => _$this._address;
+  set address(String? address) => _$this._address = address;
+
+  UpdateAgentRequestStatusEnum? _status;
+  UpdateAgentRequestStatusEnum? get status => _$this._status;
+  set status(UpdateAgentRequestStatusEnum? status) => _$this._status = status;
+
   UpdateAgentRequestBuilder() {
     UpdateAgentRequest._defaults(this);
   }
@@ -173,6 +265,9 @@ class UpdateAgentRequestBuilder
       _merchantGpsLat = $v.merchantGpsLat;
       _merchantGpsLng = $v.merchantGpsLng;
       _phoneNumber = $v.phoneNumber;
+      _email = $v.email;
+      _address = $v.address;
+      _status = $v.status;
       _$v = null;
     }
     return this;
@@ -204,6 +299,9 @@ class UpdateAgentRequestBuilder
               merchantGpsLng, r'UpdateAgentRequest', 'merchantGpsLng'),
           phoneNumber: BuiltValueNullFieldError.checkNotNull(
               phoneNumber, r'UpdateAgentRequest', 'phoneNumber'),
+          email: email,
+          address: address,
+          status: status,
         );
     replace(_$result);
     return _$result;

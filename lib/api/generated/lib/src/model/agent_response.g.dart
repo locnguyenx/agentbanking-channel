@@ -1,4 +1,3 @@
-// @dart=2.19
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'agent_response.dart';
@@ -7,8 +6,8 @@ part of 'agent_response.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-const AgentResponseTierEnum _$agentResponseTierEnum_BASIC =
-    const AgentResponseTierEnum._('BASIC');
+const AgentResponseTierEnum _$agentResponseTierEnum_MICRO =
+    const AgentResponseTierEnum._('MICRO');
 const AgentResponseTierEnum _$agentResponseTierEnum_STANDARD =
     const AgentResponseTierEnum._('STANDARD');
 const AgentResponseTierEnum _$agentResponseTierEnum_PREMIUM =
@@ -16,8 +15,8 @@ const AgentResponseTierEnum _$agentResponseTierEnum_PREMIUM =
 
 AgentResponseTierEnum _$agentResponseTierEnumValueOf(String name) {
   switch (name) {
-    case 'BASIC':
-      return _$agentResponseTierEnum_BASIC;
+    case 'MICRO':
+      return _$agentResponseTierEnum_MICRO;
     case 'STANDARD':
       return _$agentResponseTierEnum_STANDARD;
     case 'PREMIUM':
@@ -29,23 +28,57 @@ AgentResponseTierEnum _$agentResponseTierEnumValueOf(String name) {
 
 final BuiltSet<AgentResponseTierEnum> _$agentResponseTierEnumValues =
     BuiltSet<AgentResponseTierEnum>(const <AgentResponseTierEnum>[
-  _$agentResponseTierEnum_BASIC,
+  _$agentResponseTierEnum_MICRO,
   _$agentResponseTierEnum_STANDARD,
   _$agentResponseTierEnum_PREMIUM,
 ]);
 
+const AgentResponseStatusEnum _$agentResponseStatusEnum_ACTIVE =
+    const AgentResponseStatusEnum._('ACTIVE');
+const AgentResponseStatusEnum _$agentResponseStatusEnum_INACTIVE =
+    const AgentResponseStatusEnum._('INACTIVE');
+const AgentResponseStatusEnum _$agentResponseStatusEnum_PENDING =
+    const AgentResponseStatusEnum._('PENDING');
+const AgentResponseStatusEnum _$agentResponseStatusEnum_SUSPENDED =
+    const AgentResponseStatusEnum._('SUSPENDED');
+
+AgentResponseStatusEnum _$agentResponseStatusEnumValueOf(String name) {
+  switch (name) {
+    case 'ACTIVE':
+      return _$agentResponseStatusEnum_ACTIVE;
+    case 'INACTIVE':
+      return _$agentResponseStatusEnum_INACTIVE;
+    case 'PENDING':
+      return _$agentResponseStatusEnum_PENDING;
+    case 'SUSPENDED':
+      return _$agentResponseStatusEnum_SUSPENDED;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<AgentResponseStatusEnum> _$agentResponseStatusEnumValues =
+    BuiltSet<AgentResponseStatusEnum>(const <AgentResponseStatusEnum>[
+  _$agentResponseStatusEnum_ACTIVE,
+  _$agentResponseStatusEnum_INACTIVE,
+  _$agentResponseStatusEnum_PENDING,
+  _$agentResponseStatusEnum_SUSPENDED,
+]);
+
 Serializer<AgentResponseTierEnum> _$agentResponseTierEnumSerializer =
     _$AgentResponseTierEnumSerializer();
+Serializer<AgentResponseStatusEnum> _$agentResponseStatusEnumSerializer =
+    _$AgentResponseStatusEnumSerializer();
 
 class _$AgentResponseTierEnumSerializer
     implements PrimitiveSerializer<AgentResponseTierEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
-    'BASIC': 'BASIC',
+    'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
     'PREMIUM': 'PREMIUM',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
-    'BASIC': 'BASIC',
+    'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
     'PREMIUM': 'PREMIUM',
   };
@@ -67,6 +100,39 @@ class _$AgentResponseTierEnumSerializer
           _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
+class _$AgentResponseStatusEnumSerializer
+    implements PrimitiveSerializer<AgentResponseStatusEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'ACTIVE': 'ACTIVE',
+    'INACTIVE': 'INACTIVE',
+    'PENDING': 'PENDING',
+    'SUSPENDED': 'SUSPENDED',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'ACTIVE': 'ACTIVE',
+    'INACTIVE': 'INACTIVE',
+    'PENDING': 'PENDING',
+    'SUSPENDED': 'SUSPENDED',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[AgentResponseStatusEnum];
+  @override
+  final String wireName = 'AgentResponseStatusEnum';
+
+  @override
+  Object serialize(Serializers serializers, AgentResponseStatusEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  AgentResponseStatusEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AgentResponseStatusEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
 class _$AgentResponse extends AgentResponse {
   @override
   final String? agentId;
@@ -77,7 +143,7 @@ class _$AgentResponse extends AgentResponse {
   @override
   final AgentResponseTierEnum? tier;
   @override
-  final String? status;
+  final AgentResponseStatusEnum? status;
   @override
   final num? merchantGpsLat;
   @override
@@ -85,9 +151,13 @@ class _$AgentResponse extends AgentResponse {
   @override
   final String? phoneNumber;
   @override
-  final String? createdAt;
+  final String? email;
   @override
-  final String? updatedAt;
+  final String? address;
+  @override
+  final DateTime? createdAt;
+  @override
+  final DateTime? updatedAt;
 
   factory _$AgentResponse([void Function(AgentResponseBuilder)? updates]) =>
       (AgentResponseBuilder()..update(updates))._build();
@@ -101,6 +171,8 @@ class _$AgentResponse extends AgentResponse {
       this.merchantGpsLat,
       this.merchantGpsLng,
       this.phoneNumber,
+      this.email,
+      this.address,
       this.createdAt,
       this.updatedAt})
       : super._();
@@ -123,6 +195,8 @@ class _$AgentResponse extends AgentResponse {
         merchantGpsLat == other.merchantGpsLat &&
         merchantGpsLng == other.merchantGpsLng &&
         phoneNumber == other.phoneNumber &&
+        email == other.email &&
+        address == other.address &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt;
   }
@@ -138,6 +212,8 @@ class _$AgentResponse extends AgentResponse {
     _$hash = $jc(_$hash, merchantGpsLat.hashCode);
     _$hash = $jc(_$hash, merchantGpsLng.hashCode);
     _$hash = $jc(_$hash, phoneNumber.hashCode);
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, address.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
     _$hash = $jf(_$hash);
@@ -155,6 +231,8 @@ class _$AgentResponse extends AgentResponse {
           ..add('merchantGpsLat', merchantGpsLat)
           ..add('merchantGpsLng', merchantGpsLng)
           ..add('phoneNumber', phoneNumber)
+          ..add('email', email)
+          ..add('address', address)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt))
         .toString();
@@ -181,9 +259,9 @@ class AgentResponseBuilder
   AgentResponseTierEnum? get tier => _$this._tier;
   set tier(AgentResponseTierEnum? tier) => _$this._tier = tier;
 
-  String? _status;
-  String? get status => _$this._status;
-  set status(String? status) => _$this._status = status;
+  AgentResponseStatusEnum? _status;
+  AgentResponseStatusEnum? get status => _$this._status;
+  set status(AgentResponseStatusEnum? status) => _$this._status = status;
 
   num? _merchantGpsLat;
   num? get merchantGpsLat => _$this._merchantGpsLat;
@@ -199,13 +277,21 @@ class AgentResponseBuilder
   String? get phoneNumber => _$this._phoneNumber;
   set phoneNumber(String? phoneNumber) => _$this._phoneNumber = phoneNumber;
 
-  String? _createdAt;
-  String? get createdAt => _$this._createdAt;
-  set createdAt(String? createdAt) => _$this._createdAt = createdAt;
+  String? _email;
+  String? get email => _$this._email;
+  set email(String? email) => _$this._email = email;
 
-  String? _updatedAt;
-  String? get updatedAt => _$this._updatedAt;
-  set updatedAt(String? updatedAt) => _$this._updatedAt = updatedAt;
+  String? _address;
+  String? get address => _$this._address;
+  set address(String? address) => _$this._address = address;
+
+  DateTime? _createdAt;
+  DateTime? get createdAt => _$this._createdAt;
+  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
+
+  DateTime? _updatedAt;
+  DateTime? get updatedAt => _$this._updatedAt;
+  set updatedAt(DateTime? updatedAt) => _$this._updatedAt = updatedAt;
 
   AgentResponseBuilder() {
     AgentResponse._defaults(this);
@@ -222,6 +308,8 @@ class AgentResponseBuilder
       _merchantGpsLat = $v.merchantGpsLat;
       _merchantGpsLng = $v.merchantGpsLng;
       _phoneNumber = $v.phoneNumber;
+      _email = $v.email;
+      _address = $v.address;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
       _$v = null;
@@ -253,6 +341,8 @@ class AgentResponseBuilder
           merchantGpsLat: merchantGpsLat,
           merchantGpsLng: merchantGpsLng,
           phoneNumber: phoneNumber,
+          email: email,
+          address: address,
           createdAt: createdAt,
           updatedAt: updatedAt,
         );

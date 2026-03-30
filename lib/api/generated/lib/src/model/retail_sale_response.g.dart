@@ -1,4 +1,3 @@
-// @dart=2.19
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'retail_sale_response.dart';

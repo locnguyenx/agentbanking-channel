@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 
 # **checkerApprove**
-> BuiltMap<String, JsonObject> checkerApprove(caseId, requestBody)
+> TransactionResponse checkerApprove(caseId, discrepancyCheckerActionRequest)
 
 
 
@@ -24,11 +24,11 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final String caseId = caseId_example; // String | 
+final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
 
 try {
-    final response = api.checkerApprove(caseId, requestBody);
+    final response = api.checkerApprove(caseId, discrepancyCheckerActionRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerApprove: $e\n');
@@ -40,11 +40,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **discrepancyCheckerActionRequest** | [**DiscrepancyCheckerActionRequest**](DiscrepancyCheckerActionRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -53,12 +53,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **checkerReject**
-> BuiltMap<String, JsonObject> checkerReject(caseId, requestBody)
+> TransactionResponse checkerReject(caseId, discrepancyCheckerActionRequest)
 
 
 
@@ -67,11 +67,11 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final String caseId = caseId_example; // String | 
+final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
 
 try {
-    final response = api.checkerReject(caseId, requestBody);
+    final response = api.checkerReject(caseId, discrepancyCheckerActionRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerReject: $e\n');
@@ -83,11 +83,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **discrepancyCheckerActionRequest** | [**DiscrepancyCheckerActionRequest**](DiscrepancyCheckerActionRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -96,12 +96,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **makerPropose**
-> BuiltMap<String, JsonObject> makerPropose(caseId, requestBody)
+> TransactionResponse makerPropose(caseId, discrepancyMakerActionRequest)
 
 
 
@@ -110,11 +110,11 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final String caseId = caseId_example; // String | 
+final DiscrepancyMakerActionRequest discrepancyMakerActionRequest = ; // DiscrepancyMakerActionRequest | 
 
 try {
-    final response = api.makerPropose(caseId, requestBody);
+    final response = api.makerPropose(caseId, discrepancyMakerActionRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling ReconciliationControllerLedgerServiceApi->makerPropose: $e\n');
@@ -126,11 +126,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **discrepancyMakerActionRequest** | [**DiscrepancyMakerActionRequest**](DiscrepancyMakerActionRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -139,7 +139,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -10,7 +9,7 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/model/duit_now_request.dart';
-import 'package:built_value/json_object.dart';
+import 'package:agent_api/src/model/transaction_response.dart';
 
 class SwitchControllerSwitchAdapterServiceApi {
 
@@ -32,9 +31,9 @@ class SwitchControllerSwitchAdapterServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [JsonObject] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<JsonObject>> duitNowTransfer({ 
+  Future<Response<TransactionResponse>> duitNowTransfer({ 
     required DuitNowRequest duitNowRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -84,14 +83,14 @@ class SwitchControllerSwitchAdapterServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    JsonObject? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(JsonObject),
-      ) as JsonObject;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -103,7 +102,7 @@ class SwitchControllerSwitchAdapterServiceApi {
       );
     }
 
-    return Response<JsonObject>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

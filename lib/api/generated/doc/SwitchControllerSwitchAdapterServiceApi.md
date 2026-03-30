@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **duitNowTransfer**
-> JsonObject duitNowTransfer(duitNowRequest)
+> TransactionResponse duitNowTransfer(duitNowRequest)
 
 
 
@@ -40,7 +40,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**JsonObject**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -49,7 +49,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

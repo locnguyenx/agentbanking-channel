@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -19,6 +18,7 @@ import 'package:agent_api/src/api/ledger_controller_ledger_service_api.dart';
 import 'package:agent_api/src/api/merchant_controller_ledger_service_api.dart';
 import 'package:agent_api/src/api/onboarding_controller_onboarding_service_api.dart';
 import 'package:agent_api/src/api/reconciliation_controller_ledger_service_api.dart';
+import 'package:agent_api/src/api/rules_controller_rules_service_api.dart';
 import 'package:agent_api/src/api/switch_controller_switch_adapter_service_api.dart';
 
 class AgentApi {
@@ -127,6 +127,12 @@ class AgentApi {
   /// by doing that all interceptors will not be executed
   ReconciliationControllerLedgerServiceApi getReconciliationControllerLedgerServiceApi() {
     return ReconciliationControllerLedgerServiceApi(dio, serializers);
+  }
+
+  /// Get RulesControllerRulesServiceApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  RulesControllerRulesServiceApi getRulesControllerRulesServiceApi() {
+    return RulesControllerRulesServiceApi(dio, serializers);
   }
 
   /// Get SwitchControllerSwitchAdapterServiceApi instance, base route and serializer can be overridden by a given but be careful,

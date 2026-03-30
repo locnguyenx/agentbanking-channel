@@ -48,10 +48,10 @@ import 'package:agent_api/agent_api.dart';
 
 
 final api = AgentApi().getAgentControllerOnboardingServiceApi();
-final CreateAgentRequest createAgentRequest = ; // CreateAgentRequest | 
+final CreateAgentExternalRequest createAgentExternalRequest = ; // CreateAgentExternalRequest | 
 
 try {
-    final response = await api.createAgent(createAgentRequest);
+    final response = await api.createAgent(createAgentExternalRequest);
     print(response);
 } on DioException catch (e) {
     print("Exception when calling AgentControllerOnboardingServiceApi->createAgent: $e\n");
@@ -71,6 +71,7 @@ Class | Method | HTTP request | Description
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**listAgents**](doc/AgentControllerOnboardingServiceApi.md#listagents) | **GET** /api/v1/backoffice/agents | 
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**updateAgent**](doc/AgentControllerOnboardingServiceApi.md#updateagent) | **PUT** /api/v1/backoffice/agents/{id} | 
 [*AuditLogControllerOnboardingServiceApi*](doc/AuditLogControllerOnboardingServiceApi.md) | [**getAuditLogs**](doc/AuditLogControllerOnboardingServiceApi.md#getauditlogs) | **GET** /api/v1/backoffice/audit-logs | 
+[*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**jomPay**](doc/BillerControllerBillerServiceApi.md#jompay) | **POST** /api/v1/billpayment/jompay | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**payBill**](doc/BillerControllerBillerServiceApi.md#paybill) | **POST** /api/v1/bill/pay | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**topup**](doc/BillerControllerBillerServiceApi.md#topup) | **POST** /api/v1/topup | 
 [*EWalletControllerBillerServiceApi*](doc/EWalletControllerBillerServiceApi.md) | [**topup1**](doc/EWalletControllerBillerServiceApi.md#topup1) | **POST** /api/v1/ewallet/topup | 
@@ -88,30 +89,61 @@ Class | Method | HTTP request | Description
 [*MerchantControllerLedgerServiceApi*](doc/MerchantControllerLedgerServiceApi.md) | [**processRetailSale**](doc/MerchantControllerLedgerServiceApi.md#processretailsale) | **POST** /api/v1/retail/sale | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**biometricMatch**](doc/OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**getKycReviewQueue**](doc/OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
-[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKad**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/kyc/verify | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**submitApplication**](doc/OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyKyc**](doc/OnboardingControllerOnboardingServiceApi.md#verifykyc) | **POST** /api/v1/kyc/verify | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKad**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerApprove**](doc/ReconciliationControllerLedgerServiceApi.md#checkerapprove) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerReject**](doc/ReconciliationControllerLedgerServiceApi.md#checkerreject) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**makerPropose**](doc/ReconciliationControllerLedgerServiceApi.md#makerpropose) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
+[*RulesControllerRulesServiceApi*](doc/RulesControllerRulesServiceApi.md) | [**createFeeConfig**](doc/RulesControllerRulesServiceApi.md#createfeeconfig) | **POST** /api/v1/rules/fees | 
 [*SwitchControllerSwitchAdapterServiceApi*](doc/SwitchControllerSwitchAdapterServiceApi.md) | [**duitNowTransfer**](doc/SwitchControllerSwitchAdapterServiceApi.md#duitnowtransfer) | **POST** /api/v1/transfer/duitnow | 
 
 
 ## Documentation For Models
 
  - [AgentResponse](doc/AgentResponse.md)
+ - [ApplicationSubmitRequest](doc/ApplicationSubmitRequest.md)
+ - [ApplicationSubmitResponse](doc/ApplicationSubmitResponse.md)
+ - [BalanceInquiryExternalRequest](doc/BalanceInquiryExternalRequest.md)
  - [BalanceInquiryRequest](doc/BalanceInquiryRequest.md)
+ - [BalanceResponse](doc/BalanceResponse.md)
+ - [BillPayExternalRequest](doc/BillPayExternalRequest.md)
  - [CardAuthRequest](doc/CardAuthRequest.md)
  - [CashBackCommand](doc/CashBackCommand.md)
  - [CashBackResponse](doc/CashBackResponse.md)
- - [CreateAgentRequest](doc/CreateAgentRequest.md)
- - [DepositRequest](doc/DepositRequest.md)
+ - [CreateAgentExternalRequest](doc/CreateAgentExternalRequest.md)
+ - [DashboardResponse](doc/DashboardResponse.md)
+ - [DashboardResponseDailyStatsInner](doc/DashboardResponseDailyStatsInner.md)
+ - [DepositExternalRequest](doc/DepositExternalRequest.md)
+ - [DiscrepancyCheckerActionRequest](doc/DiscrepancyCheckerActionRequest.md)
+ - [DiscrepancyMakerActionRequest](doc/DiscrepancyMakerActionRequest.md)
+ - [DuitNowExternalRequest](doc/DuitNowExternalRequest.md)
  - [DuitNowRequest](doc/DuitNowRequest.md)
+ - [EWalletTopupExternalRequest](doc/EWalletTopupExternalRequest.md)
+ - [EWalletWithdrawExternalRequest](doc/EWalletWithdrawExternalRequest.md)
+ - [ErrorResponse](doc/ErrorResponse.md)
+ - [ErrorResponseError](doc/ErrorResponseError.md)
+ - [EsspExternalRequest](doc/EsspExternalRequest.md)
+ - [FeeConfigRequest](doc/FeeConfigRequest.md)
+ - [FeeConfigResponse](doc/FeeConfigResponse.md)
+ - [GeoLocation](doc/GeoLocation.md)
+ - [JomPayExternalRequest](doc/JomPayExternalRequest.md)
+ - [KycVerifyResponse](doc/KycVerifyResponse.md)
+ - [MyKadVerifyRequest](doc/MyKadVerifyRequest.md)
  - [PinPurchaseCommand](doc/PinPurchaseCommand.md)
  - [PinPurchaseResponse](doc/PinPurchaseResponse.md)
+ - [RetailCashbackExternalRequest](doc/RetailCashbackExternalRequest.md)
+ - [RetailPinPurchaseExternalRequest](doc/RetailPinPurchaseExternalRequest.md)
  - [RetailSaleCommand](doc/RetailSaleCommand.md)
+ - [RetailSaleExternalRequest](doc/RetailSaleExternalRequest.md)
  - [RetailSaleResponse](doc/RetailSaleResponse.md)
  - [ReversalRequest](doc/ReversalRequest.md)
+ - [SettlementResponse](doc/SettlementResponse.md)
+ - [TopupExternalRequest](doc/TopupExternalRequest.md)
+ - [TransactionListResponse](doc/TransactionListResponse.md)
+ - [TransactionResponse](doc/TransactionResponse.md)
  - [UpdateAgentRequest](doc/UpdateAgentRequest.md)
- - [WithdrawalRequest](doc/WithdrawalRequest.md)
+ - [WithdrawalExternalRequest](doc/WithdrawalExternalRequest.md)
 
 
 ## Documentation For Authorization

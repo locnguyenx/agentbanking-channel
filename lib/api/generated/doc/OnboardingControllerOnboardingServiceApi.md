@@ -11,7 +11,9 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**biometricMatch**](OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
 [**getKycReviewQueue**](OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
-[**verifyMyKad**](OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/kyc/verify | 
+[**submitApplication**](OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
+[**verifyKyc**](OnboardingControllerOnboardingServiceApi.md#verifykyc) | **POST** /api/v1/kyc/verify | 
+[**verifyMyKad**](OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
 
 
 # **biometricMatch**
@@ -98,8 +100,49 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **verifyMyKad**
-> BuiltMap<String, JsonObject> verifyMyKad(requestBody)
+# **submitApplication**
+> ApplicationSubmitResponse submitApplication(applicationSubmitRequest)
+
+
+
+### Example
+```dart
+import 'package:agent_api/api.dart';
+
+final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
+final ApplicationSubmitRequest applicationSubmitRequest = ; // ApplicationSubmitRequest | 
+
+try {
+    final response = api.submitApplication(applicationSubmitRequest);
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling OnboardingControllerOnboardingServiceApi->submitApplication: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationSubmitRequest** | [**ApplicationSubmitRequest**](ApplicationSubmitRequest.md)|  | 
+
+### Return type
+
+[**ApplicationSubmitResponse**](ApplicationSubmitResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **verifyKyc**
+> BuiltMap<String, JsonObject> verifyKyc(requestBody)
 
 
 
@@ -111,10 +154,10 @@ final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
 final BuiltMap<String, String> requestBody = ; // BuiltMap<String, String> | 
 
 try {
-    final response = api.verifyMyKad(requestBody);
+    final response = api.verifyKyc(requestBody);
     print(response);
 } on DioException catch (e) {
-    print('Exception when calling OnboardingControllerOnboardingServiceApi->verifyMyKad: $e\n');
+    print('Exception when calling OnboardingControllerOnboardingServiceApi->verifyKyc: $e\n');
 }
 ```
 
@@ -136,6 +179,47 @@ No authorization required
 
  - **Content-Type**: application/json
  - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **verifyMyKad**
+> KycVerifyResponse verifyMyKad(myKadVerifyRequest)
+
+
+
+### Example
+```dart
+import 'package:agent_api/api.dart';
+
+final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
+final MyKadVerifyRequest myKadVerifyRequest = ; // MyKadVerifyRequest | 
+
+try {
+    final response = api.verifyMyKad(myKadVerifyRequest);
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling OnboardingControllerOnboardingServiceApi->verifyMyKad: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **myKadVerifyRequest** | [**MyKadVerifyRequest**](MyKadVerifyRequest.md)|  | 
+
+### Return type
+
+[**KycVerifyResponse**](KycVerifyResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

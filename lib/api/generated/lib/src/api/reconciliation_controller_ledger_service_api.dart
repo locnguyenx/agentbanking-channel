@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -10,8 +9,10 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/json_object.dart';
+import 'package:agent_api/src/model/discrepancy_checker_action_request.dart';
+import 'package:agent_api/src/model/discrepancy_maker_action_request.dart';
+import 'package:agent_api/src/model/error_response.dart';
+import 'package:agent_api/src/model/transaction_response.dart';
 
 class ReconciliationControllerLedgerServiceApi {
 
@@ -26,7 +27,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [requestBody] 
+  /// * [discrepancyCheckerActionRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,11 +35,11 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> checkerApprove({ 
+  Future<Response<TransactionResponse>> checkerApprove({ 
     required String caseId,
-    required BuiltMap<String, JsonObject> requestBody,
+    required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -63,8 +64,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
-      _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
+      const _type = FullType(DiscrepancyCheckerActionRequest);
+      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -87,14 +88,14 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -106,7 +107,7 @@ class ReconciliationControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -123,7 +124,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [requestBody] 
+  /// * [discrepancyCheckerActionRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -131,11 +132,11 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> checkerReject({ 
+  Future<Response<TransactionResponse>> checkerReject({ 
     required String caseId,
-    required BuiltMap<String, JsonObject> requestBody,
+    required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -160,8 +161,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
-      _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
+      const _type = FullType(DiscrepancyCheckerActionRequest);
+      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -184,14 +185,14 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -203,7 +204,7 @@ class ReconciliationControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -220,7 +221,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [requestBody] 
+  /// * [discrepancyMakerActionRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -228,11 +229,11 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> makerPropose({ 
+  Future<Response<TransactionResponse>> makerPropose({ 
     required String caseId,
-    required BuiltMap<String, JsonObject> requestBody,
+    required DiscrepancyMakerActionRequest discrepancyMakerActionRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -257,8 +258,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
-      _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
+      const _type = FullType(DiscrepancyMakerActionRequest);
+      _bodyData = _serializers.serialize(discrepancyMakerActionRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -281,14 +282,14 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -300,7 +301,7 @@ class ReconciliationControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

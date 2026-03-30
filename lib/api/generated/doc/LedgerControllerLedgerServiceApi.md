@@ -19,7 +19,7 @@ Method | HTTP request | Description
 
 
 # **balanceInquiry**
-> BuiltMap<String, JsonObject> balanceInquiry(balanceInquiryRequest)
+> BalanceResponse balanceInquiry(balanceInquiryExternalRequest)
 
 
 
@@ -28,10 +28,10 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getLedgerControllerLedgerServiceApi();
-final BalanceInquiryRequest balanceInquiryRequest = ; // BalanceInquiryRequest | 
+final BalanceInquiryExternalRequest balanceInquiryExternalRequest = ; // BalanceInquiryExternalRequest | 
 
 try {
-    final response = api.balanceInquiry(balanceInquiryRequest);
+    final response = api.balanceInquiry(balanceInquiryExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling LedgerControllerLedgerServiceApi->balanceInquiry: $e\n');
@@ -42,11 +42,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **balanceInquiryRequest** | [**BalanceInquiryRequest**](BalanceInquiryRequest.md)|  | 
+ **balanceInquiryExternalRequest** | [**BalanceInquiryExternalRequest**](BalanceInquiryExternalRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**BalanceResponse**](BalanceResponse.md)
 
 ### Authorization
 
@@ -55,12 +55,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **credit**
-> BuiltMap<String, JsonObject> credit(depositRequest)
+> TransactionResponse credit(depositExternalRequest)
 
 
 
@@ -69,10 +69,10 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getLedgerControllerLedgerServiceApi();
-final DepositRequest depositRequest = ; // DepositRequest | 
+final DepositExternalRequest depositExternalRequest = ; // DepositExternalRequest | 
 
 try {
-    final response = api.credit(depositRequest);
+    final response = api.credit(depositExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling LedgerControllerLedgerServiceApi->credit: $e\n');
@@ -83,11 +83,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **depositRequest** | [**DepositRequest**](DepositRequest.md)|  | 
+ **depositExternalRequest** | [**DepositExternalRequest**](DepositExternalRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -96,12 +96,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **debit**
-> BuiltMap<String, JsonObject> debit(withdrawalRequest)
+> TransactionResponse debit(withdrawalExternalRequest)
 
 
 
@@ -110,10 +110,10 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getLedgerControllerLedgerServiceApi();
-final WithdrawalRequest withdrawalRequest = ; // WithdrawalRequest | 
+final WithdrawalExternalRequest withdrawalExternalRequest = ; // WithdrawalExternalRequest | 
 
 try {
-    final response = api.debit(withdrawalRequest);
+    final response = api.debit(withdrawalExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling LedgerControllerLedgerServiceApi->debit: $e\n');
@@ -124,11 +124,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **withdrawalRequest** | [**WithdrawalRequest**](WithdrawalRequest.md)|  | 
+ **withdrawalExternalRequest** | [**WithdrawalExternalRequest**](WithdrawalExternalRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -137,12 +137,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getBalance**
-> BuiltMap<String, JsonObject> getBalance(agentId)
+> BalanceResponse getBalance(agentId)
 
 
 
@@ -169,7 +169,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**BalanceResponse**](BalanceResponse.md)
 
 ### Authorization
 
@@ -178,12 +178,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getDashboard**
-> BuiltMap<String, JsonObject> getDashboard()
+> DashboardResponse getDashboard()
 
 
 
@@ -206,7 +206,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**DashboardResponse**](DashboardResponse.md)
 
 ### Authorization
 
@@ -215,12 +215,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getSettlement**
-> BuiltMap<String, JsonObject> getSettlement(date)
+> SettlementResponse getSettlement(date)
 
 
 
@@ -229,7 +229,7 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getLedgerControllerLedgerServiceApi();
-final String date = date_example; // String | 
+final Date date = 2013-10-20; // Date | 
 
 try {
     final response = api.getSettlement(date);
@@ -243,11 +243,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **date** | **String**|  | 
+ **date** | **Date**|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**SettlementResponse**](SettlementResponse.md)
 
 ### Authorization
 
@@ -256,12 +256,12 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getTransactions**
-> BuiltMap<String, JsonObject> getTransactions(page, size)
+> TransactionListResponse getTransactions(page, size)
 
 
 
@@ -290,7 +290,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionListResponse**](TransactionListResponse.md)
 
 ### Authorization
 
@@ -299,7 +299,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

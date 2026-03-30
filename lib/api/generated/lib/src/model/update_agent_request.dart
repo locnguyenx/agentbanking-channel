@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -13,28 +12,46 @@ part 'update_agent_request.g.dart';
 /// UpdateAgentRequest
 ///
 /// Properties:
-/// * [businessName] 
-/// * [tier] 
-/// * [merchantGpsLat] 
-/// * [merchantGpsLng] 
-/// * [phoneNumber] 
+/// * [businessName] - Business name
+/// * [tier] - Agent tier level
+/// * [merchantGpsLat] - Merchant GPS latitude
+/// * [merchantGpsLng] - Merchant GPS longitude
+/// * [phoneNumber] - Contact number
+/// * [email] 
+/// * [address] 
+/// * [status] 
 @BuiltValue()
 abstract class UpdateAgentRequest implements Built<UpdateAgentRequest, UpdateAgentRequestBuilder> {
+  /// Business name
   @BuiltValueField(wireName: r'businessName')
   String get businessName;
 
+  /// Agent tier level
   @BuiltValueField(wireName: r'tier')
   UpdateAgentRequestTierEnum get tier;
-  // enum tierEnum {  BASIC,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  MICRO,  STANDARD,  PREMIUM,  };
 
+  /// Merchant GPS latitude
   @BuiltValueField(wireName: r'merchantGpsLat')
   num get merchantGpsLat;
 
+  /// Merchant GPS longitude
   @BuiltValueField(wireName: r'merchantGpsLng')
   num get merchantGpsLng;
 
+  /// Contact number
   @BuiltValueField(wireName: r'phoneNumber')
   String get phoneNumber;
+
+  @BuiltValueField(wireName: r'email')
+  String? get email;
+
+  @BuiltValueField(wireName: r'address')
+  String? get address;
+
+  @BuiltValueField(wireName: r'status')
+  UpdateAgentRequestStatusEnum? get status;
+  // enum statusEnum {  ACTIVE,  INACTIVE,  SUSPENDED,  };
 
   UpdateAgentRequest._();
 
@@ -84,6 +101,27 @@ class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentR
       object.phoneNumber,
       specifiedType: const FullType(String),
     );
+    if (object.email != null) {
+      yield r'email';
+      yield serializers.serialize(
+        object.email,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.address != null) {
+      yield r'address';
+      yield serializers.serialize(
+        object.address,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.status != null) {
+      yield r'status';
+      yield serializers.serialize(
+        object.status,
+        specifiedType: const FullType(UpdateAgentRequestStatusEnum),
+      );
+    }
   }
 
   @override
@@ -142,6 +180,27 @@ class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentR
           ) as String;
           result.phoneNumber = valueDes;
           break;
+        case r'email':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.email = valueDes;
+          break;
+        case r'address':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.address = valueDes;
+          break;
+        case r'status':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(UpdateAgentRequestStatusEnum),
+          ) as UpdateAgentRequestStatusEnum;
+          result.status = valueDes;
+          break;
         default:
           unhandled.add(key);
           unhandled.add(value);
@@ -173,10 +232,13 @@ class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentR
 
 class UpdateAgentRequestTierEnum extends EnumClass {
 
-  @BuiltValueEnumConst(wireName: r'BASIC')
-  static const UpdateAgentRequestTierEnum BASIC = _$updateAgentRequestTierEnum_BASIC;
+  /// Agent tier level
+  @BuiltValueEnumConst(wireName: r'MICRO')
+  static const UpdateAgentRequestTierEnum MICRO = _$updateAgentRequestTierEnum_MICRO;
+  /// Agent tier level
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const UpdateAgentRequestTierEnum STANDARD = _$updateAgentRequestTierEnum_STANDARD;
+  /// Agent tier level
   @BuiltValueEnumConst(wireName: r'PREMIUM')
   static const UpdateAgentRequestTierEnum PREMIUM = _$updateAgentRequestTierEnum_PREMIUM;
 
@@ -186,5 +248,22 @@ class UpdateAgentRequestTierEnum extends EnumClass {
 
   static BuiltSet<UpdateAgentRequestTierEnum> get values => _$updateAgentRequestTierEnumValues;
   static UpdateAgentRequestTierEnum valueOf(String name) => _$updateAgentRequestTierEnumValueOf(name);
+}
+
+class UpdateAgentRequestStatusEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'ACTIVE')
+  static const UpdateAgentRequestStatusEnum ACTIVE = _$updateAgentRequestStatusEnum_ACTIVE;
+  @BuiltValueEnumConst(wireName: r'INACTIVE')
+  static const UpdateAgentRequestStatusEnum INACTIVE = _$updateAgentRequestStatusEnum_INACTIVE;
+  @BuiltValueEnumConst(wireName: r'SUSPENDED')
+  static const UpdateAgentRequestStatusEnum SUSPENDED = _$updateAgentRequestStatusEnum_SUSPENDED;
+
+  static Serializer<UpdateAgentRequestStatusEnum> get serializer => _$updateAgentRequestStatusEnumSerializer;
+
+  const UpdateAgentRequestStatusEnum._(String name): super(name);
+
+  static BuiltSet<UpdateAgentRequestStatusEnum> get values => _$updateAgentRequestStatusEnumValues;
+  static UpdateAgentRequestStatusEnum valueOf(String name) => _$updateAgentRequestStatusEnumValueOf(name);
 }
 

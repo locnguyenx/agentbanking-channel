@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -9,6 +8,10 @@ import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
+import 'package:agent_api/src/model/e_wallet_topup_external_request.dart';
+import 'package:agent_api/src/model/e_wallet_withdraw_external_request.dart';
+import 'package:agent_api/src/model/error_response.dart';
+import 'package:agent_api/src/model/transaction_response.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
 
@@ -24,7 +27,7 @@ class EWalletControllerBillerServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [requestBody] 
+  /// * [eWalletTopupExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,7 +38,7 @@ class EWalletControllerBillerServiceApi {
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<BuiltMap<String, JsonObject>>> topup1({ 
-    required BuiltMap<String, JsonObject> requestBody,
+    required EWalletTopupExternalRequest eWalletTopupExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,8 +63,8 @@ class EWalletControllerBillerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
-      _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
+      const _type = FullType(EWalletTopupExternalRequest);
+      _bodyData = _serializers.serialize(eWalletTopupExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -119,7 +122,7 @@ class EWalletControllerBillerServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [requestBody] 
+  /// * [eWalletWithdrawExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -127,10 +130,10 @@ class EWalletControllerBillerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> withdrawal({ 
-    required BuiltMap<String, JsonObject> requestBody,
+  Future<Response<TransactionResponse>> withdrawal({ 
+    required EWalletWithdrawExternalRequest eWalletWithdrawExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -155,8 +158,8 @@ class EWalletControllerBillerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BuiltMap, [FullType(String), FullType(JsonObject)]);
-      _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
+      const _type = FullType(EWalletWithdrawExternalRequest);
+      _bodyData = _serializers.serialize(eWalletWithdrawExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -179,14 +182,14 @@ class EWalletControllerBillerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -198,7 +201,7 @@ class EWalletControllerBillerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **createAgent**
-> AgentResponse createAgent(createAgentRequest)
+> AgentResponse createAgent(createAgentExternalRequest)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getAgentControllerOnboardingServiceApi();
-final CreateAgentRequest createAgentRequest = ; // CreateAgentRequest | 
+final CreateAgentExternalRequest createAgentExternalRequest = ; // CreateAgentExternalRequest | 
 
 try {
-    final response = api.createAgent(createAgentRequest);
+    final response = api.createAgent(createAgentExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling AgentControllerOnboardingServiceApi->createAgent: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createAgentRequest** | [**CreateAgentRequest**](CreateAgentRequest.md)|  | 
+ **createAgentExternalRequest** | [**CreateAgentExternalRequest**](CreateAgentExternalRequest.md)|  | 
 
 ### Return type
 
@@ -53,7 +53,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

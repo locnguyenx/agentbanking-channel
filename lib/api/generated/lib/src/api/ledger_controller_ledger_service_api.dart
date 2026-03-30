@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -10,11 +9,16 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
-import 'package:agent_api/src/model/balance_inquiry_request.dart';
-import 'package:agent_api/src/model/deposit_request.dart';
-import 'package:agent_api/src/model/withdrawal_request.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/json_object.dart';
+import 'package:agent_api/src/model/balance_inquiry_external_request.dart';
+import 'package:agent_api/src/model/balance_response.dart';
+import 'package:agent_api/src/model/dashboard_response.dart';
+import 'package:agent_api/src/model/date.dart';
+import 'package:agent_api/src/model/deposit_external_request.dart';
+import 'package:agent_api/src/model/error_response.dart';
+import 'package:agent_api/src/model/settlement_response.dart';
+import 'package:agent_api/src/model/transaction_list_response.dart';
+import 'package:agent_api/src/model/transaction_response.dart';
+import 'package:agent_api/src/model/withdrawal_external_request.dart';
 
 class LedgerControllerLedgerServiceApi {
 
@@ -28,7 +32,7 @@ class LedgerControllerLedgerServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [balanceInquiryRequest] 
+  /// * [balanceInquiryExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -36,10 +40,10 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [BalanceResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> balanceInquiry({ 
-    required BalanceInquiryRequest balanceInquiryRequest,
+  Future<Response<BalanceResponse>> balanceInquiry({ 
+    required BalanceInquiryExternalRequest balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -64,8 +68,8 @@ class LedgerControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(BalanceInquiryRequest);
-      _bodyData = _serializers.serialize(balanceInquiryRequest, specifiedType: _type);
+      const _type = FullType(BalanceInquiryExternalRequest);
+      _bodyData = _serializers.serialize(balanceInquiryExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -88,14 +92,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    BalanceResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(BalanceResponse),
+      ) as BalanceResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -107,7 +111,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<BalanceResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -123,7 +127,7 @@ class LedgerControllerLedgerServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [depositRequest] 
+  /// * [depositExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -131,10 +135,10 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> credit({ 
-    required DepositRequest depositRequest,
+  Future<Response<TransactionResponse>> credit({ 
+    required DepositExternalRequest depositExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -159,8 +163,8 @@ class LedgerControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(DepositRequest);
-      _bodyData = _serializers.serialize(depositRequest, specifiedType: _type);
+      const _type = FullType(DepositExternalRequest);
+      _bodyData = _serializers.serialize(depositExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -183,14 +187,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -202,7 +206,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -218,7 +222,7 @@ class LedgerControllerLedgerServiceApi {
   /// 
   ///
   /// Parameters:
-  /// * [withdrawalRequest] 
+  /// * [withdrawalExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -226,10 +230,10 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> debit({ 
-    required WithdrawalRequest withdrawalRequest,
+  Future<Response<TransactionResponse>> debit({ 
+    required WithdrawalExternalRequest withdrawalExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -254,8 +258,8 @@ class LedgerControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(WithdrawalRequest);
-      _bodyData = _serializers.serialize(withdrawalRequest, specifiedType: _type);
+      const _type = FullType(WithdrawalExternalRequest);
+      _bodyData = _serializers.serialize(withdrawalExternalRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -278,14 +282,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -297,7 +301,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -321,9 +325,9 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [BalanceResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getBalance({ 
+  Future<Response<BalanceResponse>> getBalance({ 
     required String agentId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -353,14 +357,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    BalanceResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(BalanceResponse),
+      ) as BalanceResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -372,7 +376,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<BalanceResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -395,9 +399,9 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [DashboardResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getDashboard({ 
+  Future<Response<DashboardResponse>> getDashboard({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -426,14 +430,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    DashboardResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(DashboardResponse),
+      ) as DashboardResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -445,7 +449,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<DashboardResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -469,10 +473,10 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [SettlementResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getSettlement({ 
-    required String date,
+  Future<Response<SettlementResponse>> getSettlement({ 
+    required Date date,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -494,7 +498,7 @@ class LedgerControllerLedgerServiceApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      r'date': encodeQueryParameter(_serializers, date, const FullType(String)),
+      r'date': encodeQueryParameter(_serializers, date, const FullType(Date)),
     };
 
     final _response = await _dio.request<Object>(
@@ -506,14 +510,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    SettlementResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(SettlementResponse),
+      ) as SettlementResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -525,7 +529,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<SettlementResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -550,9 +554,9 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
+  /// Returns a [Future] containing a [Response] with a [TransactionListResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getTransactions({ 
+  Future<Response<TransactionListResponse>> getTransactions({ 
     int? page = 0,
     int? size = 20,
     CancelToken? cancelToken,
@@ -589,14 +593,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltMap<String, JsonObject>? _responseData;
+    TransactionListResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
+        specifiedType: const FullType(TransactionListResponse),
+      ) as TransactionListResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -608,7 +612,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<TransactionListResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

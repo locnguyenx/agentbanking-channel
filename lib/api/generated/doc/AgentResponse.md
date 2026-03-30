@@ -16,8 +16,10 @@ Name | Type | Description | Notes
 **merchantGpsLat** | **num** |  | [optional] 
 **merchantGpsLng** | **num** |  | [optional] 
 **phoneNumber** | **String** |  | [optional] 
-**createdAt** | **String** |  | [optional] 
-**updatedAt** | **String** |  | [optional] 
+**email** | **String** |  | [optional] 
+**address** | **String** |  | [optional] 
+**createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

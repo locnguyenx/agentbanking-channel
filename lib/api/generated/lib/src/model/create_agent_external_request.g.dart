@@ -1,0 +1,270 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'create_agent_external_request.dart';
+
+// **************************************************************************
+// BuiltValueGenerator
+// **************************************************************************
+
+const CreateAgentExternalRequestTierEnum
+    _$createAgentExternalRequestTierEnum_MICRO =
+    const CreateAgentExternalRequestTierEnum._('MICRO');
+const CreateAgentExternalRequestTierEnum
+    _$createAgentExternalRequestTierEnum_STANDARD =
+    const CreateAgentExternalRequestTierEnum._('STANDARD');
+const CreateAgentExternalRequestTierEnum
+    _$createAgentExternalRequestTierEnum_PREMIER =
+    const CreateAgentExternalRequestTierEnum._('PREMIER');
+
+CreateAgentExternalRequestTierEnum _$createAgentExternalRequestTierEnumValueOf(
+    String name) {
+  switch (name) {
+    case 'MICRO':
+      return _$createAgentExternalRequestTierEnum_MICRO;
+    case 'STANDARD':
+      return _$createAgentExternalRequestTierEnum_STANDARD;
+    case 'PREMIER':
+      return _$createAgentExternalRequestTierEnum_PREMIER;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<CreateAgentExternalRequestTierEnum>
+    _$createAgentExternalRequestTierEnumValues = BuiltSet<
+        CreateAgentExternalRequestTierEnum>(const <CreateAgentExternalRequestTierEnum>[
+  _$createAgentExternalRequestTierEnum_MICRO,
+  _$createAgentExternalRequestTierEnum_STANDARD,
+  _$createAgentExternalRequestTierEnum_PREMIER,
+]);
+
+Serializer<CreateAgentExternalRequestTierEnum>
+    _$createAgentExternalRequestTierEnumSerializer =
+    _$CreateAgentExternalRequestTierEnumSerializer();
+
+class _$CreateAgentExternalRequestTierEnumSerializer
+    implements PrimitiveSerializer<CreateAgentExternalRequestTierEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'MICRO': 'MICRO',
+    'STANDARD': 'STANDARD',
+    'PREMIER': 'PREMIER',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'MICRO': 'MICRO',
+    'STANDARD': 'STANDARD',
+    'PREMIER': 'PREMIER',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[CreateAgentExternalRequestTierEnum];
+  @override
+  final String wireName = 'CreateAgentExternalRequestTierEnum';
+
+  @override
+  Object serialize(
+          Serializers serializers, CreateAgentExternalRequestTierEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  CreateAgentExternalRequestTierEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      CreateAgentExternalRequestTierEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
+
+class _$CreateAgentExternalRequest extends CreateAgentExternalRequest {
+  @override
+  final String agentCode;
+  @override
+  final String businessName;
+  @override
+  final CreateAgentExternalRequestTierEnum tier;
+  @override
+  final String mykadNumber;
+  @override
+  final String phoneNumber;
+  @override
+  final num merchantGpsLat;
+  @override
+  final num merchantGpsLng;
+  @override
+  final String? email;
+  @override
+  final String? address;
+
+  factory _$CreateAgentExternalRequest(
+          [void Function(CreateAgentExternalRequestBuilder)? updates]) =>
+      (CreateAgentExternalRequestBuilder()..update(updates))._build();
+
+  _$CreateAgentExternalRequest._(
+      {required this.agentCode,
+      required this.businessName,
+      required this.tier,
+      required this.mykadNumber,
+      required this.phoneNumber,
+      required this.merchantGpsLat,
+      required this.merchantGpsLng,
+      this.email,
+      this.address})
+      : super._();
+  @override
+  CreateAgentExternalRequest rebuild(
+          void Function(CreateAgentExternalRequestBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  CreateAgentExternalRequestBuilder toBuilder() =>
+      CreateAgentExternalRequestBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is CreateAgentExternalRequest &&
+        agentCode == other.agentCode &&
+        businessName == other.businessName &&
+        tier == other.tier &&
+        mykadNumber == other.mykadNumber &&
+        phoneNumber == other.phoneNumber &&
+        merchantGpsLat == other.merchantGpsLat &&
+        merchantGpsLng == other.merchantGpsLng &&
+        email == other.email &&
+        address == other.address;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, agentCode.hashCode);
+    _$hash = $jc(_$hash, businessName.hashCode);
+    _$hash = $jc(_$hash, tier.hashCode);
+    _$hash = $jc(_$hash, mykadNumber.hashCode);
+    _$hash = $jc(_$hash, phoneNumber.hashCode);
+    _$hash = $jc(_$hash, merchantGpsLat.hashCode);
+    _$hash = $jc(_$hash, merchantGpsLng.hashCode);
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, address.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'CreateAgentExternalRequest')
+          ..add('agentCode', agentCode)
+          ..add('businessName', businessName)
+          ..add('tier', tier)
+          ..add('mykadNumber', mykadNumber)
+          ..add('phoneNumber', phoneNumber)
+          ..add('merchantGpsLat', merchantGpsLat)
+          ..add('merchantGpsLng', merchantGpsLng)
+          ..add('email', email)
+          ..add('address', address))
+        .toString();
+  }
+}
+
+class CreateAgentExternalRequestBuilder
+    implements
+        Builder<CreateAgentExternalRequest, CreateAgentExternalRequestBuilder> {
+  _$CreateAgentExternalRequest? _$v;
+
+  String? _agentCode;
+  String? get agentCode => _$this._agentCode;
+  set agentCode(String? agentCode) => _$this._agentCode = agentCode;
+
+  String? _businessName;
+  String? get businessName => _$this._businessName;
+  set businessName(String? businessName) => _$this._businessName = businessName;
+
+  CreateAgentExternalRequestTierEnum? _tier;
+  CreateAgentExternalRequestTierEnum? get tier => _$this._tier;
+  set tier(CreateAgentExternalRequestTierEnum? tier) => _$this._tier = tier;
+
+  String? _mykadNumber;
+  String? get mykadNumber => _$this._mykadNumber;
+  set mykadNumber(String? mykadNumber) => _$this._mykadNumber = mykadNumber;
+
+  String? _phoneNumber;
+  String? get phoneNumber => _$this._phoneNumber;
+  set phoneNumber(String? phoneNumber) => _$this._phoneNumber = phoneNumber;
+
+  num? _merchantGpsLat;
+  num? get merchantGpsLat => _$this._merchantGpsLat;
+  set merchantGpsLat(num? merchantGpsLat) =>
+      _$this._merchantGpsLat = merchantGpsLat;
+
+  num? _merchantGpsLng;
+  num? get merchantGpsLng => _$this._merchantGpsLng;
+  set merchantGpsLng(num? merchantGpsLng) =>
+      _$this._merchantGpsLng = merchantGpsLng;
+
+  String? _email;
+  String? get email => _$this._email;
+  set email(String? email) => _$this._email = email;
+
+  String? _address;
+  String? get address => _$this._address;
+  set address(String? address) => _$this._address = address;
+
+  CreateAgentExternalRequestBuilder() {
+    CreateAgentExternalRequest._defaults(this);
+  }
+
+  CreateAgentExternalRequestBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _agentCode = $v.agentCode;
+      _businessName = $v.businessName;
+      _tier = $v.tier;
+      _mykadNumber = $v.mykadNumber;
+      _phoneNumber = $v.phoneNumber;
+      _merchantGpsLat = $v.merchantGpsLat;
+      _merchantGpsLng = $v.merchantGpsLng;
+      _email = $v.email;
+      _address = $v.address;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(CreateAgentExternalRequest other) {
+    _$v = other as _$CreateAgentExternalRequest;
+  }
+
+  @override
+  void update(void Function(CreateAgentExternalRequestBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  CreateAgentExternalRequest build() => _build();
+
+  _$CreateAgentExternalRequest _build() {
+    final _$result = _$v ??
+        _$CreateAgentExternalRequest._(
+          agentCode: BuiltValueNullFieldError.checkNotNull(
+              agentCode, r'CreateAgentExternalRequest', 'agentCode'),
+          businessName: BuiltValueNullFieldError.checkNotNull(
+              businessName, r'CreateAgentExternalRequest', 'businessName'),
+          tier: BuiltValueNullFieldError.checkNotNull(
+              tier, r'CreateAgentExternalRequest', 'tier'),
+          mykadNumber: BuiltValueNullFieldError.checkNotNull(
+              mykadNumber, r'CreateAgentExternalRequest', 'mykadNumber'),
+          phoneNumber: BuiltValueNullFieldError.checkNotNull(
+              phoneNumber, r'CreateAgentExternalRequest', 'phoneNumber'),
+          merchantGpsLat: BuiltValueNullFieldError.checkNotNull(
+              merchantGpsLat, r'CreateAgentExternalRequest', 'merchantGpsLat'),
+          merchantGpsLng: BuiltValueNullFieldError.checkNotNull(
+              merchantGpsLng, r'CreateAgentExternalRequest', 'merchantGpsLng'),
+          email: email,
+          address: address,
+        );
+    replace(_$result);
+    return _$result;
+  }
+}
+
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

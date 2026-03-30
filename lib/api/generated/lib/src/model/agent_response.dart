@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //
@@ -21,6 +20,8 @@ part 'agent_response.g.dart';
 /// * [merchantGpsLat] 
 /// * [merchantGpsLng] 
 /// * [phoneNumber] 
+/// * [email] 
+/// * [address] 
 /// * [createdAt] 
 /// * [updatedAt] 
 @BuiltValue()
@@ -36,10 +37,11 @@ abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilde
 
   @BuiltValueField(wireName: r'tier')
   AgentResponseTierEnum? get tier;
-  // enum tierEnum {  BASIC,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  MICRO,  STANDARD,  PREMIUM,  };
 
   @BuiltValueField(wireName: r'status')
-  String? get status;
+  AgentResponseStatusEnum? get status;
+  // enum statusEnum {  ACTIVE,  INACTIVE,  PENDING,  SUSPENDED,  };
 
   @BuiltValueField(wireName: r'merchantGpsLat')
   num? get merchantGpsLat;
@@ -50,11 +52,17 @@ abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilde
   @BuiltValueField(wireName: r'phoneNumber')
   String? get phoneNumber;
 
+  @BuiltValueField(wireName: r'email')
+  String? get email;
+
+  @BuiltValueField(wireName: r'address')
+  String? get address;
+
   @BuiltValueField(wireName: r'createdAt')
-  String? get createdAt;
+  DateTime? get createdAt;
 
   @BuiltValueField(wireName: r'updatedAt')
-  String? get updatedAt;
+  DateTime? get updatedAt;
 
   AgentResponse._();
 
@@ -111,7 +119,7 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
       yield r'status';
       yield serializers.serialize(
         object.status,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(AgentResponseStatusEnum),
       );
     }
     if (object.merchantGpsLat != null) {
@@ -135,18 +143,32 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
         specifiedType: const FullType(String),
       );
     }
+    if (object.email != null) {
+      yield r'email';
+      yield serializers.serialize(
+        object.email,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.address != null) {
+      yield r'address';
+      yield serializers.serialize(
+        object.address,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.createdAt != null) {
       yield r'createdAt';
       yield serializers.serialize(
         object.createdAt,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(DateTime),
       );
     }
     if (object.updatedAt != null) {
       yield r'updatedAt';
       yield serializers.serialize(
         object.updatedAt,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(DateTime),
       );
     }
   }
@@ -203,8 +225,8 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
         case r'status':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(AgentResponseStatusEnum),
+          ) as AgentResponseStatusEnum;
           result.status = valueDes;
           break;
         case r'merchantGpsLat':
@@ -228,18 +250,32 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
           ) as String;
           result.phoneNumber = valueDes;
           break;
-        case r'createdAt':
+        case r'email':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
           ) as String;
+          result.email = valueDes;
+          break;
+        case r'address':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.address = valueDes;
+          break;
+        case r'createdAt':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(DateTime),
+          ) as DateTime;
           result.createdAt = valueDes;
           break;
         case r'updatedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(DateTime),
+          ) as DateTime;
           result.updatedAt = valueDes;
           break;
         default:
@@ -273,8 +309,8 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
 
 class AgentResponseTierEnum extends EnumClass {
 
-  @BuiltValueEnumConst(wireName: r'BASIC')
-  static const AgentResponseTierEnum BASIC = _$agentResponseTierEnum_BASIC;
+  @BuiltValueEnumConst(wireName: r'MICRO')
+  static const AgentResponseTierEnum MICRO = _$agentResponseTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const AgentResponseTierEnum STANDARD = _$agentResponseTierEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIUM')
@@ -286,5 +322,24 @@ class AgentResponseTierEnum extends EnumClass {
 
   static BuiltSet<AgentResponseTierEnum> get values => _$agentResponseTierEnumValues;
   static AgentResponseTierEnum valueOf(String name) => _$agentResponseTierEnumValueOf(name);
+}
+
+class AgentResponseStatusEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'ACTIVE')
+  static const AgentResponseStatusEnum ACTIVE = _$agentResponseStatusEnum_ACTIVE;
+  @BuiltValueEnumConst(wireName: r'INACTIVE')
+  static const AgentResponseStatusEnum INACTIVE = _$agentResponseStatusEnum_INACTIVE;
+  @BuiltValueEnumConst(wireName: r'PENDING')
+  static const AgentResponseStatusEnum PENDING = _$agentResponseStatusEnum_PENDING;
+  @BuiltValueEnumConst(wireName: r'SUSPENDED')
+  static const AgentResponseStatusEnum SUSPENDED = _$agentResponseStatusEnum_SUSPENDED;
+
+  static Serializer<AgentResponseStatusEnum> get serializer => _$agentResponseStatusEnumSerializer;
+
+  const AgentResponseStatusEnum._(String name): super(name);
+
+  static BuiltSet<AgentResponseStatusEnum> get values => _$agentResponseStatusEnumValues;
+  static AgentResponseStatusEnum valueOf(String name) => _$agentResponseStatusEnumValueOf(name);
 }
 

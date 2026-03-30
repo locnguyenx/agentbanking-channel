@@ -14,7 +14,7 @@ Method | HTTP request | Description
 
 
 # **topup1**
-> BuiltMap<String, JsonObject> topup1(requestBody)
+> BuiltMap<String, JsonObject> topup1(eWalletTopupExternalRequest)
 
 
 
@@ -23,10 +23,10 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getEWalletControllerBillerServiceApi();
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final EWalletTopupExternalRequest eWalletTopupExternalRequest = ; // EWalletTopupExternalRequest | 
 
 try {
-    final response = api.topup1(requestBody);
+    final response = api.topup1(eWalletTopupExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling EWalletControllerBillerServiceApi->topup1: $e\n');
@@ -37,7 +37,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **eWalletTopupExternalRequest** | [**EWalletTopupExternalRequest**](EWalletTopupExternalRequest.md)|  | 
 
 ### Return type
 
@@ -55,7 +55,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **withdrawal**
-> BuiltMap<String, JsonObject> withdrawal(requestBody)
+> TransactionResponse withdrawal(eWalletWithdrawExternalRequest)
 
 
 
@@ -64,10 +64,10 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getEWalletControllerBillerServiceApi();
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final EWalletWithdrawExternalRequest eWalletWithdrawExternalRequest = ; // EWalletWithdrawExternalRequest | 
 
 try {
-    final response = api.withdrawal(requestBody);
+    final response = api.withdrawal(eWalletWithdrawExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling EWalletControllerBillerServiceApi->withdrawal: $e\n');
@@ -78,11 +78,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **eWalletWithdrawExternalRequest** | [**EWalletWithdrawExternalRequest**](EWalletWithdrawExternalRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -91,7 +91,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

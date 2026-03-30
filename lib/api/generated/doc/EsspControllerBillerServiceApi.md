@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **purchase**
-> BuiltMap<String, JsonObject> purchase(requestBody)
+> TransactionResponse purchase(esspExternalRequest)
 
 
 
@@ -22,10 +22,10 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getEsspControllerBillerServiceApi();
-final BuiltMap<String, JsonObject> requestBody = Object; // BuiltMap<String, JsonObject> | 
+final EsspExternalRequest esspExternalRequest = ; // EsspExternalRequest | 
 
 try {
-    final response = api.purchase(requestBody);
+    final response = api.purchase(esspExternalRequest);
     print(response);
 } on DioException catch (e) {
     print('Exception when calling EsspControllerBillerServiceApi->purchase: $e\n');
@@ -36,11 +36,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **requestBody** | [**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)|  | 
+ **esspExternalRequest** | [**EsspExternalRequest**](EsspExternalRequest.md)|  | 
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**TransactionResponse**](TransactionResponse.md)
 
 ### Authorization
 
@@ -49,7 +49,7 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
