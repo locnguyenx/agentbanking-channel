@@ -182,3 +182,87 @@ Expected: PASS
 git add lib/features/transactions/screens/jompay_form.dart test/features/transactions/jompay_test.dart
 git commit -m "feat: full JomPay endpoint integration"
 ```
+
+### Task 5: Refactor Ledger Service Features
+
+**BDD Scenarios:** Refactoring existing paths.
+**BRD Requirements:** FR-03: Refactor current Ledger forms
+**User-Facing:** YES
+
+**Files:**
+- Modify: `lib/features/transactions/screens/withdrawal_screen.dart`
+- Modify: `lib/features/transactions/screens/deposit_screen.dart`
+- Modify: `lib/features/transactions/screens/balance_inquiry_screen.dart`
+- Modify: `lib/features/merchant/screens/merchant_sale_screen.dart` (for Retail Sale/Cashback/Pin Purchase)
+
+- [ ] **Step 1: Write failing UI tests for Validation**
+Add validation tests for Withdrawal, Deposit, and Merchant fields to respective test files.
+- [ ] **Step 2: Run UI tests to verify failure**
+- [ ] **Step 3: Implement Validators & DTO Mappers**
+Import `OpenApiValidators` and apply validation. Map domain models to `WithdrawalExternalRequest`, `DepositExternalRequest`, `RetailSaleCommand`, `CashBackCommand`, `PinPurchaseCommand` in repositories.
+- [ ] **Step 4: Run tests to verify success**
+- [ ] **Step 5: Commit**
+```bash
+git commit -am "feat: apply openapi clients and validators to ledger features"
+```
+
+### Task 6: Refactor Extended Biller Features
+
+**BDD Scenarios:** Refactoring existing paths.
+**BRD Requirements:** FR-03: Refactor current Biller forms
+**User-Facing:** YES
+
+**Files:**
+- Modify: `lib/features/transactions/screens/prepaid_topup_screen.dart`
+- Modify: `lib/features/transactions/screens/essp_purchase_screen.dart`
+- Modify: `lib/features/transactions/screens/ewallet_screen.dart`
+
+- [ ] **Step 1: Write failing UI tests for Validation**
+- [ ] **Step 2: Run tests to verify failure**
+- [ ] **Step 3: Implement Validators & DTO Mappers**
+Implement validators for Topup, ESSP, and eWallet. Map domain models to `TopupExternalRequest`, `EsspExternalRequest`, `EWalletTopupExternalRequest`, etc.
+- [ ] **Step 4: Run tests to verify success**
+- [ ] **Step 5: Commit**
+```bash
+git commit -am "feat: apply openapi clients and validators to extended biller features"
+```
+
+### Task 7: Refactor Switch Service Features
+
+**BDD Scenarios:** Refactoring existing paths.
+**BRD Requirements:** FR-03: Refactor current Switch forms
+**User-Facing:** YES
+
+**Files:**
+- Modify: `lib/features/transactions/screens/duitnow_screen.dart`
+
+- [ ] **Step 1: Write failing UI tests implementation**
+- [ ] **Step 2: Run tests to verify failure**
+- [ ] **Step 3: Implement Validators & DTO Mappers**
+Apply validators to DuitNow form. Map domain models to `DuitNowExternalRequest`.
+- [ ] **Step 4: Run tests to verify success**
+- [ ] **Step 5: Commit**
+```bash
+git commit -am "feat: apply openapi clients to DuitNow features"
+```
+
+### Task 8: Implement New Onboarding Features
+
+**BDD Scenarios:** Happy path and Edge cases for Onboarding features.
+**BRD Requirements:** FR-04: Implement new endpoint flows
+**User-Facing:** YES
+
+**Files:**
+- Modify: `lib/features/agent_onboarding/screens/mykad_verification_screen.dart`
+- Modify: `lib/features/agent_onboarding/screens/application_submit_screen.dart`
+
+- [ ] **Step 1: Write failing UI test**
+Write UI integration test for completing MyKad verification and Application Submission.
+- [ ] **Step 2: Run tests to verify failure**
+- [ ] **Step 3: Implement Onboarding UI & Logic**
+Create screens and map inputs to `MyKadVerifyRequest` and `ApplicationSubmitRequest` using `OnboardingApi`.
+- [ ] **Step 4: Run tests to verify success**
+- [ ] **Step 5: Commit**
+```bash
+git commit -am "feat: full Onboarding integration for MyKad and Application Submit"
+```
