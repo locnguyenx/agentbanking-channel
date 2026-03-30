@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/merchant/providers/merchant_provider.dart';
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart';
+import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class CashbackScreen extends ConsumerStatefulWidget {
   const CashbackScreen({super.key});
@@ -12,6 +13,7 @@ class CashbackScreen extends ConsumerStatefulWidget {
 }
 
 class _CashbackScreenState extends ConsumerState<CashbackScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _saleController = TextEditingController();
   final _cashbackController = TextEditingController();
 
@@ -45,29 +47,37 @@ class _CashbackScreenState extends ConsumerState<CashbackScreen> {
       appBar: AppBar(title: const Text('Cash-Back Hybrid')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _saleController,
-              decoration: const InputDecoration(labelText: 'Sale Amount (RM)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _cashbackController,
-              decoration: const InputDecoration(labelText: 'Additional Cash-Back (RM)'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 32),
-
-            if (state.status == MerchantStatus.idle)
-              ElevatedButton(
-                onPressed: () => notifier.startCashback(
-                  Decimal.parse(_saleController.text),
-                  Decimal.parse(_cashbackController.text),
-                ),
-                child: const Text('Process Hybrid Sale'),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _saleController,
+                decoration: const InputDecoration(labelText: 'Sale Amount (RM)', prefixText: 'RM '),
+                keyboardType: TextInputType.number,
+                validator: (v) => OpenApiValidators.minMax(v, min: 0.1, max: 10000.0),
               ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _cashbackController,
+                decoration: const InputDecoration(labelText: 'Additional Cash-Back (RM)', prefixText: 'RM '),
+                keyboardType: TextInputType.number,
+                validator: (v) => OpenApiValidators.minMax(v, min: 0.0, max: 1000.0),
+              ),
+              const SizedBox(height: 32),
+
+              if (state.status == MerchantStatus.idle)
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      notifier.startCashback(
+                        Decimal.parse(_saleController.text),
+                        Decimal.parse(_cashbackController.text),
+                      );
+                    }
+                  },
+                  child: const Text('Process Hybrid Sale'),
+                ),
 
             if (state.status == MerchantStatus.waitingCard) ...[
               const Icon(Icons.credit_card, size: 48),
@@ -84,6 +94,7 @@ class _CashbackScreenState extends ConsumerState<CashbackScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }

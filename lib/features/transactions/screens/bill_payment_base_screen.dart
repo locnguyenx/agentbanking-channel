@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class BillPaymentBaseScreen extends ConsumerStatefulWidget {
   final String title;
@@ -122,8 +123,8 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) return 'Required';
-                  if (widget.metadataRegex != null && !RegExp(widget.metadataRegex!).hasMatch(val)) {
-                    return 'Invalid format';
+                  if (widget.metadataRegex != null) {
+                    return OpenApiValidators.regex(val, widget.metadataRegex!);
                   }
                   return null;
                 },
@@ -139,12 +140,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                   border: OutlineInputBorder(),
                   prefixText: 'RM ',
                 ),
-                validator: (val) {
-                  if (val == null || val.isEmpty) return 'Required';
-                  if (Decimal.tryParse(val) == null) return 'Invalid amount';
-                  if (Decimal.parse(val) <= Decimal.zero) return 'Must be > 0';
-                  return null;
-                },
+                validator: (val) => OpenApiValidators.minMax(val, min: 0.1, max: 10000.0),
               ),
               const SizedBox(height: 24),
 

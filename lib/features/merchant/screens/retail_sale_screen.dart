@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/merchant/providers/merchant_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart';
+import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class RetailSaleScreen extends ConsumerStatefulWidget {
   const RetailSaleScreen({super.key});
@@ -13,6 +14,7 @@ class RetailSaleScreen extends ConsumerStatefulWidget {
 }
 
 class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   FundingSource _fundingSource = FundingSource.CARD_EMV;
 
@@ -46,30 +48,39 @@ class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
       appBar: AppBar(title: const Text('Merchant Retail Sale')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _amountController,
-              decoration: const InputDecoration(labelText: 'Sale Amount (RM)', prefixText: 'RM '),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<FundingSource>(
-              value: _fundingSource,
-              items: const [
-                DropdownMenuItem(value: FundingSource.CARD_EMV, child: Text('Card (MDR 1%)')),
-                DropdownMenuItem(value: FundingSource.CASH, child: Text('Cash (No MDR)')),
-                DropdownMenuItem(value: FundingSource.DUITNOW_QR, child: Text('DuitNow QR (MDR 0.5%)')),
-              ],
-              onChanged: (val) => setState(() => _fundingSource = val!),
-            ),
-            const SizedBox(height: 32),
-            
-            if (state.status == MerchantStatus.idle)
-              ElevatedButton(
-                onPressed: () => notifier.startRetailSale(Decimal.parse(_amountController.text), _fundingSource),
-                child: const Text('PROCEED'),
+        child: Form(
+          key: GlobalKey<FormState>(),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _amountController,
+                decoration: const InputDecoration(labelText: 'Sale Amount (RM)', prefixText: 'RM '),
+                keyboardType: TextInputType.number,
+                validator: (v) => OpenApiValidators.minMax(v, min: 0.1, max: 10000.0),
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<FundingSource>(
+                value: _fundingSource,
+                items: const [
+                  DropdownMenuItem(value: FundingSource.CARD_EMV, child: Text('Card (MDR 1%)')),
+                  DropdownMenuItem(value: FundingSource.CASH, child: Text('Cash (No MDR)')),
+                  DropdownMenuItem(value: FundingSource.DUITNOW_QR, child: Text('DuitNow QR (MDR 0.5%)')),
+                ],
+                onChanged: (val) => setState(() => _fundingSource = val!),
+              ),
+              const SizedBox(height: 32),
+              
+              if (state.status == MerchantStatus.idle)
+                Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      if (Form.of(context).validate()) {
+                        notifier.startRetailSale(Decimal.parse(_amountController.text), _fundingSource);
+                      }
+                    },
+                    child: const Text('PROCEED'),
+                  ),
+                ),
 
             if (state.status == MerchantStatus.quoting)
               const CircularProgressIndicator(),
@@ -111,6 +122,7 @@ class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }
