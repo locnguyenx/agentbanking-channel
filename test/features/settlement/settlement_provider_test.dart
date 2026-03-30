@@ -5,16 +5,28 @@ import 'package:mockito/annotations.dart';
 import 'package:agentbanking_channel/features/settlement/providers/settlement_provider.dart';
 import 'package:agentbanking_channel/features/settlement/models/settlement_models.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
-@GenerateMocks([TransactionRepository])
-import 'settlement_provider_test.mocks.dart';
+
+class ManualMockTransactionRepository extends Mock implements TransactionRepository {
+  @override
+  Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async {
+    return TransactionQuoteResponse(
+      quoteId: 'Q1', 
+      amount: request.amount, 
+      fee: Decimal.zero, 
+      commission: Decimal.zero,
+      total: request.amount
+    );
+  }
+}
 
 void main() {
   late SettlementNotifier notifier;
-  late MockTransactionRepository mockRepo;
+  late ManualMockTransactionRepository mockRepo;
 
   setUp(() {
-    mockRepo = MockTransactionRepository();
+    mockRepo = ManualMockTransactionRepository();
     notifier = SettlementNotifier(repository: mockRepo);
   });
 

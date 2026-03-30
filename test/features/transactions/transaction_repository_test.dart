@@ -31,13 +31,13 @@ class MockDio extends Mock implements Dio {
 }
 
 class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
-  WithdrawalRequest? lastWithdrawalRequest;
-  DepositRequest? lastDepositRequest;
-  BalanceInquiryRequest? lastBalanceInquiryRequest;
+  WithdrawalExternalRequest? lastWithdrawalRequest;
+  DepositExternalRequest? lastDepositRequest;
+  BalanceInquiryExternalRequest? lastBalanceInquiryRequest;
 
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> debit({
-    required WithdrawalRequest withdrawalRequest,
+  Future<Response<TransactionResponse>> debit({
+    required WithdrawalExternalRequest withdrawalExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -45,20 +45,20 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    lastWithdrawalRequest = withdrawalRequest;
+    lastWithdrawalRequest = withdrawalExternalRequest;
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BuiltMap<String, JsonObject>({
-        'status': JsonObject('SUCCESS'),
-        'referenceId': JsonObject('REF_123'),
-      }),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'REF_123'
+      ),
       statusCode: 200,
     );
   }
 
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> credit({
-    required DepositRequest depositRequest,
+  Future<Response<TransactionResponse>> credit({
+    required DepositExternalRequest depositExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -66,20 +66,20 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    lastDepositRequest = depositRequest;
+    lastDepositRequest = depositExternalRequest;
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BuiltMap<String, JsonObject>({
-        'status': JsonObject('SUCCESS'),
-        'referenceId': JsonObject('REF_123'),
-      }),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'REF_123'
+      ),
       statusCode: 200,
     );
   }
 
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> balanceInquiry({
-    required BalanceInquiryRequest balanceInquiryRequest,
+  Future<Response<BalanceResponse>> balanceInquiry({
+    required BalanceInquiryExternalRequest balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -87,13 +87,14 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    lastBalanceInquiryRequest = balanceInquiryRequest;
+    lastBalanceInquiryRequest = balanceInquiryExternalRequest;
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BuiltMap<String, JsonObject>({
-        'status': JsonObject('SUCCESS'),
-        'referenceId': JsonObject('REF_123'),
-      }),
+      data: BalanceResponse((b) => b
+        ..availableBalance = 1000.0
+        ..currency = 'MYR'
+        ..lastTransactionId = 'REF_123'
+      ),
       statusCode: 200,
     );
   }
@@ -175,8 +176,8 @@ class MockMerchantApi extends Mock implements MerchantControllerLedgerServiceApi
 
 class MockBillerApi extends Mock implements BillerControllerBillerServiceApi {
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> payBill({
-    required BuiltMap<String, JsonObject> requestBody,
+  Future<Response<TransactionResponse>> payBill({
+    required BillPayExternalRequest billPayExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -186,17 +187,17 @@ class MockBillerApi extends Mock implements BillerControllerBillerServiceApi {
   }) async {
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BuiltMap<String, JsonObject>({
-        'status': JsonObject('SUCCESS'),
-        'referenceId': JsonObject('BILL_REF_123'),
-      }),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'BILL_REF_123'
+      ),
       statusCode: 200,
     );
   }
 
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> topup({
-    required BuiltMap<String, JsonObject> requestBody,
+  Future<Response<TransactionResponse>> topup({
+    required TopupExternalRequest topupExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -206,10 +207,30 @@ class MockBillerApi extends Mock implements BillerControllerBillerServiceApi {
   }) async {
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BuiltMap<String, JsonObject>({
-        'status': JsonObject('SUCCESS'),
-        'referenceId': JsonObject('TOPUP_REF_123'),
-      }),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'TOPUP_REF_123'
+      ),
+      statusCode: 200,
+    );
+  }
+
+  @override
+  Future<Response<TransactionResponse>> jomPay({
+    required JomPayExternalRequest jomPayExternalRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      requestOptions: RequestOptions(path: ''),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'JOM_REF_123'
+      ),
       statusCode: 200,
     );
   }
@@ -217,7 +238,7 @@ class MockBillerApi extends Mock implements BillerControllerBillerServiceApi {
 
 class MockSwitchApi extends Mock implements SwitchControllerSwitchAdapterServiceApi {
   @override
-  Future<Response<JsonObject>> duitNowTransfer({
+  Future<Response<TransactionResponse>> duitNowTransfer({
     required DuitNowRequest duitNowRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -228,7 +249,10 @@ class MockSwitchApi extends Mock implements SwitchControllerSwitchAdapterService
   }) async {
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: JsonObject({'status': 'SUCCESS', 'referenceId': 'DN_REF_123'}),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'DN_REF_123'
+      ),
       statusCode: 200,
     );
   }
@@ -238,8 +262,30 @@ class MockOnboardingApi extends Mock implements OnboardingControllerOnboardingSe
 
 class MockEsspApi extends Mock implements EsspControllerBillerServiceApi {
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> purchase({
-    required BuiltMap<String, JsonObject> requestBody,
+  Future<Response<TransactionResponse>> purchase({
+    required EsspExternalRequest esspExternalRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      requestOptions: RequestOptions(path: ''),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'ESSP_REF_123'
+      ),
+      statusCode: 200,
+    );
+  }
+}
+
+class MockEWalletApi extends Mock implements EWalletControllerBillerServiceApi {
+  @override
+  Future<Response<BuiltMap<String, JsonObject>>> topup1({
+    required EWalletTopupExternalRequest eWalletTopupExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -251,8 +297,28 @@ class MockEsspApi extends Mock implements EsspControllerBillerServiceApi {
       requestOptions: RequestOptions(path: ''),
       data: BuiltMap<String, JsonObject>({
         'status': JsonObject('SUCCESS'), 
-        'transactionId': JsonObject('ESSP_REF_123')
+        'transactionId': JsonObject('EW_123')
       }),
+      statusCode: 200,
+    );
+  }
+
+  @override
+  Future<Response<TransactionResponse>> withdrawal({
+    required EWalletWithdrawExternalRequest eWalletWithdrawExternalRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      requestOptions: RequestOptions(path: ''),
+      data: TransactionResponse((b) => b
+        ..status = TransactionResponseStatusEnum.SUCCESS
+        ..transactionId = 'EW_WDL_123'
+      ),
       statusCode: 200,
     );
   }
@@ -266,6 +332,7 @@ void main() {
   late MockSwitchApi mockSwitchApi;
   late MockOnboardingApi mockOnboardingApi;
   late MockEsspApi mockEsspApi;
+  late MockEWalletApi mockEWalletApi;
   late MockDio mockDio;
 
   setUp(() {
@@ -275,6 +342,7 @@ void main() {
     mockBillerApi = MockBillerApi();
     mockOnboardingApi = MockOnboardingApi();
     mockEsspApi = MockEsspApi();
+    mockEWalletApi = MockEWalletApi();
     mockDio = MockDio();
     repository = TransactionRepository(
       ledgerApi: mockLedgerApi,
@@ -283,6 +351,7 @@ void main() {
       billerApi: mockBillerApi,
       onboardingApi: mockOnboardingApi,
       esspApi: mockEsspApi,
+      ewalletApi: mockEWalletApi,
       dio: mockDio,
     );
   });
@@ -325,9 +394,9 @@ void main() {
       
       // Verify the withdrawal request mapping
       final captured = mockLedgerApi.lastWithdrawalRequest!;
-      expect(captured.geofenceLat, 3.1390);
-      expect(captured.geofenceLng, 101.6869);
-      expect(captured.customerCardMasked, 'XXXX-XXXX-XXXX-1234');
+      expect(captured.location?.latitude, 3.1390);
+      expect(captured.location?.longitude, 101.6869);
+      expect(captured.customerCard, 'XXXX-XXXX-XXXX-1234');
       expect(captured.amount, 100.0);
     });
 
@@ -349,7 +418,7 @@ void main() {
 
       final captured = mockLedgerApi.lastDepositRequest!;
       expect(captured.amount, 500.0);
-      expect(captured.destinationAccount, '1234567890');
+      expect(captured.customerAccount, '1234567890');
     });
 
     test('executeTransaction (BILL_PAY) returns success', () async {

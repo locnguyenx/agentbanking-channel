@@ -1,4 +1,3 @@
-// @dart=2.19
 //
 // AUTO-GENERATED FILE, DO NOT MODIFY!
 //

@@ -83,6 +83,7 @@ class FundingSourceSelector extends StatelessWidget {
       case FundingSource.DUITNOW_MOBILE:
       case FundingSource.DUITNOW_MYKAD:
       case FundingSource.DUITNOW_BRN:
+      case FundingSource.DUITNOW_QR:
         return Icons.qr_code;
       case FundingSource.MYKAD_BIOMETRIC:
         return Icons.fingerprint;
@@ -101,6 +102,8 @@ class FundingSourceSelector extends StatelessWidget {
         return 'DUITNOW (IC)';
       case FundingSource.DUITNOW_BRN:
         return 'DUITNOW (BRN)';
+      case FundingSource.DUITNOW_QR:
+        return 'DUITNOW QR';
       case FundingSource.MYKAD_BIOMETRIC:
         return 'MYKAD';
     }

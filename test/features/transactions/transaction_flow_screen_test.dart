@@ -35,7 +35,7 @@ void main() {
           transactionProvider.overrideWith((ref) => MockTransactionNotifier()),
         ],
         child: const MaterialApp(
-          home: TransactionFlowScreen(title: 'Withdrawal', serviceCode: 'CASH_WDL'),
+          home: TransactionFlowScreen(title: 'Withdrawal', serviceCode: 'CASH_WITHDRAWAL'),
         ),
       ),
     );

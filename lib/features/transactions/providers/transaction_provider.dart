@@ -21,6 +21,7 @@ enum TransactionStatus {
   waitingMyKadScan,    // NEW: large cash AML check
   processing,
   processingDuitNow,
+  processingBiller, // NEW: for Topup/BillPay polling
   reversalQueued,
   success,
   failed,
@@ -155,10 +156,9 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       }
       await _executeFinal();
     } else {
-      state = state.copyWith(status: TransactionStatus.validatingService);
-      // Simulate backend validation before card insertion
-      await Future.delayed(validationDelay);
       state = state.copyWith(status: TransactionStatus.waitingCard);
+      // Automatically trigger card processing for simulation/hardware response
+      Future.delayed(const Duration(milliseconds: 500), () => processCard());
     }
   }
 
@@ -207,6 +207,9 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
         // Phase 2: Refetch balance instead of manual local updates
         await floatNotifier.fetchLatestBalance();
         state = state.copyWith(status: TransactionStatus.success, result: result);
+      } else if (result.status == 'PENDING') {
+        state = state.copyWith(result: result);
+        startBillerPolling(result.referenceId);
       } else {
         state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
       }
@@ -223,6 +226,66 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     }
   }
 
+  Future<void> jomPay(String billerCode, String ref1, String? ref2, Decimal amount) async {
+    if (complianceNotifier.state.isFrozen) {
+      state = state.copyWith(status: TransactionStatus.failed, error: 'ERR_COMPLIANCE_FROZEN');
+      return;
+    }
+
+    state = TransactionState(
+      status: TransactionStatus.quoting,
+      amount: amount,
+      serviceCode: 'JOMPAY',
+      fundingSource: FundingSource.CASH, // Default for now, could be extensible
+      metadata: {'billerCode': billerCode, 'ref1': ref1, 'ref2': ref2 ?? ''},
+    );
+
+    try {
+      final quote = await repository.getQuote(TransactionQuoteRequest(
+        serviceCode: 'JOMPAY',
+        amount: amount,
+        agentId: 'AGENT-123',
+        fundingSource: FundingSource.CASH,
+      ));
+      
+      state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
+    } catch (e) {
+      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+    }
+  }
+
+  Future<void> startBillerPolling(String transactionId) async {
+    state = state.copyWith(status: TransactionStatus.processingBiller);
+    
+    bool isApproved = false;
+    int retries = 0;
+    while (!isApproved && retries < 36) { // 3 minutes max
+      await Future.delayed(pollingInterval);
+      try {
+        final status = await repository.getBillerStatus(transactionId);
+        if (status == 'SUCCESS' || status == 'COMPLETED') {
+          isApproved = true;
+          await floatNotifier.fetchLatestBalance();
+          state = state.copyWith(status: TransactionStatus.success);
+          break;
+        } else if (status == 'FAILED' || status == 'EXPIRED') {
+          state = state.copyWith(status: TransactionStatus.failed, error: 'BILLER_$status');
+          break;
+        }
+      } catch (e) {
+        // Continue polling on transient errors
+      }
+      retries++;
+    }
+
+    if (!isApproved && state.status == TransactionStatus.processingBiller) {
+       state = state.copyWith(
+         status: TransactionStatus.failed,
+         error: 'Biller transaction still pending. Please check history later.',
+       );
+    }
+  }
+
   Future<void> _executeDuitNowFlow() async {
     state = state.copyWith(status: TransactionStatus.processing);
     try {
@@ -233,6 +296,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
         quoteId: state.quote!.quoteId,
         proxyId: proxyId ?? '',
         proxyType: proxyType,
+        amount: state.amount ?? Decimal.zero,
       );
 
       if (result.status == 'SUCCESS') {
@@ -333,16 +397,20 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     // Polling logic for S14 (DuitNow Approval)
     bool isApproved = false;
     int retries = 0;
-    while (!isApproved && retries < 36) { // 3 minutes max
+    while (!isApproved && retries < 36) { // 3 minutes max (36 * 5s)
       await Future.delayed(pollingInterval);
-      final status = await repository.getDuitNowStatus(referenceId);
-      if (status == 'SUCCESS' || status == 'COMPLETED') { // Support both labels
-        isApproved = true;
-        state = state.copyWith(status: TransactionStatus.success);
-        break;
-      } else if (status == 'FAILED' || status == 'EXPIRED') {
-        state = state.copyWith(status: TransactionStatus.failed, error: 'DUITNOW_$status');
-        break;
+      try {
+        final status = await repository.getDuitNowStatus(referenceId);
+        if (status == 'SUCCESS' || status == 'COMPLETED') { // Support both labels
+          isApproved = true;
+          state = state.copyWith(status: TransactionStatus.success);
+          break;
+        } else if (status == 'FAILED' || status == 'EXPIRED') {
+          state = state.copyWith(status: TransactionStatus.failed, error: 'DUITNOW_$status');
+          break;
+        }
+      } catch (e) {
+        // Continue polling on transient errors
       }
       retries++;
     }
@@ -369,6 +437,8 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
     switchApi: ref.watch(switchApiProvider),
     billerApi: ref.watch(billerApiProvider),
     onboardingApi: ref.watch(onboardingApiProvider),
+    esspApi: ref.watch(esspApiProvider),
+    ewalletApi: ref.watch(ewalletApiProvider),
     dio: ref.watch(dioProvider),
   );
 });

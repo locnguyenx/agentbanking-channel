@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Generate API Client
+### Task 1: Generate API Client [DONE]
 
 **BDD Scenarios:** N/A (Foundation setup)
 **BRD Requirements:** FR-01: Utilize `scripts/generate_api.sh`
@@ -20,24 +20,24 @@
 - Modify: `lib/api/generated/` (Generated content)
 - Test: N/A
 
-- [ ] **Step 1: Execute API Generation Script**
+- [x] **Step 1: Execute API Generation Script** [DONE]
 
 Run: `bash scripts/generate_api.sh`
 Expected: Completes without errors, building `lib/api/generated/`.
 
-- [ ] **Step 2: Verify Compilation**
+- [x] **Step 2: Verify Compilation** [DONE]
 
 Run: `flutter pub get && flutter analyze`
 Expected: PASS (No new compilation errors from generated files).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit** [DONE]
 
 ```bash
 git add lib/api/generated/
 git commit -m "chore: generate agent_api client from openapi.yaml"
 ```
 
-### Task 2: Implement OpenAPI Reusable Form Validators
+### Task 2: Implement OpenAPI Reusable Form Validators [DONE]
 
 **BDD Scenarios:** S.1, S.2 (Form Validation Edge Cases)
 **BRD Requirements:** FR-02: Implement generic validators
@@ -47,7 +47,7 @@ git commit -m "chore: generate agent_api client from openapi.yaml"
 - Create: `lib/core/utils/openapi_validators.dart`
 - Create: `test/core/utils/openapi_validators_test.dart`
 
-- [ ] **Step 1: Write failing validator tests**
+- [x] **Step 1: Write failing validator tests** [DONE]
 
 ```dart
 // In test/core/utils/openapi_validators_test.dart
@@ -64,12 +64,12 @@ void main() {
 }
 ```
 
-- [ ] **Step 2: Run validator tests to verify failure**
+- [x] **Step 2: Run validator tests to verify failure** [DONE]
 
 Run: `flutter test test/core/utils/openapi_validators_test.dart`
 Expected: FAIL
 
-- [ ] **Step 3: Implement Validator utility**
+- [x] **Step 3: Implement Validator utility** [DONE]
 
 ```dart
 // In lib/core/utils/openapi_validators.dart
@@ -91,19 +91,19 @@ class OpenApiValidators {
 }
 ```
 
-- [ ] **Step 4: Run validator tests to verify success**
+- [x] **Step 4: Run validator tests to verify success** [DONE]
 
 Run: `flutter test test/core/utils/openapi_validators_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit** [DONE]
 
 ```bash
 git add lib/core/utils/openapi_validators.dart test/core/utils/openapi_validators_test.dart
 git commit -m "feat: implement reusable openapi schema validators"
 ```
 
-### Task 3: Refactor Bill Payment UI Validations
+### Task 3: Refactor Bill Payment UI Validations [DONE]
 
 **BDD Scenarios:** S.1 (Agent enters value exceeding maximum length for text field)
 **BRD Requirements:** FR-03: Refactor current Biller forms
@@ -148,7 +148,7 @@ git commit -m "feat: apply openapi validation to bill payment form"
 - Modify: `lib/features/transactions/screens/jompay_form.dart` (Create new)
 - Test: `test/features/transactions/jompay_test.dart` (Create new)
 
-- [ ] **Step 1: Write failing UI test**
+- [x] **Step 1: Write failing UI test** [DONE]
 
 ```dart
 // In test/features/transactions/jompay_test.dart
@@ -162,21 +162,21 @@ void main() {
 }
 ```
 
-- [ ] **Step 2: Run UI test to verify failure**
+- [x] **Step 2: Run UI test to verify failure** [DONE]
 
 Run: `flutter test test/features/transactions/jompay_test.dart`
 Expected: FAIL
 
-- [ ] **Step 3: Implement JomPay Screen**
+- [x] **Step 3: Implement JomPay Screen** [DONE]
 
 Create `lib/features/transactions/screens/jompay_form.dart` incorporating `JomPayExternalRequest` generated model.
 
-- [ ] **Step 4: Run UI test to verify success**
+- [x] **Step 4: Run UI test to verify success** [DONE]
 
 Run: `flutter test test/features/transactions/jompay_test.dart`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit** [DONE]
 
 ```bash
 git add lib/features/transactions/screens/jompay_form.dart test/features/transactions/jompay_test.dart

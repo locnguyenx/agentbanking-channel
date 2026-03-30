@@ -14,6 +14,7 @@ import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.da
 import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:decimal/decimal.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
 
 class FakeTransactionRepository extends Fake implements TransactionRepository {
   @override
@@ -40,6 +41,7 @@ class FakeTransactionRepository extends Fake implements TransactionRepository {
     required String quoteId,
     required String proxyId,
     required String proxyType,
+    required Decimal amount,
   }) async {
     return TransactionExecutionResponse(status: 'SUCCESS', referenceId: 'DN123');
   }
@@ -64,6 +66,11 @@ class FakeKycRepository extends Fake implements KycRepository {
   @override
   Future<AmlCheckResponse> runAmlCheck(String icNumber) async {
     return AmlCheckResponse(isClear: true, amlReference: 'AML123');
+  }
+
+  @override
+  Future<void> openAccount(String icNumber, String productCode) async {
+    // No-op for fake
   }
 }
 
@@ -105,6 +112,7 @@ void main() {
           transactionRepositoryProvider.overrideWithValue(mockRepo),
           floatRepositoryProvider.overrideWithValue(mockFloatRepo),
           kycRepositoryProvider.overrideWithValue(mockKycRepo),
+          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
         ],
         child: const AgentBankingApp(),
       ));
@@ -129,10 +137,16 @@ void main() {
 
       await tester.tap(find.byKey(const Key('btn_bills')));
       await tester.pumpAndSettle();
+
+      // Select Biller from Dropdown
+      await tester.tap(find.text('Select Biller'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Air Selangor (1234)').last);
+      await tester.pumpAndSettle();
+
       final fields = find.byType(TextField);
-      await tester.enterText(fields.at(0), '1234');
-      await tester.enterText(fields.at(1), 'REF123');
-      await tester.enterText(fields.at(2), '50.00');
+      await tester.enterText(fields.at(0), 'REF123');
+      await tester.enterText(fields.at(1), '50.00');
       
       await tester.tap(find.text('PROCEED'));
       await tester.pumpAndSettle();
@@ -160,6 +174,7 @@ void main() {
           transactionRepositoryProvider.overrideWithValue(mockRepo),
           floatRepositoryProvider.overrideWithValue(mockFloatRepo),
           kycRepositoryProvider.overrideWithValue(mockKycRepo),
+          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
         ],
         child: const AgentBankingApp(),
       ));
@@ -175,10 +190,15 @@ void main() {
       await tester.tap(find.byKey(const Key('funding_source_CARD_EMV')));
       await tester.pumpAndSettle();
 
+      // Select Biller from Dropdown
+      await tester.tap(find.text('Select Biller'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Air Selangor (1234)').last);
+      await tester.pumpAndSettle();
+
       final fields = find.byType(TextField);
-      await tester.enterText(fields.at(0), '1234');
-      await tester.enterText(fields.at(1), 'REF123');
-      await tester.enterText(fields.at(2), '50.00');
+      await tester.enterText(fields.at(0), 'REF123');
+      await tester.enterText(fields.at(1), '50.00');
       
       await tester.tap(find.text('PROCEED'));
       await tester.pumpAndSettle();
@@ -204,6 +224,7 @@ void main() {
           transactionRepositoryProvider.overrideWithValue(mockRepo),
           floatRepositoryProvider.overrideWithValue(mockFloatRepo),
           kycRepositoryProvider.overrideWithValue(mockKycRepo),
+          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
         ],
         child: const AgentBankingApp(),
       ));
@@ -222,9 +243,15 @@ void main() {
       // DuitNow flow has 4 fields (Proxy + Biller + Ref + Amount)
       final fields = find.byType(TextField);
       await tester.enterText(fields.at(0), '0129999999'); 
-      await tester.enterText(fields.at(1), '1234');
-      await tester.enterText(fields.at(2), 'REF123');
-      await tester.enterText(fields.at(3), '75.00');
+
+      // Select Biller from Dropdown
+      await tester.tap(find.text('Select Biller'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Air Selangor (1234)').last);
+      await tester.pumpAndSettle();
+      
+      await tester.enterText(fields.at(1), 'REF123');
+      await tester.enterText(fields.at(2), '75.00');
       
       await tester.tap(find.text('PROCEED'));
       await tester.pumpAndSettle();

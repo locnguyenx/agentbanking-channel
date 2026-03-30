@@ -69,11 +69,12 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Agent Self-Onboarding')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // STEP 1: MYKAD
             const Text('Step 1: Scan MyKad', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             ListTile(
@@ -84,24 +85,75 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
                 child: const Text('Scan'),
               ),
             ),
-            const Divider(height: 48),
-            const Text('Step 2: Business Registration', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Divider(height: 32),
+
+            // STEP 2: PHONE & OTP
+            const Text('Step 2: Phone Verification', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            if (!state.otpVerified) ...[
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                enabled: state.myKadNumber != null && state.status == AgentOnboardingStatus.idle,
+                decoration: InputDecoration(
+                  labelText: 'Mobile Number',
+                  prefixIcon: const Icon(Icons.phone_android),
+                  suffixIcon: IconButton(
+                    icon: state.status == AgentOnboardingStatus.requestingOtp 
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.send),
+                    onPressed: (state.myKadNumber != null && state.status == AgentOnboardingStatus.idle)
+                      ? () => notifier.requestOtp(_phoneController.text)
+                      : null,
+                  ),
+                ),
+              ),
+              if (state.status == AgentOnboardingStatus.waitingOtp || state.status == AgentOnboardingStatus.verifyingOtp) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _otpController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  decoration: InputDecoration(
+                    labelText: 'Enter 6-digit OTP',
+                    suffixIcon: TextButton(
+                      onPressed: state.status == AgentOnboardingStatus.waitingOtp
+                        ? () => notifier.verifyOtp(_otpController.text)
+                        : null,
+                      child: state.status == AgentOnboardingStatus.verifyingOtp
+                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                        : const Text('Verify'),
+                    ),
+                  ),
+                ),
+              ],
+            ] else ...[
+              ListTile(
+                leading: const Icon(Icons.check_circle, color: Colors.green),
+                title: Text('Phone Verified: ${state.phoneNumber}'),
+              ),
+            ],
+            const Divider(height: 32),
+
+            // STEP 3: BUSINESS REGISTRATION
+            const Text('Step 3: Business Registration', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             TextField(
               controller: _ssmController,
+              enabled: state.otpVerified && state.status == AgentOnboardingStatus.idle,
               decoration: const InputDecoration(
                 labelText: 'SSM Registration Number',
                 hintText: 'e.g. 202301012345',
                 border: OutlineInputBorder(),
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade900, foregroundColor: Colors.white),
-                onPressed: (state.myKadNumber != null && state.status == AgentOnboardingStatus.idle)
+                onPressed: (state.otpVerified && state.status == AgentOnboardingStatus.idle)
                   ? () => notifier.submitOnboarding(_ssmController.text)
                   : null,
                 child: state.status == AgentOnboardingStatus.submitting
@@ -109,6 +161,10 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
                   : const Text('Submit for Instant Activation'),
               ),
             ),
+            if (state.errorMessage != null) ...[
+              const SizedBox(height: 16),
+              Text(state.errorMessage!, style: const TextStyle(color: Colors.red)),
+            ],
           ],
         ),
       ),

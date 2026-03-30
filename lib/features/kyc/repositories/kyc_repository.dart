@@ -1,51 +1,46 @@
+import 'package:dio/dio.dart';
 import 'package:agent_api/agent_api.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
 import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 
 class KycRepository {
   final OnboardingControllerOnboardingServiceApi onboardingApi;
+  final Dio _dio;
 
-  KycRepository(this.onboardingApi);
+  KycRepository(this.onboardingApi, this._dio);
 
   Future<KycValidationResponse> validateKyc(KycValidationRequest request) async {
-    final requestBody = BuiltMap<String, String>({
-      'icNumber': request.myKadData.icNumber,
-      'fullName': request.myKadData.fullName,
-      'address': request.myKadData.address,
-      'faceMatchScore': request.faceMatchScore.toString(),
-    });
+    final myKadVerifyRequest = MyKadVerifyRequest((b) => b
+      ..mykadNumber = request.myKadData.icNumber
+      ..name = request.myKadData.fullName
+      ..address = request.myKadData.address
+    );
 
-    final response = await onboardingApi.verifyMyKad(requestBody: requestBody);
+    final response = await onboardingApi.verifyMyKad(myKadVerifyRequest: myKadVerifyRequest);
     final data = response.data;
 
-    // Map BuiltMap<String, JsonObject> to domain model
-    final isApproved = data?['isApproved']?.value as bool? ?? false;
-    final kycId = data?['kycId']?.value as String?;
-    final reasons = (data?['reasons']?.value as List?)?.cast<String>() ?? [];
-
     return KycValidationResponse(
-      isApproved: isApproved,
-      kycId: kycId,
-      reasons: reasons,
+      isApproved: data?.status == KycVerifyResponseStatusEnum.VERIFIED,
+      kycId: data?.verificationId,
+      reasons: [],
     );
   }
 
   Future<AmlCheckResponse> runAmlCheck(String icNumber) async {
-    final requestBody = BuiltMap<String, String>({
-      'icNumber': icNumber,
-    });
+    final myKadVerifyRequest = MyKadVerifyRequest((b) => b
+      ..mykadNumber = icNumber
+      ..name = 'SYSTEM_AML_CHECK'
+    );
 
-    // Reuse verifyMyKad or biometricMatch if no specific AML endpoint in spec
-    final response = await onboardingApi.verifyMyKad(requestBody: requestBody);
+    final response = await onboardingApi.verifyMyKad(myKadVerifyRequest: myKadVerifyRequest);
     final data = response.data;
 
-    final isClear = data?['isClear']?.value as bool? ?? true;
-    final amlReference = data?['amlReference']?.value as String?;
-
     return AmlCheckResponse(
-      isClear: isClear,
-      amlReference: amlReference,
+      isClear: data?.status == KycVerifyResponseStatusEnum.VERIFIED,
+      amlReference: data?.verificationId,
     );
   }
 
@@ -68,5 +63,15 @@ class KycRepository {
       score: score,
       matchReference: matchReference,
     );
+  }
+
+  Future<void> openAccount(String icNumber, String productCode) async {
+    // Phase 2 Fix: Call real Gateway Onboarding service for account opening.
+    // We use _dio directly because the endpoint is missing from the current spec.
+    await _dio.post('/api/v1/onboarding/open-account', data: {
+      'icNumber': icNumber,
+      'productCode': productCode,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
   }
 }

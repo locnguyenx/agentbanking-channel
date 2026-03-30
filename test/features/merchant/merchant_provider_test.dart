@@ -1,36 +1,92 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:decimal/decimal.dart';
-import 'package:mockito/annotations.dart';
-import 'package:agentbanking_channel/features/merchant/providers/merchant_provider.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart';
-import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/merchant/providers/merchant_provider.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Reuse mocks or generate new ones
-@GenerateMocks([TransactionRepository, ICardReader, IPinPad, FloatNotifier, ComplianceNotifier])
-import 'merchant_provider_test.mocks.dart';
+class ManualMockTransactionRepository implements TransactionRepository {
+  RetailSaleResponse? nextRetailSaleResponse;
+  CashbackResponse? nextCashbackResponse;
+
+  @override
+  Future<RetailSaleResponse> executeRetailSale(Decimal amount, String agentId, {String? pinBlock, String? cardToken}) async {
+    if (nextRetailSaleResponse == null) throw UnimplementedError('nextRetailSaleResponse not set');
+    return nextRetailSaleResponse!;
+  }
+
+  @override
+  Future<CashbackResponse> executeCashback(Decimal purchaseAmount, Decimal cashbackAmount, String agentId, {String? pinBlock, String? cardToken}) async {
+    if (nextCashbackResponse == null) throw UnimplementedError('nextCashbackResponse not set');
+    return nextCashbackResponse!;
+  }
+  
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(invocation.memberName.toString());
+}
+
+class ManualMockComplianceNotifier extends StateNotifier<ComplianceState> implements ComplianceNotifier {
+  ManualMockComplianceNotifier() : super(ComplianceState(isFrozen: false));
+  @override
+  void freeze(String reason) => state = ComplianceState(isFrozen: true, reason: reason);
+  @override
+  void unlock() => state = ComplianceState(isFrozen: false);
+  @override
+  Future<void> simulateWebhookUnlock() async => unlock();
+}
+
+class ManualCardReader implements ICardReader {
+  CardData? nextCardData;
+  @override
+  Future<CardData?> readCard() async => nextCardData;
+  @override
+  Future<bool> isAvailable() async => true;
+}
+
+class ManualPinPad implements IPinPad {
+  String? nextPin;
+  @override
+  Future<String?> capturePin() async => nextPin;
+  @override
+  Future<bool> isAvailable() async => true;
+}
+
+class ManualMerchantTerminal implements IMerchantTerminal {
+  @override
+  Future<bool> isAvailable() async => true;
+  @override
+  Future<bool> displayQrCode(String data) async => true;
+  @override
+  Future<void> clearDisplay() async {}
+}
+
+class ManualFloatNotifier extends StateNotifier<FloatLedger> implements FloatNotifier {
+  ManualFloatNotifier() : super(FloatLedger(currentBalance: Decimal.zero, limit: Decimal.zero));
+  @override
+  Future<void> fetchLatestBalance() async {}
+}
 
 void main() {
   late MerchantNotifier notifier;
-  late MockTransactionRepository mockRepo;
-  late MockICardReader mockCardReader;
-  late MockIPinPad mockPinPad;
-  late MockFloatNotifier mockFloatNotifier;
-  late MockComplianceNotifier mockComplianceNotifier;
+  late ManualMockTransactionRepository mockRepo;
+  late ManualCardReader mockCardReader;
+  late ManualPinPad mockPinPad;
+  late ManualFloatNotifier mockFloatNotifier;
+  late ManualMockComplianceNotifier mockComplianceNotifier;
+  late ManualMerchantTerminal mockTerminal;
 
   setUp(() {
-    mockRepo = MockTransactionRepository();
-    mockCardReader = MockICardReader();
-    mockPinPad = MockIPinPad();
-    mockFloatNotifier = MockFloatNotifier();
-    mockComplianceNotifier = MockComplianceNotifier();
-
-    // Default compliance state: not frozen
-    when(mockComplianceNotifier.state).thenReturn(ComplianceState(isFrozen: false));
+    mockRepo = ManualMockTransactionRepository();
+    mockCardReader = ManualCardReader();
+    mockPinPad = ManualPinPad();
+    mockFloatNotifier = ManualFloatNotifier();
+    mockTerminal = ManualMerchantTerminal();
+    mockComplianceNotifier = ManualMockComplianceNotifier();
 
     notifier = MerchantNotifier(
       repository: mockRepo,
@@ -38,6 +94,7 @@ void main() {
       pinPad: mockPinPad,
       floatNotifier: mockFloatNotifier,
       complianceNotifier: mockComplianceNotifier,
+      merchantTerminal: mockTerminal,
     );
   });
 
@@ -53,20 +110,14 @@ void main() {
     expect(notifier.state.mdr, Decimal.parse('1.0')); // 1% of 100
 
     // 2. Process Card
-    when(mockCardReader.readCard()).thenAnswer((_) async => CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X'));
-    when(mockPinPad.capturePin()).thenAnswer((_) async => '123456');
-    when(mockFloatNotifier.fetchLatestBalance()).thenAnswer((_) async => {});
+    mockCardReader.nextCardData = CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X');
+    mockPinPad.nextPin = '123456';
     
-    when(mockRepo.executeRetailSale(
-      argThat(isA<Decimal>()), 
-      argThat(isA<String>()), 
-      pinBlock: anyNamed('pinBlock'), 
-      cardToken: anyNamed('cardToken')
-    )).thenAnswer((_) async => RetailSaleResponse(
-              floatCreditAmount: Decimal.parse('99.0'),
-              mdrAmount: Decimal.parse('1.0'),
-              receiptReference: 'REF-123',
-            ));
+    mockRepo.nextRetailSaleResponse = RetailSaleResponse(
+      floatCreditAmount: Decimal.parse('99.0'),
+      mdrAmount: Decimal.parse('1.0'),
+      receiptReference: 'REF-123',
+    );
 
     await notifier.processCardSale();
 
@@ -84,21 +135,14 @@ void main() {
     expect(notifier.state.status, MerchantStatus.waitingCard);
     expect(notifier.state.amount, Decimal.parse('150.0'));
 
-    when(mockCardReader.readCard()).thenAnswer((_) async => CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X'));
-    when(mockPinPad.capturePin()).thenAnswer((_) async => '123456');
-    when(mockFloatNotifier.fetchLatestBalance()).thenAnswer((_) async => {});
+    mockCardReader.nextCardData = CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X');
+    mockPinPad.nextPin = '123456';
 
-    when(mockRepo.executeCashback(
-      argThat(isA<Decimal>()), 
-      argThat(isA<Decimal>()), 
-      argThat(isA<String>()), 
-      pinBlock: anyNamed('pinBlock'), 
-      cardToken: anyNamed('cardToken')
-    )).thenAnswer((_) async => CashbackResponse(
-              purchaseAmount: Decimal.parse('100.0'),
-              cashBackAmount: Decimal.parse('50.0'),
-              receiptReference: 'REF-456',
-            ));
+    mockRepo.nextCashbackResponse = CashbackResponse(
+      purchaseAmount: Decimal.parse('100.0'),
+      cashBackAmount: Decimal.parse('50.0'),
+      receiptReference: 'REF-456',
+    );
 
     await notifier.processCashbackHandshake();
 

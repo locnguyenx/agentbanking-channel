@@ -38,3 +38,8 @@ final esspApiProvider = Provider<EsspControllerBillerServiceApi>((ref) {
   final dio = ref.watch(dioProvider);
   return EsspControllerBillerServiceApi(dio, standardSerializers);
 });
+
+final ewalletApiProvider = Provider<EWalletControllerBillerServiceApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return EWalletControllerBillerServiceApi(dio, standardSerializers);
+});

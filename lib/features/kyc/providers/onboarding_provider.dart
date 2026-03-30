@@ -4,6 +4,7 @@ import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
 import 'package:agentbanking_channel/api/api_providers.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
 
 enum OnboardingStatus {
   idle,
@@ -83,12 +84,14 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
     }
   }
 
-  void selectProduct(String productCode) {
+  Future<void> selectProduct(String productCode) async {
     state = state.copyWith(status: OnboardingStatus.provisioning, selectedProduct: productCode);
-    // In real app, call Provisioning API here
-    Future.delayed(const Duration(seconds: 2), () {
+    try {
+      await kycRepository.openAccount(state.myKadData?.icNumber ?? '', productCode);
       state = state.copyWith(status: OnboardingStatus.success);
-    });
+    } catch (e) {
+      state = state.copyWith(status: OnboardingStatus.failed, error: e.toString());
+    }
   }
 
   void reset() {
@@ -97,7 +100,10 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
 }
 
 final kycRepositoryProvider = Provider<KycRepository>((ref) {
-  return KycRepository(ref.watch(onboardingApiProvider));
+  return KycRepository(
+    ref.watch(onboardingApiProvider),
+    ref.watch(dioProvider),
+  );
 });
 
 final onboardingProvider = StateNotifierProvider<OnboardingNotifier, OnboardingState>((ref) {

@@ -8,7 +8,8 @@ class ValidationService {
 
   /// Validates Malaysian Biller Code format.
   static bool isValidBillerCode(String code) {
-    final regex = RegExp(r'^\d{3,6}$');
+    // Phase 5 Fix: Allow alphanumeric codes (e.g., JOMPAY) as per BDD requirements.
+    final regex = RegExp(r'^[a-zA-Z0-9]{3,10}$');
     return regex.hasMatch(code);
   }
 

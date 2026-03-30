@@ -10,6 +10,7 @@ enum FundingSource {
   DUITNOW_MYKAD,  // DuitNow proxy: MyKad Number
   DUITNOW_BRN,    // DuitNow proxy: Business Registration Number
   MYKAD_BIOMETRIC, // MyKad chip + thumbprint (for MyKad withdrawal)
+  DUITNOW_QR,     // NEW: DuitNow Dynamic QR (for Retail Sale)
 }
 
 // BillerRouting: used for JomPAY to separate ON-US from OFF-US flow

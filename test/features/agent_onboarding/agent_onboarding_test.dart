@@ -14,9 +14,16 @@ class FakeScanner implements IMyKadScanner {
 
 class FakeAgentOnboardingRepository implements AgentOnboardingRepository {
   AgentResponse? nextResponse;
+  bool nextOtpResult = true;
   
   @override
   AgentControllerOnboardingServiceApi get agentApi => throw UnimplementedError();
+
+  @override
+  Future<bool> requestOtp(String phoneNumber) async => nextOtpResult;
+
+  @override
+  Future<bool> verifyOtp(String phoneNumber, String otp) async => nextOtpResult;
 
   @override
   Future<AgentResponse?> submitOnboarding({
@@ -63,9 +70,29 @@ void main() {
     expect(notifier.state.myKadNumber, '900101011234');
   });
 
+  test('requestOtp transitions to waitingOtp on success', () async {
+    await notifier.requestOtp('0123456789');
+
+    expect(notifier.state.status, AgentOnboardingStatus.waitingOtp);
+    expect(notifier.state.phoneNumber, '0123456789');
+  });
+
+  test('verifyOtp transitions to idle with otpVerified true on success', () async {
+    notifier.state = notifier.state.copyWith(phoneNumber: '0123456789');
+    
+    await notifier.verifyOtp('123456');
+
+    expect(notifier.state.status, AgentOnboardingStatus.idle);
+    expect(notifier.state.otpVerified, isTrue);
+  });
+
   test('submitOnboarding transitions to activated for valid SSM (S10.1)', () async {
-    notifier.state = notifier.state.copyWith(myKadNumber: '900101011234');
-    fakeRepo.nextResponse = AgentResponse((b) => b..status = 'ACTIVE');
+    notifier.state = notifier.state.copyWith(
+      myKadNumber: '900101011234',
+      phoneNumber: '0123456789',
+      otpVerified: true,
+    );
+    fakeRepo.nextResponse = AgentResponse((b) => b..status = AgentResponseStatusEnum.ACTIVE);
 
     await notifier.submitOnboarding('202301012345');
 
@@ -74,8 +101,12 @@ void main() {
   });
 
   test('submitOnboarding transitions to manualReview for AML-prefixed SSM (S10.2)', () async {
-    notifier.state = notifier.state.copyWith(myKadNumber: '900101011234');
-    fakeRepo.nextResponse = AgentResponse((b) => b..status = 'PENDING_REVIEW');
+    notifier.state = notifier.state.copyWith(
+      myKadNumber: '900101011234',
+      phoneNumber: '0123456789',
+      otpVerified: true,
+    );
+    fakeRepo.nextResponse = AgentResponse((b) => b..status = AgentResponseStatusEnum.PENDING);
 
     await notifier.submitOnboarding('AML999');
 

@@ -1,4 +1,3 @@
-// @dart=2.19
 import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 

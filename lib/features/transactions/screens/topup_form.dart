@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/services/validation_service.dart';
+import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class TopUpForm extends StatefulWidget {
   final Function(String telco, String phoneNumber, Decimal amount) onSubmit;
@@ -36,18 +37,22 @@ class _TopUpFormState extends State<TopUpForm> {
             ),
             TextFormField(
               controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'Phone Number (e.g. 012-3456789)'),
+              decoration: const InputDecoration(labelText: 'Phone Number (e.g. 0123456789)'),
               keyboardType: TextInputType.phone,
-              validator: (v) => ValidationService.isValidPhoneNumber(v ?? '') 
-                  ? null : 'Invalid Phone Number',
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Invalid Phone Number';
+                if (!ValidationService.isValidPhoneNumber(v)) return 'Invalid Phone Number';
+                return null;
+              },
             ),
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Amount (RM)'),
               keyboardType: TextInputType.number,
               validator: (v) {
-                final amount = Decimal.tryParse(v ?? '');
-                return (amount != null && amount > Decimal.zero) ? null : 'Invalid Amount';
+                if (v == null || v.isEmpty) return 'Invalid Amount';
+                final err = OpenApiValidators.minMax(v, min: 1.0, max: 1000.0);
+                return err != null ? 'Invalid Amount' : null;
               },
             ),
             const SizedBox(height: 24),

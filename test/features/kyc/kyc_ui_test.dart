@@ -15,9 +15,17 @@ class DummyKycRepository implements KycRepository {
   @override
   OnboardingControllerOnboardingServiceApi get onboardingApi => throw UnimplementedError();
   @override
+  Dio get _dio => throw UnimplementedError();
+  @override
   Future<KycValidationResponse> validateKyc(KycValidationRequest request) async => throw UnimplementedError();
   @override
   Future<AmlCheckResponse> runAmlCheck(String icNumber) async => throw UnimplementedError();
+  @override
+  Future<BiometricMatchResponse> submitBiometrics(BiometricMatchRequest request) async {
+    return BiometricMatchResponse(isMatched: true, score: 0.95, matchReference: 'TXN-KYC');
+  }
+  @override
+  Future<void> openAccount(String icNumber, String productCode) async {}
 }
 
 class DummyScanner implements IMyKadScanner {

@@ -14,9 +14,9 @@ class RetailSaleResponse {
   });
 
   factory RetailSaleResponse.fromJson(Map<String, dynamic> json) => RetailSaleResponse(
-    floatCreditAmount: Decimal.parse(json['floatCreditAmount'].toString()),
+    floatCreditAmount: Decimal.parse((json['netToMerchant'] ?? json['floatCreditAmount']).toString()),
     mdrAmount: Decimal.parse(json['mdrAmount'].toString()),
-    receiptReference: json['receiptReference'],
+    receiptReference: json['transactionId'] ?? json['receiptReference'] ?? '',
   );
 }
 

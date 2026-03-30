@@ -9,6 +9,7 @@ import 'package:agentbanking_channel/features/transactions/screens/topup_form.da
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/transactions/screens/cashless_payment_form.dart';
 import 'package:agentbanking_channel/features/transactions/screens/special_services_form.dart';
+import 'package:agentbanking_channel/features/transactions/screens/jompay_form.dart';
 import 'package:agentbanking_channel/features/transactions/screens/ewallet_form.dart';
 import 'package:agentbanking_channel/features/transactions/widgets/funding_source_selector.dart';
 import 'package:agentbanking_channel/features/transactions/widgets/balance_inquiry_result.dart';
@@ -39,6 +40,13 @@ class TransactionFlowScreen extends ConsumerWidget {
     final agentId = authState.user?.agentId ?? 'AGENT_UNKNOWN';
     final amountText = ref.watch(transactionAmountProvider);
     final selectedSource = ref.watch(fundingSourceProvider);
+    
+    // Auto-update funding source if it's the first build for withdrawal
+    if (state.status == TransactionStatus.idle && serviceCode == 'CASH_WITHDRAWAL' && selectedSource == FundingSource.CASH) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(fundingSourceProvider.notifier).state = FundingSource.CARD_EMV;
+      });
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -89,7 +97,7 @@ class TransactionFlowScreen extends ConsumerWidget {
   Widget _buildStateView(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText, FundingSource selectedSource) {
     switch (state.status) {
       case TransactionStatus.idle:
-        final bool supportsMultiSource = ['BILL_PAY', 'TOP_UP', 'CASH_DEP', 'ESSP_PURCHASE', 'PIN_PURCHASE', 'SARAWAK_PAY', 'CASHLESS_PAY'].contains(serviceCode);
+        final bool supportsMultiSource = ['BILL_PAY', 'TOP_UP', 'CASH_DEP', 'ESSP_PURCHASE', 'PIN_PURCHASE', 'SARAWAK_PAY', 'CASHLESS_PAY', 'JOMPAY'].contains(serviceCode);
         
         return Column(
           children: [
@@ -141,8 +149,21 @@ class TransactionFlowScreen extends ConsumerWidget {
               const Divider(height: 24),
               _buildSummaryRow('Transaction Fee', 'RM ${state.quote?.fee}'),
               const Divider(height: 24),
-              _buildSummaryRow('Total to Charged', 'RM ${state.quote?.total}', isBold: true),
+              _buildSummaryRow('Total to Deduct', 'RM ${state.quote?.total}', isBold: true),
               const SizedBox(height: 32),
+              if (selectedSource == FundingSource.CASH && serviceCode == 'CASH_DEPOSIT') 
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.green.shade100)),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.monetization_on, color: Colors.green),
+                      SizedBox(width: 12),
+                      Expanded(child: Text('Confirm Cash Received from Customer', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold))),
+                    ],
+                  ),
+                ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
@@ -241,6 +262,27 @@ class TransactionFlowScreen extends ConsumerWidget {
             Text('Customer should enter PIN on the PinPad', style: TextStyle(color: Colors.grey, fontSize: 13)),
           ],
         );
+      case TransactionStatus.processingDuitNow:
+      case TransactionStatus.processingBiller:
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 24),
+              Text(
+                'Processing Biller...', 
+                key: const Key('status_processing_biller'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Checking transaction status with provider',
+                style: TextStyle(color: Colors.grey, fontSize: 13)
+              ),
+            ],
+          ),
+        );
       case TransactionStatus.success:
         if (serviceCode == 'BALANCE_INQUIRY' && state.result?.balance != null) {
           return BalanceInquiryResult(
@@ -317,6 +359,17 @@ class TransactionFlowScreen extends ConsumerWidget {
             serviceCode: serviceCode,
             fundingSource: ref.read(fundingSourceProvider),
             metadata: {'billerCode': biller, 'ref1': ref1},
+          );
+        },
+      );
+    } else if (serviceCode == 'JOMPAY') {
+      return JomPayForm(
+        onSubmit: (req) {
+          ref.read(transactionProvider.notifier).jomPay(
+            req.billerCode,
+            req.ref1,
+            req.ref2,
+            Decimal.parse(req.amount.toString()),
           );
         },
       );

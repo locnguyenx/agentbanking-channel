@@ -11,18 +11,22 @@ final agentOnboardingRepositoryProvider = Provider<AgentOnboardingRepository>((r
   );
 });
 
-enum AgentOnboardingStatus { idle, scanning, submitting, activated, manualReview, failed }
+enum AgentOnboardingStatus { idle, scanning, requestingOtp, waitingOtp, verifyingOtp, submitting, activated, manualReview, failed }
 
 class AgentOnboardingState {
   final AgentOnboardingStatus status;
   final String? myKadNumber;
   final String? ssmNumber;
+  final String? phoneNumber;
+  final bool otpVerified;
   final String? errorMessage;
 
   AgentOnboardingState({
     required this.status,
     this.myKadNumber,
     this.ssmNumber,
+    this.phoneNumber,
+    this.otpVerified = false,
     this.errorMessage,
   });
 
@@ -30,12 +34,16 @@ class AgentOnboardingState {
     AgentOnboardingStatus? status,
     String? myKadNumber,
     String? ssmNumber,
+    String? phoneNumber,
+    bool? otpVerified,
     String? errorMessage,
   }) {
     return AgentOnboardingState(
       status: status ?? this.status,
       myKadNumber: myKadNumber ?? this.myKadNumber,
       ssmNumber: ssmNumber ?? this.ssmNumber,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      otpVerified: otpVerified ?? this.otpVerified,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -51,7 +59,7 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
   }) : super(AgentOnboardingState(status: AgentOnboardingStatus.idle));
 
   Future<void> scanMyKad() async {
-    state = state.copyWith(status: AgentOnboardingStatus.scanning);
+    state = state.copyWith(status: AgentOnboardingStatus.scanning, errorMessage: null);
     try {
       final result = await myKadScanner.scanMyKad();
       if (result != null) {
@@ -61,6 +69,41 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
         );
       } else {
         state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'MyKad scan cancelled');
+      }
+    } catch (e) {
+      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+    }
+  }
+
+  Future<void> requestOtp(String phoneNumber) async {
+    state = state.copyWith(status: AgentOnboardingStatus.requestingOtp, errorMessage: null);
+    try {
+      final success = await repository.requestOtp(phoneNumber);
+      if (success) {
+        state = state.copyWith(
+          status: AgentOnboardingStatus.waitingOtp,
+          phoneNumber: phoneNumber,
+        );
+      } else {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Failed to request OTP');
+      }
+    } catch (e) {
+      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+    }
+  }
+
+  Future<void> verifyOtp(String otp) async {
+    if (state.phoneNumber == null) return;
+    state = state.copyWith(status: AgentOnboardingStatus.verifyingOtp, errorMessage: null);
+    try {
+      final success = await repository.verifyOtp(state.phoneNumber!, otp);
+      if (success) {
+        state = state.copyWith(
+          status: AgentOnboardingStatus.idle,
+          otpVerified: true,
+        );
+      } else {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Invalid OTP');
       }
     } catch (e) {
       state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
@@ -86,9 +129,9 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
 
       // Map backend status to UI status
       // BDD Feature 10 S10.2: AML Flag -> Manual Review
-      if (response.status == 'PENDING_REVIEW' || ssmNumber.startsWith('AML')) {
+      if (response.status == AgentResponseStatusEnum.PENDING || ssmNumber.startsWith('AML')) {
         state = state.copyWith(status: AgentOnboardingStatus.manualReview);
-      } else if (response.status == 'ACTIVE') {
+      } else if (response.status == AgentResponseStatusEnum.ACTIVE) {
         state = state.copyWith(status: AgentOnboardingStatus.activated);
       } else {
         state = state.copyWith(status: AgentOnboardingStatus.activated); // Default success

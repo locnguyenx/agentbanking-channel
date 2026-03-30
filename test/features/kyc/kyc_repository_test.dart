@@ -11,8 +11,8 @@ import 'package:mockito/mockito.dart';
 // Concrete fake for OnboardingApi to satisfy the new repository constructor
 class FakeOnboardingApi extends Mock implements OnboardingControllerOnboardingServiceApi {
   @override
-  Future<Response<BuiltMap<String, JsonObject>>> verifyMyKad({
-    required BuiltMap<String, String> requestBody,
+  Future<Response<KycVerifyResponse>> verifyMyKad({
+    required MyKadVerifyRequest myKadVerifyRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -20,22 +20,17 @@ class FakeOnboardingApi extends Mock implements OnboardingControllerOnboardingSe
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final Map<String, dynamic> data = {};
-    if (requestBody['faceMatchScore'] != null && double.parse(requestBody['faceMatchScore']!) > 0.8) {
-      data['isApproved'] = true;
-      data['kycId'] = 'KYC_MOCK_123';
-      data['reasons'] = <String>[];
-    } else if (requestBody['icNumber'] != null) {
-      data['isClear'] = true;
-      data['amlReference'] = 'AML_MOCK_123';
-      data['isApproved'] = false;
-    }
+    final status = (myKadVerifyRequest.name == 'TEST USER' || myKadVerifyRequest.name == 'SYSTEM_AML_CHECK')
+        ? KycVerifyResponseStatusEnum.VERIFIED 
+        : KycVerifyResponseStatusEnum.PENDING;
 
-    final responseData = BuiltMap<String, JsonObject>(
-      data.map((k, v) => MapEntry(k, JsonObject(v)))
+    final responseData = KycVerifyResponse((b) => b
+      ..status = status
+      ..verificationId = myKadVerifyRequest.name == 'SYSTEM_AML_CHECK' ? 'AML_MOCK_123' : 'KYC_MOCK_123'
+      ..message = 'Success'
     );
 
-    return Response<BuiltMap<String, JsonObject>>(
+    return Response<KycVerifyResponse>(
       data: responseData,
       requestOptions: RequestOptions(path: ''),
       statusCode: 200,
@@ -66,13 +61,34 @@ class FakeOnboardingApi extends Mock implements OnboardingControllerOnboardingSe
   }
 }
 
+class MockDio extends Mock implements Dio {
+  @override
+  Future<Response<T>> post<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      requestOptions: RequestOptions(path: path),
+      data: {'status': 'SUCCESS'} as T,
+      statusCode: 200,
+    );
+  }
+}
+
 void main() {
   late KycRepository repository;
   late FakeOnboardingApi fakeApi;
+  late MockDio mockDio;
 
   setUp(() {
     fakeApi = FakeOnboardingApi();
-    repository = KycRepository(fakeApi);
+    mockDio = MockDio();
+    repository = KycRepository(fakeApi, mockDio);
   });
 
   group('KycRepository', () {

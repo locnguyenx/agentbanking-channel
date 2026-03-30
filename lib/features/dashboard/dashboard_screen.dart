@@ -9,6 +9,7 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:intl/intl.dart';
 import 'package:agentbanking_channel/features/transactions/screens/bill_payment_form.dart';
 import 'package:agentbanking_channel/features/transactions/screens/topup_form.dart';
+import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -54,24 +55,24 @@ class DashboardScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAgentHeader(context, agentName, agentTier, balanceStr, isTablet),
+            _buildAgentHeader(context, ref, agentName, agentTier, balanceStr, isTablet),
             SizedBox(height: isTablet ? 48 : 32),
             Text('QUICK ACTIONS', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
             const SizedBox(height: 16),
-            _buildQuickActionsGrid(context, isTablet),
+            _buildQuickActionsGrid(context, ref, isTablet),
             SizedBox(height: isTablet ? 48 : 32),
             Text('SERVICES', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
             const SizedBox(height: 16),
-            _buildServicesRow(context, isTablet),
+            _buildServicesRow(context, ref, isTablet),
             SizedBox(height: isTablet ? 48 : 32),
-            _buildRecentActivity(context, isTablet),
+            _buildRecentActivity(context, ref, isTablet),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAgentHeader(BuildContext context, String name, String tier, String balance, bool isTablet) {
+  Widget _buildAgentHeader(BuildContext context, WidgetRef ref, String name, String tier, String balance, bool isTablet) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(isTablet ? 40 : 24),
@@ -139,7 +140,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickActionsGrid(BuildContext context, bool isTablet) {
+  Widget _buildQuickActionsGrid(BuildContext context, WidgetRef ref, bool isTablet) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -148,15 +149,18 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       children: [
-        _buildActionCard(context, 'Withdrawal', Icons.outbox, Colors.blue, 'CASH_WDL', isTablet),
-        _buildActionCard(context, 'Deposit', Icons.move_to_inbox, Colors.green, 'CASH_DEP', isTablet),
+        _buildActionCard(context, ref, 'Withdrawal', Icons.outbox, Colors.blue, 'CASH_WITHDRAWAL', isTablet),
+        _buildActionCard(context, ref, 'Deposit', Icons.move_to_inbox, Colors.green, 'CASH_DEPOSIT', isTablet),
       ],
     );
   }
 
-  Widget _buildActionCard(BuildContext context, String title, IconData icon, Color color, String serviceCode, bool isTablet) {
+  Widget _buildActionCard(BuildContext context, WidgetRef ref, String title, IconData icon, Color color, String serviceCode, bool isTablet) {
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionFlowScreen(title: title, serviceCode: serviceCode))),
+      onTap: () {
+        ref.read(transactionProvider.notifier).reset();
+        Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionFlowScreen(title: title, serviceCode: serviceCode)));
+      },
       child: Container(
         padding: EdgeInsets.all(isTablet ? 20 : 16),
         decoration: BoxDecoration(
@@ -179,7 +183,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildServicesRow(BuildContext context, bool isTablet) {
+  Widget _buildServicesRow(BuildContext context, WidgetRef ref, bool isTablet) {
     return Center(
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: isTablet ? 900 : 600),
@@ -189,14 +193,17 @@ class DashboardScreen extends ConsumerWidget {
           crossAxisCount: isTablet ? 4 : 4,
           mainAxisSpacing: isTablet ? 32 : 24,
           crossAxisSpacing: 16,
-          childAspectRatio: isTablet ? 0.95 : 0.85,
+          childAspectRatio: isTablet ? 0.85 : 0.60,
           children: [
             _buildCircularService(
               context,
               'Inquiry',
               Icons.search,
               Colors.blue,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Balance Inquiry', serviceCode: 'BALANCE_INQUIRY'))),
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Balance Inquiry', serviceCode: 'BALANCE_INQUIRY')));
+              },
               isTablet,
             ),
             _buildCircularService(
@@ -212,16 +219,22 @@ class DashboardScreen extends ConsumerWidget {
               context,
               'Top-up',
               Icons.phone_android,
-              Colors.purple,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Prepaid Top-up', serviceCode: 'TOP_UP'))),
+              Colors.red,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Prepaid Topup', serviceCode: 'TOP_UP')));
+              },
               isTablet,
             ),
             _buildCircularService(
               context,
               'Bills',
               Icons.receipt_long,
-              Colors.red,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Bill Payment', serviceCode: 'BILL_PAY'))),
+              Colors.purple,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Bill Payment', serviceCode: 'BILL_PAY')));
+              },
               isTablet,
               key: const Key('btn_bills'),
             ),
@@ -230,7 +243,10 @@ class DashboardScreen extends ConsumerWidget {
               'E-Wallet',
               Icons.account_balance_wallet,
               Colors.teal,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Sarawak Pay', serviceCode: 'SARAWAK_PAY'))),
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Sarawak Pay', serviceCode: 'SARAWAK_PAY')));
+              },
               isTablet,
               key: const Key('btn_sarawak'),
             ),
@@ -239,7 +255,10 @@ class DashboardScreen extends ConsumerWidget {
               'Cashless',
               Icons.qr_code_scanner,
               Colors.deepPurple,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Cashless Payment', serviceCode: 'CASHLESS_PAY'))),
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Cashless Payment', serviceCode: 'CASHLESS_PAY')));
+              },
               isTablet,
               key: const Key('btn_cashless'),
             ),
@@ -248,18 +267,24 @@ class DashboardScreen extends ConsumerWidget {
               'eSSP',
               Icons.card_membership,
               Colors.amber,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'eSSP Purchase', serviceCode: 'ESSP_PURCHASE'))),
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'eSSP Purchase', serviceCode: 'ESSP_PURCHASE')));
+              },
               isTablet,
               key: const Key('btn_essp'),
             ),
             _buildCircularService(
               context,
-              'PIN',
-              Icons.vpn_key,
-              Colors.brown,
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'PIN Purchase', serviceCode: 'PIN_PURCHASE'))),
+              'JomPAY',
+              Icons.payments,
+              Colors.redAccent,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'JomPAY', serviceCode: 'JOMPAY')));
+              },
               isTablet,
-              key: const Key('btn_pin'),
+              key: const Key('btn_jompay'),
             ),
           ],
         ),
@@ -290,13 +315,15 @@ class DashboardScreen extends ConsumerWidget {
         Text(
           title, 
           textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: isTablet ? 16 : 12, fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 
-  Widget _buildRecentActivity(BuildContext context, bool isTablet) {
+  Widget _buildRecentActivity(BuildContext context, WidgetRef ref, bool isTablet) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

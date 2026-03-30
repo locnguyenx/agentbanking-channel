@@ -57,8 +57,8 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
               },
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Please select a biller';
-                if (v == 'JOMPAY') return null; // JomPAY code is dynamic
-                return OpenApiValidators.regex(v, r'^[0-9]{4}$');
+                if (v == 'JOMPAY') return null;
+                return OpenApiValidators.regex(v, r'^[0-9]{3,10}$');
               },
             ),
             const SizedBox(height: 16),
@@ -78,7 +78,7 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
-              validator: (v) => OpenApiValidators.minMax(v, min: 0.01),
+              validator: (v) => OpenApiValidators.minMax(v, min: 0.01, max: 10000.0),
             ),
             const SizedBox(height: 32),
             ElevatedButton(

@@ -12,20 +12,39 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 
-@GenerateMocks([TransactionRepository, ICardReader, IPinPad, FloatNotifier, ReversalService])
-import 'compliance_integration_test.mocks.dart';
+
+class ManualMockTransactionRepository extends Mock implements TransactionRepository {
+  TransactionQuoteResponse? mockQuote;
+
+  @override
+  Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async {
+    return mockQuote ?? TransactionQuoteResponse(
+      quoteId: 'Q1', 
+      amount: request.amount, 
+      fee: Decimal.zero, 
+      commission: Decimal.zero,
+      total: request.amount
+    );
+  }
+}
+
+class MockICardReader extends Mock implements ICardReader {}
+class MockIPinPad extends Mock implements IPinPad {}
+class MockFloatNotifier extends Mock implements FloatNotifier {}
+class MockReversalService extends Mock implements ReversalService {}
+class MockMyKadScanner extends Mock implements IMyKadScanner {}
 
 void main() {
   late TransactionNotifier notifier;
   late ComplianceNotifier complianceNotifier;
-  late MockTransactionRepository mockRepo;
+  late ManualMockTransactionRepository mockRepo;
   late MockICardReader mockCardReader;
   late MockIPinPad mockPinPad;
   late MockFloatNotifier mockFloatNotifier;
   late MockReversalService mockReversalService;
 
   setUp(() {
-    mockRepo = MockTransactionRepository();
+    mockRepo = ManualMockTransactionRepository();
     mockCardReader = MockICardReader();
     mockPinPad = MockIPinPad();
     mockFloatNotifier = MockFloatNotifier();
@@ -65,7 +84,6 @@ void main() {
     complianceNotifier.freeze('VELOCITY_EXCEEDED');
     
     // 2. Simulate Webhook (async)
-    // We use a shorter delay for testing if we wanted, but let's test the real one
     final unlockFuture = complianceNotifier.simulateWebhookUnlock();
     
     // During delay, still frozen
@@ -75,13 +93,13 @@ void main() {
     expect(complianceNotifier.state.isFrozen, false);
 
     // 3. Start transaction now should work
-    when(mockRepo.getQuote(any)).thenAnswer((_) async => TransactionQuoteResponse(
+    mockRepo.mockQuote = TransactionQuoteResponse(
       quoteId: 'Q1', 
       amount: Decimal.parse('10.0'), 
       fee: Decimal.zero, 
       commission: Decimal.zero,
       total: Decimal.parse('10.0')
-    ));
+    );
 
     await notifier.startTransaction(
       Decimal.parse('10.0'), 

@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      built_value_generator:built_value:
+        generate_for:
+          exclude:
+            - lib/api/generated/**
+      mockito:mockBuilder:
+        generate_for:
+          include:
+            - test/**
+          exclude:
+            - lib/api/generated/**
