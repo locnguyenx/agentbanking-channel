@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
-import 'package:agentbanking_channel/features/transactions/services/validation_service.dart';
+import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class BillPaymentForm extends StatefulWidget {
   final Function(String billerCode, String ref1, Decimal amount) onSubmit;
@@ -17,6 +17,16 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
   final _refController = TextEditingController();
   final _amountController = TextEditingController();
 
+  final List<Map<String, String>> _billers = [
+    {'name': 'JomPAY', 'code': 'JOMPAY'},
+    {'name': 'Tenaga Nasional Berhad (TNB)', 'code': '5454'},
+    {'name': 'Telekom Malaysia (TM)', 'code': '8888'},
+    {'name': 'Air Selangor', 'code': '1234'},
+    {'name': 'Indah Water Konsortium', 'code': '5566'},
+  ];
+
+  String? _selectedBiller;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,31 +34,59 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextFormField(
-              controller: _billerController,
-              decoration: const InputDecoration(labelText: 'Biller Code'),
-              keyboardType: TextInputType.number,
-              validator: (v) => ValidationService.isValidBillerCode(v ?? '') 
-                  ? null : 'Invalid Biller Code',
-            ),
-            TextFormField(
-              controller: _refController,
-              decoration: const InputDecoration(labelText: 'Ref-1'),
-              validator: (v) => ValidationService.isValidRef1(v ?? '') 
-                  ? null : 'Invalid Ref-1',
-            ),
-            TextFormField(
-              controller: _amountController,
-              decoration: const InputDecoration(labelText: 'Amount (RM)'),
-              keyboardType: TextInputType.number,
+            DropdownButtonFormField<String>(
+              value: _selectedBiller,
+              isExpanded: true,
+              decoration: const InputDecoration(
+                labelText: 'Select Biller',
+                border: OutlineInputBorder(),
+              ),
+              items: _billers.map((biller) {
+                return DropdownMenuItem<String>(
+                  value: biller['code'],
+                  child: Text('${biller['name']} (${biller['code']})'),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedBiller = value;
+                  _billerController.text = value ?? '';
+                });
+              },
               validator: (v) {
-                final amount = Decimal.tryParse(v ?? '');
-                return (amount != null && amount > Decimal.zero) ? null : 'Invalid Amount';
+                if (v == null || v.isEmpty) return 'Please select a biller';
+                if (v == 'JOMPAY') return null; // JomPAY code is dynamic
+                return OpenApiValidators.regex(v, r'^[0-9]{4}$');
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _refController,
+              decoration: const InputDecoration(
+                labelText: 'Ref-1 (Account Number)',
+                border: OutlineInputBorder(),
+              ),
+              validator: (v) => OpenApiValidators.length(v, minLen: 5, maxLen: 20),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _amountController,
+              decoration: const InputDecoration(
+                labelText: 'Amount (RM)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              validator: (v) => OpenApiValidators.minMax(v, min: 0.01),
+            ),
+            const SizedBox(height: 32),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   widget.onSubmit(
@@ -58,7 +96,7 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
                   );
                 }
               },
-              child: const Text('PROCEED'),
+              child: const Text('PROCEED', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],
         ),
