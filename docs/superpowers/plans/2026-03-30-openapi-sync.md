@@ -114,9 +114,23 @@ git commit -m "feat: implement reusable openapi schema validators"
 - Test: `test/features/transactions/bill_payment_test.dart`
 
 - [x] **Step 1: Write failing UI test** [DONE]
+
+Add test to `test/features/transactions/bill_payment_test.dart` verifying that entering 11 chars in Biller Code field shows 'Cannot exceed 10 characters' error.
+
 - [x] **Step 2: Run UI test to verify failure** [DONE]
+
+Run: `flutter test test/features/transactions/bill_payment_test.dart`
+Expected: FAIL
+
 - [x] **Step 3: Implement BillPaymentForm validator** [DONE]
+
+Import `OpenApiValidators` and apply `validator: (v) => OpenApiValidators.length(v, maxLen: 10)` to the Biller Code `TextFormField` in `lib/features/transactions/screens/bill_payment_form.dart`.
+
 - [x] **Step 4: Run UI test to verify success** [DONE]
+
+Run: `flutter test test/features/transactions/bill_payment_test.dart`
+Expected: PASS
+
 - [x] **Step 5: Commit** [DONE]
 
 ```bash
@@ -124,7 +138,7 @@ git add lib/features/transactions/screens/bill_payment_form.dart test/features/t
 git commit -m "feat: apply openapi validation to bill payment form"
 ```
 
-### Task 4: Implement JomPay Feature Integration
+### Task 4: Implement JomPay Feature Integration [DONE]
 
 **BDD Scenarios:** S.3 (Agent completes successful JomPay transaction)
 **BRD Requirements:** FR-04: Implement new endpoint flows
@@ -182,10 +196,13 @@ git commit -m "feat: full JomPay endpoint integration"
 - Modify: `lib/features/merchant/screens/merchant_sale_screen.dart` (for Retail Sale/Cashback/Pin Purchase)
 
 - [x] **Step 1: Write failing UI tests for Validation** [DONE]
+Add validation tests for Withdrawal, Deposit, and Merchant fields to respective test files.
 - [x] **Step 2: Run UI tests to verify failure** [DONE]
 - [x] **Step 3: Implement Validators & DTO Mappers** [DONE]
+Import `OpenApiValidators` and apply validation. Map domain models to `WithdrawalExternalRequest`, `DepositExternalRequest`, `RetailSaleCommand`, `CashBackCommand`, `PinPurchaseCommand` in repositories.
 - [x] **Step 4: Run tests to verify success** [DONE]
 - [x] **Step 5: Commit** [DONE]
+
 ```bash
 git commit -am "feat: apply openapi clients and validators to ledger features"
 ```
@@ -204,8 +221,10 @@ git commit -am "feat: apply openapi clients and validators to ledger features"
 - [x] **Step 1: Write failing UI tests for Validation** [DONE]
 - [x] **Step 2: Run tests to verify failure** [DONE]
 - [x] **Step 3: Implement Validators & DTO Mappers** [DONE]
+Implement validators for Topup, ESSP, and eWallet. Map domain models to `TopupExternalRequest`, `EsspExternalRequest`, `EWalletTopupExternalRequest`, etc.
 - [x] **Step 4: Run tests to verify success** [DONE]
 - [x] **Step 5: Commit** [DONE]
+
 ```bash
 git commit -am "feat: apply openapi clients and validators to extended biller features"
 ```
@@ -222,8 +241,10 @@ git commit -am "feat: apply openapi clients and validators to extended biller fe
 - [x] **Step 1: Write failing UI tests implementation** [DONE]
 - [x] **Step 2: Run tests to verify failure** [DONE]
 - [x] **Step 3: Implement Validators & DTO Mappers** [DONE]
+Apply validators to DuitNow form. Map domain models to `DuitNowExternalRequest`.
 - [x] **Step 4: Run tests to verify success** [DONE]
 - [x] **Step 5: Commit** [DONE]
+
 ```bash
 git commit -am "feat: apply openapi clients to DuitNow features"
 ```
@@ -239,10 +260,13 @@ git commit -am "feat: apply openapi clients to DuitNow features"
 - Modify: `lib/features/agent_onboarding/screens/application_submit_screen.dart`
 
 - [x] **Step 1: Write failing UI test** [DONE]
+Write UI integration test for completing MyKad verification and Application Submission.
 - [x] **Step 2: Run tests to verify failure** [DONE]
 - [x] **Step 3: Implement Onboarding UI & Logic** [DONE]
+Create screens and map inputs to `MyKadVerifyRequest` and `ApplicationSubmitRequest` using `OnboardingApi`.
 - [x] **Step 4: Run tests to verify success** [DONE]
 - [x] **Step 5: Commit** [DONE]
+
 ```bash
 git commit -am "feat: full Onboarding integration for MyKad and Application Submit"
 ```
