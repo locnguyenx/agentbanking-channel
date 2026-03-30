@@ -4,17 +4,25 @@ This document provides instructions and guidelines for AI coding agents working 
 
 ## Project Overview
 
-This project is an **Agent Banking Platform** facilitating financial services at third-party retail locations.
+This project is building Channel App for **Agent Banking** facilitating financial services at third-party retail locations.
 * **Regulatory Compliance:** Bank Malaysia standards.
 * **Security:** Zero-trust architecture. No PII in logs. Hardware-level encryption for PINs.
 
-## Architecture
+## Documentation
+- `docs` - at project root
+- `docs/ideas` - high level requirements (ARCHITECTURE.md, BRD_SUMMARY.md) formal specs (BRD, BDD, Design) for Channel App
+- `docs/superpowers/specs/agent-banking-channel/*-brd.md` - BRD for Channel App
+- `docs/superpowers/specs/agent-banking-channel/*-bdd.md` - BDD for Channel App
+- `docs/superpowers/specs/agent-banking-channel/2026-03-27-agent-banking-channel-design.md` - System Design Specification for Channel App
+- `docs/api/openapi.yaml` - external API spec
 
-### 5-Tier System Architecture
+## 1. Architecture
+
+### 5-Tier System Architecture for Agent Banking
 
 All agents MUST understand this architecture before making any code changes:
 
-1. **Tier 1: Channel Layer** — POS Terminals (Android/Flutter)
+1. **Tier 1: Channel Layer (This project)** — POS Terminals (Android/Flutter)
 2. **Tier 2: Spring Cloud Gateway** — JWT validation, rate limiting, routing
 3. **Tier 3: Domain Core Services** — Rules, Ledger & Float, Onboarding, Switch Adapter, Biller
 4. **Tier 4: Translation Layer** — HSM Connector, Switch Connector, Biller Connector
@@ -22,56 +30,59 @@ All agents MUST understand this architecture before making any code changes:
 
 See `docs/superpowers/specs/agent-banking-platform/*-design.md` for full architecture details.
 
-### Hexagonal Architecture (MANDATORY per service)
+### Channel App's Layers
+The Channel App lives exclusively in **Tier 1: Channel Layer**.
 
-Every microservice MUST follow hexagonal (Ports & Adapters) pattern:
+*   **Presentation:** Flutter Widgets, Riverpod (State Management), routing via `go_router`. Designed for Dual-Display layouts (Agent vs Customer view).
+*   **Domain:** Business logic, Use Cases (e.g., `ExecuteDualHandshakeUseCase`), and abstract Entity classes.
+*   **Data:** Repositories implementing Domain interfaces. Includes REST API clients (`dio`), local database (`sqflite`), and device secure storage.
+*   **Hardware Abstraction Layer (HAL):** Abstraction wrappers around physical POS peripherals (printers, EMV readers) using Android `MethodChannel`.
 
-```
-service-name/
-├── domain/                    # ZERO framework imports
-│   ├── model/                 # Entities, value objects (Java Records)
-│   ├── port/
-│   │   ├── in/                # Inbound ports (use cases)
-│   │   └── out/               # Outbound ports (repository, gateway, messaging)
-│   └── service/               # Business rules
-├── application/               # Use case orchestration
-├── infrastructure/            # Adapters (implement ports)
-│   ├── web/                   # REST controllers
-│   ├── persistence/           # JPA repositories
-│   ├── messaging/             # Kafka producers/consumers
-│   └── external/              # Feign clients
-└── config/                    # Spring configuration
-```
+### CRITICAL RULES (NON NEGOTIABLE)
 
-**ENFORCEMENT:**
-- `domain/` must have ZERO imports from Spring, JPA, Kafka, or any infrastructure framework
-- `infrastructure/` implements interfaces defined in `domain/port/`
-- Controllers accept DTOs, call use cases, return DTOs — NEVER expose entities
-- All financial calculations and state changes in `domain/service/`
+**The app is a consumer.** It never implements business rules that belong to the backend (float balances, fee calculation, velocity checks, AML). Those are backend responsibilities accessed via API calls.
 
-## Technology Stack
+## 2. Core Technical Components
 
+### 2.1 State Management & Dependency Injection
+*   **Framework:** `Riverpod` (`hooks_riverpod`).
+*   **Providers Strategy:**
+    *   `authProvider`: Manages JWT lifecycle and background session expiration checks.
+    *   `floatBalanceProvider`: Streams Agent Float polling every 30 seconds.
+    *   `transactionProvider`: A robust `StateNotifier` governing the strict Dual-Handshake state machine: `INIT -> QUOTING -> WAITING_CONSENT -> WAITING_CARD -> WAITING_PIN -> PROCESSING -> SUCCESS/LOCKED`.
 
-## Architectural Laws (NON-NEGOTIABLE)
+### 2.2 Hardware Abstraction Layer (HAL)
+To decouple the app from specific vendor SDKs (e.g., Sunmi, Pax, Aisino), all hardware interactions occur via abstract Dart contracts.
+*   **Contracts:** `ICardReader`, `IPinPad`, `IPrinter`, `IBiometricScanner`.
+*   **Implementation:** `VendorAPrinterImpl` implements `IPrinter` by communicating over a `MethodChannel` (`com.banking.channel/printer`) to the native Android host which executes the proprietary `.jar/.aar` SDK.
+*   **Fallback Strategy:** Features degradation is automatic. If `IPrinter.isAvailable()` is false, the app safely defaults to SMS-only receipts without crashing.
 
-## Coding Standards
+### 2.3 Store & Forward Engine (Local Database)
+*   **Engine:** `sqflite` bundled with `sqlcipher` for AES-256 local database encryption.
+*   **Encryption Key:** The database master key is securely generated once per device and permanently vaulted inside the **Android Keystore** via `flutter_secure_storage`.
+*   **Queue Entity:** Failed reversals (MTI 0400) and offline logs are serialized as JSON and pushed to the `txn_queue` table with their original `X-Idempotency-Key`.
+*   **Sync Worker:** `workmanager` schedules a background isolate to execute every 15 minutes, pushing pending queue items to the Backend API.
+
+---
+
+## 3. Security & Anti-Fraud Mechanisms
+
+### 3.1 Protection Measures
+1.  **TLS & Pinning:** Mandatory TLS 1.2+ for all `dio` client traffic. API Certificate SHA-256 hashes are pinned to reject Man-In-The-Middle attacks.
+2.  **Display Obfuscation:** The Flutter app is restricted with `WindowManager.LayoutParams.FLAG_SECURE` on native Android, preventing OS-level screenshots or screen recordings.
+3.  **Encrypted PIN Processing:** The app **never** renders a virtual keyboard for PINs. It strictly delegates PIN capture to the HSM (Hardware Security Module) built into the POS device, which returns an encrypted DUKPT PIN-Block.
+4.  **Zero PII Logging:** A custom Logger intercepts all logs. Regex parsers proactively redact strings matching 16-digit PANs or 12-digit MyKads before writing to console/Crashlytics.
+
+### 3.2 Anti-Smurfing & Compliance Locks
+When the Backend Rule Engine returns an `ERR_COMPLIANCE_FREEZE` code:
+*   The `authProvider` immediately flips `isComplianceLocked = true`.
+*   The `go_router` instantly redirects the navigation stack to a dead-end `ComplianceLockScreen`, popping all previous routes.
+*   The state persists across app reboots via encrypted local storage until the Backend proactively sends an Unlock webhook.
+
 
 ## API Contract Enforcement
 
 **OpenAPI 3.0 Specification** is the single source of truth for all REST APIs.
-
-### Rules
-- **External API:** All backend REST endpoints exposed via Gateway MUST be documented in `docs/api/openapi.yaml`
-- **Internal API:** Each service's internal endpoints documented in `<service-root>/docs/openapi-internal.yaml`
-- **Frontend API clients and TypeScript types** MUST be generated from `openapi.yaml`
-- **No manual hand-written API mocks** — use generated mocks from OpenAPI spec
-- **CI validation**: Run `openapi-generator-cli validate` and diff check
-
-## Documentation
-- `docs` - at project root
-- `docs/ideas` - high level requirements (ARCHITECTURE.md, BRD_SUMMARY.md)
-- `docs/superpowers/specs/agent-banking-platform/` - formal specs (BRD, BDD, Design)
-- `docs/api/openapi.yaml` - external API spec
 
 ## Testing Guidelines
 * Unit tests: 
@@ -102,9 +113,3 @@ service-name/
 ### Velocity Checks
 * Limit transactions per MyKad per day to prevent smurfing.
 * Configurable via VelocityRule entity.
-
-## Git Workflow
-
-## Database Guidelines
-
-## Test Infrastructure & Strategy

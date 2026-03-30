@@ -48,3 +48,27 @@ class AmlCheckResponse {
         amlReference: json['amlReference'],
       );
 }
+
+class BiometricMatchRequest {
+  final String icNumber;
+  final String biometricData;
+  final String biometricType; // 'FINGERPRINT' or 'FACE'
+
+  BiometricMatchRequest({
+    required this.icNumber,
+    required this.biometricData,
+    required this.biometricType,
+  });
+}
+
+class BiometricMatchResponse {
+  final bool isMatched;
+  final double score;
+  final String? matchReference;
+
+  BiometricMatchResponse({
+    required this.isMatched,
+    required this.score,
+    this.matchReference,
+  });
+}

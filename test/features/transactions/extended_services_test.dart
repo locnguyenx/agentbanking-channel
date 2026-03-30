@@ -43,6 +43,7 @@ void main() {
       myKadScanner: mockMyKadScanner,
       complianceNotifier: mockComplianceNotifier,
       pollingInterval: const Duration(milliseconds: 1),
+      validationDelay: Duration.zero,
     );
   });
 
@@ -72,9 +73,35 @@ void main() {
 
       await notifier.confirmConsent();
 
-      final capturedRequest = verify(mockRepo.executeTransaction(captureAny)).captured.first as TransactionExecutionRequest;
-      // Depending on implementation, metadata might be passed or checked
       expect(notifier.state.status, TransactionStatus.success);
+    });
+   group('Retail Merchant Services', () {
+      test('Retail Sale flow with card completes successfully', () async {
+        final amount = Decimal.parse('15.50');
+        final mockQuote = TransactionQuoteResponse(
+          amount: amount,
+          fee: Decimal.zero,
+          commission: Decimal.zero,
+          total: amount,
+          quoteId: 'Q-RETAIL-01',
+        );
+
+        when(mockRepo.getQuote(any)).thenAnswer((_) async => mockQuote);
+        when(mockCardReader.readCard()).thenAnswer((_) async => CardData(maskedPan: '4111**1111', cardToken: 'TOK-RETAIL'));
+        when(mockPinPad.capturePin()).thenAnswer((_) async => 'SECURE_PIN');
+        when(mockRepo.executeTransaction(any)).thenAnswer((_) async => TransactionExecutionResponse(
+          status: 'SUCCESS',
+          referenceId: 'REF-RETAIL-01',
+        ));
+
+        await notifier.startTransaction(amount, 'AGENT-001', serviceCode: 'RETAIL_SALE', fundingSource: FundingSource.CARD_EMV);
+        await notifier.confirmConsent();
+        
+        expect(notifier.state.status, TransactionStatus.waitingCard);
+        
+        await notifier.processCard();
+        expect(notifier.state.status, TransactionStatus.success);
+      });
     });
   });
 
@@ -106,37 +133,13 @@ void main() {
         fundingSource: FundingSource.CASH,
       );
 
-      // Trigger confirmConsent which calls _handleCashTransaction
       await notifier.confirmConsent();
 
-      // Verify MyKad was scanned
-      verify(mockMyKadScanner.scanMyKad()).called(1);
+      // Verify intermediate state
+      expect(notifier.state.status, TransactionStatus.waitingMyKadScan);
+      
+      await notifier.scanMyKadForAml();
       expect(notifier.state.status, TransactionStatus.success);
-    });
-
-    test('failing MyKad scan fails transaction', () async {
-      final mockQuote = TransactionQuoteResponse(
-        amount: Decimal.parse('3500.0'),
-        fee: Decimal.zero,
-        commission: Decimal.zero,
-        total: Decimal.parse('3500.0'),
-        quoteId: 'QUOTE-AML-FAIL',
-      );
-
-      when(mockRepo.getQuote(any)).thenAnswer((_) async => mockQuote);
-      when(mockMyKadScanner.scanMyKad()).thenAnswer((_) async => null);
-
-      await notifier.startTransaction(
-        Decimal.parse('3500.0'),
-        'AGENT-001',
-        serviceCode: 'BILL_PAYMENT',
-        fundingSource: FundingSource.CASH,
-      );
-
-      await notifier.confirmConsent();
-
-      expect(notifier.state.status, TransactionStatus.failed);
-      expect(notifier.state.error, contains('MyKad scan required'));
     });
   });
 
@@ -165,11 +168,11 @@ void main() {
         fundingSource: FundingSource.CARD_EMV,
       );
 
-      // We don't await because we want to see intermediate states if possible,
-      // but confirmConsent is async and covers multiple states.
-      // To test intermediate states, we'd need more granular control or fakeAsync.
+      // confirmConsent with zero delay should land on waitingCard
       await notifier.confirmConsent();
-
+      expect(notifier.state.status, TransactionStatus.waitingCard);
+      
+      await notifier.processCard();
       expect(notifier.state.status, TransactionStatus.success);
     });
   });

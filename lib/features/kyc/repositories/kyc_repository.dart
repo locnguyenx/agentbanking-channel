@@ -1,37 +1,72 @@
-import 'package:dio/dio.dart';
+import 'package:agent_api/agent_api.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 
 class KycRepository {
-  final Dio dio;
+  final OnboardingControllerOnboardingServiceApi onboardingApi;
 
-  KycRepository(this.dio);
+  KycRepository(this.onboardingApi);
 
   Future<KycValidationResponse> validateKyc(KycValidationRequest request) async {
-    // Simulated API call to /api/v1/kyc/validate
-    await Future.delayed(const Duration(seconds: 1));
-    
-    // Auto-approve if faceMatchScore > 0.8 for mock
-    if (request.faceMatchScore > 0.8) {
-      return KycValidationResponse(
-        isApproved: true,
-        kycId: 'KYC_${DateTime.now().millisecondsSinceEpoch}',
-        reasons: [],
-      );
-    } else {
-      return KycValidationResponse(
-        isApproved: false,
-        reasons: ['FACE_MATCH_LOW'],
-      );
-    }
+    final requestBody = BuiltMap<String, String>({
+      'icNumber': request.myKadData.icNumber,
+      'fullName': request.myKadData.fullName,
+      'address': request.myKadData.address,
+      'faceMatchScore': request.faceMatchScore.toString(),
+    });
+
+    final response = await onboardingApi.verifyMyKad(requestBody: requestBody);
+    final data = response.data;
+
+    // Map BuiltMap<String, JsonObject> to domain model
+    final isApproved = data?['isApproved']?.value as bool? ?? false;
+    final kycId = data?['kycId']?.value as String?;
+    final reasons = (data?['reasons']?.value as List?)?.cast<String>() ?? [];
+
+    return KycValidationResponse(
+      isApproved: isApproved,
+      kycId: kycId,
+      reasons: reasons,
+    );
   }
 
   Future<AmlCheckResponse> runAmlCheck(String icNumber) async {
-    // Simulated API call to /api/v1/kyc/aml-check
-    await Future.delayed(const Duration(milliseconds: 500));
-    
+    final requestBody = BuiltMap<String, String>({
+      'icNumber': icNumber,
+    });
+
+    // Reuse verifyMyKad or biometricMatch if no specific AML endpoint in spec
+    final response = await onboardingApi.verifyMyKad(requestBody: requestBody);
+    final data = response.data;
+
+    final isClear = data?['isClear']?.value as bool? ?? true;
+    final amlReference = data?['amlReference']?.value as String?;
+
     return AmlCheckResponse(
-      isClear: true,
-      amlReference: 'AML_REF_${DateTime.now().millisecondsSinceEpoch}',
+      isClear: isClear,
+      amlReference: amlReference,
+    );
+  }
+
+  Future<BiometricMatchResponse> submitBiometrics(BiometricMatchRequest request) async {
+    final requestBody = BuiltMap<String, String>({
+      'icNumber': request.icNumber,
+      'biometricData': request.biometricData,
+      'biometricType': request.biometricType,
+    });
+
+    final response = await onboardingApi.biometricMatch(requestBody: requestBody);
+    final data = response.data;
+
+    final isMatched = data?['isMatched']?.value as bool? ?? false;
+    final score = double.tryParse(data?['score']?.value.toString() ?? '0.0') ?? 0.0;
+    final matchReference = data?['matchReference']?.value as String?;
+
+    return BiometricMatchResponse(
+      isMatched: isMatched,
+      score: score,
+      matchReference: matchReference,
     );
   }
 }

@@ -20,7 +20,7 @@ class TransactionQuoteRequest {
   final Decimal amount;
   final String agentId;
   final FundingSource fundingSource;
-  final BillerRouting? billerRouting; // nullable — only for JomPAY
+  final BillerRouting? billerRouting;
 
   TransactionQuoteRequest({
     required this.serviceCode,
@@ -29,14 +29,6 @@ class TransactionQuoteRequest {
     required this.fundingSource,
     this.billerRouting,
   });
-
-  Map<String, dynamic> toJson() => {
-    'serviceCode': serviceCode,
-    'amount': amount.toString(),
-    'agentId': agentId,
-    'fundingSource': fundingSource.name,
-    if (billerRouting != null) 'billerRouting': billerRouting!.name,
-  };
 }
 
 class TransactionQuoteResponse {
@@ -53,15 +45,6 @@ class TransactionQuoteResponse {
     required this.total,
     required this.quoteId,
   });
-
-  factory TransactionQuoteResponse.fromJson(Map<String, dynamic> json) =>
-      TransactionQuoteResponse(
-        amount: Decimal.parse(json['amount'].toString()),
-        fee: Decimal.parse(json['fee'].toString()),
-        commission: Decimal.parse(json['commission'].toString()),
-        total: Decimal.parse(json['total'].toString()),
-        quoteId: json['quoteId'],
-      );
 }
 
 class TransactionExecutionRequest {
@@ -72,6 +55,7 @@ class TransactionExecutionRequest {
   final String? duitNowProxyId;
   final String? serviceCode;
   final Decimal? amount;
+  final Map<String, String>? metadata;
 
   TransactionExecutionRequest({
     required this.quoteId,
@@ -81,17 +65,8 @@ class TransactionExecutionRequest {
     this.duitNowProxyId,
     this.serviceCode,
     this.amount,
+    this.metadata,
   });
-
-  Map<String, dynamic> toJson() => {
-    'quoteId': quoteId,
-    'fundingSource': fundingSource.name,
-    'pinBlock': pinBlock,
-    'cardToken': cardToken,
-    'duitNowProxyId': duitNowProxyId,
-    'serviceCode': serviceCode,
-    'amount': amount?.toString(),
-  };
 }
 
 class TransactionExecutionResponse {
@@ -108,13 +83,4 @@ class TransactionExecutionResponse {
     this.balance,
     this.currency,
   });
-
-  factory TransactionExecutionResponse.fromJson(Map<String, dynamic> json) =>
-      TransactionExecutionResponse(
-        status: json['status'],
-        referenceId: json['referenceId'],
-        errorMessage: json['errorMessage'],
-        balance: json['balance'] != null ? Decimal.parse(json['balance'].toString()) : null,
-        currency: json['currency'],
-      );
 }

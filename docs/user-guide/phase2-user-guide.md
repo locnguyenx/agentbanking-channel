@@ -32,9 +32,12 @@ Most financial services (Bill Payment, Top-Up, Sarawak Pay, eSSP) now support **
 ## 3. Merchant Services
 Transform your terminal into a retail Point of Sale (POS) system.
 
-### Retail Sale
-- **Card**: Enter the sale amount, select **Card**, and follow the standard Card + PIN flow.
-- **DuitNow QR**: Select **DuitNow QR**. The terminal will display a dynamic QR code. The customer scans this with their banking app to pay. The terminal will automatically detect the payment and print a receipt.
+### DuitNow QR (Card/Account)
+- **Status**: *Planned for Future Release*
+- This feature is currently in design and will be enabled once the Switch API supports QR payload generation.
+
+### Retail Sale (Card)
+- **Steps**: Enter the sale amount, select **Card**, and follow the standard Card + PIN flow. Receipts are generated instantly upon bank approval.
 
 ### Cash-Back Hybrid
 Customers can now purchase items and withdraw cash in a single transaction.

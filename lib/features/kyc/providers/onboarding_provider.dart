@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.dart';
 import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
-import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
 
 enum OnboardingStatus {
   idle,
@@ -96,12 +96,15 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
   }
 }
 
-final kycRepositoryProvider = Provider<KycRepository>((ref) => KycRepository(Dio()));
+final kycRepositoryProvider = Provider<KycRepository>((ref) {
+  return KycRepository(ref.watch(onboardingApiProvider));
+});
 
 final onboardingProvider = StateNotifierProvider<OnboardingNotifier, OnboardingState>((ref) {
   final repository = ref.watch(kycRepositoryProvider);
+  final myKadScanner = ref.watch(myKadScannerProvider);
   return OnboardingNotifier(
     kycRepository: repository,
-    myKadScanner: MockMyKadScanner(),
+    myKadScanner: myKadScanner,
   );
 });

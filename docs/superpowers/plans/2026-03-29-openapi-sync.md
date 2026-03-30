@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: API Code Generation Tooling
+### Task 1: API Code Generation Tooling [DONE]
 
 **BDD Scenarios:** Scenario 1 (Code generation succeeds)
 **BRD Requirements:** FR-01 (Integrate openapi-generator-cli)
@@ -33,7 +33,7 @@
   Execute `./scripts/generate_api.sh` and ensure `lib/api/generated` populates without issue.
 - [ ] **Step 4: Commit**
 
-### Task 2: Ledger Service Refactoring
+### Task 2: Ledger Service Refactoring [IN_PROGRESS]
 
 **BDD Scenarios:** Scenario 2, Scenario 3, Scenario 4, Scenario 5
 **BRD Requirements:** FR-03, FR-04, FR-05, FR-06, FR-07

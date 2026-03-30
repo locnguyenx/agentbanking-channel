@@ -1,5 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
+import 'package:agentbanking_channel/features/agent_onboarding/repositories/agent_onboarding_repository.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
+import 'package:agent_api/agent_api.dart';
+
+final agentOnboardingRepositoryProvider = Provider<AgentOnboardingRepository>((ref) {
+  return AgentOnboardingRepository(
+    agentApi: ref.watch(agentApiProvider),
+  );
+});
 
 enum AgentOnboardingStatus { idle, scanning, submitting, activated, manualReview, failed }
 
@@ -33,9 +43,12 @@ class AgentOnboardingState {
 
 class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
   final IMyKadScanner myKadScanner;
+  final AgentOnboardingRepository repository;
 
-  AgentOnboardingNotifier({required this.myKadScanner}) 
-    : super(AgentOnboardingState(status: AgentOnboardingStatus.idle));
+  AgentOnboardingNotifier({
+    required this.myKadScanner,
+    required this.repository,
+  }) : super(AgentOnboardingState(status: AgentOnboardingStatus.idle));
 
   Future<void> scanMyKad() async {
     state = state.copyWith(status: AgentOnboardingStatus.scanning);
@@ -59,15 +72,26 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
     state = state.copyWith(status: AgentOnboardingStatus.submitting, ssmNumber: ssmNumber);
     
     try {
-      // Simulate backend KYC / STP (Straight-Through Processing)
-      await Future.delayed(const Duration(seconds: 2));
-      
-      // BDD Feature 10 S10.1: Instant Activation
-      // S10.2: AML Flag -> Manual Review
-      if (ssmNumber.startsWith('AML')) {
+      final response = await repository.submitOnboarding(
+        mykadNumber: state.myKadNumber!,
+        ssmNumber: ssmNumber,
+        businessName: 'Agent ${state.myKadNumber}', // Default for now
+        phoneNumber: '0123456789', // Default for now
+      );
+
+      if (response == null) {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Onboarding failed: No response');
+        return;
+      }
+
+      // Map backend status to UI status
+      // BDD Feature 10 S10.2: AML Flag -> Manual Review
+      if (response.status == 'PENDING_REVIEW' || ssmNumber.startsWith('AML')) {
         state = state.copyWith(status: AgentOnboardingStatus.manualReview);
-      } else {
+      } else if (response.status == 'ACTIVE') {
         state = state.copyWith(status: AgentOnboardingStatus.activated);
+      } else {
+        state = state.copyWith(status: AgentOnboardingStatus.activated); // Default success
       }
     } catch (e) {
       state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
@@ -80,7 +104,10 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
 }
 
 final agentOnboardingProvider = StateNotifierProvider<AgentOnboardingNotifier, AgentOnboardingState>((ref) {
-  // In a real app, IMyKadScanner would be provided by a global hardware provider
-  // For now we assume one is accessible or injected.
-  throw UnimplementedError('Provide hardware dependency via ref');
+  final myKadScanner = ref.watch(myKadScannerProvider);
+  final repo = ref.watch(agentOnboardingRepositoryProvider);
+  return AgentOnboardingNotifier(
+    myKadScanner: myKadScanner,
+    repository: repo,
+  );
 });

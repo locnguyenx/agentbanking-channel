@@ -23,6 +23,8 @@ dependencies:
   mockito: ^5.4.2
   built_value: ^8.8.1
   built_collection: ^5.1.1
+  agent_api:
+    path: lib/api/generated
 
 dev_dependencies:
   integration_test:

@@ -1,0 +1,19 @@
+# agent_api.model.PinPurchaseResponse
+
+## Load the model package
+```dart
+import 'package:agent_api/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**status** | **String** |  | [optional] 
+**transactionId** | **String** |  | [optional] 
+**pinCode** | **String** |  | [optional] 
+**commission** | **num** |  | [optional] 
+**timestamp** | **String** |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

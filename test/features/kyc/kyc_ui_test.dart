@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:agent_api/agent_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/kyc/screens/kyc_flow_screen.dart';
 import 'package:agentbanking_channel/features/kyc/providers/onboarding_provider.dart';
@@ -12,7 +13,7 @@ import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart'
 
 class DummyKycRepository implements KycRepository {
   @override
-  Dio get dio => Dio();
+  OnboardingControllerOnboardingServiceApi get onboardingApi => throw UnimplementedError();
   @override
   Future<KycValidationResponse> validateKyc(KycValidationRequest request) async => throw UnimplementedError();
   @override

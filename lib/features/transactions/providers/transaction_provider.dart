@@ -9,6 +9,7 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:agentbanking_channel/core/network/dio_provider.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
 
 enum TransactionStatus {
   idle,
@@ -78,6 +79,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
   final IMyKadScanner myKadScanner;
   final ComplianceNotifier complianceNotifier;
   final Duration pollingInterval;
+  final Duration validationDelay;
 
   TransactionNotifier({
     required this.repository,
@@ -88,6 +90,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     required this.myKadScanner,
     required this.complianceNotifier,
     this.pollingInterval = const Duration(seconds: 5),
+    this.validationDelay = const Duration(seconds: 1),
   }) : super(TransactionState(status: TransactionStatus.idle));
 
   Future<void> startTransaction(
@@ -99,252 +102,111 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
   }) async {
     // Check Compliance Freeze (Task 4)
     if (complianceNotifier.state.isFrozen) {
-      state = state.copyWith(
-        status: TransactionStatus.failed,
-        error: 'ERR_COMPLIANCE_FROZEN: Terminal is locked for review.',
-      );
+      state = state.copyWith(status: TransactionStatus.failed, error: 'ERR_COMPLIANCE_FROZEN');
       return;
     }
 
-    state = state.copyWith(
-      status: TransactionStatus.quoting, 
-      fundingSource: fundingSource,
-      error: null,
-      metadata: metadata,
-      serviceCode: serviceCode,
+    state = TransactionState(
+      status: TransactionStatus.quoting,
       amount: amount,
+      serviceCode: serviceCode,
+      fundingSource: fundingSource,
+      metadata: metadata,
     );
+
     try {
       final quote = await repository.getQuote(TransactionQuoteRequest(
-        amount: amount,
         serviceCode: serviceCode,
+        amount: amount,
         agentId: merchantId,
         fundingSource: fundingSource,
       ));
+      
       state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
     } catch (e) {
       state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
     }
   }
 
+  bool _isNonCardSource(FundingSource source) {
+    return source == FundingSource.CASH || 
+           source == FundingSource.DUITNOW_MOBILE || 
+           source == FundingSource.DUITNOW_MYKAD || 
+           source == FundingSource.DUITNOW_BRN;
+  }
+
   Future<void> confirmConsent({String? duitNowProxyId}) async {
-    if (state.quote == null) return;
-
-    // FR-CA-4.7: Card-funded generic validation (e.g. Ref-1 check)
-    if (state.fundingSource == FundingSource.CARD_EMV) {
-      state = state.copyWith(status: TransactionStatus.validatingService);
-      // Simulate backend validation (Ref-1, biller availability)
-      await Future.delayed(const Duration(seconds: 1));
+    if (duitNowProxyId != null) {
+      final updatedMetadata = Map<String, dynamic>.from(state.metadata ?? {});
+      updatedMetadata['duitNowProxyId'] = duitNowProxyId;
+      state = state.copyWith(metadata: updatedMetadata);
     }
 
-    if (state.fundingSource == FundingSource.DUITNOW_MOBILE || 
-        state.fundingSource == FundingSource.DUITNOW_MYKAD ||
-        state.fundingSource == FundingSource.DUITNOW_BRN) {
-      await _handleDuitNowTransaction(duitNowProxyId);
-    } else if (state.fundingSource == FundingSource.CASH) {
-      await _handleCashTransaction();
-    } else {
-      await _handleCardTransaction();
-    }
-  }
-
-  Future<void> _handleCardTransaction() async {
-    state = state.copyWith(status: TransactionStatus.waitingCard);
-    final cardData = await cardReader.readCard();
-    if (cardData == null) {
-      state = state.copyWith(status: TransactionStatus.failed, error: 'Card Read Failed');
+    if (state.serviceCode == 'DUITNOW_TRANSFER') {
+      await _executeDuitNowFlow();
       return;
     }
 
-    state = state.copyWith(status: TransactionStatus.waitingPin);
-    final pinBlock = await pinPad.capturePin();
-    if (pinBlock == null) {
-      state = state.copyWith(status: TransactionStatus.failed, error: 'PIN Capture Failed');
-      return;
-    }
-
-    state = state.copyWith(status: TransactionStatus.processing);
-    await _execute(TransactionExecutionRequest(
-      quoteId: state.quote!.quoteId,
-      fundingSource: FundingSource.CARD_EMV,
-      pinBlock: pinBlock,
-      cardToken: cardData.cardToken,
-      serviceCode: state.serviceCode,
-      amount: state.amount,
-    ));
-  }
-
-  Future<void> _handleCashTransaction() async {
-    // BRD FR-CA-4.8: MyKad required if cash collected > RM 3,000
-    final amount = state.quote!.amount;
-    if (amount > Decimal.parse('3000.00')) {
-      state = state.copyWith(status: TransactionStatus.waitingMyKadScan);
-      try {
-        final myKadData = await myKadScanner.scanMyKad();
-        if (myKadData == null) {
-          state = state.copyWith(status: TransactionStatus.failed, error: 'MyKad scan required for AML');
-          return;
-        }
-        // Include MyKad reference in API call
-        state = state.copyWith(metadata: {
-          ...?state.metadata, 
-          'myKadRef': myKadData.icNumber,
-          'complianceType': 'AML_LARGE_CASH'
-        });
-      } catch (e) {
-        state = state.copyWith(status: TransactionStatus.failed, error: 'MyKad Scanner Error: $e');
+    if (_isNonCardSource(state.fundingSource!)) {
+      // Large Cash AML Check (Phase 2 Rule)
+      if (state.fundingSource == FundingSource.CASH && state.amount != null && state.amount! >= Decimal.parse('3000')) {
+        state = state.copyWith(status: TransactionStatus.waitingMyKadScan);
         return;
       }
+      await _executeFinal();
+    } else {
+      state = state.copyWith(status: TransactionStatus.validatingService);
+      // Simulate backend validation before card insertion
+      await Future.delayed(validationDelay);
+      state = state.copyWith(status: TransactionStatus.waitingCard);
     }
+  }
 
+  Future<void> scanMyKadForAml() async {
+    final myKad = await myKadScanner.scanMyKad();
+    if (myKad != null) {
+      await _executeFinal();
+    } else {
+      state = state.copyWith(status: TransactionStatus.failed, error: 'ERR_GPS_UNAVAILABLE');
+    }
+  }
+
+  Future<void> processCard() async {
+    try {
+      final cardData = await cardReader.readCard();
+      if (cardData == null) {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'Card Read Failed');
+        return;
+      }
+      state = state.copyWith(status: TransactionStatus.waitingPin);
+      final pinBlock = await pinPad.capturePin();
+      if (pinBlock == null) {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'PIN Entry Cancelled');
+        return;
+      }
+      await _executeFinal(pinBlock: pinBlock, cardToken: cardData.cardToken);
+    } catch (e) {
+      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+    }
+  }
+
+  Future<void> _executeFinal({String? pinBlock, String? cardToken}) async {
     state = state.copyWith(status: TransactionStatus.processing);
     try {
       final result = await repository.executeTransaction(TransactionExecutionRequest(
         quoteId: state.quote!.quoteId,
-        fundingSource: FundingSource.CASH,
+        fundingSource: state.fundingSource!,
+        pinBlock: pinBlock,
+        cardToken: cardToken,
         serviceCode: state.serviceCode,
         amount: state.amount,
+        metadata: state.metadata?.cast<String, String>() ?? (state.metadata != null ? Map<String, String>.from(state.metadata!.map((k, v) => MapEntry(k, v.toString()))) : null),
       ));
+
       if (result.status == 'SUCCESS') {
+        // Phase 2: Refetch balance instead of manual local updates
         await floatNotifier.fetchLatestBalance();
         state = state.copyWith(status: TransactionStatus.success, result: result);
-      } else {
-        state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
-      }
-    } catch (e) {
-      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
-    }
-  }
-
-  Future<void> _handleDuitNowTransaction(String? proxyId) async {
-    if (proxyId == null) {
-      state = state.copyWith(status: TransactionStatus.failed, error: 'Proxy ID required');
-      return;
-    }
-    state = state.copyWith(status: TransactionStatus.processing);
-    try {
-      final initResult = await repository.initiateDuitNow(
-        quoteId: state.quote!.quoteId,
-        proxyId: proxyId,
-        proxyType: _proxyTypeFromFundingSource(state.fundingSource!),
-      );
-      state = state.copyWith(status: TransactionStatus.processingDuitNow);
-      await _pollDuitNowStatus(initResult.referenceId);
-    } catch (e) {
-      await _queueReversal();
-      state = state.copyWith(status: TransactionStatus.reversalQueued, error: e.toString());
-    }
-  }
-
-  String _proxyTypeFromFundingSource(FundingSource fs) {
-    switch (fs) {
-      case FundingSource.DUITNOW_MOBILE: return 'MOBILE';
-      case FundingSource.DUITNOW_MYKAD: return 'NRIC';
-      case FundingSource.DUITNOW_BRN:   return 'BRN';
-      default: throw ArgumentError('Not a DuitNow funding source: $fs');
-    }
-  }
-
-  Future<void> _pollDuitNowStatus(String referenceId) async {
-    // BDD Feature 4 S4.4: poll every 5s for max 3 minutes (36 attempts)
-    for (int i = 0; i < 36; i++) {
-      await Future.delayed(pollingInterval);
-      try {
-        final status = await repository.getDuitNowStatus(referenceId);
-        if (status == 'COMPLETED') {
-          state = state.copyWith(status: TransactionStatus.success);
-          await floatNotifier.fetchLatestBalance();
-          return;
-        } else if (status == 'DECLINED') {
-          state = state.copyWith(status: TransactionStatus.failed, error: 'Customer declined');
-          return;
-        }
-      } catch (e) {
-        // Continue polling on transient errors
-      }
-    }
-    // Timeout after 3 min — treat as unknown, queue reversal
-    await _queueReversal();
-    state = state.copyWith(
-      status: TransactionStatus.reversalQueued, 
-      error: 'DuitNow confirmation timed out. A reversal has been queued.'
-    );
-  }
-
-  Future<void> _queueReversal() async {
-    if (state.quote == null) return;
-    
-    final originalRequest = {
-      'quoteId': state.quote!.quoteId,
-      'amount': state.quote!.amount.toString(),
-      'serviceCode': state.metadata?['serviceCode'] ?? 'DUITNOW_TRANSFER',
-      'idempotencyKey': state.metadata?['idempotencyKey'] ?? state.quote!.quoteId,
-      'fundingSource': state.fundingSource?.name,
-    };
-    
-    await reversalService.queueReversal(originalRequest);
-  }
-
-  Future<void> balanceInquiry(String agentId, {
-    FundingSource fundingSource = FundingSource.CARD_EMV,
-  }) async {
-    state = state.copyWith(
-      status: TransactionStatus.quoting, 
-      fundingSource: fundingSource,
-      error: null,
-    );
-    try {
-      final quote = await repository.getQuote(TransactionQuoteRequest(
-        amount: Decimal.zero,
-        serviceCode: 'BALANCE_INQUIRY',
-        agentId: agentId,
-        fundingSource: fundingSource,
-      ));
-      state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
-      
-      // Auto-confirm for balance inquiry if it's card-based
-      if (fundingSource == FundingSource.CARD_EMV) {
-        state = state.copyWith(status: TransactionStatus.waitingCard);
-        final cardData = await cardReader.readCard();
-        if (cardData == null) {
-          state = state.copyWith(status: TransactionStatus.failed, error: 'Card Read Failed');
-          return;
-        }
-
-        state = state.copyWith(status: TransactionStatus.waitingPin);
-        final pinBlock = await pinPad.capturePin();
-        if (pinBlock == null) {
-          state = state.copyWith(status: TransactionStatus.failed, error: 'PIN Capture Failed');
-          return;
-        }
-
-        state = state.copyWith(status: TransactionStatus.processing);
-        final result = await repository.balanceInquiry(TransactionExecutionRequest(
-          quoteId: quote.quoteId,
-          fundingSource: FundingSource.CARD_EMV,
-          pinBlock: pinBlock,
-          cardToken: cardData.cardToken,
-        ));
-        
-        if (result.status == 'SUCCESS') {
-          state = state.copyWith(status: TransactionStatus.success, result: result);
-          await floatNotifier.fetchLatestBalance();
-        } else {
-          state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
-        }
-      }
-    } catch (e) {
-      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
-    }
-  }
-
-  Future<void> _execute(TransactionExecutionRequest request) async {
-    try {
-      final result = await repository.executeTransaction(request);
-      if (result.status == 'SUCCESS') {
-        state = state.copyWith(status: TransactionStatus.success, result: result);
-        // Refresh float balance from backend
-        await floatNotifier.fetchLatestBalance();
       } else {
         state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
       }
@@ -361,14 +223,154 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     }
   }
 
+  Future<void> _executeDuitNowFlow() async {
+    state = state.copyWith(status: TransactionStatus.processing);
+    try {
+      final proxyId = state.metadata?['duitNowProxyId'] as String?;
+      final proxyType = _proxyTypeFromFundingSource(state.fundingSource!);
+      
+      final result = await repository.initiateDuitNow(
+        quoteId: state.quote!.quoteId,
+        proxyId: proxyId ?? '',
+        proxyType: proxyType,
+      );
+
+      if (result.status == 'SUCCESS') {
+        await startDuitNowPolling(result.referenceId);
+      } else {
+        state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
+      }
+    } catch (e) {
+      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+    }
+  }
+
+  String _proxyTypeFromFundingSource(FundingSource source) {
+    switch (source) {
+      case FundingSource.DUITNOW_MOBILE:
+        return 'MOBILE';
+      case FundingSource.DUITNOW_MYKAD:
+        return 'MYKAD';
+      case FundingSource.DUITNOW_BRN:
+        return 'BRN';
+      default:
+        return 'UNKNOWN';
+    }
+  }
+
+  Future<void> _queueReversal() async {
+    // Phase 2: Implement robust reversal saga logic
+    await reversalService.queueReversal({
+      'quoteId': state.quote?.quoteId,
+      'amount': state.amount?.toString(),
+      'serviceCode': state.serviceCode,
+    });
+  }
+
+  Future<void> balanceInquiry(String merchantId) async {
+    // Check Compliance Freeze
+    if (complianceNotifier.state.isFrozen) {
+      state = state.copyWith(status: TransactionStatus.failed, error: 'ERR_COMPLIANCE_FROZEN');
+      return;
+    }
+
+    state = TransactionState(
+      status: TransactionStatus.quoting,
+      amount: Decimal.zero,
+      serviceCode: 'BALANCE_INQUIRY',
+      fundingSource: FundingSource.CARD_EMV,
+    );
+
+    try {
+      final quote = await repository.getQuote(TransactionQuoteRequest(
+        serviceCode: 'BALANCE_INQUIRY',
+        amount: Decimal.zero,
+        agentId: merchantId,
+        fundingSource: FundingSource.CARD_EMV,
+      ));
+      
+      state = state.copyWith(status: TransactionStatus.waitingConsent, quote: quote);
+
+      // Balance Inquiry automatically proceeds to card after quote
+      await Future.delayed(const Duration(milliseconds: 500));
+      state = state.copyWith(status: TransactionStatus.waitingCard);
+      
+      final cardData = await cardReader.readCard();
+      if (cardData == null) {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'Card Read Failed');
+        return;
+      }
+      state = state.copyWith(status: TransactionStatus.waitingPin);
+      final pinBlock = await pinPad.capturePin();
+      if (pinBlock == null) {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'PIN Entry Cancelled');
+        return;
+      }
+      
+      state = state.copyWith(status: TransactionStatus.processing);
+      final result = await repository.balanceInquiry(TransactionExecutionRequest(
+        quoteId: quote.quoteId,
+        fundingSource: FundingSource.CARD_EMV,
+        pinBlock: pinBlock,
+        cardToken: cardData.cardToken,
+        serviceCode: 'BALANCE_INQUIRY',
+      ));
+
+      if (result.status == 'SUCCESS') {
+        await floatNotifier.fetchLatestBalance();
+        state = state.copyWith(status: TransactionStatus.success, result: result);
+      } else {
+        state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);
+      }
+    } catch (e) {
+      state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+    }
+  }
+
+  Future<void> startDuitNowPolling(String referenceId) async {
+    state = state.copyWith(status: TransactionStatus.processingDuitNow);
+    
+    // Polling logic for S14 (DuitNow Approval)
+    bool isApproved = false;
+    int retries = 0;
+    while (!isApproved && retries < 36) { // 3 minutes max
+      await Future.delayed(pollingInterval);
+      final status = await repository.getDuitNowStatus(referenceId);
+      if (status == 'SUCCESS' || status == 'COMPLETED') { // Support both labels
+        isApproved = true;
+        state = state.copyWith(status: TransactionStatus.success);
+        break;
+      } else if (status == 'FAILED' || status == 'EXPIRED') {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'DUITNOW_$status');
+        break;
+      }
+      retries++;
+    }
+
+    if (!isApproved && state.status == TransactionStatus.processingDuitNow) {
+       // TIMEOUT: Trigger reversal saga (MTI 0400)
+       await _queueReversal();
+       state = state.copyWith(
+         status: TransactionStatus.reversalQueued,
+         error: 'DuitNow Approval Timeout. Reversal initiated.',
+       );
+    }
+  }
+
   void reset() {
     state = TransactionState(status: TransactionStatus.idle);
   }
 }
 
 final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  return TransactionRepository(dio);
+  return TransactionRepository(
+    ledgerApi: ref.watch(ledgerApiProvider),
+    merchantApi: ref.watch(merchantApiProvider),
+    switchApi: ref.watch(switchApiProvider),
+    billerApi: ref.watch(billerApiProvider),
+    onboardingApi: ref.watch(onboardingApiProvider),
+    dio: ref.watch(dioProvider),
+  );
 });
 
 final transactionProvider = StateNotifierProvider<TransactionNotifier, TransactionState>((ref) {
