@@ -13,13 +13,14 @@ part 'transaction_list_response.g.dart';
 /// TransactionListResponse
 ///
 /// Properties:
-/// * [transactions] 
-/// * [page] 
-/// * [size] 
-/// * [totalElements] 
-/// * [totalPages] 
+/// * [transactions]
+/// * [page]
+/// * [size]
+/// * [totalElements]
+/// * [totalPages]
 @BuiltValue()
-abstract class TransactionListResponse implements Built<TransactionListResponse, TransactionListResponseBuilder> {
+abstract class TransactionListResponse
+    implements Built<TransactionListResponse, TransactionListResponseBuilder> {
   @BuiltValueField(wireName: r'transactions')
   BuiltList<TransactionResponse>? get transactions;
 
@@ -37,18 +38,25 @@ abstract class TransactionListResponse implements Built<TransactionListResponse,
 
   TransactionListResponse._();
 
-  factory TransactionListResponse([void updates(TransactionListResponseBuilder b)]) = _$TransactionListResponse;
+  factory TransactionListResponse(
+          [void updates(TransactionListResponseBuilder b)]) =
+      _$TransactionListResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(TransactionListResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<TransactionListResponse> get serializer => _$TransactionListResponseSerializer();
+  static Serializer<TransactionListResponse> get serializer =>
+      _$TransactionListResponseSerializer();
 }
 
-class _$TransactionListResponseSerializer implements PrimitiveSerializer<TransactionListResponse> {
+class _$TransactionListResponseSerializer
+    implements PrimitiveSerializer<TransactionListResponse> {
   @override
-  final Iterable<Type> types = const [TransactionListResponse, _$TransactionListResponse];
+  final Iterable<Type> types = const [
+    TransactionListResponse,
+    _$TransactionListResponse
+  ];
 
   @override
   final String wireName = r'TransactionListResponse';
@@ -62,7 +70,8 @@ class _$TransactionListResponseSerializer implements PrimitiveSerializer<Transac
       yield r'transactions';
       yield serializers.serialize(
         object.transactions,
-        specifiedType: const FullType(BuiltList, [FullType(TransactionResponse)]),
+        specifiedType:
+            const FullType(BuiltList, [FullType(TransactionResponse)]),
       );
     }
     if (object.page != null) {
@@ -101,7 +110,9 @@ class _$TransactionListResponseSerializer implements PrimitiveSerializer<Transac
     TransactionListResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -119,7 +130,8 @@ class _$TransactionListResponseSerializer implements PrimitiveSerializer<Transac
         case r'transactions':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(BuiltList, [FullType(TransactionResponse)]),
+            specifiedType:
+                const FullType(BuiltList, [FullType(TransactionResponse)]),
           ) as BuiltList<TransactionResponse>;
           result.transactions.replace(valueDes);
           break;
@@ -179,4 +191,3 @@ class _$TransactionListResponseSerializer implements PrimitiveSerializer<Transac
     return result.build();
   }
 }
-

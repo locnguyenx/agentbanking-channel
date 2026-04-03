@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+Future<void> entersTheirPinOnTheHardwarePinPad(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+  // Handle AGREE if visible
+  final agreeBtn = find.byKey(const Key('btn_confirm'));
+  if (agreeBtn.evaluate().isNotEmpty) {
+    await tester.tap(agreeBtn);
+    await tester.pumpAndSettle();
+  }
+}

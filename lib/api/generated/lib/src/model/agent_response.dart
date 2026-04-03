@@ -12,20 +12,21 @@ part 'agent_response.g.dart';
 /// AgentResponse
 ///
 /// Properties:
-/// * [agentId] 
-/// * [agentCode] 
-/// * [businessName] 
-/// * [tier] 
-/// * [status] 
-/// * [merchantGpsLat] 
-/// * [merchantGpsLng] 
-/// * [phoneNumber] 
-/// * [email] 
-/// * [address] 
-/// * [createdAt] 
-/// * [updatedAt] 
+/// * [agentId]
+/// * [agentCode]
+/// * [businessName]
+/// * [tier]
+/// * [status]
+/// * [merchantGpsLat]
+/// * [merchantGpsLng]
+/// * [phoneNumber]
+/// * [email]
+/// * [address]
+/// * [createdAt]
+/// * [updatedAt]
 @BuiltValue()
-abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilder> {
+abstract class AgentResponse
+    implements Built<AgentResponse, AgentResponseBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -66,13 +67,15 @@ abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilde
 
   AgentResponse._();
 
-  factory AgentResponse([void updates(AgentResponseBuilder b)]) = _$AgentResponse;
+  factory AgentResponse([void updates(AgentResponseBuilder b)]) =
+      _$AgentResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(AgentResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<AgentResponse> get serializer => _$AgentResponseSerializer();
+  static Serializer<AgentResponse> get serializer =>
+      _$AgentResponseSerializer();
 }
 
 class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
@@ -179,7 +182,9 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
     AgentResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -308,38 +313,46 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
 }
 
 class AgentResponseTierEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MICRO')
   static const AgentResponseTierEnum MICRO = _$agentResponseTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const AgentResponseTierEnum STANDARD = _$agentResponseTierEnum_STANDARD;
+  static const AgentResponseTierEnum STANDARD =
+      _$agentResponseTierEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIUM')
   static const AgentResponseTierEnum PREMIUM = _$agentResponseTierEnum_PREMIUM;
 
-  static Serializer<AgentResponseTierEnum> get serializer => _$agentResponseTierEnumSerializer;
+  static Serializer<AgentResponseTierEnum> get serializer =>
+      _$agentResponseTierEnumSerializer;
 
-  const AgentResponseTierEnum._(String name): super(name);
+  const AgentResponseTierEnum._(String name) : super(name);
 
-  static BuiltSet<AgentResponseTierEnum> get values => _$agentResponseTierEnumValues;
-  static AgentResponseTierEnum valueOf(String name) => _$agentResponseTierEnumValueOf(name);
+  static BuiltSet<AgentResponseTierEnum> get values =>
+      _$agentResponseTierEnumValues;
+  static AgentResponseTierEnum valueOf(String name) =>
+      _$agentResponseTierEnumValueOf(name);
 }
 
 class AgentResponseStatusEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'ACTIVE')
-  static const AgentResponseStatusEnum ACTIVE = _$agentResponseStatusEnum_ACTIVE;
+  static const AgentResponseStatusEnum ACTIVE =
+      _$agentResponseStatusEnum_ACTIVE;
   @BuiltValueEnumConst(wireName: r'INACTIVE')
-  static const AgentResponseStatusEnum INACTIVE = _$agentResponseStatusEnum_INACTIVE;
+  static const AgentResponseStatusEnum INACTIVE =
+      _$agentResponseStatusEnum_INACTIVE;
   @BuiltValueEnumConst(wireName: r'PENDING')
-  static const AgentResponseStatusEnum PENDING = _$agentResponseStatusEnum_PENDING;
+  static const AgentResponseStatusEnum PENDING =
+      _$agentResponseStatusEnum_PENDING;
   @BuiltValueEnumConst(wireName: r'SUSPENDED')
-  static const AgentResponseStatusEnum SUSPENDED = _$agentResponseStatusEnum_SUSPENDED;
+  static const AgentResponseStatusEnum SUSPENDED =
+      _$agentResponseStatusEnum_SUSPENDED;
 
-  static Serializer<AgentResponseStatusEnum> get serializer => _$agentResponseStatusEnumSerializer;
+  static Serializer<AgentResponseStatusEnum> get serializer =>
+      _$agentResponseStatusEnumSerializer;
 
-  const AgentResponseStatusEnum._(String name): super(name);
+  const AgentResponseStatusEnum._(String name) : super(name);
 
-  static BuiltSet<AgentResponseStatusEnum> get values => _$agentResponseStatusEnumValues;
-  static AgentResponseStatusEnum valueOf(String name) => _$agentResponseStatusEnumValueOf(name);
+  static BuiltSet<AgentResponseStatusEnum> get values =>
+      _$agentResponseStatusEnumValues;
+  static AgentResponseStatusEnum valueOf(String name) =>
+      _$agentResponseStatusEnumValueOf(name);
 }
-

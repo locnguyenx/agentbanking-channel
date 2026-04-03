@@ -6,7 +6,7 @@ import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 class TopUpForm extends StatefulWidget {
   final Function(String telco, String phoneNumber, Decimal amount) onSubmit;
 
-  const TopUpForm({Key? key, required this.onSubmit}) : super(key: key);
+  const TopUpForm({super.key, required this.onSubmit});
 
   @override
   _TopUpFormState createState() => _TopUpFormState();
@@ -18,7 +18,7 @@ class _TopUpFormState extends State<TopUpForm> {
   final _phoneController = TextEditingController();
   final _amountController = TextEditingController();
 
-  final List<String> _telcos = ['CELCOM', 'DIGI', 'MAXIS', 'UMOBILE'];
+  final List<String> _telcos = ['CELCOM', 'DIGI', 'MAXIS', 'UMOBILE', 'M1'];
 
   @override
   Widget build(BuildContext context) {
@@ -32,31 +32,34 @@ class _TopUpFormState extends State<TopUpForm> {
               value: _selectedTelco,
               items: _telcos.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
               onChanged: (v) => setState(() => _selectedTelco = v),
-              decoration: const InputDecoration(labelText: 'Telco Provider'),
+              decoration: const InputDecoration(labelText: 'Select Provider'),
               validator: (v) => v == null ? 'Please select a Telco' : null,
             ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'Phone Number (e.g. 0123456789)'),
+              decoration: const InputDecoration(labelText: 'Phone Number'),
               keyboardType: TextInputType.phone,
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Invalid Phone Number';
+                if (v == null || v.isEmpty) return 'Required';
                 if (!ValidationService.isValidPhoneNumber(v)) return 'Invalid Phone Number';
                 return null;
               },
             ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _amountController,
-              decoration: const InputDecoration(labelText: 'Amount (RM)'),
+              decoration: const InputDecoration(labelText: 'Amount'),
               keyboardType: TextInputType.number,
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Invalid Amount';
+                if (v == null || v.isEmpty) return 'Required';
                 final err = OpenApiValidators.minMax(v, min: 1.0, max: 1000.0);
                 return err != null ? 'Invalid Amount' : null;
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   widget.onSubmit(
@@ -66,6 +69,7 @@ class _TopUpFormState extends State<TopUpForm> {
                   );
                 }
               },
+              key: const Key('btn_main_action'),
               child: const Text('PROCEED'),
             ),
           ],

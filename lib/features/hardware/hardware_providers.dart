@@ -17,3 +17,7 @@ final pinPadProvider = Provider<IPinPad>((ref) {
 final printerProvider = Provider<IPrinter>((ref) {
   return MockPrinter();
 });
+
+final merchantTerminalProvider = Provider<IMerchantTerminal>((ref) {
+  return MockMerchantTerminal();
+});

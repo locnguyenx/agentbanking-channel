@@ -7,9 +7,9 @@ class FloatRepository {
 
   FloatRepository(this.ledgerApi);
 
-  Future<FloatLedger> getFloatStatus() async {
+  Future<FloatLedger> getFloatStatus(String agentId) async {
     try {
-      final response = await ledgerApi.getBalance(agentId: 'AGENT-123');
+      final response = await ledgerApi.getBalance(agentId: agentId);
       final data = response.data;
       
       if (data == null) {

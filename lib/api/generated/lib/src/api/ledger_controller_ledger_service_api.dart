@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
@@ -14,14 +13,12 @@ import 'package:agent_api/src/model/balance_response.dart';
 import 'package:agent_api/src/model/dashboard_response.dart';
 import 'package:agent_api/src/model/date.dart';
 import 'package:agent_api/src/model/deposit_external_request.dart';
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/settlement_response.dart';
 import 'package:agent_api/src/model/transaction_list_response.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 import 'package:agent_api/src/model/withdrawal_external_request.dart';
 
 class LedgerControllerLedgerServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -29,10 +26,10 @@ class LedgerControllerLedgerServiceApi {
   const LedgerControllerLedgerServiceApi(this._dio, this._serializers);
 
   /// balanceInquiry
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [balanceInquiryExternalRequest] 
+  /// * [balanceInquiryExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -42,7 +39,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BalanceResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BalanceResponse>> balanceInquiry({ 
+  Future<Response<BalanceResponse>> balanceInquiry({
     required BalanceInquiryExternalRequest balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -69,11 +66,11 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       const _type = FullType(BalanceInquiryExternalRequest);
-      _bodyData = _serializers.serialize(balanceInquiryExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(balanceInquiryExternalRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -96,11 +93,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BalanceResponse),
-      ) as BalanceResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(BalanceResponse),
+            ) as BalanceResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -124,10 +122,10 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// credit
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [depositExternalRequest] 
+  /// * [depositExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -137,7 +135,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> credit({ 
+  Future<Response<TransactionResponse>> credit({
     required DepositExternalRequest depositExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -164,11 +162,11 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       const _type = FullType(DepositExternalRequest);
-      _bodyData = _serializers.serialize(depositExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(depositExternalRequest, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -191,11 +189,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -219,10 +218,10 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// debit
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [withdrawalExternalRequest] 
+  /// * [withdrawalExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -232,7 +231,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> debit({ 
+  Future<Response<TransactionResponse>> debit({
     required WithdrawalExternalRequest withdrawalExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -259,11 +258,11 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       const _type = FullType(WithdrawalExternalRequest);
-      _bodyData = _serializers.serialize(withdrawalExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(withdrawalExternalRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -286,11 +285,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -314,10 +314,10 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// getBalance
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [agentId] 
+  /// * [agentId]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -327,7 +327,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BalanceResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BalanceResponse>> getBalance({ 
+  Future<Response<BalanceResponse>> getBalance({
     required String agentId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -336,7 +336,10 @@ class LedgerControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/agent/balance'.replaceAll('{' r'agentId' '}', encodeQueryParameter(_serializers, agentId, const FullType(String)).toString());
+    final _path = r'/api/v1/agent/balance'.replaceAll(
+        '{' r'agentId' '}',
+        encodeQueryParameter(_serializers, agentId, const FullType(String))
+            .toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -361,11 +364,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BalanceResponse),
-      ) as BalanceResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(BalanceResponse),
+            ) as BalanceResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -389,7 +393,7 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// getDashboard
-  /// 
+  ///
   ///
   /// Parameters:
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -401,7 +405,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DashboardResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DashboardResponse>> getDashboard({ 
+  Future<Response<DashboardResponse>> getDashboard({
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -434,11 +438,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DashboardResponse),
-      ) as DashboardResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(DashboardResponse),
+            ) as DashboardResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -462,10 +467,10 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// getSettlement
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [date] 
+  /// * [date]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -475,7 +480,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [SettlementResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<SettlementResponse>> getSettlement({ 
+  Future<Response<SettlementResponse>> getSettlement({
     required Date date,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -514,11 +519,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(SettlementResponse),
-      ) as SettlementResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(SettlementResponse),
+            ) as SettlementResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -542,11 +548,11 @@ class LedgerControllerLedgerServiceApi {
   }
 
   /// getTransactions
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [page] 
-  /// * [size] 
+  /// * [page]
+  /// * [size]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -556,7 +562,7 @@ class LedgerControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionListResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionListResponse>> getTransactions({ 
+  Future<Response<TransactionListResponse>> getTransactions({
     int? page = 0,
     int? size = 20,
     CancelToken? cancelToken,
@@ -580,8 +586,10 @@ class LedgerControllerLedgerServiceApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
-      if (size != null) r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
+      if (page != null)
+        r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
+      if (size != null)
+        r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
     };
 
     final _response = await _dio.request<Object>(
@@ -597,11 +605,12 @@ class LedgerControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionListResponse),
-      ) as TransactionListResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionListResponse),
+            ) as TransactionListResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -623,5 +632,4 @@ class LedgerControllerLedgerServiceApi {
       extra: _response.extra,
     );
   }
-
 }

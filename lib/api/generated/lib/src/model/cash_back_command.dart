@@ -11,13 +11,14 @@ part 'cash_back_command.g.dart';
 /// CashBackCommand
 ///
 /// Properties:
-/// * [merchantId] 
-/// * [cashBackAmount] 
-/// * [cardData] 
-/// * [pinBlock] 
-/// * [idempotencyKey] 
+/// * [merchantId]
+/// * [cashBackAmount]
+/// * [cardData]
+/// * [pinBlock]
+/// * [idempotencyKey]
 @BuiltValue()
-abstract class CashBackCommand implements Built<CashBackCommand, CashBackCommandBuilder> {
+abstract class CashBackCommand
+    implements Built<CashBackCommand, CashBackCommandBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String? get merchantId;
 
@@ -35,16 +36,19 @@ abstract class CashBackCommand implements Built<CashBackCommand, CashBackCommand
 
   CashBackCommand._();
 
-  factory CashBackCommand([void updates(CashBackCommandBuilder b)]) = _$CashBackCommand;
+  factory CashBackCommand([void updates(CashBackCommandBuilder b)]) =
+      _$CashBackCommand;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CashBackCommandBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CashBackCommand> get serializer => _$CashBackCommandSerializer();
+  static Serializer<CashBackCommand> get serializer =>
+      _$CashBackCommandSerializer();
 }
 
-class _$CashBackCommandSerializer implements PrimitiveSerializer<CashBackCommand> {
+class _$CashBackCommandSerializer
+    implements PrimitiveSerializer<CashBackCommand> {
   @override
   final Iterable<Type> types = const [CashBackCommand, _$CashBackCommand];
 
@@ -99,7 +103,9 @@ class _$CashBackCommandSerializer implements PrimitiveSerializer<CashBackCommand
     CashBackCommand object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -177,4 +183,3 @@ class _$CashBackCommandSerializer implements PrimitiveSerializer<CashBackCommand
     return result.build();
   }
 }
-

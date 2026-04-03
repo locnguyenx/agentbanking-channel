@@ -6,11 +6,11 @@ class ProxyEnquiryDialog extends StatelessWidget {
   final VoidCallback onCancel;
 
   const ProxyEnquiryDialog({
-    Key? key,
+    super.key,
     required this.maskedName,
     required this.onConfirm,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

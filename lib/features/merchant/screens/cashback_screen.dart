@@ -31,10 +31,10 @@ class _CashbackScreenState extends ConsumerState<CashbackScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.check_circle, color: Colors.green, size: 80),
-              Text('Purchase: RM ${res.purchaseAmount}', style: const TextStyle(fontSize: 18)),
-              Text('Cashback: RM ${res.cashBackAmount}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text('Purchase: RM ${res.purchaseAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18)),
+              Text('Cashback: RM ${res.cashBackAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              Text('Total Charged: RM ${state.amount}', style: const TextStyle(fontSize: 22)),
+              Text('Total Charged: RM ${state.amount?.toStringAsFixed(2) ?? "0.00"}', style: const TextStyle(fontSize: 22)),
               const SizedBox(height: 32),
               ElevatedButton(onPressed: () => notifier.reset(), child: const Text('Done')),
             ],

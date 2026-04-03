@@ -4,7 +4,7 @@ import 'package:agentbanking_channel/features/kyc/providers/onboarding_provider.
 import 'package:agentbanking_channel/core/offline/widgets/offline_indicator.dart';
 
 class KycFlowScreen extends ConsumerWidget {
-  const KycFlowScreen({Key? key}) : super(key: key);
+  const KycFlowScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,6 +92,7 @@ class KycFlowScreen extends ConsumerWidget {
         );
       case OnboardingStatus.scanningMyKad:
       case OnboardingStatus.validatingKyc:
+      case OnboardingStatus.livenessProcessing:
       case OnboardingStatus.provisioning:
         String message = 'Processing...';
         String detail = 'Please wait';
@@ -101,6 +102,9 @@ class KycFlowScreen extends ConsumerWidget {
         } else if (state.status == OnboardingStatus.validatingKyc) {
           message = 'VALIDATING IDENTITY...';
           detail = 'AML & Sanction check in progress';
+        } else if (state.status == OnboardingStatus.livenessProcessing) {
+          message = 'LIVENESS VERIFICATION';
+          detail = 'Please BLINK TWICE for frontal camera';
         } else if (state.status == OnboardingStatus.provisioning) {
           message = 'OPENING ACCOUNT...';
           detail = 'Provisioning Core Banking details';
@@ -146,6 +150,32 @@ class KycFlowScreen extends ConsumerWidget {
               'Current Account-i',
               'For daily high-volume transactions',
               'CURRENT_001',
+            ),
+          ],
+        );
+      case OnboardingStatus.manualReview:
+        return Column(
+          children: [
+            const Icon(Icons.assignment_late_outlined, color: Colors.amber, size: 80),
+            const SizedBox(height: 24),
+            const Text('Manual Review Required', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            const Text(
+              'Your application has been queued for analyst review. You will be notified via SMS once completed.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+            const SizedBox(height: 48),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  ref.read(onboardingProvider.notifier).reset();
+                  Navigator.pop(context);
+                },
+                child: const Text('BACK TO DASHBOARD'),
+              ),
             ),
           ],
         );

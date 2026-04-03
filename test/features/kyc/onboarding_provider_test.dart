@@ -3,7 +3,6 @@ import 'package:mockito/mockito.dart';
 import 'package:agentbanking_channel/features/kyc/providers/onboarding_provider.dart';
 import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
-import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart';
 
 class MockKycRepository extends Mock implements KycRepository {}
 class MockMyKadScanner extends Mock implements IMyKadScanner {}

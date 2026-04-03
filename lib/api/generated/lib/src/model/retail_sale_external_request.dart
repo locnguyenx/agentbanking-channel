@@ -11,13 +11,15 @@ part 'retail_sale_external_request.g.dart';
 /// RetailSaleExternalRequest
 ///
 /// Properties:
-/// * [merchantId] 
-/// * [amount] 
-/// * [cardData] 
-/// * [pinBlock] 
-/// * [idempotencyKey] 
+/// * [merchantId]
+/// * [amount]
+/// * [cardData]
+/// * [pinBlock]
+/// * [idempotencyKey]
 @BuiltValue()
-abstract class RetailSaleExternalRequest implements Built<RetailSaleExternalRequest, RetailSaleExternalRequestBuilder> {
+abstract class RetailSaleExternalRequest
+    implements
+        Built<RetailSaleExternalRequest, RetailSaleExternalRequestBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String get merchantId;
 
@@ -35,18 +37,25 @@ abstract class RetailSaleExternalRequest implements Built<RetailSaleExternalRequ
 
   RetailSaleExternalRequest._();
 
-  factory RetailSaleExternalRequest([void updates(RetailSaleExternalRequestBuilder b)]) = _$RetailSaleExternalRequest;
+  factory RetailSaleExternalRequest(
+          [void updates(RetailSaleExternalRequestBuilder b)]) =
+      _$RetailSaleExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailSaleExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailSaleExternalRequest> get serializer => _$RetailSaleExternalRequestSerializer();
+  static Serializer<RetailSaleExternalRequest> get serializer =>
+      _$RetailSaleExternalRequestSerializer();
 }
 
-class _$RetailSaleExternalRequestSerializer implements PrimitiveSerializer<RetailSaleExternalRequest> {
+class _$RetailSaleExternalRequestSerializer
+    implements PrimitiveSerializer<RetailSaleExternalRequest> {
   @override
-  final Iterable<Type> types = const [RetailSaleExternalRequest, _$RetailSaleExternalRequest];
+  final Iterable<Type> types = const [
+    RetailSaleExternalRequest,
+    _$RetailSaleExternalRequest
+  ];
 
   @override
   final String wireName = r'RetailSaleExternalRequest';
@@ -93,7 +102,9 @@ class _$RetailSaleExternalRequestSerializer implements PrimitiveSerializer<Retai
     RetailSaleExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -171,4 +182,3 @@ class _$RetailSaleExternalRequestSerializer implements PrimitiveSerializer<Retai
     return result.build();
   }
 }
-

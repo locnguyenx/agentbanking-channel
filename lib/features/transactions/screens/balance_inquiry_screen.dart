@@ -49,7 +49,10 @@ class BalanceInquiryScreen extends ConsumerWidget {
             ] else ...[
               const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text('Status: ${state.status.name}...'),
+              Text(
+                'Status: ${state.status.name}...',
+                key: const Key('bdd_status_token'),
+              ),
             ],
           ],
         ),

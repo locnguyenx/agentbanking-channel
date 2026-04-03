@@ -26,8 +26,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Please select a Telco'), findsOneWidget);
-    expect(find.text('Invalid Phone Number'), findsOneWidget);
-    expect(find.text('Invalid Amount'), findsOneWidget);
+    expect(find.text('Required'), findsNWidgets(2));
     expect(submitted, false);
 
     // Select Telco
@@ -36,8 +35,8 @@ void main() {
     await tester.tap(find.text('CELCOM').last);
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextFormField).at(0), '012-3456789');
-    await tester.enterText(find.byType(TextFormField).at(1), '10.0');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Phone Number'), '012-3456789');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '10.0');
 
     await tester.tap(find.text('PROCEED'));
     await tester.pump();

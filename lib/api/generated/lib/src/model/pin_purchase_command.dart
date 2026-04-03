@@ -11,12 +11,13 @@ part 'pin_purchase_command.g.dart';
 /// PinPurchaseCommand
 ///
 /// Properties:
-/// * [agentId] 
-/// * [productCode] 
-/// * [amount] 
-/// * [idempotencyKey] 
+/// * [agentId]
+/// * [productCode]
+/// * [amount]
+/// * [idempotencyKey]
 @BuiltValue()
-abstract class PinPurchaseCommand implements Built<PinPurchaseCommand, PinPurchaseCommandBuilder> {
+abstract class PinPurchaseCommand
+    implements Built<PinPurchaseCommand, PinPurchaseCommandBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -31,16 +32,19 @@ abstract class PinPurchaseCommand implements Built<PinPurchaseCommand, PinPurcha
 
   PinPurchaseCommand._();
 
-  factory PinPurchaseCommand([void updates(PinPurchaseCommandBuilder b)]) = _$PinPurchaseCommand;
+  factory PinPurchaseCommand([void updates(PinPurchaseCommandBuilder b)]) =
+      _$PinPurchaseCommand;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(PinPurchaseCommandBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PinPurchaseCommand> get serializer => _$PinPurchaseCommandSerializer();
+  static Serializer<PinPurchaseCommand> get serializer =>
+      _$PinPurchaseCommandSerializer();
 }
 
-class _$PinPurchaseCommandSerializer implements PrimitiveSerializer<PinPurchaseCommand> {
+class _$PinPurchaseCommandSerializer
+    implements PrimitiveSerializer<PinPurchaseCommand> {
   @override
   final Iterable<Type> types = const [PinPurchaseCommand, _$PinPurchaseCommand];
 
@@ -88,7 +92,9 @@ class _$PinPurchaseCommandSerializer implements PrimitiveSerializer<PinPurchaseC
     PinPurchaseCommand object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -159,4 +165,3 @@ class _$PinPurchaseCommandSerializer implements PrimitiveSerializer<PinPurchaseC
     return result.build();
   }
 }
-

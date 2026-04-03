@@ -12,16 +12,17 @@ part 'transaction_response.g.dart';
 /// TransactionResponse
 ///
 /// Properties:
-/// * [status] 
-/// * [transactionId] 
-/// * [amount] 
-/// * [currency] 
-/// * [transactionType] 
-/// * [timestamp] 
-/// * [message] 
-/// * [reference] 
+/// * [status]
+/// * [transactionId]
+/// * [amount]
+/// * [currency]
+/// * [transactionType]
+/// * [timestamp]
+/// * [message]
+/// * [reference]
 @BuiltValue()
-abstract class TransactionResponse implements Built<TransactionResponse, TransactionResponseBuilder> {
+abstract class TransactionResponse
+    implements Built<TransactionResponse, TransactionResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   TransactionResponseStatusEnum? get status;
   // enum statusEnum {  SUCCESS,  PENDING,  FAILED,  };
@@ -49,18 +50,24 @@ abstract class TransactionResponse implements Built<TransactionResponse, Transac
 
   TransactionResponse._();
 
-  factory TransactionResponse([void updates(TransactionResponseBuilder b)]) = _$TransactionResponse;
+  factory TransactionResponse([void updates(TransactionResponseBuilder b)]) =
+      _$TransactionResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(TransactionResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<TransactionResponse> get serializer => _$TransactionResponseSerializer();
+  static Serializer<TransactionResponse> get serializer =>
+      _$TransactionResponseSerializer();
 }
 
-class _$TransactionResponseSerializer implements PrimitiveSerializer<TransactionResponse> {
+class _$TransactionResponseSerializer
+    implements PrimitiveSerializer<TransactionResponse> {
   @override
-  final Iterable<Type> types = const [TransactionResponse, _$TransactionResponse];
+  final Iterable<Type> types = const [
+    TransactionResponse,
+    _$TransactionResponse
+  ];
 
   @override
   final String wireName = r'TransactionResponse';
@@ -134,7 +141,9 @@ class _$TransactionResponseSerializer implements PrimitiveSerializer<Transaction
     TransactionResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -235,19 +244,23 @@ class _$TransactionResponseSerializer implements PrimitiveSerializer<Transaction
 }
 
 class TransactionResponseStatusEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'SUCCESS')
-  static const TransactionResponseStatusEnum SUCCESS = _$transactionResponseStatusEnum_SUCCESS;
+  static const TransactionResponseStatusEnum SUCCESS =
+      _$transactionResponseStatusEnum_SUCCESS;
   @BuiltValueEnumConst(wireName: r'PENDING')
-  static const TransactionResponseStatusEnum PENDING = _$transactionResponseStatusEnum_PENDING;
+  static const TransactionResponseStatusEnum PENDING =
+      _$transactionResponseStatusEnum_PENDING;
   @BuiltValueEnumConst(wireName: r'FAILED')
-  static const TransactionResponseStatusEnum FAILED = _$transactionResponseStatusEnum_FAILED;
+  static const TransactionResponseStatusEnum FAILED =
+      _$transactionResponseStatusEnum_FAILED;
 
-  static Serializer<TransactionResponseStatusEnum> get serializer => _$transactionResponseStatusEnumSerializer;
+  static Serializer<TransactionResponseStatusEnum> get serializer =>
+      _$transactionResponseStatusEnumSerializer;
 
-  const TransactionResponseStatusEnum._(String name): super(name);
+  const TransactionResponseStatusEnum._(String name) : super(name);
 
-  static BuiltSet<TransactionResponseStatusEnum> get values => _$transactionResponseStatusEnumValues;
-  static TransactionResponseStatusEnum valueOf(String name) => _$transactionResponseStatusEnumValueOf(name);
+  static BuiltSet<TransactionResponseStatusEnum> get values =>
+      _$transactionResponseStatusEnumValues;
+  static TransactionResponseStatusEnum valueOf(String name) =>
+      _$transactionResponseStatusEnumValueOf(name);
 }
-

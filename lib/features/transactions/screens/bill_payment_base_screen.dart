@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 
 class BillPaymentBaseScreen extends ConsumerStatefulWidget {
@@ -253,14 +254,17 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
+      final authState = ref.read(authProvider);
+      final agentId = authState.user?.agentId ?? 'UNKNOWN';
+      
       ref.read(transactionProvider.notifier).startTransaction(
         Decimal.parse(_amountController.text),
-        'AGENT-123', // Hardcoded for demo
+        agentId,
         serviceCode: widget.serviceCode,
         fundingSource: _fundingSource,
         metadata: {
           widget.metadataKey: _metadataController.text,
-          if (_selectedBillerCode != null) 'billerCode': _selectedBillerCode,
+          if (_selectedBillerCode != null) 'billerCode': _selectedBillerCode!,
         },
       );
     }

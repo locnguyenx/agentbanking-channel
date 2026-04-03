@@ -10,9 +10,11 @@ enum OnboardingStatus {
   idle,
   scanningMyKad,
   validatingKyc,
+  livenessProcessing,
   selectingProduct,
   provisioning,
   success,
+  manualReview,
   failed,
 }
 
@@ -51,6 +53,7 @@ class OnboardingState {
 class OnboardingNotifier extends StateNotifier<OnboardingState> {
   final KycRepository kycRepository;
   final IMyKadScanner myKadScanner;
+  bool _mounted = true;
 
   OnboardingNotifier({
     required this.kycRepository,
@@ -58,15 +61,23 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
   }) : super(OnboardingState(status: OnboardingStatus.idle));
 
   Future<void> startOnboarding() async {
-    state = state.copyWith(status: OnboardingStatus.scanningMyKad, error: null);
+    if (!_mounted) return;
+    if (_mounted) {
+      state = state.copyWith(status: OnboardingStatus.scanningMyKad, error: null);
+    }
     try {
       final myKadData = await myKadScanner.scanMyKad();
+      if (!_mounted) return;
       if (myKadData == null) {
-        state = state.copyWith(status: OnboardingStatus.failed, error: 'MyKad Scan Failed');
+        if (_mounted) {
+          state = state.copyWith(status: OnboardingStatus.failed, error: 'MyKad Scan Failed');
+        }
         return;
       }
       
-      state = state.copyWith(status: OnboardingStatus.validatingKyc, myKadData: myKadData);
+      if (_mounted) {
+        state = state.copyWith(status: OnboardingStatus.validatingKyc, myKadData: myKadData);
+      }
       
       // Perform KYC validation (Face score mock: 0.9)
       final kycResponse = await kycRepository.validateKyc(KycValidationRequest(
@@ -74,28 +85,56 @@ class OnboardingNotifier extends StateNotifier<OnboardingState> {
         faceMatchScore: 0.9,
       ));
 
+      if (!_mounted) return;
       if (kycResponse.isApproved) {
-        state = state.copyWith(status: OnboardingStatus.selectingProduct, kycResponse: kycResponse);
+        if (_mounted) {
+          state = state.copyWith(status: OnboardingStatus.selectingProduct, kycResponse: kycResponse);
+        }
+      } else if (kycResponse.reasons.contains('MANUAL_REVIEW')) {
+        if (_mounted) {
+          state = state.copyWith(status: OnboardingStatus.manualReview, kycResponse: kycResponse);
+        }
       } else {
-        state = state.copyWith(status: OnboardingStatus.failed, error: kycResponse.reasons.join(', '));
+        if (_mounted) {
+          state = state.copyWith(status: OnboardingStatus.failed, error: kycResponse.reasons.join(', '));
+        }
       }
     } catch (e) {
-      state = state.copyWith(status: OnboardingStatus.failed, error: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: OnboardingStatus.failed, error: e.toString());
+      }
     }
   }
 
   Future<void> selectProduct(String productCode) async {
-    state = state.copyWith(status: OnboardingStatus.provisioning, selectedProduct: productCode);
+    if (!_mounted) return;
+    if (_mounted) {
+      state = state.copyWith(status: OnboardingStatus.provisioning, selectedProduct: productCode);
+    }
     try {
       await kycRepository.openAccount(state.myKadData?.icNumber ?? '', productCode);
-      state = state.copyWith(status: OnboardingStatus.success);
+      if (_mounted) {
+        state = state.copyWith(status: OnboardingStatus.success);
+      }
     } catch (e) {
-      state = state.copyWith(status: OnboardingStatus.failed, error: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: OnboardingStatus.failed, error: e.toString());
+      }
     }
   }
 
   void reset() {
     state = OnboardingState(status: OnboardingStatus.idle);
+  }
+
+  void debugSetState(OnboardingState newState) {
+    state = newState;
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    super.dispose();
   }
 }
 

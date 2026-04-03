@@ -4,19 +4,16 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
 import 'package:agent_api/src/model/agent_response.dart';
 import 'package:agent_api/src/model/create_agent_external_request.dart';
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/update_agent_request.dart';
 import 'package:built_collection/built_collection.dart';
 
 class AgentControllerOnboardingServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -24,10 +21,10 @@ class AgentControllerOnboardingServiceApi {
   const AgentControllerOnboardingServiceApi(this._dio, this._serializers);
 
   /// createAgent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [createAgentExternalRequest] 
+  /// * [createAgentExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -37,7 +34,7 @@ class AgentControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AgentResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AgentResponse>> createAgent({ 
+  Future<Response<AgentResponse>> createAgent({
     required CreateAgentExternalRequest createAgentExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -64,11 +61,11 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       const _type = FullType(CreateAgentExternalRequest);
-      _bodyData = _serializers.serialize(createAgentExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(createAgentExternalRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -91,11 +88,12 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(AgentResponse),
-      ) as AgentResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(AgentResponse),
+            ) as AgentResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -119,10 +117,10 @@ class AgentControllerOnboardingServiceApi {
   }
 
   /// deactivateAgent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -132,7 +130,7 @@ class AgentControllerOnboardingServiceApi {
   ///
   /// Returns a [Future]
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<void>> deactivateAgent({ 
+  Future<Response<void>> deactivateAgent({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -141,7 +139,10 @@ class AgentControllerOnboardingServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll(
+        '{' r'id' '}',
+        encodeQueryParameter(_serializers, id, const FullType(String))
+            .toString());
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{
@@ -166,10 +167,10 @@ class AgentControllerOnboardingServiceApi {
   }
 
   /// getAgent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -179,7 +180,7 @@ class AgentControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AgentResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AgentResponse>> getAgent({ 
+  Future<Response<AgentResponse>> getAgent({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -188,7 +189,10 @@ class AgentControllerOnboardingServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll(
+        '{' r'id' '}',
+        encodeQueryParameter(_serializers, id, const FullType(String))
+            .toString());
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
@@ -213,11 +217,12 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(AgentResponse),
-      ) as AgentResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(AgentResponse),
+            ) as AgentResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -241,11 +246,11 @@ class AgentControllerOnboardingServiceApi {
   }
 
   /// listAgents
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [page] 
-  /// * [size] 
+  /// * [page]
+  /// * [size]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -255,7 +260,7 @@ class AgentControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltList<AgentResponse>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<AgentResponse>>> listAgents({ 
+  Future<Response<BuiltList<AgentResponse>>> listAgents({
     int? page = 0,
     int? size = 20,
     CancelToken? cancelToken,
@@ -279,8 +284,10 @@ class AgentControllerOnboardingServiceApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
-      if (size != null) r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
+      if (page != null)
+        r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
+      if (size != null)
+        r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
     };
 
     final _response = await _dio.request<Object>(
@@ -296,11 +303,13 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BuiltList, [FullType(AgentResponse)]),
-      ) as BuiltList<AgentResponse>;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType:
+                  const FullType(BuiltList, [FullType(AgentResponse)]),
+            ) as BuiltList<AgentResponse>;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -324,11 +333,11 @@ class AgentControllerOnboardingServiceApi {
   }
 
   /// updateAgent
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [updateAgentRequest] 
+  /// * [id]
+  /// * [updateAgentRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -338,7 +347,7 @@ class AgentControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [AgentResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AgentResponse>> updateAgent({ 
+  Future<Response<AgentResponse>> updateAgent({
     required String id,
     required UpdateAgentRequest updateAgentRequest,
     CancelToken? cancelToken,
@@ -348,7 +357,10 @@ class AgentControllerOnboardingServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/agents/{id}'.replaceAll(
+        '{' r'id' '}',
+        encodeQueryParameter(_serializers, id, const FullType(String))
+            .toString());
     final _options = Options(
       method: r'PUT',
       headers: <String, dynamic>{
@@ -366,11 +378,11 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       const _type = FullType(UpdateAgentRequest);
-      _bodyData = _serializers.serialize(updateAgentRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(updateAgentRequest, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -393,11 +405,12 @@ class AgentControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(AgentResponse),
-      ) as AgentResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(AgentResponse),
+            ) as AgentResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -419,5 +432,4 @@ class AgentControllerOnboardingServiceApi {
       extra: _response.extra,
     );
   }
-
 }

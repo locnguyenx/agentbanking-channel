@@ -29,8 +29,8 @@ void main() {
     ));
 
     // Fill Ref-1 with invalid data to trigger error messages
-    await tester.enterText(find.byType(TextFormField).at(0), '123'); // Too short
-    await tester.enterText(find.byType(TextFormField).at(1), '0'); // Too small
+    await tester.enterText(find.widgetWithText(TextFormField, 'Ref-1'), '123'); // Too short
+    await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '0'); // Too small
 
     await tester.tap(find.text('PROCEED'));
     await tester.pump();
@@ -47,8 +47,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Fill other fields
-    await tester.enterText(find.byType(TextFormField).at(0), 'REF123');
-    await tester.enterText(find.byType(TextFormField).at(1), '50.0');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Ref-1'), 'REF123');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Amount'), '50.0');
 
     await tester.tap(find.text('PROCEED'));
     await tester.pump();
@@ -63,7 +63,7 @@ void main() {
     ));
 
     // Fill Ref-1 with > 20 chars
-    await tester.enterText(find.byType(TextFormField).at(0), 'A' * 21);
+    await tester.enterText(find.widgetWithText(TextFormField, 'Ref-1'), 'A' * 21);
     await tester.tap(find.text('PROCEED'));
     await tester.pump();
 

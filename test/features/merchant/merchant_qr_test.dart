@@ -6,27 +6,51 @@ import 'package:agentbanking_channel/features/transactions/repositories/transact
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockito/mockito.dart';
+import '../../test_utils.dart';
 
-class ManualMockTransactionRepository implements TransactionRepository {
+class FakeFloatRepository extends Fake implements FloatRepository {
+  @override
+  Future<FloatLedger> getFloatStatus(String agentId) async {
+    return FloatLedger(currentBalance: Decimal.parse('5000.0'), limit: Decimal.parse('10000.0'));
+  }
+}
+
+class ManualMockTransactionRepository extends Mock implements TransactionRepository {
   RetailSaleResponse? nextRetailSaleResponse;
   String? nextDuitNowStatus;
 
   @override
-  Future<RetailSaleResponse> executeRetailSale(Decimal amount, String agentId, {String? pinBlock, String? cardToken}) async {
-    return nextRetailSaleResponse!;
+  Future<Map<String, String>> generateQrSale(Decimal amount, String agentId) async {
+    return {
+      'qrPayload': 'duitnow-qr-payload-for-TEST',
+      'referenceId': 'QR_TEST_123',
+    };
   }
 
   @override
-  Future<String> getDuitNowStatus(String referenceId) async {
-    return nextDuitNowStatus ?? 'PENDING';
+  Future<Map<String, dynamic>> getDuitNowStatus(String referenceId) async {
+    return {
+      'status': nextDuitNowStatus ?? 'PENDING',
+      'referenceId': referenceId,
+      'amount': 50.0,
+      'mdrAmount': 0.25,
+      'netToMerchant': 49.75,
+      'transactionId': 'TXN_QR_123',
+    };
   }
-  
   @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(invocation.memberName.toString());
+  Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
+    return TransactionExecutionResponse(status: 'SUCCESS', referenceId: 'REF_TEST_123');
+  }
+
+  @override
+  Future<TransactionExecutionResponse> balanceInquiry(TransactionExecutionRequest request, String agentId) async {
+    return TransactionExecutionResponse(status: 'SUCCESS', referenceId: 'BAL_TEST_123');
+  }
 }
 
 class ManualMockMerchantTerminal implements IMerchantTerminal {
@@ -48,20 +72,28 @@ class ManualMockMerchantTerminal implements IMerchantTerminal {
   }
 }
 
-class ManualFloatNotifier extends StateNotifier<FloatLedger> implements FloatNotifier {
-  ManualFloatNotifier() : super(FloatLedger(currentBalance: Decimal.zero, limit: Decimal.zero));
+class ManualFloatNotifier extends FloatNotifier {
+  ManualFloatNotifier() : super(FakeFloatRepository(), null);
   @override
   Future<void> fetchLatestBalance() async {}
 }
 
-class ManualMockComplianceNotifier extends StateNotifier<ComplianceState> implements ComplianceNotifier {
-  ManualMockComplianceNotifier() : super(ComplianceState(isFrozen: false));
+class ManualMockComplianceNotifier extends ComplianceNotifier {
+  ManualMockComplianceNotifier() : super();
   @override
-  void freeze(String reason) {}
+  void freeze(String reason) => state = ComplianceState(isFrozen: true, reason: reason);
   @override
-  void unlock() {}
+  void unlock() => state = ComplianceState(isFrozen: false);
   @override
-  Future<void> simulateWebhookUnlock() async {}
+  Future<void> simulateWebhookUnlock() async => unlock();
+}
+class FakeCardReader extends Mock implements ICardReader {
+  @override
+  Future<bool> isAvailable() async => true;
+}
+class FakePinPad extends Mock implements IPinPad {
+  @override
+  Future<bool> isAvailable() async => true;
 }
 
 void main() {
@@ -78,12 +110,14 @@ void main() {
     mockComplianceNotifier = ManualMockComplianceNotifier();
 
     notifier = MerchantNotifier(
+      ref: ManualMockRef(),
       repository: mockRepo,
       cardReader: FakeCardReader(), 
       pinPad: FakePinPad(),
       merchantTerminal: mockTerminal,
       floatNotifier: mockFloatNotifier,
       complianceNotifier: mockComplianceNotifier,
+      agentId: 'AGENT-001',
     );
   });
 
@@ -93,13 +127,11 @@ void main() {
     // 1. Start Sale
     final future = notifier.startRetailSale(amount, FundingSource.DUITNOW_QR);
     
-    // Quoting state
-    expect(notifier.state.status, MerchantStatus.quoting);
-    
-    await Future.delayed(const Duration(seconds: 2)); // Wait for quote + transition
-    
-    // Displaying QR state
+    // Displaying QR state immediately since quoting is removed
     expect(notifier.state.status, MerchantStatus.displayingQr);
+    
+    // Wait for generateQrSale to finish and send to terminal
+    await Future.delayed(const Duration(milliseconds: 50));
     expect(mockTerminal.lastQrPayload, contains('duitnow-qr-payload'));
 
     // 2. Simulate Backend notification (polling success)
@@ -120,6 +152,3 @@ void main() {
     expect(mockTerminal.clearCalled, isTrue);
   });
 }
-
-class FakeCardReader extends Fake implements ICardReader {}
-class FakePinPad extends Fake implements IPinPad {}

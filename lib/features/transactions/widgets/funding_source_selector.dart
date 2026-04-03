@@ -7,11 +7,11 @@ class FundingSourceSelector extends StatelessWidget {
   final List<FundingSource> availableSources;
 
   const FundingSourceSelector({
-    Key? key,
+    super.key,
     required this.selectedSource,
     required this.onSourceChanged,
     this.availableSources = FundingSource.values,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

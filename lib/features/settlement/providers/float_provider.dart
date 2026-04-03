@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:agentbanking_channel/api/api_providers.dart';
 import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 
 final floatRepositoryProvider = Provider<FloatRepository>((ref) {
   final ledgerApi = ref.watch(ledgerApiProvider);
@@ -12,35 +13,62 @@ final floatRepositoryProvider = Provider<FloatRepository>((ref) {
 
 final floatProvider = StateNotifierProvider<FloatNotifier, FloatLedger>((ref) {
   final repository = ref.watch(floatRepositoryProvider);
-  final notifier = FloatNotifier(repository);
+  final authState = ref.watch(authProvider);
+  final agentId = authState.user?.agentId;
   
-  // Start polling
-  final timer = Timer.periodic(const Duration(seconds: 30), (_) {
-    notifier.fetchLatestBalance();
-  });
-  
-  ref.onDispose(() => timer.cancel());
-  
-  return notifier;
+  // Notifier handles its own timer/polling
+  return FloatNotifier(repository, agentId);
 });
 
 class FloatNotifier extends StateNotifier<FloatLedger> {
   final FloatRepository _repository;
+  final String? _agentId;
+  final bool startTimer;
+  bool _mounted = true;
+  Timer? timer;
 
-  FloatNotifier(this._repository) : super(FloatLedger(
-    currentBalance: Decimal.parse('5000.0'),
-    limit: Decimal.parse('10000.0'),
+  FloatNotifier(this._repository, this._agentId, {this.startTimer = true}) : super(FloatLedger(
+    currentBalance: Decimal.zero,
+    limit: Decimal.zero,
   )) {
-    // Initial fetch
-    fetchLatestBalance();
+    // Initial fetch if authenticated
+    if (_agentId != null) {
+      fetchLatestBalance();
+    }
+    
+    if (startTimer) {
+      _startPolling();
+    }
+  }
+
+  void _startPolling() {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (_agentId != null) {
+        fetchLatestBalance();
+      }
+    });
   }
 
   Future<void> fetchLatestBalance() async {
+    if (_agentId == null) return;
+    if (!_mounted) return;
+    
     try {
-      final ledger = await _repository.getFloatStatus();
-      state = ledger;
+      final ledger = await _repository.getFloatStatus(_agentId!);
+      if (_mounted) {
+        state = ledger;
+      }
     } catch (e) {
       // Handle error
     }
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    timer?.cancel();
+    timer = null;
+    super.dispose();
   }
 }

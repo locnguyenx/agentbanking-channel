@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum SettlementStatus { open, warning, blocked }
 
-final settlementProvider = StateNotifierProvider<SettlementNotifier, SettlementStatus>((ref) {
+final settlementStatusProvider = StateNotifierProvider<SettlementNotifier, SettlementStatus>((ref) {
   return SettlementNotifier(startMonitor: true);
 });
 
 class SettlementNotifier extends StateNotifier<SettlementStatus> {
   Timer? _timer;
+  final bool startMonitor;
 
-  SettlementNotifier({bool startMonitor = false}) : super(SettlementStatus.open) {
+  SettlementNotifier({this.startMonitor = false}) : super(SettlementStatus.open) {
     if (startMonitor) {
       _startMonitor();
     }

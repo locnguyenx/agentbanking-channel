@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 
-
 /// tests for RulesControllerRulesServiceApi
 void main() {
   final instance = AgentApi().getRulesControllerRulesServiceApi();
@@ -11,6 +10,5 @@ void main() {
     test('test createFeeConfig', () async {
       // TODO
     });
-
   });
 }

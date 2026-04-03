@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:decimal/decimal.dart';
-import 'package:mockito/annotations.dart';
 import 'package:agentbanking_channel/features/settlement/providers/settlement_provider.dart';
 import 'package:agentbanking_channel/features/settlement/models/settlement_models.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
@@ -30,25 +29,25 @@ void main() {
     notifier = SettlementNotifier(repository: mockRepo);
   });
 
-  test('fetchSummary populates state with daily totals', () async {
+  test('fetchSummary enforces backend API mapping', () async {
     await notifier.fetchSummary();
     
-    expect(notifier.state.status, SettlementStatus.ready);
-    expect(notifier.state.summary, isNotNull);
-    expect(notifier.state.summary!.services.length, 3);
-    expect(notifier.state.summary!.totalCommission, Decimal.parse('17.0'));
+    expect(notifier.state.status, SettlementStatus.error);
+    expect(notifier.state.error, contains('Backend API mapping required for settlement summary'));
   });
 
-  test('performSettlement transitions to settled state on success', () async {
-    await notifier.fetchSummary();
-    expect(notifier.state.status, SettlementStatus.ready);
+  test('performSettlement enforces backend API mapping', () async {
+    // Manually set summary to bypass early return
+    notifier.state = notifier.state.copyWith(summary: SettlementSummary(
+      terminalId: 'TM-001',
+      timestamp: DateTime.now(),
+      services: [],
+      netVolume: Decimal.zero,
+      totalCommission: Decimal.zero,
+    ));
 
-    final settlementFuture = notifier.performSettlement();
-    expect(notifier.state.status, SettlementStatus.processing);
-
-    await settlementFuture;
-    expect(notifier.state.status, SettlementStatus.settled);
-    expect(notifier.state.result?.success, true);
-    expect(notifier.state.result?.batchNumber, startsWith('B-'));
+    await notifier.performSettlement();
+    expect(notifier.state.status, SettlementStatus.error);
+    expect(notifier.state.error, contains('Backend API mapping required for EOD closure'));
   });
 }

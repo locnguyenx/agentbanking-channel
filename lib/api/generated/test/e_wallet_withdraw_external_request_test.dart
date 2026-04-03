@@ -45,6 +45,5 @@ void main() {
     test('to test the property `customerPin`', () async {
       // TODO
     });
-
   });
 }

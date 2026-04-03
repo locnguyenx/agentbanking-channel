@@ -11,15 +11,16 @@ part 'balance_response.g.dart';
 /// BalanceResponse
 ///
 /// Properties:
-/// * [agentId] 
-/// * [availableBalance] 
-/// * [ledgerBalance] 
-/// * [pendingBalance] 
-/// * [currency] 
-/// * [lastTransactionId] 
-/// * [lastUpdated] 
+/// * [agentId]
+/// * [availableBalance]
+/// * [ledgerBalance]
+/// * [pendingBalance]
+/// * [currency]
+/// * [lastTransactionId]
+/// * [lastUpdated]
 @BuiltValue()
-abstract class BalanceResponse implements Built<BalanceResponse, BalanceResponseBuilder> {
+abstract class BalanceResponse
+    implements Built<BalanceResponse, BalanceResponseBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -43,16 +44,19 @@ abstract class BalanceResponse implements Built<BalanceResponse, BalanceResponse
 
   BalanceResponse._();
 
-  factory BalanceResponse([void updates(BalanceResponseBuilder b)]) = _$BalanceResponse;
+  factory BalanceResponse([void updates(BalanceResponseBuilder b)]) =
+      _$BalanceResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(BalanceResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<BalanceResponse> get serializer => _$BalanceResponseSerializer();
+  static Serializer<BalanceResponse> get serializer =>
+      _$BalanceResponseSerializer();
 }
 
-class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse> {
+class _$BalanceResponseSerializer
+    implements PrimitiveSerializer<BalanceResponse> {
   @override
   final Iterable<Type> types = const [BalanceResponse, _$BalanceResponse];
 
@@ -121,7 +125,9 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
     BalanceResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -213,4 +219,3 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
     return result.build();
   }
 }
-

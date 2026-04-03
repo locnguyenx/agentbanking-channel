@@ -6,7 +6,7 @@ import 'package:uuid/uuid.dart';
 class JomPayForm extends StatefulWidget {
   final Function(JomPayExternalRequest) onSubmit;
 
-  const JomPayForm({Key? key, required this.onSubmit}) : super(key: key);
+  const JomPayForm({super.key, required this.onSubmit});
 
   @override
   _JomPayFormState createState() => _JomPayFormState();
@@ -35,18 +35,18 @@ class _JomPayFormState extends State<JomPayForm> {
                 border: OutlineInputBorder(),
               ),
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Please enter biller code';
-                return OpenApiValidators.regex(v, r'^[0-9]{3,10}$');
+                if (v == null || v.isEmpty) return 'Required';
+                return OpenApiValidators.regex(v, r'^\d{4,5}$');
               },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _ref1Controller,
               decoration: const InputDecoration(
-                labelText: 'Ref-1 (Account Number)',
+                labelText: 'Ref-1',
                 border: OutlineInputBorder(),
               ),
-              validator: (v) => OpenApiValidators.length(v, minLen: 5, maxLen: 20),
+              validator: (v) => OpenApiValidators.length(v, minLen: 10, maxLen: 20),
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -60,7 +60,7 @@ class _JomPayFormState extends State<JomPayForm> {
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(
-                labelText: 'Amount (RM)',
+                labelText: 'Amount',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
@@ -84,6 +84,7 @@ class _JomPayFormState extends State<JomPayForm> {
                   widget.onSubmit(req);
                 }
               },
+              key: const Key('btn_main_action'),
               child: const Text('PROCEED', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ],

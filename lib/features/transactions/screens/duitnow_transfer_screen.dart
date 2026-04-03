@@ -4,7 +4,7 @@ import 'package:agentbanking_channel/features/transactions/providers/transaction
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
 class DuitNowTransferScreen extends ConsumerStatefulWidget {
-  const DuitNowTransferScreen({Key? key}) : super(key: key);
+  const DuitNowTransferScreen({super.key});
 
   @override
   ConsumerState<DuitNowTransferScreen> createState() => _DuitNowTransferScreenState();

@@ -11,11 +11,12 @@ part 'card_auth_request.g.dart';
 /// CardAuthRequest
 ///
 /// Properties:
-/// * [internalTransactionId] 
-/// * [pan] 
-/// * [amount] 
+/// * [internalTransactionId]
+/// * [pan]
+/// * [amount]
 @BuiltValue()
-abstract class CardAuthRequest implements Built<CardAuthRequest, CardAuthRequestBuilder> {
+abstract class CardAuthRequest
+    implements Built<CardAuthRequest, CardAuthRequestBuilder> {
   @BuiltValueField(wireName: r'internalTransactionId')
   String get internalTransactionId;
 
@@ -27,16 +28,19 @@ abstract class CardAuthRequest implements Built<CardAuthRequest, CardAuthRequest
 
   CardAuthRequest._();
 
-  factory CardAuthRequest([void updates(CardAuthRequestBuilder b)]) = _$CardAuthRequest;
+  factory CardAuthRequest([void updates(CardAuthRequestBuilder b)]) =
+      _$CardAuthRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CardAuthRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CardAuthRequest> get serializer => _$CardAuthRequestSerializer();
+  static Serializer<CardAuthRequest> get serializer =>
+      _$CardAuthRequestSerializer();
 }
 
-class _$CardAuthRequestSerializer implements PrimitiveSerializer<CardAuthRequest> {
+class _$CardAuthRequestSerializer
+    implements PrimitiveSerializer<CardAuthRequest> {
   @override
   final Iterable<Type> types = const [CardAuthRequest, _$CardAuthRequest];
 
@@ -71,7 +75,9 @@ class _$CardAuthRequestSerializer implements PrimitiveSerializer<CardAuthRequest
     CardAuthRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -135,4 +141,3 @@ class _$CardAuthRequestSerializer implements PrimitiveSerializer<CardAuthRequest
     return result.build();
   }
 }
-

@@ -4,16 +4,13 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/fee_config_request.dart';
 import 'package:agent_api/src/model/fee_config_response.dart';
 
 class RulesControllerRulesServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -21,10 +18,10 @@ class RulesControllerRulesServiceApi {
   const RulesControllerRulesServiceApi(this._dio, this._serializers);
 
   /// createFeeConfig
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [feeConfigRequest] 
+  /// * [feeConfigRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,7 +31,7 @@ class RulesControllerRulesServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [FeeConfigResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<FeeConfigResponse>> createFeeConfig({ 
+  Future<Response<FeeConfigResponse>> createFeeConfig({
     required FeeConfigRequest feeConfigRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -61,11 +58,11 @@ class RulesControllerRulesServiceApi {
 
     try {
       const _type = FullType(FeeConfigRequest);
-      _bodyData = _serializers.serialize(feeConfigRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(feeConfigRequest, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -88,11 +85,12 @@ class RulesControllerRulesServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(FeeConfigResponse),
-      ) as FeeConfigResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(FeeConfigResponse),
+            ) as FeeConfigResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -114,5 +112,4 @@ class RulesControllerRulesServiceApi {
       extra: _response.extra,
     );
   }
-
 }

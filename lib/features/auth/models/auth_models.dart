@@ -1,21 +1,25 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum AuthStatus {
   unauthenticated,
   authenticating,
   authenticated,
   failed,
+  expired,
 }
 
 class AuthUser {
   final String agentId;
   final String name;
   final String tier;
+  final double? registeredLat;
+  final double? registeredLng;
 
   AuthUser({
     required this.agentId,
     required this.name,
     required this.tier,
+    this.registeredLat,
+    this.registeredLng,
   });
 }
 

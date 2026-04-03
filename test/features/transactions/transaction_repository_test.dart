@@ -366,7 +366,7 @@ void main() {
         metadata: {'productCode': 'ESSP_TOKEN_V2'},
       );
 
-      final response = await repository.executeTransaction(request);
+      final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('ESSP_REF_123'));
@@ -387,7 +387,7 @@ void main() {
         },
       );
 
-      final response = await repository.executeTransaction(request);
+      final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('REF_123'));
@@ -411,7 +411,7 @@ void main() {
         },
       );
 
-      final response = await repository.executeTransaction(request);
+      final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('REF_123'));
@@ -429,7 +429,7 @@ void main() {
         amount: Decimal.parse('50.0'),
       );
 
-      final response = await repository.executeTransaction(request);
+      final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('BILL_REF_123'));
@@ -443,7 +443,7 @@ void main() {
         amount: Decimal.parse('30.0'),
       );
 
-      final response = await repository.executeTransaction(request);
+      final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('TOPUP_REF_123'));
@@ -460,21 +460,21 @@ void main() {
     });
 
     test('executeRetailSale returns success', () async {
-      final response = await repository.executeRetailSale(Decimal.parse('100.0'), 'CARD');
+      final response = await repository.executeRetailSale(Decimal.parse('100.0'), 'AGENT007');
       expect(response.receiptReference, 'TRANS_123');
       expect(response.floatCreditAmount, Decimal.parse('98.0'));
       expect(mockMerchantApi.lastRetailSaleCommand?.amount, 100.0);
     });
 
     test('executeCashback returns success', () async {
-      final response = await repository.executeCashback(Decimal.parse('100.0'), Decimal.parse('20.0'), 'CARD');
+      final response = await repository.executeCashback(Decimal.parse('100.0'), Decimal.parse('20.0'), 'AGENT007');
       expect(response.receiptReference, 'TRANS_456');
       expect(response.cashBackAmount, Decimal.parse('20.0'));
       expect(mockMerchantApi.lastCashBackCommand?.cashBackAmount, 20.0);
     });
 
     test('executePinPurchase returns success', () async {
-      final response = await repository.executePinPurchase(Decimal.parse('50.0'), 'CELCOM_50');
+      final response = await repository.executePinPurchase(Decimal.parse('50.0'), 'AGENT007', 'CELCOM_50');
       expect(response.pinCode, '8888-9999');
       expect(response.receiptReference, 'PIN_123');
     });

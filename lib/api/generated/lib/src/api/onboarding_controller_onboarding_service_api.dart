@@ -11,14 +11,11 @@ import 'package:dio/dio.dart';
 import 'package:agent_api/src/api_util.dart';
 import 'package:agent_api/src/model/application_submit_request.dart';
 import 'package:agent_api/src/model/application_submit_response.dart';
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/kyc_verify_response.dart';
 import 'package:agent_api/src/model/my_kad_verify_request.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:built_value/json_object.dart';
 
 class OnboardingControllerOnboardingServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -26,10 +23,10 @@ class OnboardingControllerOnboardingServiceApi {
   const OnboardingControllerOnboardingServiceApi(this._dio, this._serializers);
 
   /// biometricMatch
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [requestBody] 
+  /// * [requestBody]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -39,7 +36,7 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> biometricMatch({ 
+  Future<Response<BuiltMap<String, JsonObject>>> biometricMatch({
     required BuiltMap<String, String> requestBody,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -67,10 +64,9 @@ class OnboardingControllerOnboardingServiceApi {
     try {
       const _type = FullType(BuiltMap, [FullType(String), FullType(String)]);
       _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -93,11 +89,13 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(
+                  BuiltMap, [FullType(String), FullType(JsonObject)]),
+            ) as BuiltMap<String, JsonObject>;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -121,11 +119,11 @@ class OnboardingControllerOnboardingServiceApi {
   }
 
   /// getKycReviewQueue
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [page] 
-  /// * [size] 
+  /// * [page]
+  /// * [size]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -135,7 +133,7 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getKycReviewQueue({ 
+  Future<Response<BuiltMap<String, JsonObject>>> getKycReviewQueue({
     int? page = 0,
     int? size = 20,
     CancelToken? cancelToken,
@@ -159,8 +157,10 @@ class OnboardingControllerOnboardingServiceApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
-      if (size != null) r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
+      if (page != null)
+        r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
+      if (size != null)
+        r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
     };
 
     final _response = await _dio.request<Object>(
@@ -176,11 +176,13 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(
+                  BuiltMap, [FullType(String), FullType(JsonObject)]),
+            ) as BuiltMap<String, JsonObject>;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -204,10 +206,10 @@ class OnboardingControllerOnboardingServiceApi {
   }
 
   /// submitApplication
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [applicationSubmitRequest] 
+  /// * [applicationSubmitRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -217,7 +219,7 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ApplicationSubmitResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ApplicationSubmitResponse>> submitApplication({ 
+  Future<Response<ApplicationSubmitResponse>> submitApplication({
     required ApplicationSubmitRequest applicationSubmitRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -244,11 +246,11 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       const _type = FullType(ApplicationSubmitRequest);
-      _bodyData = _serializers.serialize(applicationSubmitRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(applicationSubmitRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -271,11 +273,12 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(ApplicationSubmitResponse),
-      ) as ApplicationSubmitResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(ApplicationSubmitResponse),
+            ) as ApplicationSubmitResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -299,10 +302,10 @@ class OnboardingControllerOnboardingServiceApi {
   }
 
   /// verifyKyc
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [requestBody] 
+  /// * [requestBody]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -312,7 +315,7 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> verifyKyc({ 
+  Future<Response<BuiltMap<String, JsonObject>>> verifyKyc({
     required BuiltMap<String, String> requestBody,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -340,10 +343,9 @@ class OnboardingControllerOnboardingServiceApi {
     try {
       const _type = FullType(BuiltMap, [FullType(String), FullType(String)]);
       _bodyData = _serializers.serialize(requestBody, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -366,11 +368,13 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(
+                  BuiltMap, [FullType(String), FullType(JsonObject)]),
+            ) as BuiltMap<String, JsonObject>;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -394,10 +398,10 @@ class OnboardingControllerOnboardingServiceApi {
   }
 
   /// verifyMyKad
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [myKadVerifyRequest] 
+  /// * [myKadVerifyRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -407,7 +411,7 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [KycVerifyResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<KycVerifyResponse>> verifyMyKad({ 
+  Future<Response<KycVerifyResponse>> verifyMyKad({
     required MyKadVerifyRequest myKadVerifyRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -434,11 +438,11 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       const _type = FullType(MyKadVerifyRequest);
-      _bodyData = _serializers.serialize(myKadVerifyRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(myKadVerifyRequest, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -461,11 +465,12 @@ class OnboardingControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(KycVerifyResponse),
-      ) as KycVerifyResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(KycVerifyResponse),
+            ) as KycVerifyResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -487,5 +492,4 @@ class OnboardingControllerOnboardingServiceApi {
       extra: _response.extra,
     );
   }
-
 }

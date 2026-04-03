@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/settlement/providers/settlement_provider.dart';
-import 'package:agentbanking_channel/features/settlement/models/settlement_models.dart';
 import 'package:intl/intl.dart';
 
 class SettlementScreen extends ConsumerStatefulWidget {

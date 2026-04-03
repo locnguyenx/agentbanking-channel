@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/transactions/screens/duitnow_transfer_screen.dart';
-import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 
 void main() {
   testWidgets('DuitNowTransferScreen allows selecting proxy type and entering ID', (WidgetTester tester) async {

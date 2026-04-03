@@ -4,10 +4,8 @@ targets:
       built_value_generator:built_value:
         generate_for:
           exclude:
-            - lib/api/generated/**
+            - test/** # Exclude tests from built_value by default if needed
       mockito:mockBuilder:
         generate_for:
           include:
             - test/**
-          exclude:
-            - lib/api/generated/**

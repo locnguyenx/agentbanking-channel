@@ -12,13 +12,14 @@ part 'essp_external_request.g.dart';
 /// EsspExternalRequest
 ///
 /// Properties:
-/// * [productCode] 
-/// * [amount] 
-/// * [currency] 
-/// * [idempotencyKey] 
-/// * [customerMobile] 
+/// * [productCode]
+/// * [amount]
+/// * [currency]
+/// * [idempotencyKey]
+/// * [customerMobile]
 @BuiltValue()
-abstract class EsspExternalRequest implements Built<EsspExternalRequest, EsspExternalRequestBuilder> {
+abstract class EsspExternalRequest
+    implements Built<EsspExternalRequest, EsspExternalRequestBuilder> {
   @BuiltValueField(wireName: r'productCode')
   String get productCode;
 
@@ -37,18 +38,24 @@ abstract class EsspExternalRequest implements Built<EsspExternalRequest, EsspExt
 
   EsspExternalRequest._();
 
-  factory EsspExternalRequest([void updates(EsspExternalRequestBuilder b)]) = _$EsspExternalRequest;
+  factory EsspExternalRequest([void updates(EsspExternalRequestBuilder b)]) =
+      _$EsspExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(EsspExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<EsspExternalRequest> get serializer => _$EsspExternalRequestSerializer();
+  static Serializer<EsspExternalRequest> get serializer =>
+      _$EsspExternalRequestSerializer();
 }
 
-class _$EsspExternalRequestSerializer implements PrimitiveSerializer<EsspExternalRequest> {
+class _$EsspExternalRequestSerializer
+    implements PrimitiveSerializer<EsspExternalRequest> {
   @override
-  final Iterable<Type> types = const [EsspExternalRequest, _$EsspExternalRequest];
+  final Iterable<Type> types = const [
+    EsspExternalRequest,
+    _$EsspExternalRequest
+  ];
 
   @override
   final String wireName = r'EsspExternalRequest';
@@ -93,7 +100,9 @@ class _$EsspExternalRequestSerializer implements PrimitiveSerializer<EsspExterna
     EsspExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -173,15 +182,17 @@ class _$EsspExternalRequestSerializer implements PrimitiveSerializer<EsspExterna
 }
 
 class EsspExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const EsspExternalRequestCurrencyEnum MYR = _$esspExternalRequestCurrencyEnum_MYR;
+  static const EsspExternalRequestCurrencyEnum MYR =
+      _$esspExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<EsspExternalRequestCurrencyEnum> get serializer => _$esspExternalRequestCurrencyEnumSerializer;
+  static Serializer<EsspExternalRequestCurrencyEnum> get serializer =>
+      _$esspExternalRequestCurrencyEnumSerializer;
 
-  const EsspExternalRequestCurrencyEnum._(String name): super(name);
+  const EsspExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<EsspExternalRequestCurrencyEnum> get values => _$esspExternalRequestCurrencyEnumValues;
-  static EsspExternalRequestCurrencyEnum valueOf(String name) => _$esspExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<EsspExternalRequestCurrencyEnum> get values =>
+      _$esspExternalRequestCurrencyEnumValues;
+  static EsspExternalRequestCurrencyEnum valueOf(String name) =>
+      _$esspExternalRequestCurrencyEnumValueOf(name);
 }
-

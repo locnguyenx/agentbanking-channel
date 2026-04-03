@@ -11,13 +11,16 @@ part 'retail_cashback_external_request.g.dart';
 /// RetailCashbackExternalRequest
 ///
 /// Properties:
-/// * [merchantId] 
-/// * [cashBackAmount] 
-/// * [cardData] 
-/// * [pinBlock] 
-/// * [idempotencyKey] 
+/// * [merchantId]
+/// * [cashBackAmount]
+/// * [cardData]
+/// * [pinBlock]
+/// * [idempotencyKey]
 @BuiltValue()
-abstract class RetailCashbackExternalRequest implements Built<RetailCashbackExternalRequest, RetailCashbackExternalRequestBuilder> {
+abstract class RetailCashbackExternalRequest
+    implements
+        Built<RetailCashbackExternalRequest,
+            RetailCashbackExternalRequestBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String get merchantId;
 
@@ -35,18 +38,25 @@ abstract class RetailCashbackExternalRequest implements Built<RetailCashbackExte
 
   RetailCashbackExternalRequest._();
 
-  factory RetailCashbackExternalRequest([void updates(RetailCashbackExternalRequestBuilder b)]) = _$RetailCashbackExternalRequest;
+  factory RetailCashbackExternalRequest(
+          [void updates(RetailCashbackExternalRequestBuilder b)]) =
+      _$RetailCashbackExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailCashbackExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailCashbackExternalRequest> get serializer => _$RetailCashbackExternalRequestSerializer();
+  static Serializer<RetailCashbackExternalRequest> get serializer =>
+      _$RetailCashbackExternalRequestSerializer();
 }
 
-class _$RetailCashbackExternalRequestSerializer implements PrimitiveSerializer<RetailCashbackExternalRequest> {
+class _$RetailCashbackExternalRequestSerializer
+    implements PrimitiveSerializer<RetailCashbackExternalRequest> {
   @override
-  final Iterable<Type> types = const [RetailCashbackExternalRequest, _$RetailCashbackExternalRequest];
+  final Iterable<Type> types = const [
+    RetailCashbackExternalRequest,
+    _$RetailCashbackExternalRequest
+  ];
 
   @override
   final String wireName = r'RetailCashbackExternalRequest';
@@ -93,7 +103,9 @@ class _$RetailCashbackExternalRequestSerializer implements PrimitiveSerializer<R
     RetailCashbackExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -171,4 +183,3 @@ class _$RetailCashbackExternalRequestSerializer implements PrimitiveSerializer<R
     return result.build();
   }
 }
-

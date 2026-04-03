@@ -15,12 +15,15 @@ part 'e_wallet_withdraw_external_request.g.dart';
 /// * [walletProvider] - E-wallet provider
 /// * [walletAccountId] - E-wallet account ID
 /// * [amount] - Withdrawal amount in MYR
-/// * [currency] 
-/// * [idempotencyKey] 
+/// * [currency]
+/// * [idempotencyKey]
 /// * [customerCard] - Customer card for card-based withdrawal
-/// * [customerPin] 
+/// * [customerPin]
 @BuiltValue()
-abstract class EWalletWithdrawExternalRequest implements Built<EWalletWithdrawExternalRequest, EWalletWithdrawExternalRequestBuilder> {
+abstract class EWalletWithdrawExternalRequest
+    implements
+        Built<EWalletWithdrawExternalRequest,
+            EWalletWithdrawExternalRequestBuilder> {
   /// E-wallet provider
   @BuiltValueField(wireName: r'walletProvider')
   EWalletWithdrawExternalRequestWalletProviderEnum get walletProvider;
@@ -50,19 +53,26 @@ abstract class EWalletWithdrawExternalRequest implements Built<EWalletWithdrawEx
 
   EWalletWithdrawExternalRequest._();
 
-  factory EWalletWithdrawExternalRequest([void updates(EWalletWithdrawExternalRequestBuilder b)]) = _$EWalletWithdrawExternalRequest;
+  factory EWalletWithdrawExternalRequest(
+          [void updates(EWalletWithdrawExternalRequestBuilder b)]) =
+      _$EWalletWithdrawExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(EWalletWithdrawExternalRequestBuilder b) => b
-      ..currency = EWalletWithdrawExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(EWalletWithdrawExternalRequestBuilder b) =>
+      b..currency = EWalletWithdrawExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<EWalletWithdrawExternalRequest> get serializer => _$EWalletWithdrawExternalRequestSerializer();
+  static Serializer<EWalletWithdrawExternalRequest> get serializer =>
+      _$EWalletWithdrawExternalRequestSerializer();
 }
 
-class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<EWalletWithdrawExternalRequest> {
+class _$EWalletWithdrawExternalRequestSerializer
+    implements PrimitiveSerializer<EWalletWithdrawExternalRequest> {
   @override
-  final Iterable<Type> types = const [EWalletWithdrawExternalRequest, _$EWalletWithdrawExternalRequest];
+  final Iterable<Type> types = const [
+    EWalletWithdrawExternalRequest,
+    _$EWalletWithdrawExternalRequest
+  ];
 
   @override
   final String wireName = r'EWalletWithdrawExternalRequest';
@@ -75,7 +85,8 @@ class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<
     yield r'walletProvider';
     yield serializers.serialize(
       object.walletProvider,
-      specifiedType: const FullType(EWalletWithdrawExternalRequestWalletProviderEnum),
+      specifiedType:
+          const FullType(EWalletWithdrawExternalRequestWalletProviderEnum),
     );
     yield r'walletAccountId';
     yield serializers.serialize(
@@ -119,7 +130,9 @@ class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<
     EWalletWithdrawExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -137,7 +150,8 @@ class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<
         case r'walletProvider':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(EWalletWithdrawExternalRequestWalletProviderEnum),
+            specifiedType: const FullType(
+                EWalletWithdrawExternalRequestWalletProviderEnum),
           ) as EWalletWithdrawExternalRequestWalletProviderEnum;
           result.walletProvider = valueDes;
           break;
@@ -158,7 +172,8 @@ class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<
         case r'currency':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(EWalletWithdrawExternalRequestCurrencyEnum),
+            specifiedType:
+                const FullType(EWalletWithdrawExternalRequestCurrencyEnum),
           ) as EWalletWithdrawExternalRequestCurrencyEnum;
           result.currency = valueDes;
           break;
@@ -213,32 +228,42 @@ class _$EWalletWithdrawExternalRequestSerializer implements PrimitiveSerializer<
 }
 
 class EWalletWithdrawExternalRequestWalletProviderEnum extends EnumClass {
-
   /// E-wallet provider
   @BuiltValueEnumConst(wireName: r'SARAWAK_PAY')
-  static const EWalletWithdrawExternalRequestWalletProviderEnum SARAWAK_PAY = _$eWalletWithdrawExternalRequestWalletProviderEnum_SARAWAK_PAY;
+  static const EWalletWithdrawExternalRequestWalletProviderEnum SARAWAK_PAY =
+      _$eWalletWithdrawExternalRequestWalletProviderEnum_SARAWAK_PAY;
+
   /// E-wallet provider
   @BuiltValueEnumConst(wireName: r'SARAWAK_TOPUP')
-  static const EWalletWithdrawExternalRequestWalletProviderEnum SARAWAK_TOPUP = _$eWalletWithdrawExternalRequestWalletProviderEnum_SARAWAK_TOPUP;
+  static const EWalletWithdrawExternalRequestWalletProviderEnum SARAWAK_TOPUP =
+      _$eWalletWithdrawExternalRequestWalletProviderEnum_SARAWAK_TOPUP;
 
-  static Serializer<EWalletWithdrawExternalRequestWalletProviderEnum> get serializer => _$eWalletWithdrawExternalRequestWalletProviderEnumSerializer;
+  static Serializer<EWalletWithdrawExternalRequestWalletProviderEnum>
+      get serializer =>
+          _$eWalletWithdrawExternalRequestWalletProviderEnumSerializer;
 
-  const EWalletWithdrawExternalRequestWalletProviderEnum._(String name): super(name);
+  const EWalletWithdrawExternalRequestWalletProviderEnum._(String name)
+      : super(name);
 
-  static BuiltSet<EWalletWithdrawExternalRequestWalletProviderEnum> get values => _$eWalletWithdrawExternalRequestWalletProviderEnumValues;
-  static EWalletWithdrawExternalRequestWalletProviderEnum valueOf(String name) => _$eWalletWithdrawExternalRequestWalletProviderEnumValueOf(name);
+  static BuiltSet<EWalletWithdrawExternalRequestWalletProviderEnum>
+      get values => _$eWalletWithdrawExternalRequestWalletProviderEnumValues;
+  static EWalletWithdrawExternalRequestWalletProviderEnum valueOf(
+          String name) =>
+      _$eWalletWithdrawExternalRequestWalletProviderEnumValueOf(name);
 }
 
 class EWalletWithdrawExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const EWalletWithdrawExternalRequestCurrencyEnum MYR = _$eWalletWithdrawExternalRequestCurrencyEnum_MYR;
+  static const EWalletWithdrawExternalRequestCurrencyEnum MYR =
+      _$eWalletWithdrawExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<EWalletWithdrawExternalRequestCurrencyEnum> get serializer => _$eWalletWithdrawExternalRequestCurrencyEnumSerializer;
+  static Serializer<EWalletWithdrawExternalRequestCurrencyEnum>
+      get serializer => _$eWalletWithdrawExternalRequestCurrencyEnumSerializer;
 
-  const EWalletWithdrawExternalRequestCurrencyEnum._(String name): super(name);
+  const EWalletWithdrawExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<EWalletWithdrawExternalRequestCurrencyEnum> get values => _$eWalletWithdrawExternalRequestCurrencyEnumValues;
-  static EWalletWithdrawExternalRequestCurrencyEnum valueOf(String name) => _$eWalletWithdrawExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<EWalletWithdrawExternalRequestCurrencyEnum> get values =>
+      _$eWalletWithdrawExternalRequestCurrencyEnumValues;
+  static EWalletWithdrawExternalRequestCurrencyEnum valueOf(String name) =>
+      _$eWalletWithdrawExternalRequestCurrencyEnumValueOf(name);
 }
-

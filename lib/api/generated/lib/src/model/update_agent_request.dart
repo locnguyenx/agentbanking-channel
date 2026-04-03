@@ -17,11 +17,12 @@ part 'update_agent_request.g.dart';
 /// * [merchantGpsLat] - Merchant GPS latitude
 /// * [merchantGpsLng] - Merchant GPS longitude
 /// * [phoneNumber] - Contact number
-/// * [email] 
-/// * [address] 
-/// * [status] 
+/// * [email]
+/// * [address]
+/// * [status]
 @BuiltValue()
-abstract class UpdateAgentRequest implements Built<UpdateAgentRequest, UpdateAgentRequestBuilder> {
+abstract class UpdateAgentRequest
+    implements Built<UpdateAgentRequest, UpdateAgentRequestBuilder> {
   /// Business name
   @BuiltValueField(wireName: r'businessName')
   String get businessName;
@@ -55,16 +56,19 @@ abstract class UpdateAgentRequest implements Built<UpdateAgentRequest, UpdateAge
 
   UpdateAgentRequest._();
 
-  factory UpdateAgentRequest([void updates(UpdateAgentRequestBuilder b)]) = _$UpdateAgentRequest;
+  factory UpdateAgentRequest([void updates(UpdateAgentRequestBuilder b)]) =
+      _$UpdateAgentRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(UpdateAgentRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<UpdateAgentRequest> get serializer => _$UpdateAgentRequestSerializer();
+  static Serializer<UpdateAgentRequest> get serializer =>
+      _$UpdateAgentRequestSerializer();
 }
 
-class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentRequest> {
+class _$UpdateAgentRequestSerializer
+    implements PrimitiveSerializer<UpdateAgentRequest> {
   @override
   final Iterable<Type> types = const [UpdateAgentRequest, _$UpdateAgentRequest];
 
@@ -130,7 +134,9 @@ class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentR
     UpdateAgentRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -231,39 +237,50 @@ class _$UpdateAgentRequestSerializer implements PrimitiveSerializer<UpdateAgentR
 }
 
 class UpdateAgentRequestTierEnum extends EnumClass {
-
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'MICRO')
-  static const UpdateAgentRequestTierEnum MICRO = _$updateAgentRequestTierEnum_MICRO;
+  static const UpdateAgentRequestTierEnum MICRO =
+      _$updateAgentRequestTierEnum_MICRO;
+
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const UpdateAgentRequestTierEnum STANDARD = _$updateAgentRequestTierEnum_STANDARD;
+  static const UpdateAgentRequestTierEnum STANDARD =
+      _$updateAgentRequestTierEnum_STANDARD;
+
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const UpdateAgentRequestTierEnum PREMIUM = _$updateAgentRequestTierEnum_PREMIUM;
+  static const UpdateAgentRequestTierEnum PREMIUM =
+      _$updateAgentRequestTierEnum_PREMIUM;
 
-  static Serializer<UpdateAgentRequestTierEnum> get serializer => _$updateAgentRequestTierEnumSerializer;
+  static Serializer<UpdateAgentRequestTierEnum> get serializer =>
+      _$updateAgentRequestTierEnumSerializer;
 
-  const UpdateAgentRequestTierEnum._(String name): super(name);
+  const UpdateAgentRequestTierEnum._(String name) : super(name);
 
-  static BuiltSet<UpdateAgentRequestTierEnum> get values => _$updateAgentRequestTierEnumValues;
-  static UpdateAgentRequestTierEnum valueOf(String name) => _$updateAgentRequestTierEnumValueOf(name);
+  static BuiltSet<UpdateAgentRequestTierEnum> get values =>
+      _$updateAgentRequestTierEnumValues;
+  static UpdateAgentRequestTierEnum valueOf(String name) =>
+      _$updateAgentRequestTierEnumValueOf(name);
 }
 
 class UpdateAgentRequestStatusEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'ACTIVE')
-  static const UpdateAgentRequestStatusEnum ACTIVE = _$updateAgentRequestStatusEnum_ACTIVE;
+  static const UpdateAgentRequestStatusEnum ACTIVE =
+      _$updateAgentRequestStatusEnum_ACTIVE;
   @BuiltValueEnumConst(wireName: r'INACTIVE')
-  static const UpdateAgentRequestStatusEnum INACTIVE = _$updateAgentRequestStatusEnum_INACTIVE;
+  static const UpdateAgentRequestStatusEnum INACTIVE =
+      _$updateAgentRequestStatusEnum_INACTIVE;
   @BuiltValueEnumConst(wireName: r'SUSPENDED')
-  static const UpdateAgentRequestStatusEnum SUSPENDED = _$updateAgentRequestStatusEnum_SUSPENDED;
+  static const UpdateAgentRequestStatusEnum SUSPENDED =
+      _$updateAgentRequestStatusEnum_SUSPENDED;
 
-  static Serializer<UpdateAgentRequestStatusEnum> get serializer => _$updateAgentRequestStatusEnumSerializer;
+  static Serializer<UpdateAgentRequestStatusEnum> get serializer =>
+      _$updateAgentRequestStatusEnumSerializer;
 
-  const UpdateAgentRequestStatusEnum._(String name): super(name);
+  const UpdateAgentRequestStatusEnum._(String name) : super(name);
 
-  static BuiltSet<UpdateAgentRequestStatusEnum> get values => _$updateAgentRequestStatusEnumValues;
-  static UpdateAgentRequestStatusEnum valueOf(String name) => _$updateAgentRequestStatusEnumValueOf(name);
+  static BuiltSet<UpdateAgentRequestStatusEnum> get values =>
+      _$updateAgentRequestStatusEnumValues;
+  static UpdateAgentRequestStatusEnum valueOf(String name) =>
+      _$updateAgentRequestStatusEnumValueOf(name);
 }
-

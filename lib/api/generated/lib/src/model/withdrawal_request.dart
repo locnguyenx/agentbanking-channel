@@ -11,17 +11,18 @@ part 'withdrawal_request.g.dart';
 /// WithdrawalRequest
 ///
 /// Properties:
-/// * [agentId] 
-/// * [amount] 
-/// * [customerFee] 
-/// * [agentCommission] 
-/// * [bankShare] 
-/// * [idempotencyKey] 
-/// * [customerCardMasked] 
-/// * [geofenceLat] 
-/// * [geofenceLng] 
+/// * [agentId]
+/// * [amount]
+/// * [customerFee]
+/// * [agentCommission]
+/// * [bankShare]
+/// * [idempotencyKey]
+/// * [customerCardMasked]
+/// * [geofenceLat]
+/// * [geofenceLng]
 @BuiltValue()
-abstract class WithdrawalRequest implements Built<WithdrawalRequest, WithdrawalRequestBuilder> {
+abstract class WithdrawalRequest
+    implements Built<WithdrawalRequest, WithdrawalRequestBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -51,16 +52,19 @@ abstract class WithdrawalRequest implements Built<WithdrawalRequest, WithdrawalR
 
   WithdrawalRequest._();
 
-  factory WithdrawalRequest([void updates(WithdrawalRequestBuilder b)]) = _$WithdrawalRequest;
+  factory WithdrawalRequest([void updates(WithdrawalRequestBuilder b)]) =
+      _$WithdrawalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(WithdrawalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<WithdrawalRequest> get serializer => _$WithdrawalRequestSerializer();
+  static Serializer<WithdrawalRequest> get serializer =>
+      _$WithdrawalRequestSerializer();
 }
 
-class _$WithdrawalRequestSerializer implements PrimitiveSerializer<WithdrawalRequest> {
+class _$WithdrawalRequestSerializer
+    implements PrimitiveSerializer<WithdrawalRequest> {
   @override
   final Iterable<Type> types = const [WithdrawalRequest, _$WithdrawalRequest];
 
@@ -143,7 +147,9 @@ class _$WithdrawalRequestSerializer implements PrimitiveSerializer<WithdrawalReq
     WithdrawalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -249,4 +255,3 @@ class _$WithdrawalRequestSerializer implements PrimitiveSerializer<WithdrawalReq
     return result.build();
   }
 }
-

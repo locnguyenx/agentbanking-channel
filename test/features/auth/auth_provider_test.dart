@@ -3,42 +3,81 @@ import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/repositories/auth_repository.dart';
 
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+
+class FakeSecureStorageManager implements SecureStorageManager {
+  final Map<String, String> _data = {};
+
+  @override
+  Future<void> saveJwt(String jwt) async => _data['agent_jwt'] = jwt;
+  @override
+  Future<void> clearJwt() async => _data.remove('agent_jwt');
+  @override
+  Future<String?> readJwt() async => _data['agent_jwt'];
+  
+  @override
+  Future<String> getSqlCipherPassphrase() async => 'test-pass';
+  
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 void main() {
   late AuthNotifier auth;
   late AuthRepository repository;
+  late FakeSecureStorageManager fakeStorage;
 
   setUp(() {
-    repository = AuthRepository();
+    fakeStorage = FakeSecureStorageManager();
+    repository = AuthRepository(secureStorage: fakeStorage, isDeviceWhitelisted: true);
     auth = AuthNotifier(repository: repository);
   });
 
-  test('initial state is unauthenticated', () {
-    expect(auth.state.status, AuthStatus.unauthenticated);
-    expect(auth.state.user, isNull);
-  });
+  group('AuthNotifier BDD Tests', () {
+    test('initial state is unauthenticated', () {
+      expect(auth.state.status, AuthStatus.unauthenticated);
+      expect(auth.state.user, isNull);
+    });
 
-  test('login updates state to authenticated with valid credentials', () async {
-    await auth.login('AGENT01', '123456');
-    expect(auth.state.status, AuthStatus.authenticated);
-    expect(auth.state.user?.agentId, 'AGENT01');
-  });
+    test('loginBiometric updates state to authenticated and saves JWT', () async {
+      // Given: Device is whitelisted (default in setup)
+      // When: agent attempts biometric login
+      await auth.loginBiometric();
+      
+      // Then: state is authenticated
+      expect(auth.state.status, AuthStatus.authenticated);
+      expect(auth.state.user?.agentId, 'BIO_USER_001');
+      
+      // And: JWT is saved securely
+      expect(await fakeStorage.readJwt(), isNotNull);
+    });
 
-  test('login updates state to failed with invalid credentials', () async {
-    await auth.login('AGENT01', 'wrong-pass');
-    expect(auth.state.status, AuthStatus.failed);
-    expect(auth.state.error, contains('Exception: Invalid Agent ID or Password'));
-  });
+    test('loginBiometric fails if device is not whitelisted', () async {
+      // Given: Device is NOT whitelisted
+      final repo = AuthRepository(secureStorage: fakeStorage, isDeviceWhitelisted: false);
+      final authNotWhite = AuthNotifier(repository: repo);
+      
+      // When: agent attempts biometric login
+      await authNotWhite.loginBiometric();
+      
+      // Then: login rejected
+      expect(authNotWhite.state.status, AuthStatus.failed);
+      expect(authNotWhite.state.error, contains('ERR_AUTH_DEVICE_NOT_WHITELISTED'));
+    });
 
-  test('logout resets state to unauthenticated', () async {
-    await auth.login('AGENT01', '123456');
-    auth.logout();
-    expect(auth.state.status, AuthStatus.unauthenticated);
-    expect(auth.state.user, isNull);
-  });
-
-  test('loginBiometric updates state to authenticated', () async {
-    await auth.loginBiometric();
-    expect(auth.state.status, AuthStatus.authenticated);
-    expect(auth.state.user?.agentId, 'AGENT_BIO_01');
+    test('logout clears JWT token from secure storage', () async {
+      // Given: agent is logged in
+      await auth.loginBiometric();
+      expect(await fakeStorage.readJwt(), isNotNull);
+      
+      // When: agent logs out
+      auth.logout();
+      
+      // Then: state is unauthenticated
+      expect(auth.state.status, AuthStatus.unauthenticated);
+      
+      // And: JWT is deleted from secure storage
+      expect(await fakeStorage.readJwt(), isNull);
+    });
   });
 }

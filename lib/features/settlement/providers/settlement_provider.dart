@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:decimal/decimal.dart';
 import 'package:agentbanking_channel/features/settlement/models/settlement_models.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
@@ -42,41 +41,20 @@ class SettlementNotifier extends StateNotifier<SettlementState> {
   Future<void> fetchSummary() async {
     state = state.copyWith(status: SettlementStatus.loading);
     try {
-      // Simulate backend aggregation API
-      await Future.delayed(const Duration(seconds: 1));
-      
-      final summary = SettlementSummary(
-        terminalId: 'TM-001',
-        timestamp: DateTime.now(),
-        services: [
-          ServiceTotal(serviceName: 'Bill Payment', count: 12, totalAmount: Decimal.parse('1250.00'), totalCommission: Decimal.parse('6.00')),
-          ServiceTotal(serviceName: 'DuitNow Trf', count: 5, totalAmount: Decimal.parse('3000.00'), totalCommission: Decimal.parse('2.50')),
-          ServiceTotal(serviceName: 'Merchant Sale', count: 8, totalAmount: Decimal.parse('850.50'), totalCommission: Decimal.parse('8.50')),
-        ],
-        netVolume: Decimal.parse('5100.50'),
-        totalCommission: Decimal.parse('17.00'),
-      );
-      
-      state = state.copyWith(status: SettlementStatus.ready, summary: summary);
+      // BDD @US-CA-22: Fetch settlement summary from backend
+      // Phase 5 Enforcement: Do not use stubs for settlement logic.
+      throw Exception('Backend API mapping required for settlement summary');
     } catch (e) {
       state = state.copyWith(status: SettlementStatus.error, error: e.toString());
     }
   }
 
   Future<void> performSettlement() async {
-    if (state.summary == null) return;
     state = state.copyWith(status: SettlementStatus.processing);
     try {
-      // Simulate EOD Closure API
-      await Future.delayed(const Duration(seconds: 2));
-      
-      final result = SettlementClosureResponse(
-        success: true,
-        batchNumber: 'B-${DateTime.now().day}${DateTime.now().hour}',
-        reference: 'SETTLE-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      
-      state = state.copyWith(status: SettlementStatus.settled, result: result);
+      // BDD @US-CA-22: Execute EOD closure
+      // Phase 5 Enforcement: Do not use stubs for settlement logic.
+      throw Exception('Backend API mapping required for EOD closure');
     } catch (e) {
       state = state.copyWith(status: SettlementStatus.error, error: e.toString());
     }

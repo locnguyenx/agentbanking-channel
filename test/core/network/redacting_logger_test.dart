@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:agentbanking_channel/core/network/redacting_logger.dart';
-import 'package:dio/dio.dart';
 
 void main() {
   late RedactingLogger logger;

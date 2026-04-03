@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
@@ -16,7 +15,6 @@ import 'package:agent_api/src/model/retail_sale_command.dart';
 import 'package:agent_api/src/model/retail_sale_response.dart';
 
 class MerchantControllerLedgerServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -24,10 +22,10 @@ class MerchantControllerLedgerServiceApi {
   const MerchantControllerLedgerServiceApi(this._dio, this._serializers);
 
   /// processCashBack
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cashBackCommand] 
+  /// * [cashBackCommand]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -37,7 +35,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CashBackResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CashBackResponse>> processCashBack({ 
+  Future<Response<CashBackResponse>> processCashBack({
     required CashBackCommand cashBackCommand,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -65,10 +63,9 @@ class MerchantControllerLedgerServiceApi {
     try {
       const _type = FullType(CashBackCommand);
       _bodyData = _serializers.serialize(cashBackCommand, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -91,11 +88,12 @@ class MerchantControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(CashBackResponse),
-      ) as CashBackResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(CashBackResponse),
+            ) as CashBackResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -119,10 +117,10 @@ class MerchantControllerLedgerServiceApi {
   }
 
   /// processPinPurchase
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [pinPurchaseCommand] 
+  /// * [pinPurchaseCommand]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -132,7 +130,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [PinPurchaseResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<PinPurchaseResponse>> processPinPurchase({ 
+  Future<Response<PinPurchaseResponse>> processPinPurchase({
     required PinPurchaseCommand pinPurchaseCommand,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -159,11 +157,11 @@ class MerchantControllerLedgerServiceApi {
 
     try {
       const _type = FullType(PinPurchaseCommand);
-      _bodyData = _serializers.serialize(pinPurchaseCommand, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(pinPurchaseCommand, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -186,11 +184,12 @@ class MerchantControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(PinPurchaseResponse),
-      ) as PinPurchaseResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(PinPurchaseResponse),
+            ) as PinPurchaseResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -214,10 +213,10 @@ class MerchantControllerLedgerServiceApi {
   }
 
   /// processRetailSale
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [retailSaleCommand] 
+  /// * [retailSaleCommand]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -227,7 +226,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [RetailSaleResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<RetailSaleResponse>> processRetailSale({ 
+  Future<Response<RetailSaleResponse>> processRetailSale({
     required RetailSaleCommand retailSaleCommand,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -254,11 +253,11 @@ class MerchantControllerLedgerServiceApi {
 
     try {
       const _type = FullType(RetailSaleCommand);
-      _bodyData = _serializers.serialize(retailSaleCommand, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData =
+          _serializers.serialize(retailSaleCommand, specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -281,11 +280,12 @@ class MerchantControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(RetailSaleResponse),
-      ) as RetailSaleResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(RetailSaleResponse),
+            ) as RetailSaleResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -307,5 +307,4 @@ class MerchantControllerLedgerServiceApi {
       extra: _response.extra,
     );
   }
-
 }

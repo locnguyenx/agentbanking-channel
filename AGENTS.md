@@ -85,10 +85,14 @@ When the Backend Rule Engine returns an `ERR_COMPLIANCE_FREEZE` code:
 **OpenAPI 3.0 Specification** is the single source of truth for all REST APIs.
 
 ## Testing Guidelines
-* Unit tests: 
-* Architecture tests: 
-* Integration tests: 
-* BDD scenarios in `*-bdd.md` are the acceptance criteria
+* Integration tests: use BDD test framework `bdd_widget_test`
+* BDD scenarios in `*.feature` files are the acceptance criteria
+* All BDD scenarios must be run in `test/bdd/features/` directory
+
+**TDD ENFORCEMENT**
+* TDD pattern must be complied in development
+* Make sure that all the tests are stablized first in the RED phase.
+* NEVER change the test to get PASSED in GREEN/REFACTOR phase instead of fixing production code
 
 ## Banking-Specific Guidelines
 

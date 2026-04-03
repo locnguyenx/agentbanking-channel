@@ -1,16 +1,27 @@
-import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:mockito/mockito.dart' as mockito;
+import 'package:geolocator/geolocator.dart';
+import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
+import '../../../test_utils.dart';
 
-class ManualMockTransactionRepository implements TransactionRepository {
+class FakeFloatRepository extends mockito.Fake implements FloatRepository {
+  @override
+  Future<FloatLedger> getFloatStatus(String agentId) async {
+    return FloatLedger(currentBalance: Decimal.parse('5000.0'), limit: Decimal.parse('10000.0'));
+  }
+}
+
+class ManualMockTransactionRepository extends mockito.Mock implements TransactionRepository {
   TransactionQuoteResponse? mockQuote;
   TransactionExecutionResponse? mockExecution;
 
@@ -26,7 +37,7 @@ class ManualMockTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request) async {
+  Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
     return mockExecution ?? TransactionExecutionResponse(
       status: 'SUCCESS',
       referenceId: 'REF-TEST-001',
@@ -34,7 +45,7 @@ class ManualMockTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<TransactionExecutionResponse> balanceInquiry(TransactionExecutionRequest request) async {
+  Future<TransactionExecutionResponse> balanceInquiry(TransactionExecutionRequest request, String agentId) async {
     return mockExecution ?? TransactionExecutionResponse(
       status: 'SUCCESS',
       referenceId: 'REF-BAL-001',
@@ -55,13 +66,16 @@ class ManualMockTransactionRepository implements TransactionRepository {
       referenceId: 'REF-DUT-001',
     );
   }
-
+  
   @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(invocation.memberName.toString());
+  Future<String> performProxyEnquiry(String proxyId, String proxyType) async => 'MOHD A***D BIN AL*';
+  
+  @override
+  Future<String> getBillerStatus(String transactionId) async => 'SUCCESS';
 }
 
-class ManualMockComplianceNotifier extends StateNotifier<ComplianceState> implements ComplianceNotifier {
-  ManualMockComplianceNotifier() : super(ComplianceState(isFrozen: false));
+class ManualMockComplianceNotifier extends ComplianceNotifier {
+  ManualMockComplianceNotifier() : super();
   @override
   void freeze(String reason) => state = ComplianceState(isFrozen: true, reason: reason);
   @override
@@ -84,9 +98,9 @@ class ManualPinPad implements IPinPad {
   Future<bool> isAvailable() async => true;
 }
 
-class ManualFloatNotifier extends StateNotifier<FloatLedger> implements FloatNotifier {
+class ManualFloatNotifier extends FloatNotifier {
   bool fetchLatestCalled = false;
-  ManualFloatNotifier() : super(FloatLedger(currentBalance: Decimal.zero, limit: Decimal.zero));
+  ManualFloatNotifier() : super(FakeFloatRepository(), null);
   @override
   Future<void> fetchLatestBalance() async {
     fetchLatestCalled = true;
@@ -105,6 +119,16 @@ class ManualMyKadScanner implements IMyKadScanner {
   Future<MyKadData?> scanMyKad() async => null;
 }
 
+class FakeGeolocatorPlatform extends mockito.Fake implements GeolocatorPlatform {
+  Position position = Position(
+    latitude: 3.1390, longitude: 101.6869,
+    timestamp: DateTime.now(), accuracy: 1.0, altitude: 0.0, heading: 0.0, speed: 0.0, speedAccuracy: 0.0,
+    altitudeAccuracy: 0.0, headingAccuracy: 0.0,
+  );
+  @override
+  Future<Position> getCurrentPosition({LocationSettings? locationSettings}) async => position;
+}
+
 void main() {
   late TransactionNotifier notifier;
   late ManualMockTransactionRepository mockRepo;
@@ -114,6 +138,7 @@ void main() {
   late ManualReversalService mockReversalService;
   late ManualMyKadScanner mockMyKadScanner;
   late ManualMockComplianceNotifier mockComplianceNotifier;
+  late FakeEodTimerService fakeEodTimer;
 
   setUp(() {
     mockRepo = ManualMockTransactionRepository();
@@ -123,8 +148,10 @@ void main() {
     mockFloatNotifier = ManualFloatNotifier();
     mockReversalService = ManualReversalService();
     mockMyKadScanner = ManualMyKadScanner();
+    fakeEodTimer = FakeEodTimerService();
     
     notifier = TransactionNotifier(
+      ref: ManualMockRef(),
       repository: mockRepo,
       cardReader: mockCardReader,
       pinPad: mockPinPad,
@@ -132,6 +159,8 @@ void main() {
       reversalService: mockReversalService,
       myKadScanner: mockMyKadScanner,
       complianceNotifier: mockComplianceNotifier,
+      eodTimerService: fakeEodTimer,
+      geolocator: FakeGeolocatorPlatform(),
       pollingInterval: const Duration(milliseconds: 1),
     );
   });
@@ -193,6 +222,11 @@ void main() {
 
     expect(notifier.state.status, TransactionStatus.success);
     expect(notifier.state.result?.balance, equals(Decimal.parse('1500.0')));
-    expect(mockFloatNotifier.fetchLatestCalled, isTrue);
+    expect(mockFloatNotifier.fetchLatestCalled, isFalse);
   });
+}
+
+class FakeEodTimerService extends mockito.Mock implements EodTimerService {
+  @override
+  EodStatus getCurrentEodStatus() => EodStatus.open;
 }

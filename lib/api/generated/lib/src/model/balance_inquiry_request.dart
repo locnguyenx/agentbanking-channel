@@ -11,10 +11,11 @@ part 'balance_inquiry_request.g.dart';
 /// BalanceInquiryRequest
 ///
 /// Properties:
-/// * [encryptedCardData] 
-/// * [pinBlock] 
+/// * [encryptedCardData]
+/// * [pinBlock]
 @BuiltValue()
-abstract class BalanceInquiryRequest implements Built<BalanceInquiryRequest, BalanceInquiryRequestBuilder> {
+abstract class BalanceInquiryRequest
+    implements Built<BalanceInquiryRequest, BalanceInquiryRequestBuilder> {
   @BuiltValueField(wireName: r'encryptedCardData')
   String get encryptedCardData;
 
@@ -23,18 +24,24 @@ abstract class BalanceInquiryRequest implements Built<BalanceInquiryRequest, Bal
 
   BalanceInquiryRequest._();
 
-  factory BalanceInquiryRequest([void updates(BalanceInquiryRequestBuilder b)]) = _$BalanceInquiryRequest;
+  factory BalanceInquiryRequest(
+      [void updates(BalanceInquiryRequestBuilder b)]) = _$BalanceInquiryRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(BalanceInquiryRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<BalanceInquiryRequest> get serializer => _$BalanceInquiryRequestSerializer();
+  static Serializer<BalanceInquiryRequest> get serializer =>
+      _$BalanceInquiryRequestSerializer();
 }
 
-class _$BalanceInquiryRequestSerializer implements PrimitiveSerializer<BalanceInquiryRequest> {
+class _$BalanceInquiryRequestSerializer
+    implements PrimitiveSerializer<BalanceInquiryRequest> {
   @override
-  final Iterable<Type> types = const [BalanceInquiryRequest, _$BalanceInquiryRequest];
+  final Iterable<Type> types = const [
+    BalanceInquiryRequest,
+    _$BalanceInquiryRequest
+  ];
 
   @override
   final String wireName = r'BalanceInquiryRequest';
@@ -62,7 +69,9 @@ class _$BalanceInquiryRequestSerializer implements PrimitiveSerializer<BalanceIn
     BalanceInquiryRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -119,4 +128,3 @@ class _$BalanceInquiryRequestSerializer implements PrimitiveSerializer<BalanceIn
     return result.build();
   }
 }
-

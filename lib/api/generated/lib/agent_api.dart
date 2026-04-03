@@ -65,4 +65,3 @@ export 'package:agent_api/src/model/transaction_list_response.dart';
 export 'package:agent_api/src/model/transaction_response.dart';
 export 'package:agent_api/src/model/update_agent_request.dart';
 export 'package:agent_api/src/model/withdrawal_external_request.dart';
-

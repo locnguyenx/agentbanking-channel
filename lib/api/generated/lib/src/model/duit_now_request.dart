@@ -11,12 +11,13 @@ part 'duit_now_request.g.dart';
 /// DuitNowRequest
 ///
 /// Properties:
-/// * [internalTransactionId] 
-/// * [proxyType] 
-/// * [proxyValue] 
-/// * [amount] 
+/// * [internalTransactionId]
+/// * [proxyType]
+/// * [proxyValue]
+/// * [amount]
 @BuiltValue()
-abstract class DuitNowRequest implements Built<DuitNowRequest, DuitNowRequestBuilder> {
+abstract class DuitNowRequest
+    implements Built<DuitNowRequest, DuitNowRequestBuilder> {
   @BuiltValueField(wireName: r'internalTransactionId')
   String get internalTransactionId;
 
@@ -31,16 +32,19 @@ abstract class DuitNowRequest implements Built<DuitNowRequest, DuitNowRequestBui
 
   DuitNowRequest._();
 
-  factory DuitNowRequest([void updates(DuitNowRequestBuilder b)]) = _$DuitNowRequest;
+  factory DuitNowRequest([void updates(DuitNowRequestBuilder b)]) =
+      _$DuitNowRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DuitNowRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DuitNowRequest> get serializer => _$DuitNowRequestSerializer();
+  static Serializer<DuitNowRequest> get serializer =>
+      _$DuitNowRequestSerializer();
 }
 
-class _$DuitNowRequestSerializer implements PrimitiveSerializer<DuitNowRequest> {
+class _$DuitNowRequestSerializer
+    implements PrimitiveSerializer<DuitNowRequest> {
   @override
   final Iterable<Type> types = const [DuitNowRequest, _$DuitNowRequest];
 
@@ -80,7 +84,9 @@ class _$DuitNowRequestSerializer implements PrimitiveSerializer<DuitNowRequest> 
     DuitNowRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -151,4 +157,3 @@ class _$DuitNowRequestSerializer implements PrimitiveSerializer<DuitNowRequest> 
     return result.build();
   }
 }
-

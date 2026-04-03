@@ -10,13 +10,10 @@ import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/model/e_wallet_topup_external_request.dart';
 import 'package:agent_api/src/model/e_wallet_withdraw_external_request.dart';
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:built_value/json_object.dart';
 
 class EWalletControllerBillerServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -24,10 +21,10 @@ class EWalletControllerBillerServiceApi {
   const EWalletControllerBillerServiceApi(this._dio, this._serializers);
 
   /// topup1
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [eWalletTopupExternalRequest] 
+  /// * [eWalletTopupExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -37,7 +34,7 @@ class EWalletControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> topup1({ 
+  Future<Response<BuiltMap<String, JsonObject>>> topup1({
     required EWalletTopupExternalRequest eWalletTopupExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -64,11 +61,11 @@ class EWalletControllerBillerServiceApi {
 
     try {
       const _type = FullType(EWalletTopupExternalRequest);
-      _bodyData = _serializers.serialize(eWalletTopupExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(eWalletTopupExternalRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -91,11 +88,13 @@ class EWalletControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
-      ) as BuiltMap<String, JsonObject>;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(
+                  BuiltMap, [FullType(String), FullType(JsonObject)]),
+            ) as BuiltMap<String, JsonObject>;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -119,10 +118,10 @@ class EWalletControllerBillerServiceApi {
   }
 
   /// withdrawal
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [eWalletWithdrawExternalRequest] 
+  /// * [eWalletWithdrawExternalRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -132,7 +131,7 @@ class EWalletControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> withdrawal({ 
+  Future<Response<TransactionResponse>> withdrawal({
     required EWalletWithdrawExternalRequest eWalletWithdrawExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -159,11 +158,11 @@ class EWalletControllerBillerServiceApi {
 
     try {
       const _type = FullType(EWalletWithdrawExternalRequest);
-      _bodyData = _serializers.serialize(eWalletWithdrawExternalRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(eWalletWithdrawExternalRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -186,11 +185,12 @@ class EWalletControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -212,5 +212,4 @@ class EWalletControllerBillerServiceApi {
       extra: _response.extra,
     );
   }
-
 }

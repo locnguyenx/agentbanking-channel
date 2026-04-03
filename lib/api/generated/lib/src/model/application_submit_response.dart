@@ -12,12 +12,14 @@ part 'application_submit_response.g.dart';
 /// ApplicationSubmitResponse
 ///
 /// Properties:
-/// * [applicationId] 
-/// * [status] 
-/// * [message] 
-/// * [submittedAt] 
+/// * [applicationId]
+/// * [status]
+/// * [message]
+/// * [submittedAt]
 @BuiltValue()
-abstract class ApplicationSubmitResponse implements Built<ApplicationSubmitResponse, ApplicationSubmitResponseBuilder> {
+abstract class ApplicationSubmitResponse
+    implements
+        Built<ApplicationSubmitResponse, ApplicationSubmitResponseBuilder> {
   @BuiltValueField(wireName: r'applicationId')
   String? get applicationId;
 
@@ -33,18 +35,25 @@ abstract class ApplicationSubmitResponse implements Built<ApplicationSubmitRespo
 
   ApplicationSubmitResponse._();
 
-  factory ApplicationSubmitResponse([void updates(ApplicationSubmitResponseBuilder b)]) = _$ApplicationSubmitResponse;
+  factory ApplicationSubmitResponse(
+          [void updates(ApplicationSubmitResponseBuilder b)]) =
+      _$ApplicationSubmitResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ApplicationSubmitResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ApplicationSubmitResponse> get serializer => _$ApplicationSubmitResponseSerializer();
+  static Serializer<ApplicationSubmitResponse> get serializer =>
+      _$ApplicationSubmitResponseSerializer();
 }
 
-class _$ApplicationSubmitResponseSerializer implements PrimitiveSerializer<ApplicationSubmitResponse> {
+class _$ApplicationSubmitResponseSerializer
+    implements PrimitiveSerializer<ApplicationSubmitResponse> {
   @override
-  final Iterable<Type> types = const [ApplicationSubmitResponse, _$ApplicationSubmitResponse];
+  final Iterable<Type> types = const [
+    ApplicationSubmitResponse,
+    _$ApplicationSubmitResponse
+  ];
 
   @override
   final String wireName = r'ApplicationSubmitResponse';
@@ -90,7 +99,9 @@ class _$ApplicationSubmitResponseSerializer implements PrimitiveSerializer<Appli
     ApplicationSubmitResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -163,21 +174,26 @@ class _$ApplicationSubmitResponseSerializer implements PrimitiveSerializer<Appli
 }
 
 class ApplicationSubmitResponseStatusEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'SUBMITTED')
-  static const ApplicationSubmitResponseStatusEnum SUBMITTED = _$applicationSubmitResponseStatusEnum_SUBMITTED;
+  static const ApplicationSubmitResponseStatusEnum SUBMITTED =
+      _$applicationSubmitResponseStatusEnum_SUBMITTED;
   @BuiltValueEnumConst(wireName: r'PENDING_REVIEW')
-  static const ApplicationSubmitResponseStatusEnum PENDING_REVIEW = _$applicationSubmitResponseStatusEnum_PENDING_REVIEW;
+  static const ApplicationSubmitResponseStatusEnum PENDING_REVIEW =
+      _$applicationSubmitResponseStatusEnum_PENDING_REVIEW;
   @BuiltValueEnumConst(wireName: r'APPROVED')
-  static const ApplicationSubmitResponseStatusEnum APPROVED = _$applicationSubmitResponseStatusEnum_APPROVED;
+  static const ApplicationSubmitResponseStatusEnum APPROVED =
+      _$applicationSubmitResponseStatusEnum_APPROVED;
   @BuiltValueEnumConst(wireName: r'REJECTED')
-  static const ApplicationSubmitResponseStatusEnum REJECTED = _$applicationSubmitResponseStatusEnum_REJECTED;
+  static const ApplicationSubmitResponseStatusEnum REJECTED =
+      _$applicationSubmitResponseStatusEnum_REJECTED;
 
-  static Serializer<ApplicationSubmitResponseStatusEnum> get serializer => _$applicationSubmitResponseStatusEnumSerializer;
+  static Serializer<ApplicationSubmitResponseStatusEnum> get serializer =>
+      _$applicationSubmitResponseStatusEnumSerializer;
 
-  const ApplicationSubmitResponseStatusEnum._(String name): super(name);
+  const ApplicationSubmitResponseStatusEnum._(String name) : super(name);
 
-  static BuiltSet<ApplicationSubmitResponseStatusEnum> get values => _$applicationSubmitResponseStatusEnumValues;
-  static ApplicationSubmitResponseStatusEnum valueOf(String name) => _$applicationSubmitResponseStatusEnumValueOf(name);
+  static BuiltSet<ApplicationSubmitResponseStatusEnum> get values =>
+      _$applicationSubmitResponseStatusEnumValues;
+  static ApplicationSubmitResponseStatusEnum valueOf(String name) =>
+      _$applicationSubmitResponseStatusEnumValueOf(name);
 }
-

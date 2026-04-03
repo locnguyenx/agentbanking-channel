@@ -11,13 +11,14 @@ part 'pin_purchase_response.g.dart';
 /// PinPurchaseResponse
 ///
 /// Properties:
-/// * [status] 
-/// * [transactionId] 
-/// * [pinCode] 
-/// * [commission] 
-/// * [timestamp] 
+/// * [status]
+/// * [transactionId]
+/// * [pinCode]
+/// * [commission]
+/// * [timestamp]
 @BuiltValue()
-abstract class PinPurchaseResponse implements Built<PinPurchaseResponse, PinPurchaseResponseBuilder> {
+abstract class PinPurchaseResponse
+    implements Built<PinPurchaseResponse, PinPurchaseResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -35,18 +36,24 @@ abstract class PinPurchaseResponse implements Built<PinPurchaseResponse, PinPurc
 
   PinPurchaseResponse._();
 
-  factory PinPurchaseResponse([void updates(PinPurchaseResponseBuilder b)]) = _$PinPurchaseResponse;
+  factory PinPurchaseResponse([void updates(PinPurchaseResponseBuilder b)]) =
+      _$PinPurchaseResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(PinPurchaseResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PinPurchaseResponse> get serializer => _$PinPurchaseResponseSerializer();
+  static Serializer<PinPurchaseResponse> get serializer =>
+      _$PinPurchaseResponseSerializer();
 }
 
-class _$PinPurchaseResponseSerializer implements PrimitiveSerializer<PinPurchaseResponse> {
+class _$PinPurchaseResponseSerializer
+    implements PrimitiveSerializer<PinPurchaseResponse> {
   @override
-  final Iterable<Type> types = const [PinPurchaseResponse, _$PinPurchaseResponse];
+  final Iterable<Type> types = const [
+    PinPurchaseResponse,
+    _$PinPurchaseResponse
+  ];
 
   @override
   final String wireName = r'PinPurchaseResponse';
@@ -99,7 +106,9 @@ class _$PinPurchaseResponseSerializer implements PrimitiveSerializer<PinPurchase
     PinPurchaseResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -177,4 +186,3 @@ class _$PinPurchaseResponseSerializer implements PrimitiveSerializer<PinPurchase
     return result.build();
   }
 }
-

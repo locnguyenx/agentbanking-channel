@@ -5,11 +5,11 @@ import 'package:agentbanking_channel/core/settlement/settlement_service.dart';
 class SettlementBarrier extends ConsumerWidget {
   final Widget child;
 
-  const SettlementBarrier({Key? key, required this.child}) : super(key: key);
+  const SettlementBarrier({super.key, required this.child});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final status = ref.watch(settlementProvider);
+    final status = ref.watch(settlementStatusProvider);
 
     return Stack(
       children: [
@@ -33,7 +33,7 @@ class SettlementBarrier extends ConsumerWidget {
           ),
         if (status == SettlementStatus.blocked)
           Container(
-            color: Colors.black.withOpacity(0.85),
+            color: Colors.black.withValues(alpha: 0.85),
             child: Center(
               child: Card(
                 margin: const EdgeInsets.all(32),

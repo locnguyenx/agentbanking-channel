@@ -11,12 +11,13 @@ part 'cash_back_response.g.dart';
 /// CashBackResponse
 ///
 /// Properties:
-/// * [status] 
-/// * [transactionId] 
-/// * [cashBackAmount] 
-/// * [commission] 
+/// * [status]
+/// * [transactionId]
+/// * [cashBackAmount]
+/// * [commission]
 @BuiltValue()
-abstract class CashBackResponse implements Built<CashBackResponse, CashBackResponseBuilder> {
+abstract class CashBackResponse
+    implements Built<CashBackResponse, CashBackResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -31,16 +32,19 @@ abstract class CashBackResponse implements Built<CashBackResponse, CashBackRespo
 
   CashBackResponse._();
 
-  factory CashBackResponse([void updates(CashBackResponseBuilder b)]) = _$CashBackResponse;
+  factory CashBackResponse([void updates(CashBackResponseBuilder b)]) =
+      _$CashBackResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CashBackResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CashBackResponse> get serializer => _$CashBackResponseSerializer();
+  static Serializer<CashBackResponse> get serializer =>
+      _$CashBackResponseSerializer();
 }
 
-class _$CashBackResponseSerializer implements PrimitiveSerializer<CashBackResponse> {
+class _$CashBackResponseSerializer
+    implements PrimitiveSerializer<CashBackResponse> {
   @override
   final Iterable<Type> types = const [CashBackResponse, _$CashBackResponse];
 
@@ -88,7 +92,9 @@ class _$CashBackResponseSerializer implements PrimitiveSerializer<CashBackRespon
     CashBackResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -159,4 +165,3 @@ class _$CashBackResponseSerializer implements PrimitiveSerializer<CashBackRespon
     return result.build();
   }
 }
-

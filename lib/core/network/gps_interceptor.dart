@@ -12,15 +12,18 @@ class GpsInterceptor extends Interceptor {
     try {
       final geolocator = _geolocator ?? GeolocatorPlatform.instance;
       final position = await geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
       );
       
       options.headers['X-GPS-Latitude'] = position.latitude.toStringAsFixed(6);
       options.headers['X-GPS-Longitude'] = position.longitude.toStringAsFixed(6);
     } catch (e) {
-      // If GPS fails, we still proceed but without headers, 
-      // or we could throw an error if mandatory.
-      // The backend will reject if headers are missing.
+      // US-CA-02: Strict geofence enforcement. Block request if GPS unavailable.
+      throw DioException(
+        requestOptions: options,
+        error: 'ERR_VAL_GPS_UNAVAILABLE',
+        type: DioExceptionType.cancel,
+      );
     }
     super.onRequest(options, handler);
   }

@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 
-
 /// tests for MerchantControllerLedgerServiceApi
 void main() {
   final instance = AgentApi().getMerchantControllerLedgerServiceApi();
@@ -21,6 +20,5 @@ void main() {
     test('test processRetailSale', () async {
       // TODO
     });
-
   });
 }

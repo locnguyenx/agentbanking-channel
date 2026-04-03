@@ -12,15 +12,16 @@ part 'create_agent_request.g.dart';
 /// CreateAgentRequest
 ///
 /// Properties:
-/// * [agentCode] 
-/// * [businessName] 
-/// * [tier] 
-/// * [merchantGpsLat] 
-/// * [merchantGpsLng] 
-/// * [mykadNumber] 
-/// * [phoneNumber] 
+/// * [agentCode]
+/// * [businessName]
+/// * [tier]
+/// * [merchantGpsLat]
+/// * [merchantGpsLng]
+/// * [mykadNumber]
+/// * [phoneNumber]
 @BuiltValue()
-abstract class CreateAgentRequest implements Built<CreateAgentRequest, CreateAgentRequestBuilder> {
+abstract class CreateAgentRequest
+    implements Built<CreateAgentRequest, CreateAgentRequestBuilder> {
   @BuiltValueField(wireName: r'agentCode')
   String get agentCode;
 
@@ -45,16 +46,19 @@ abstract class CreateAgentRequest implements Built<CreateAgentRequest, CreateAge
 
   CreateAgentRequest._();
 
-  factory CreateAgentRequest([void updates(CreateAgentRequestBuilder b)]) = _$CreateAgentRequest;
+  factory CreateAgentRequest([void updates(CreateAgentRequestBuilder b)]) =
+      _$CreateAgentRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CreateAgentRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CreateAgentRequest> get serializer => _$CreateAgentRequestSerializer();
+  static Serializer<CreateAgentRequest> get serializer =>
+      _$CreateAgentRequestSerializer();
 }
 
-class _$CreateAgentRequestSerializer implements PrimitiveSerializer<CreateAgentRequest> {
+class _$CreateAgentRequestSerializer
+    implements PrimitiveSerializer<CreateAgentRequest> {
   @override
   final Iterable<Type> types = const [CreateAgentRequest, _$CreateAgentRequest];
 
@@ -109,7 +113,9 @@ class _$CreateAgentRequestSerializer implements PrimitiveSerializer<CreateAgentR
     CreateAgentRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -203,19 +209,23 @@ class _$CreateAgentRequestSerializer implements PrimitiveSerializer<CreateAgentR
 }
 
 class CreateAgentRequestTierEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'BASIC')
-  static const CreateAgentRequestTierEnum BASIC = _$createAgentRequestTierEnum_BASIC;
+  static const CreateAgentRequestTierEnum BASIC =
+      _$createAgentRequestTierEnum_BASIC;
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const CreateAgentRequestTierEnum STANDARD = _$createAgentRequestTierEnum_STANDARD;
+  static const CreateAgentRequestTierEnum STANDARD =
+      _$createAgentRequestTierEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const CreateAgentRequestTierEnum PREMIUM = _$createAgentRequestTierEnum_PREMIUM;
+  static const CreateAgentRequestTierEnum PREMIUM =
+      _$createAgentRequestTierEnum_PREMIUM;
 
-  static Serializer<CreateAgentRequestTierEnum> get serializer => _$createAgentRequestTierEnumSerializer;
+  static Serializer<CreateAgentRequestTierEnum> get serializer =>
+      _$createAgentRequestTierEnumSerializer;
 
-  const CreateAgentRequestTierEnum._(String name): super(name);
+  const CreateAgentRequestTierEnum._(String name) : super(name);
 
-  static BuiltSet<CreateAgentRequestTierEnum> get values => _$createAgentRequestTierEnumValues;
-  static CreateAgentRequestTierEnum valueOf(String name) => _$createAgentRequestTierEnumValueOf(name);
+  static BuiltSet<CreateAgentRequestTierEnum> get values =>
+      _$createAgentRequestTierEnumValues;
+  static CreateAgentRequestTierEnum valueOf(String name) =>
+      _$createAgentRequestTierEnumValueOf(name);
 }
-

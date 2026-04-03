@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/merchant/providers/merchant_provider.dart';
@@ -49,11 +50,14 @@ class PinPurchaseScreen extends ConsumerWidget {
             ElevatedButton(
               onPressed: () {
                 // Simplified for demo
-                ref.read(merchantProvider).copyWith(status: MerchantStatus.success, result: PinPurchaseResponse(
-                  pinCode: '1234-5678-9012-3456',
-                  commissionEarned: Decimal.parse('0.50'),
-                  receiptReference: 'PIN-999',
-                ));
+                ref.read(merchantProvider.notifier).state = state.copyWith(
+                  status: MerchantStatus.success, 
+                  result: PinPurchaseResponse(
+                    pinCode: '1234-5678-9012-3456',
+                    commissionEarned: Decimal.parse('0.50'),
+                    receiptReference: 'PIN-999',
+                  ),
+                );
               }, 
               child: const Text('Simulate Purchase'),
             ),

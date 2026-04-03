@@ -6,11 +6,20 @@ import 'package:agentbanking_channel/features/transactions/repositories/transact
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mockito/mockito.dart';
+import '../../test_utils.dart';
 
-class ManualMockTransactionRepository implements TransactionRepository {
+class FakeFloatRepository extends Fake implements FloatRepository {
+  @override
+  Future<FloatLedger> getFloatStatus(String agentId) async {
+    return FloatLedger(currentBalance: Decimal.parse('5000.0'), limit: Decimal.parse('10000.0'));
+  }
+}
+
+class ManualMockTransactionRepository extends Mock implements TransactionRepository {
   RetailSaleResponse? nextRetailSaleResponse;
   CashbackResponse? nextCashbackResponse;
 
@@ -25,13 +34,10 @@ class ManualMockTransactionRepository implements TransactionRepository {
     if (nextCashbackResponse == null) throw UnimplementedError('nextCashbackResponse not set');
     return nextCashbackResponse!;
   }
-  
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(invocation.memberName.toString());
 }
 
-class ManualMockComplianceNotifier extends StateNotifier<ComplianceState> implements ComplianceNotifier {
-  ManualMockComplianceNotifier() : super(ComplianceState(isFrozen: false));
+class ManualMockComplianceNotifier extends ComplianceNotifier {
+  ManualMockComplianceNotifier() : super();
   @override
   void freeze(String reason) => state = ComplianceState(isFrozen: true, reason: reason);
   @override
@@ -65,8 +71,8 @@ class ManualMerchantTerminal implements IMerchantTerminal {
   Future<void> clearDisplay() async {}
 }
 
-class ManualFloatNotifier extends StateNotifier<FloatLedger> implements FloatNotifier {
-  ManualFloatNotifier() : super(FloatLedger(currentBalance: Decimal.zero, limit: Decimal.zero));
+class ManualFloatNotifier extends FloatNotifier {
+  ManualFloatNotifier() : super(FakeFloatRepository(), null);
   @override
   Future<void> fetchLatestBalance() async {}
 }
@@ -89,25 +95,23 @@ void main() {
     mockComplianceNotifier = ManualMockComplianceNotifier();
 
     notifier = MerchantNotifier(
+      ref: ManualMockRef(),
       repository: mockRepo,
       cardReader: mockCardReader,
       pinPad: mockPinPad,
       floatNotifier: mockFloatNotifier,
       complianceNotifier: mockComplianceNotifier,
       merchantTerminal: mockTerminal,
+      agentId: 'REAL-AGENT-456',
     );
   });
 
-  test('Retail Sale calculates 1% MDR and credits float correctly', () async {
+  test('Retail Sale executes correctly directly without quoting', () async {
     final amount = Decimal.parse('100.0');
     
     // 1. Start Sale
-    final future = notifier.startRetailSale(amount, FundingSource.CARD_EMV);
-    expect(notifier.state.status, MerchantStatus.quoting);
-    
-    await future;
+    await notifier.startRetailSale(amount, FundingSource.CARD_EMV);
     expect(notifier.state.status, MerchantStatus.waitingCard);
-    expect(notifier.state.mdr, Decimal.parse('1.0')); // 1% of 100
 
     // 2. Process Card
     mockCardReader.nextCardData = CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X');

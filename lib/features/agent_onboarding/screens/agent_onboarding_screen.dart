@@ -11,10 +11,14 @@ class AgentOnboardingScreen extends ConsumerStatefulWidget {
 
 class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
   final _ssmController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _otpController = TextEditingController();
 
   @override
   void dispose() {
     _ssmController.dispose();
+    _phoneController.dispose();
+    _otpController.dispose();
     super.dispose();
   }
 
@@ -35,10 +39,48 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
               const SizedBox(height: 16),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Text('Your Agent ID has been activated. Float account RM 0.00 created.', textAlign: TextAlign.center),
+                child: Text('KYC VERIFIED', textAlign: TextAlign.center),
               ),
               const SizedBox(height: 48),
-              ElevatedButton(onPressed: () => notifier.reset(), child: const Text('Go to Login')),
+              ElevatedButton(
+                key: const Key('btn_finish'),
+                onPressed: () {
+                  notifier.reset();
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                }, 
+                child: const Text('Go to Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (state.status == AgentOnboardingStatus.livenessCheck) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Face AI Liveness')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.blue, width: 4),
+                ),
+                child: const Icon(Icons.face, size: 100, color: Colors.white),
+              ),
+              const SizedBox(height: 32),
+              const Text('Please BLINK TWICE', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue)),
+              const SizedBox(height: 16),
+              const Text('Front camera is active for liveness detection.', style: TextStyle(color: Colors.grey)),
+              const SizedBox(height: 48),
+              const CircularProgressIndicator(),
             ],
           ),
         ),
@@ -57,10 +99,19 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
               const SizedBox(height: 16),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Text('Your application requires manual compliance review due to regional risk policy. We will notify you via SMS within 24 hours.', textAlign: TextAlign.center),
+                child: Text('Bank Officer will contact you', textAlign: TextAlign.center),
               ),
               const SizedBox(height: 48),
-              ElevatedButton(onPressed: () => notifier.reset(), child: const Text('Finish')),
+              ElevatedButton(
+                key: const Key('btn_finish'),
+                onPressed: () {
+                  notifier.reset();
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('Finish'),
+              ),
             ],
           ),
         ),
@@ -81,6 +132,7 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
               leading: Icon(state.myKadNumber != null ? Icons.check_circle : Icons.badge, color: state.myKadNumber != null ? Colors.green : null),
               title: Text(state.myKadNumber ?? 'Scan Customer MyKad'),
               trailing: ElevatedButton(
+                key: const Key('btn_scan_mykad'),
                 onPressed: state.status == AgentOnboardingStatus.idle ? () => notifier.scanMyKad() : null,
                 child: const Text('Scan'),
               ),
@@ -92,6 +144,7 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
             const SizedBox(height: 16),
             if (!state.otpVerified) ...[
               TextField(
+                key: const Key('field_phone'),
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 enabled: state.myKadNumber != null && state.status == AgentOnboardingStatus.idle,
@@ -111,6 +164,7 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
               if (state.status == AgentOnboardingStatus.waitingOtp || state.status == AgentOnboardingStatus.verifyingOtp) ...[
                 const SizedBox(height: 16),
                 TextField(
+                  key: const Key('field_otp'),
                   controller: _otpController,
                   keyboardType: TextInputType.number,
                   maxLength: 6,
@@ -139,6 +193,7 @@ class _AgentOnboardingScreenState extends ConsumerState<AgentOnboardingScreen> {
             const Text('Step 3: Business Registration', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             TextField(
+              key: const Key('field_ssm'),
               controller: _ssmController,
               enabled: state.otpVerified && state.status == AgentOnboardingStatus.idle,
               decoration: const InputDecoration(

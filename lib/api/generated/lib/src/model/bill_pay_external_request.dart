@@ -16,11 +16,12 @@ part 'bill_pay_external_request.g.dart';
 /// * [ref1] - Reference 1 (bill account number)
 /// * [ref2] - Reference 2 (optional)
 /// * [amount] - Payment amount in MYR
-/// * [currency] 
-/// * [idempotencyKey] 
+/// * [currency]
+/// * [idempotencyKey]
 /// * [customerMobile] - Customer mobile number
 @BuiltValue()
-abstract class BillPayExternalRequest implements Built<BillPayExternalRequest, BillPayExternalRequestBuilder> {
+abstract class BillPayExternalRequest
+    implements Built<BillPayExternalRequest, BillPayExternalRequestBuilder> {
   /// Biller code (4 digits)
   @BuiltValueField(wireName: r'billerCode')
   String get billerCode;
@@ -50,19 +51,26 @@ abstract class BillPayExternalRequest implements Built<BillPayExternalRequest, B
 
   BillPayExternalRequest._();
 
-  factory BillPayExternalRequest([void updates(BillPayExternalRequestBuilder b)]) = _$BillPayExternalRequest;
+  factory BillPayExternalRequest(
+          [void updates(BillPayExternalRequestBuilder b)]) =
+      _$BillPayExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(BillPayExternalRequestBuilder b) => b
-      ..currency = BillPayExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(BillPayExternalRequestBuilder b) =>
+      b..currency = BillPayExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<BillPayExternalRequest> get serializer => _$BillPayExternalRequestSerializer();
+  static Serializer<BillPayExternalRequest> get serializer =>
+      _$BillPayExternalRequestSerializer();
 }
 
-class _$BillPayExternalRequestSerializer implements PrimitiveSerializer<BillPayExternalRequest> {
+class _$BillPayExternalRequestSerializer
+    implements PrimitiveSerializer<BillPayExternalRequest> {
   @override
-  final Iterable<Type> types = const [BillPayExternalRequest, _$BillPayExternalRequest];
+  final Iterable<Type> types = const [
+    BillPayExternalRequest,
+    _$BillPayExternalRequest
+  ];
 
   @override
   final String wireName = r'BillPayExternalRequest';
@@ -119,7 +127,9 @@ class _$BillPayExternalRequestSerializer implements PrimitiveSerializer<BillPayE
     BillPayExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -213,15 +223,17 @@ class _$BillPayExternalRequestSerializer implements PrimitiveSerializer<BillPayE
 }
 
 class BillPayExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const BillPayExternalRequestCurrencyEnum MYR = _$billPayExternalRequestCurrencyEnum_MYR;
+  static const BillPayExternalRequestCurrencyEnum MYR =
+      _$billPayExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<BillPayExternalRequestCurrencyEnum> get serializer => _$billPayExternalRequestCurrencyEnumSerializer;
+  static Serializer<BillPayExternalRequestCurrencyEnum> get serializer =>
+      _$billPayExternalRequestCurrencyEnumSerializer;
 
-  const BillPayExternalRequestCurrencyEnum._(String name): super(name);
+  const BillPayExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<BillPayExternalRequestCurrencyEnum> get values => _$billPayExternalRequestCurrencyEnumValues;
-  static BillPayExternalRequestCurrencyEnum valueOf(String name) => _$billPayExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<BillPayExternalRequestCurrencyEnum> get values =>
+      _$billPayExternalRequestCurrencyEnumValues;
+  static BillPayExternalRequestCurrencyEnum valueOf(String name) =>
+      _$billPayExternalRequestCurrencyEnumValueOf(name);
 }
-

@@ -34,8 +34,8 @@ class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
               const Icon(Icons.check_circle, color: Colors.green, size: 80),
               Text('Sale RM ${state.amount} Success', style: const TextStyle(fontSize: 22)),
               const SizedBox(height: 16),
-              Text('MDR Deducted: RM ${res.mdrAmount}', style: const TextStyle(color: Colors.red)),
-              Text('Float Credited: RM ${res.floatCreditAmount}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+              Text('MDR Deducted: RM ${res.mdrAmount.toStringAsFixed(2)}', style: const TextStyle(color: Colors.red)),
+              Text('Float Credited: RM ${res.floatCreditAmount.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
               const SizedBox(height: 32),
               ElevatedButton(onPressed: () => notifier.reset(), child: const Text('New Sale')),
             ],
@@ -53,6 +53,7 @@ class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
           child: Column(
             children: [
               TextFormField(
+                key: const Key('input_amount'),
                 controller: _amountController,
                 decoration: const InputDecoration(labelText: 'Sale Amount (RM)', prefixText: 'RM '),
                 keyboardType: TextInputType.number,
@@ -60,7 +61,7 @@ class _RetailSaleScreenState extends ConsumerState<RetailSaleScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<FundingSource>(
-                value: _fundingSource,
+                initialValue: _fundingSource,
                 items: const [
                   DropdownMenuItem(value: FundingSource.CARD_EMV, child: Text('Card (MDR 1%)')),
                   DropdownMenuItem(value: FundingSource.CASH, child: Text('Cash (No MDR)')),

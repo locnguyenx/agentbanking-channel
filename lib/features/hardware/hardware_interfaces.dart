@@ -2,6 +2,7 @@
 ///
 /// These interfaces decouple the Flutter application from specific
 /// vendor-proprietary Android SDKs (Sunmi, Pax, Aisino, etc.)
+library;
 
 abstract class ICardReader {
   Future<bool> isAvailable();

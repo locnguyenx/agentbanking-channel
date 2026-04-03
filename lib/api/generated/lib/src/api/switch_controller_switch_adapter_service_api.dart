@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
@@ -12,7 +11,6 @@ import 'package:agent_api/src/model/duit_now_request.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 
 class SwitchControllerSwitchAdapterServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -20,10 +18,10 @@ class SwitchControllerSwitchAdapterServiceApi {
   const SwitchControllerSwitchAdapterServiceApi(this._dio, this._serializers);
 
   /// duitNowTransfer
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [duitNowRequest] 
+  /// * [duitNowRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -33,7 +31,7 @@ class SwitchControllerSwitchAdapterServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> duitNowTransfer({ 
+  Future<Response<TransactionResponse>> duitNowTransfer({
     required DuitNowRequest duitNowRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -61,10 +59,9 @@ class SwitchControllerSwitchAdapterServiceApi {
     try {
       const _type = FullType(DuitNowRequest);
       _bodyData = _serializers.serialize(duitNowRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -87,11 +84,12 @@ class SwitchControllerSwitchAdapterServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -113,5 +111,4 @@ class SwitchControllerSwitchAdapterServiceApi {
       extra: _response.extra,
     );
   }
-
 }

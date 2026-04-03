@@ -11,10 +11,13 @@ part 'balance_inquiry_external_request.g.dart';
 /// BalanceInquiryExternalRequest
 ///
 /// Properties:
-/// * [encryptedCardData] 
-/// * [pinBlock] 
+/// * [encryptedCardData]
+/// * [pinBlock]
 @BuiltValue()
-abstract class BalanceInquiryExternalRequest implements Built<BalanceInquiryExternalRequest, BalanceInquiryExternalRequestBuilder> {
+abstract class BalanceInquiryExternalRequest
+    implements
+        Built<BalanceInquiryExternalRequest,
+            BalanceInquiryExternalRequestBuilder> {
   @BuiltValueField(wireName: r'encryptedCardData')
   String get encryptedCardData;
 
@@ -23,18 +26,25 @@ abstract class BalanceInquiryExternalRequest implements Built<BalanceInquiryExte
 
   BalanceInquiryExternalRequest._();
 
-  factory BalanceInquiryExternalRequest([void updates(BalanceInquiryExternalRequestBuilder b)]) = _$BalanceInquiryExternalRequest;
+  factory BalanceInquiryExternalRequest(
+          [void updates(BalanceInquiryExternalRequestBuilder b)]) =
+      _$BalanceInquiryExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(BalanceInquiryExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<BalanceInquiryExternalRequest> get serializer => _$BalanceInquiryExternalRequestSerializer();
+  static Serializer<BalanceInquiryExternalRequest> get serializer =>
+      _$BalanceInquiryExternalRequestSerializer();
 }
 
-class _$BalanceInquiryExternalRequestSerializer implements PrimitiveSerializer<BalanceInquiryExternalRequest> {
+class _$BalanceInquiryExternalRequestSerializer
+    implements PrimitiveSerializer<BalanceInquiryExternalRequest> {
   @override
-  final Iterable<Type> types = const [BalanceInquiryExternalRequest, _$BalanceInquiryExternalRequest];
+  final Iterable<Type> types = const [
+    BalanceInquiryExternalRequest,
+    _$BalanceInquiryExternalRequest
+  ];
 
   @override
   final String wireName = r'BalanceInquiryExternalRequest';
@@ -62,7 +72,9 @@ class _$BalanceInquiryExternalRequestSerializer implements PrimitiveSerializer<B
     BalanceInquiryExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -119,4 +131,3 @@ class _$BalanceInquiryExternalRequestSerializer implements PrimitiveSerializer<B
     return result.build();
   }
 }
-

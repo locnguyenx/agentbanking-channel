@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 
-
 /// tests for BillerControllerBillerServiceApi
 void main() {
   final instance = AgentApi().getBillerControllerBillerServiceApi();
@@ -16,6 +15,5 @@ void main() {
     test('test topup', () async {
       // TODO
     });
-
   });
 }

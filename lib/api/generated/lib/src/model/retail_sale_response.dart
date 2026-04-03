@@ -11,13 +11,14 @@ part 'retail_sale_response.g.dart';
 /// RetailSaleResponse
 ///
 /// Properties:
-/// * [status] 
-/// * [transactionId] 
-/// * [amount] 
-/// * [mdrAmount] 
-/// * [netToMerchant] 
+/// * [status]
+/// * [transactionId]
+/// * [amount]
+/// * [mdrAmount]
+/// * [netToMerchant]
 @BuiltValue()
-abstract class RetailSaleResponse implements Built<RetailSaleResponse, RetailSaleResponseBuilder> {
+abstract class RetailSaleResponse
+    implements Built<RetailSaleResponse, RetailSaleResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -35,16 +36,19 @@ abstract class RetailSaleResponse implements Built<RetailSaleResponse, RetailSal
 
   RetailSaleResponse._();
 
-  factory RetailSaleResponse([void updates(RetailSaleResponseBuilder b)]) = _$RetailSaleResponse;
+  factory RetailSaleResponse([void updates(RetailSaleResponseBuilder b)]) =
+      _$RetailSaleResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailSaleResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailSaleResponse> get serializer => _$RetailSaleResponseSerializer();
+  static Serializer<RetailSaleResponse> get serializer =>
+      _$RetailSaleResponseSerializer();
 }
 
-class _$RetailSaleResponseSerializer implements PrimitiveSerializer<RetailSaleResponse> {
+class _$RetailSaleResponseSerializer
+    implements PrimitiveSerializer<RetailSaleResponse> {
   @override
   final Iterable<Type> types = const [RetailSaleResponse, _$RetailSaleResponse];
 
@@ -99,7 +103,9 @@ class _$RetailSaleResponseSerializer implements PrimitiveSerializer<RetailSaleRe
     RetailSaleResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -177,4 +183,3 @@ class _$RetailSaleResponseSerializer implements PrimitiveSerializer<RetailSaleRe
     return result.build();
   }
 }
-

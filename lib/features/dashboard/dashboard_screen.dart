@@ -7,17 +7,22 @@ import 'package:agentbanking_channel/features/kyc/screens/kyc_flow_screen.dart';
 import 'package:agentbanking_channel/core/offline/widgets/offline_indicator.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:agentbanking_channel/features/transactions/screens/bill_payment_form.dart';
-import 'package:agentbanking_channel/features/transactions/screens/topup_form.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
+import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final compliance = ref.watch(complianceProvider);
     final authState = ref.watch(authProvider);
     final floatState = ref.watch(floatProvider);
+    final eodStatus = ref.watch(eodTimerServiceProvider);
+    final eodTimer = ref.watch(eodTimerServiceProvider.notifier);
+    
+
     final agentName = authState.user?.name ?? 'Agent';
     final agentTier = authState.user?.tier ?? 'Silver';
     
@@ -26,6 +31,8 @@ class DashboardScreen extends ConsumerWidget {
     
     final bool isTablet = MediaQuery.of(context).size.width >= 600;
     final double horizontalPadding = isTablet ? 40.0 : 24.0;
+
+    final isEarlyMorning = eodTimer.now.hour >= 0 && eodTimer.now.hour < 3;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -50,22 +57,135 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(horizontalPadding),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: EdgeInsets.all(horizontalPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (eodStatus == EodStatus.warning)
+                  _buildEodWarningBanner(),
+                if (eodStatus == EodStatus.open && isEarlyMorning)
+                  _buildSettlementCompleteBanner(),
+                if (!compliance.isFrozen && compliance.reason == 'UNLOCKED')
+                   _buildComplianceUnlockedBanner(),
+                _buildAgentHeader(context, ref, agentName, agentTier, balanceStr, isTablet),
+                SizedBox(height: isTablet ? 48 : 32),
+                Text('QUICK ACTIONS', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                const SizedBox(height: 16),
+                _buildQuickActionsGrid(context, ref, isTablet),
+                SizedBox(height: isTablet ? 48 : 32),
+                Text('SERVICES', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                const SizedBox(height: 16),
+                _buildServicesRow(context, ref, isTablet),
+                SizedBox(height: isTablet ? 48 : 32),
+                _buildRecentActivity(context, ref, isTablet),
+              ],
+            ),
+          ),
+          if (eodStatus == EodStatus.locked)
+            _buildEodLockedOverlay(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEodWarningBanner() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade100,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.orange.shade300),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'End of Day Settlement approaching (23:55). Please finish pending transactions.',
+              style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettlementCompleteBanner() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade100,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.shade300),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle, color: Colors.green),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'Settlement Complete. New business day has started.',
+              style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildComplianceUnlockedBanner() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade100,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade300),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Colors.blue),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'Terminal Unlocked. You may resume operations.',
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEodLockedOverlay() {
+    return Container(
+      color: Colors.black.withOpacity(0.85),
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildAgentHeader(context, ref, agentName, agentTier, balanceStr, isTablet),
-            SizedBox(height: isTablet ? 48 : 32),
-            Text('QUICK ACTIONS', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
-            const SizedBox(height: 16),
-            _buildQuickActionsGrid(context, ref, isTablet),
-            SizedBox(height: isTablet ? 48 : 32),
-            Text('SERVICES', style: TextStyle(fontSize: isTablet ? 14 : 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
-            const SizedBox(height: 16),
-            _buildServicesRow(context, ref, isTablet),
-            SizedBox(height: isTablet ? 48 : 32),
-            _buildRecentActivity(context, ref, isTablet),
+            const Icon(Icons.lock_clock, color: Colors.white, size: 80),
+            const SizedBox(height: 24),
+            const Text(
+              'Transactions Blocked',
+              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Settlement in Progress - Please Wait',
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
           ],
         ),
       ),
@@ -149,14 +269,15 @@ class DashboardScreen extends ConsumerWidget {
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
       children: [
-        _buildActionCard(context, ref, 'Withdrawal', Icons.outbox, Colors.blue, 'CASH_WITHDRAWAL', isTablet),
-        _buildActionCard(context, ref, 'Deposit', Icons.move_to_inbox, Colors.green, 'CASH_DEPOSIT', isTablet),
+        _buildActionCard(context, ref, 'Withdrawal', Icons.outbox, Colors.blue, 'CASH_WITHDRAWAL', isTablet, key: const Key('btn_withdrawal')),
+        _buildActionCard(context, ref, 'Deposit', Icons.move_to_inbox, Colors.green, 'CASH_DEPOSIT', isTablet, key: const Key('btn_deposit')),
       ],
     );
   }
 
-  Widget _buildActionCard(BuildContext context, WidgetRef ref, String title, IconData icon, Color color, String serviceCode, bool isTablet) {
+  Widget _buildActionCard(BuildContext context, WidgetRef ref, String title, IconData icon, Color color, String serviceCode, bool isTablet, {Key? key}) {
     return InkWell(
+      key: key,
       onTap: () {
         ref.read(transactionProvider.notifier).reset();
         Navigator.push(context, MaterialPageRoute(builder: (_) => TransactionFlowScreen(title: title, serviceCode: serviceCode)));
@@ -205,6 +326,7 @@ class DashboardScreen extends ConsumerWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Balance Inquiry', serviceCode: 'BALANCE_INQUIRY')));
               },
               isTablet,
+              key: const Key('btn_inquiry'),
             ),
             _buildCircularService(
               context,
@@ -217,26 +339,51 @@ class DashboardScreen extends ConsumerWidget {
             ),
             _buildCircularService(
               context,
-              'Top-up',
-              Icons.phone_android,
-              Colors.red,
+              'JomPAY',
+              Icons.payment,
+              Colors.orange,
               () {
                 ref.read(transactionProvider.notifier).reset();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Prepaid Topup', serviceCode: 'TOP_UP')));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'JomPAY', serviceCode: 'JOMPAY')));
               },
               isTablet,
+              key: const Key('btn_jompay'),
+            ),
+            _buildCircularService(
+              context,
+              'PINs',
+              Icons.vpn_key,
+              Colors.purple,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'PIN Purchase', serviceCode: 'PIN_PURCHASE')));
+              },
+              isTablet,
+              key: const Key('btn_pin_purchase'),
             ),
             _buildCircularService(
               context,
               'Bills',
               Icons.receipt_long,
-              Colors.purple,
+              Colors.redAccent,
               () {
                 ref.read(transactionProvider.notifier).reset();
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Bill Payment', serviceCode: 'BILL_PAY')));
               },
               isTablet,
-              key: const Key('btn_bills'),
+              key: const Key('btn_bill_payment'),
+            ),
+            _buildCircularService(
+              context,
+              'Top Up',
+              Icons.phone_android,
+              Colors.green,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Top Up', serviceCode: 'TOP_UP')));
+              },
+              isTablet,
+              key: const Key('btn_top_up'),
             ),
             _buildCircularService(
               context,
@@ -248,7 +395,19 @@ class DashboardScreen extends ConsumerWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Sarawak Pay', serviceCode: 'SARAWAK_PAY')));
               },
               isTablet,
-              key: const Key('btn_sarawak'),
+              key: const Key('btn_sarawak_pay'),
+            ),
+            _buildCircularService(
+              context,
+              'DuitNow',
+              Icons.send_to_mobile,
+              Colors.pink,
+              () {
+                ref.read(transactionProvider.notifier).reset();
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'DuitNow Transfer', serviceCode: 'DUITNOW_TRANSFER')));
+              },
+              isTablet,
+              key: const Key('btn_duitnow'),
             ),
             _buildCircularService(
               context,
@@ -265,26 +424,14 @@ class DashboardScreen extends ConsumerWidget {
             _buildCircularService(
               context,
               'eSSP',
-              Icons.card_membership,
-              Colors.amber,
+              Icons.badge,
+              Colors.indigo,
               () {
                 ref.read(transactionProvider.notifier).reset();
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'eSSP Purchase', serviceCode: 'ESSP_PURCHASE')));
               },
               isTablet,
-              key: const Key('btn_essp'),
-            ),
-            _buildCircularService(
-              context,
-              'JomPAY',
-              Icons.payments,
-              Colors.redAccent,
-              () {
-                ref.read(transactionProvider.notifier).reset();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'JomPAY', serviceCode: 'JOMPAY')));
-              },
-              isTablet,
-              key: const Key('btn_jompay'),
+              key: const Key('btn_essp_service'),
             ),
           ],
         ),

@@ -77,13 +77,24 @@ void main() {
     expect(notifier.state.phoneNumber, '0123456789');
   });
 
-  test('verifyOtp transitions to idle with otpVerified true on success', () async {
+  test('verifyOtp transitions to livenessCheck with otpVerified true on success', () async {
     notifier.state = notifier.state.copyWith(phoneNumber: '0123456789');
     
     await notifier.verifyOtp('123456');
 
-    expect(notifier.state.status, AgentOnboardingStatus.idle);
+    expect(notifier.state.status, AgentOnboardingStatus.livenessCheck);
     expect(notifier.state.otpVerified, isTrue);
+  });
+
+  test('triggerLivenessCheck transitions to idle on completion', () async {
+    notifier.state = notifier.state.copyWith(
+      status: AgentOnboardingStatus.livenessCheck,
+      otpVerified: true,
+    );
+
+    await notifier.triggerLivenessCheck();
+
+    expect(notifier.state.status, AgentOnboardingStatus.idle);
   });
 
   test('submitOnboarding transitions to activated for valid SSM (S10.1)', () async {

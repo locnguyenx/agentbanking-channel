@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
@@ -11,7 +12,7 @@ final agentOnboardingRepositoryProvider = Provider<AgentOnboardingRepository>((r
   );
 });
 
-enum AgentOnboardingStatus { idle, scanning, requestingOtp, waitingOtp, verifyingOtp, submitting, activated, manualReview, failed }
+enum AgentOnboardingStatus { idle, scanning, requestingOtp, waitingOtp, verifyingOtp, livenessCheck, submitting, activated, manualReview, failed }
 
 class AgentOnboardingState {
   final AgentOnboardingStatus status;
@@ -52,6 +53,8 @@ class AgentOnboardingState {
 class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
   final IMyKadScanner myKadScanner;
   final AgentOnboardingRepository repository;
+  bool _mounted = true;
+  Timer? _livenessTimer;
 
   AgentOnboardingNotifier({
     required this.myKadScanner,
@@ -59,58 +62,96 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
   }) : super(AgentOnboardingState(status: AgentOnboardingStatus.idle));
 
   Future<void> scanMyKad() async {
-    state = state.copyWith(status: AgentOnboardingStatus.scanning, errorMessage: null);
+    if (!_mounted) return;
+    if (_mounted) {
+      state = state.copyWith(status: AgentOnboardingStatus.scanning, errorMessage: null);
+    }
     try {
       final result = await myKadScanner.scanMyKad();
+      if (!_mounted) return;
       if (result != null) {
-        state = state.copyWith(
-          status: AgentOnboardingStatus.idle,
-          myKadNumber: result.icNumber,
-        );
+        if (_mounted) {
+          state = state.copyWith(
+            status: AgentOnboardingStatus.idle,
+            myKadNumber: result.icNumber,
+          );
+        }
       } else {
-        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'MyKad scan cancelled');
+        if (_mounted) {
+          state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'MyKad scan cancelled');
+        }
       }
     } catch (e) {
-      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      }
     }
   }
 
   Future<void> requestOtp(String phoneNumber) async {
-    state = state.copyWith(status: AgentOnboardingStatus.requestingOtp, errorMessage: null);
+    if (!_mounted) return;
+    if (_mounted) {
+      state = state.copyWith(status: AgentOnboardingStatus.requestingOtp, errorMessage: null);
+    }
     try {
       final success = await repository.requestOtp(phoneNumber);
+      if (!_mounted) return;
       if (success) {
-        state = state.copyWith(
-          status: AgentOnboardingStatus.waitingOtp,
-          phoneNumber: phoneNumber,
-        );
+        if (_mounted) {
+          state = state.copyWith(
+            status: AgentOnboardingStatus.waitingOtp,
+            phoneNumber: phoneNumber,
+          );
+        }
       } else {
-        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Failed to request OTP');
+        if (_mounted) {
+          state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Failed to request OTP');
+        }
       }
     } catch (e) {
-      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      }
     }
   }
 
   Future<void> verifyOtp(String otp) async {
+    if (!_mounted) return;
     if (state.phoneNumber == null) return;
     state = state.copyWith(status: AgentOnboardingStatus.verifyingOtp, errorMessage: null);
     try {
       final success = await repository.verifyOtp(state.phoneNumber!, otp);
+      if (!_mounted) return;
       if (success) {
         state = state.copyWith(
-          status: AgentOnboardingStatus.idle,
+          status: AgentOnboardingStatus.livenessCheck,
           otpVerified: true,
         );
+        // Automatically trigger liveness simulation with managed timer
+        // BDD Stabilization: Use a Timer to allow UI to render the liveness state
+        _livenessTimer = Timer(const Duration(seconds: 1), () => triggerLivenessCheck());
       } else {
         state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Invalid OTP');
       }
     } catch (e) {
-      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      }
+    }
+  }
+
+  Future<void> triggerLivenessCheck() async {
+    if (!_mounted) return;
+    if (state.status != AgentOnboardingStatus.livenessCheck) return;
+    
+    // US-CA-13: Face AI Liveness Fallback (Simulated)
+    if (_mounted) {
+      state = state.copyWith(status: AgentOnboardingStatus.idle);
     }
   }
 
   Future<void> submitOnboarding(String ssmNumber) async {
+    if (!_mounted) return;
     if (state.myKadNumber == null) return;
     state = state.copyWith(status: AgentOnboardingStatus.submitting, ssmNumber: ssmNumber);
     
@@ -118,18 +159,18 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
       final response = await repository.submitOnboarding(
         mykadNumber: state.myKadNumber!,
         ssmNumber: ssmNumber,
-        businessName: 'Agent ${state.myKadNumber}', // Default for now
-        phoneNumber: '0123456789', // Default for now
+        businessName: 'Agent ${state.myKadNumber}', 
+        phoneNumber: state.phoneNumber ?? '',
       );
 
+      if (!_mounted) return;
       if (response == null) {
         state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: 'Onboarding failed: No response');
         return;
       }
 
-      // Map backend status to UI status
-      // BDD Feature 10 S10.2: AML Flag -> Manual Review
-      if (response.status == AgentResponseStatusEnum.PENDING || ssmNumber.startsWith('AML')) {
+      // BDD Feature 10 S10.2: AML Flag -> Manual Review based on backend status
+      if (response.status == AgentResponseStatusEnum.PENDING) {
         state = state.copyWith(status: AgentOnboardingStatus.manualReview);
       } else if (response.status == AgentResponseStatusEnum.ACTIVE) {
         state = state.copyWith(status: AgentOnboardingStatus.activated);
@@ -137,12 +178,22 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
         state = state.copyWith(status: AgentOnboardingStatus.activated); // Default success
       }
     } catch (e) {
-      state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      if (_mounted) {
+        state = state.copyWith(status: AgentOnboardingStatus.failed, errorMessage: e.toString());
+      }
     }
   }
 
   void reset() {
     state = AgentOnboardingState(status: AgentOnboardingStatus.idle);
+  }
+
+  @override
+  void dispose() {
+    print('BDD_DEBUG: AgentOnboardingNotifier disposing...');
+    _mounted = false;
+    _livenessTimer?.cancel();
+    super.dispose();
   }
 }
 

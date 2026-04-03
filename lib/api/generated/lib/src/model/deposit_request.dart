@@ -11,15 +11,16 @@ part 'deposit_request.g.dart';
 /// DepositRequest
 ///
 /// Properties:
-/// * [agentId] 
-/// * [amount] 
-/// * [customerFee] 
-/// * [agentCommission] 
-/// * [bankShare] 
-/// * [idempotencyKey] 
-/// * [destinationAccount] 
+/// * [agentId]
+/// * [amount]
+/// * [customerFee]
+/// * [agentCommission]
+/// * [bankShare]
+/// * [idempotencyKey]
+/// * [destinationAccount]
 @BuiltValue()
-abstract class DepositRequest implements Built<DepositRequest, DepositRequestBuilder> {
+abstract class DepositRequest
+    implements Built<DepositRequest, DepositRequestBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -43,16 +44,19 @@ abstract class DepositRequest implements Built<DepositRequest, DepositRequestBui
 
   DepositRequest._();
 
-  factory DepositRequest([void updates(DepositRequestBuilder b)]) = _$DepositRequest;
+  factory DepositRequest([void updates(DepositRequestBuilder b)]) =
+      _$DepositRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DepositRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DepositRequest> get serializer => _$DepositRequestSerializer();
+  static Serializer<DepositRequest> get serializer =>
+      _$DepositRequestSerializer();
 }
 
-class _$DepositRequestSerializer implements PrimitiveSerializer<DepositRequest> {
+class _$DepositRequestSerializer
+    implements PrimitiveSerializer<DepositRequest> {
   @override
   final Iterable<Type> types = const [DepositRequest, _$DepositRequest];
 
@@ -121,7 +125,9 @@ class _$DepositRequestSerializer implements PrimitiveSerializer<DepositRequest> 
     DepositRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -213,4 +219,3 @@ class _$DepositRequestSerializer implements PrimitiveSerializer<DepositRequest> 
     return result.build();
   }
 }
-

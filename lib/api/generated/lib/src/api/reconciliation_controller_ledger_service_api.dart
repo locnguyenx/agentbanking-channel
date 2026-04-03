@@ -4,18 +4,15 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
 import 'package:agent_api/src/model/discrepancy_checker_action_request.dart';
 import 'package:agent_api/src/model/discrepancy_maker_action_request.dart';
-import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 
 class ReconciliationControllerLedgerServiceApi {
-
   final Dio _dio;
 
   final Serializers _serializers;
@@ -23,11 +20,11 @@ class ReconciliationControllerLedgerServiceApi {
   const ReconciliationControllerLedgerServiceApi(this._dio, this._serializers);
 
   /// checkerApprove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [caseId] 
-  /// * [discrepancyCheckerActionRequest] 
+  /// * [caseId]
+  /// * [discrepancyCheckerActionRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -37,7 +34,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> checkerApprove({ 
+  Future<Response<TransactionResponse>> checkerApprove({
     required String caseId,
     required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
     CancelToken? cancelToken,
@@ -47,7 +44,11 @@ class ReconciliationControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/checker-approve'.replaceAll('{' r'caseId' '}', encodeQueryParameter(_serializers, caseId, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/checker-approve'
+        .replaceAll(
+            '{' r'caseId' '}',
+            encodeQueryParameter(_serializers, caseId, const FullType(String))
+                .toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -65,11 +66,11 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       const _type = FullType(DiscrepancyCheckerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -92,11 +93,12 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -120,11 +122,11 @@ class ReconciliationControllerLedgerServiceApi {
   }
 
   /// checkerReject
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [caseId] 
-  /// * [discrepancyCheckerActionRequest] 
+  /// * [caseId]
+  /// * [discrepancyCheckerActionRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -134,7 +136,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> checkerReject({ 
+  Future<Response<TransactionResponse>> checkerReject({
     required String caseId,
     required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
     CancelToken? cancelToken,
@@ -144,7 +146,11 @@ class ReconciliationControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/checker-reject'.replaceAll('{' r'caseId' '}', encodeQueryParameter(_serializers, caseId, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/checker-reject'
+        .replaceAll(
+            '{' r'caseId' '}',
+            encodeQueryParameter(_serializers, caseId, const FullType(String))
+                .toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -162,11 +168,11 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       const _type = FullType(DiscrepancyCheckerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -189,11 +195,12 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -217,11 +224,11 @@ class ReconciliationControllerLedgerServiceApi {
   }
 
   /// makerPropose
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [caseId] 
-  /// * [discrepancyMakerActionRequest] 
+  /// * [caseId]
+  /// * [discrepancyMakerActionRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -231,7 +238,7 @@ class ReconciliationControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> makerPropose({ 
+  Future<Response<TransactionResponse>> makerPropose({
     required String caseId,
     required DiscrepancyMakerActionRequest discrepancyMakerActionRequest,
     CancelToken? cancelToken,
@@ -241,7 +248,11 @@ class ReconciliationControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/maker-action'.replaceAll('{' r'caseId' '}', encodeQueryParameter(_serializers, caseId, const FullType(String)).toString());
+    final _path = r'/api/v1/backoffice/discrepancy/{caseId}/maker-action'
+        .replaceAll(
+            '{' r'caseId' '}',
+            encodeQueryParameter(_serializers, caseId, const FullType(String))
+                .toString());
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -259,11 +270,11 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       const _type = FullType(DiscrepancyMakerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyMakerActionRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = _serializers.serialize(discrepancyMakerActionRequest,
+          specifiedType: _type);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
+        requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -286,11 +297,12 @@ class ReconciliationControllerLedgerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
+      _responseData = rawResponse == null
+          ? null
+          : _serializers.deserialize(
+              rawResponse,
+              specifiedType: const FullType(TransactionResponse),
+            ) as TransactionResponse;
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -312,5 +324,4 @@ class ReconciliationControllerLedgerServiceApi {
       extra: _response.extra,
     );
   }
-
 }

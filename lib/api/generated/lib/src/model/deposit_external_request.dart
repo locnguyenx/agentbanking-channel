@@ -14,13 +14,14 @@ part 'deposit_external_request.g.dart';
 ///
 /// Properties:
 /// * [amount] - Transaction amount in MYR
-/// * [currency] 
+/// * [currency]
 /// * [idempotencyKey] - Unique key to prevent duplicate transactions
 /// * [customerAccount] - Customer account number
 /// * [customerName] - Customer full name
-/// * [location] 
+/// * [location]
 @BuiltValue()
-abstract class DepositExternalRequest implements Built<DepositExternalRequest, DepositExternalRequestBuilder> {
+abstract class DepositExternalRequest
+    implements Built<DepositExternalRequest, DepositExternalRequestBuilder> {
   /// Transaction amount in MYR
   @BuiltValueField(wireName: r'amount')
   num get amount;
@@ -46,19 +47,26 @@ abstract class DepositExternalRequest implements Built<DepositExternalRequest, D
 
   DepositExternalRequest._();
 
-  factory DepositExternalRequest([void updates(DepositExternalRequestBuilder b)]) = _$DepositExternalRequest;
+  factory DepositExternalRequest(
+          [void updates(DepositExternalRequestBuilder b)]) =
+      _$DepositExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DepositExternalRequestBuilder b) => b
-      ..currency = DepositExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(DepositExternalRequestBuilder b) =>
+      b..currency = DepositExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DepositExternalRequest> get serializer => _$DepositExternalRequestSerializer();
+  static Serializer<DepositExternalRequest> get serializer =>
+      _$DepositExternalRequestSerializer();
 }
 
-class _$DepositExternalRequestSerializer implements PrimitiveSerializer<DepositExternalRequest> {
+class _$DepositExternalRequestSerializer
+    implements PrimitiveSerializer<DepositExternalRequest> {
   @override
-  final Iterable<Type> types = const [DepositExternalRequest, _$DepositExternalRequest];
+  final Iterable<Type> types = const [
+    DepositExternalRequest,
+    _$DepositExternalRequest
+  ];
 
   @override
   final String wireName = r'DepositExternalRequest';
@@ -110,7 +118,9 @@ class _$DepositExternalRequestSerializer implements PrimitiveSerializer<DepositE
     DepositExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -197,15 +207,17 @@ class _$DepositExternalRequestSerializer implements PrimitiveSerializer<DepositE
 }
 
 class DepositExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const DepositExternalRequestCurrencyEnum MYR = _$depositExternalRequestCurrencyEnum_MYR;
+  static const DepositExternalRequestCurrencyEnum MYR =
+      _$depositExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<DepositExternalRequestCurrencyEnum> get serializer => _$depositExternalRequestCurrencyEnumSerializer;
+  static Serializer<DepositExternalRequestCurrencyEnum> get serializer =>
+      _$depositExternalRequestCurrencyEnumSerializer;
 
-  const DepositExternalRequestCurrencyEnum._(String name): super(name);
+  const DepositExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<DepositExternalRequestCurrencyEnum> get values => _$depositExternalRequestCurrencyEnumValues;
-  static DepositExternalRequestCurrencyEnum valueOf(String name) => _$depositExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<DepositExternalRequestCurrencyEnum> get values =>
+      _$depositExternalRequestCurrencyEnumValues;
+  static DepositExternalRequestCurrencyEnum valueOf(String name) =>
+      _$depositExternalRequestCurrencyEnumValueOf(name);
 }
-

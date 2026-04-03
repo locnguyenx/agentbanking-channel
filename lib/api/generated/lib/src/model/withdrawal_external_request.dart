@@ -14,13 +14,15 @@ part 'withdrawal_external_request.g.dart';
 ///
 /// Properties:
 /// * [amount] - Transaction amount in MYR
-/// * [currency] 
+/// * [currency]
 /// * [idempotencyKey] - Unique key to prevent duplicate transactions
 /// * [customerCard] - Customer card number (PAN)
 /// * [customerPin] - Customer PIN (4-6 digits)
-/// * [location] 
+/// * [location]
 @BuiltValue()
-abstract class WithdrawalExternalRequest implements Built<WithdrawalExternalRequest, WithdrawalExternalRequestBuilder> {
+abstract class WithdrawalExternalRequest
+    implements
+        Built<WithdrawalExternalRequest, WithdrawalExternalRequestBuilder> {
   /// Transaction amount in MYR
   @BuiltValueField(wireName: r'amount')
   num get amount;
@@ -46,19 +48,26 @@ abstract class WithdrawalExternalRequest implements Built<WithdrawalExternalRequ
 
   WithdrawalExternalRequest._();
 
-  factory WithdrawalExternalRequest([void updates(WithdrawalExternalRequestBuilder b)]) = _$WithdrawalExternalRequest;
+  factory WithdrawalExternalRequest(
+          [void updates(WithdrawalExternalRequestBuilder b)]) =
+      _$WithdrawalExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(WithdrawalExternalRequestBuilder b) => b
-      ..currency = WithdrawalExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(WithdrawalExternalRequestBuilder b) =>
+      b..currency = WithdrawalExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<WithdrawalExternalRequest> get serializer => _$WithdrawalExternalRequestSerializer();
+  static Serializer<WithdrawalExternalRequest> get serializer =>
+      _$WithdrawalExternalRequestSerializer();
 }
 
-class _$WithdrawalExternalRequestSerializer implements PrimitiveSerializer<WithdrawalExternalRequest> {
+class _$WithdrawalExternalRequestSerializer
+    implements PrimitiveSerializer<WithdrawalExternalRequest> {
   @override
-  final Iterable<Type> types = const [WithdrawalExternalRequest, _$WithdrawalExternalRequest];
+  final Iterable<Type> types = const [
+    WithdrawalExternalRequest,
+    _$WithdrawalExternalRequest
+  ];
 
   @override
   final String wireName = r'WithdrawalExternalRequest';
@@ -108,7 +117,9 @@ class _$WithdrawalExternalRequestSerializer implements PrimitiveSerializer<Withd
     WithdrawalExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -133,7 +144,8 @@ class _$WithdrawalExternalRequestSerializer implements PrimitiveSerializer<Withd
         case r'currency':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(WithdrawalExternalRequestCurrencyEnum),
+            specifiedType:
+                const FullType(WithdrawalExternalRequestCurrencyEnum),
           ) as WithdrawalExternalRequestCurrencyEnum;
           result.currency = valueDes;
           break;
@@ -195,15 +207,17 @@ class _$WithdrawalExternalRequestSerializer implements PrimitiveSerializer<Withd
 }
 
 class WithdrawalExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const WithdrawalExternalRequestCurrencyEnum MYR = _$withdrawalExternalRequestCurrencyEnum_MYR;
+  static const WithdrawalExternalRequestCurrencyEnum MYR =
+      _$withdrawalExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<WithdrawalExternalRequestCurrencyEnum> get serializer => _$withdrawalExternalRequestCurrencyEnumSerializer;
+  static Serializer<WithdrawalExternalRequestCurrencyEnum> get serializer =>
+      _$withdrawalExternalRequestCurrencyEnumSerializer;
 
-  const WithdrawalExternalRequestCurrencyEnum._(String name): super(name);
+  const WithdrawalExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<WithdrawalExternalRequestCurrencyEnum> get values => _$withdrawalExternalRequestCurrencyEnumValues;
-  static WithdrawalExternalRequestCurrencyEnum valueOf(String name) => _$withdrawalExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<WithdrawalExternalRequestCurrencyEnum> get values =>
+      _$withdrawalExternalRequestCurrencyEnumValues;
+  static WithdrawalExternalRequestCurrencyEnum valueOf(String name) =>
+      _$withdrawalExternalRequestCurrencyEnumValueOf(name);
 }
-

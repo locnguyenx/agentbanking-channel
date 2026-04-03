@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:decimal/decimal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/core/offline/widgets/offline_indicator.dart';
@@ -15,37 +15,48 @@ import 'package:agentbanking_channel/features/transactions/widgets/funding_sourc
 import 'package:agentbanking_channel/features/transactions/widgets/balance_inquiry_result.dart';
 
 // Provider for the amount input
-final transactionAmountProvider = StateProvider.autoDispose<String>((ref) => '100.00');
+final transactionAmountProvider = StateProvider.autoDispose<String>((ref) => '');
 
 // Provider for the selected funding source
 final fundingSourceProvider = StateProvider.autoDispose<FundingSource>((ref) => FundingSource.CASH);
 
 // Provider for DuitNow Proxy ID
-final duitNowProxyProvider = StateProvider.autoDispose<String>((ref) => '0123456789');
+final duitNowProxyProvider = StateProvider.autoDispose<String>((ref) => '');
+
+// Provider for metadata (e.g. destinationAccount)
+final transactionMetadataProvider = StateProvider<Map<String, String>>((ref) => {});
+
+// Provider to toggle between Agent and Customer view (for dual-display simulation/BDD)
+final isCustomerViewProvider = StateProvider<bool>((ref) => false);
 
 class TransactionFlowScreen extends ConsumerWidget {
   final String title;
   final String serviceCode;
 
   const TransactionFlowScreen({
-    Key? key,
+    super.key,
     required this.title,
     required this.serviceCode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(transactionProvider);
+    
     final authState = ref.watch(authProvider);
     final agentId = authState.user?.agentId ?? 'AGENT_UNKNOWN';
     final amountText = ref.watch(transactionAmountProvider);
     final selectedSource = ref.watch(fundingSourceProvider);
+    final isCustomerView = ref.watch(isCustomerViewProvider);
     
-    // Auto-update funding source if it's the first build for withdrawal
-    if (state.status == TransactionStatus.idle && serviceCode == 'CASH_WITHDRAWAL' && selectedSource == FundingSource.CASH) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(fundingSourceProvider.notifier).state = FundingSource.CARD_EMV;
-      });
+    // Auto-update funding source if it's the first build (or if current source is not allowed)
+    if (state.status == TransactionStatus.idle) {
+      final allowed = FundingSource.allowedFor(serviceCode);
+      if (!allowed.contains(selectedSource)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(fundingSourceProvider.notifier).state = allowed.first;
+        });
+      }
     }
 
     return Scaffold(
@@ -57,34 +68,35 @@ class TransactionFlowScreen extends ConsumerWidget {
         centerTitle: true,
         actions: const [OfflineIndicator()],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(32),
-                side: BorderSide(color: Colors.grey.shade200),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildStateView(context, ref, state, agentId, amountText, selectedSource),
-                    if (state.status == TransactionStatus.failed)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32),
+                  side: BorderSide(color: Colors.grey.shade200),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildStateView(context, ref, state, agentId, amountText, selectedSource, isCustomerView),
+                      // Hidden state for BDD tests to verify
+                      Opacity(
+                        opacity: 0.0,
                         child: Text(
-                          state.error ?? 'Unknown Error', 
-                          style: const TextStyle(color: Colors.red, fontSize: 13),
-                          textAlign: TextAlign.center,
+                          'Status: ${state.status.name}${state.error != null ? " Error: ${state.error}" : ""}', 
+                          key: const Key('bdd_status_token')
                         ),
                       ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -94,37 +106,28 @@ class TransactionFlowScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStateView(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText, FundingSource selectedSource) {
+  Widget _buildStateView(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText, FundingSource selectedSource, bool isCustomerView) {
+    final currencyFormat = NumberFormat.currency(symbol: 'RM ', decimalDigits: 2);
+
     switch (state.status) {
       case TransactionStatus.idle:
-        final bool supportsMultiSource = ['BILL_PAY', 'TOP_UP', 'CASH_DEP', 'ESSP_PURCHASE', 'PIN_PURCHASE', 'SARAWAK_PAY', 'CASHLESS_PAY', 'JOMPAY'].contains(serviceCode);
-        
         return Column(
           children: [
-            if (supportsMultiSource) ...[
-              FundingSourceSelector(
-                key: const Key('funding_selector'),
-                selectedSource: selectedSource,
-                onSourceChanged: (source) => ref.read(fundingSourceProvider.notifier).state = source,
-              ),
-              const SizedBox(height: 16),
-              if (selectedSource == FundingSource.DUITNOW_MOBILE) ...[
-                TextField(
-                  onChanged: (v) => ref.read(duitNowProxyProvider.notifier).state = v,
-                  decoration: InputDecoration(
-                    labelText: 'DuitNow Proxy ID (Mobile/IC)',
-                    hintText: 'e.g. 0123456789',
-                    prefixIcon: const Icon(Icons.perm_identity),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
-              const SizedBox(height: 16),
-            ],
+            const SizedBox(height: 16),
+            FundingSourceSelector(
+              key: const Key('funding_selector'),
+              selectedSource: selectedSource,
+              availableSources: FundingSource.allowedFor(serviceCode),
+              onSourceChanged: (source) {
+                ref.read(fundingSourceProvider.notifier).state = source;
+              },
+            ),
+            const SizedBox(height: 24),
             _buildServiceSpecificInput(context, ref, agentId, amountText, selectedSource),
+            if (!['BILL_PAY', 'JOMPAY', 'TOP_UP', 'SARAWAK_PAY', 'CASHLESS_PAY', 'ESSP_PURCHASE', 'PIN_PURCHASE'].contains(serviceCode)) ...[
+              const SizedBox(height: 32),
+              _buildSharedAction(context, ref, state, agentId, amountText, selectedSource),
+            ],
           ],
         );
       case TransactionStatus.quoting:
@@ -145,11 +148,15 @@ class TransactionFlowScreen extends ConsumerWidget {
             const Text('Confirm Details', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 24),
             if (serviceCode != 'BALANCE_INQUIRY') ...[
-              _buildSummaryRow('Amount', 'RM ${state.quote?.amount}'),
+              _buildSummaryRow('Amount', currencyFormat.format(state.quote?.amount.toDouble() ?? 0)),
+              if (state.metadata?['customerName'] != null) ...[
+                const Divider(height: 24),
+                _buildSummaryRow('Recipient', state.metadata!['customerName']!),
+              ],
               const Divider(height: 24),
-              _buildSummaryRow('Transaction Fee', 'RM ${state.quote?.fee}'),
+              _buildSummaryRow('Transaction Fee', currencyFormat.format(state.quote?.fee.toDouble() ?? 0)),
               const Divider(height: 24),
-              _buildSummaryRow('Total to Deduct', 'RM ${state.quote?.total}', isBold: true),
+              _buildSummaryRow('Total to Deduct', currencyFormat.format(state.quote?.total.toDouble() ?? 0), isBold: true),
               const SizedBox(height: 32),
               if (selectedSource == FundingSource.CASH && serviceCode == 'CASH_DEPOSIT') 
                 Container(
@@ -164,36 +171,39 @@ class TransactionFlowScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.shade100),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'AGENT COMMISSION',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                        letterSpacing: 0.5,
+              
+              if (!isCustomerView && state.quote?.commission != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  margin: const EdgeInsets.only(top: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade100),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'AGENT COMMISSION',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          letterSpacing: 0.5,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'RM ${state.quote?.commission}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                      Text(
+                        'RM ${state.quote?.commission.toDouble().toStringAsFixed(2) ?? "0.00"}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
             ] else 
               const Text('Secure balance check initiated.', style: TextStyle(fontSize: 14)),
               
@@ -213,7 +223,7 @@ class TransactionFlowScreen extends ConsumerWidget {
                     onPressed: () => ref.read(transactionProvider.notifier).confirmConsent(
                       duitNowProxyId: ref.read(duitNowProxyProvider),
                     ),
-                    child: const Text('Confirm'),
+                    child: const Text('AGREE'),
                   ),
                 ),
               ],
@@ -247,7 +257,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             Icon(Icons.credit_card_outlined, size: 80, color: Colors.indigo),
             SizedBox(height: 24),
-            Text('Insert Customer Card', key: const Key('status_waiting_card'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Insert Customer Card', key: Key('status_waiting_card'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             SizedBox(height: 8),
             Text('Please use the attached card reader', style: TextStyle(color: Colors.grey, fontSize: 13)),
           ],
@@ -257,31 +267,96 @@ class TransactionFlowScreen extends ConsumerWidget {
           children: [
             Icon(Icons.pin_outlined, size: 80, color: Colors.indigo),
             SizedBox(height: 24),
-            Text('Enter Secure PIN', key: const Key('status_waiting_pin'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Enter Secure PIN', key: Key('status_waiting_pin'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             SizedBox(height: 8),
             Text('Customer should enter PIN on the PinPad', style: TextStyle(color: Colors.grey, fontSize: 13)),
           ],
         );
+      case TransactionStatus.waitingMyKadScan:
+        return Column(
+          children: [
+            Icon(Icons.fingerprint, size: 80, color: Colors.indigo),
+            SizedBox(height: 24),
+            Text('Please Scan MyKad & Thumb', key: Key('status_waiting_mykad_scan'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            SizedBox(height: 8),
+            Text('Insert MyKad into mobile reader and verify thumbprint', style: TextStyle(color: Colors.grey, fontSize: 13)),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                key: const Key('btn_main_action'),
+                onPressed: () => ref.read(transactionProvider.notifier).completeMyKadScan(),
+                child: const Text('SUBMIT TRANSACTION'),
+              ),
+            ),
+          ],
+        );
       case TransactionStatus.processingDuitNow:
       case TransactionStatus.processingBiller:
-        return const Center(
+        return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 24),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
               Text(
-                'Processing Biller...', 
+                ref.read(transactionProvider.notifier).getPollingStatusLabel(), 
                 key: const Key('status_processing_biller'),
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 'Checking transaction status with provider',
                 style: TextStyle(color: Colors.grey, fontSize: 13)
               ),
             ],
           ),
+        );
+      case TransactionStatus.displayingQr:
+        return Column(
+          children: [
+            const Icon(Icons.qr_code_scanner, size: 80, color: Colors.indigo),
+            const SizedBox(height: 24),
+            const Text('Scan to Pay', key: Key('status_displaying_qr'), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            SizedBox(height: 8),
+            const Text('Customer should scan this QR with their DuitNow app', style: TextStyle(color: Colors.grey, fontSize: 13)),
+            const SizedBox(height: 32),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.grey.shade200, width: 2),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Simulated QR Payload Display
+                  Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.qr_code_2, size: 150, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Ref: ${state.result?.referenceId}',
+                    style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 48),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            const Text('Waiting for Payment Notification...', style: TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.w500)),
+          ],
         );
       case TransactionStatus.success:
         if (serviceCode == 'BALANCE_INQUIRY' && state.result?.balance != null) {
@@ -309,6 +384,21 @@ class TransactionFlowScreen extends ConsumerWidget {
                 children: [
                   _buildSummaryRow('Reference ID', state.result?.referenceId ?? 'N/A', small: true),
                   const SizedBox(height: 8),
+                  _buildSummaryRow('Service', state.serviceCode ?? 'N/A', small: true),
+                  if (state.quote?.commission != null && !isCustomerView) ...[
+                    const Divider(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('AGENT COMMISSION', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue)),
+                        Text('RM ${state.quote!.commission.toDouble().toStringAsFixed(2)}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue)),
+                      ],
+                    ),
+                  ],
+                  if (state.quote != null) ...[
+                    _buildSummaryRow('Commission', 'RM ${state.quote!.commission.toStringAsFixed(2)}', isBold: true, small: true),
+                  ],
+                  const SizedBox(height: 8),
                   _buildSummaryRow('Status', 'APPROVED', color: Colors.green, small: true),
                 ],
               ),
@@ -333,6 +423,12 @@ class TransactionFlowScreen extends ConsumerWidget {
             const Icon(Icons.error_outline, color: Colors.red, size: 80),
             const SizedBox(height: 24),
             const Text('Transaction Failed', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text(
+              state.error ?? 'An unexpected error occurred',
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey, fontSize: 13),
+            ),
             const SizedBox(height: 48),
             SizedBox(
               width: double.infinity,
@@ -370,6 +466,7 @@ class TransactionFlowScreen extends ConsumerWidget {
             req.ref1,
             req.ref2,
             Decimal.parse(req.amount.toString()),
+            agentId,
           );
         },
       );
@@ -399,12 +496,15 @@ class TransactionFlowScreen extends ConsumerWidget {
       );
     } else if (serviceCode == 'CASHLESS_PAY') {
       return CashlessPaymentForm(
-        onSubmit: (method, amount) {
+        onSubmit: (_, amount) {
+          final source = ref.read(fundingSourceProvider);
+          final method = source == FundingSource.DUITNOW_QR ? 'QR_CODE' : 'DEBIT_CARD';
+          
           ref.read(transactionProvider.notifier).startTransaction(
             amount, 
             agentId, 
             serviceCode: serviceCode,
-            fundingSource: ref.read(fundingSourceProvider),
+            fundingSource: source,
             metadata: {'paymentMethod': method},
           );
         },
@@ -431,7 +531,7 @@ class TransactionFlowScreen extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -441,11 +541,29 @@ class TransactionFlowScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
+        if (serviceCode == 'CASH_DEPOSIT' || serviceCode == 'DUITNOW_TRANSFER') ...[
+          Text(serviceCode == 'DUITNOW_TRANSFER' ? 'DuitNow Proxy (Mobile/MyKad)' : 'Destination Account', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 12),
+          TextField(
+            key: Key(serviceCode == 'DUITNOW_TRANSFER' ? 'field_duitnow_proxy' : 'field_destination_account'),
+            onChanged: (v) {
+              ref.read(transactionMetadataProvider.notifier).state = {...ref.read(transactionMetadataProvider), 'destinationAccount': v};
+            },
+            decoration: InputDecoration(
+              hintText: 'Enter Account Number',
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            ),
+          ),
+          const SizedBox(height: 24),
+        ],
         if (needsAmount) ...[
           const Text('Enter Amount', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const Text('Enter amount to continue', style: TextStyle(color: Colors.grey, fontSize: 12)),
           const SizedBox(height: 32),
           TextField(
+            key: const Key('field_amount'),
             onChanged: (value) => ref.read(transactionAmountProvider.notifier).state = value,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.center,
@@ -475,27 +593,42 @@ class TransactionFlowScreen extends ConsumerWidget {
             ],
           ),
           
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: () {
-              final amount = Decimal.tryParse(amountText) ?? Decimal.zero;
-              if (needsAmount && amount <= Decimal.zero) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
-                return;
-              }
-              ref.read(transactionProvider.notifier).startTransaction(
-                amount, 
-                agentId, 
-                serviceCode: serviceCode,
-                fundingSource: selectedSource,
-              );
-            },
-            child: Text(needsAmount ? 'GET QUOTE' : 'PROCEED'),
-          ),
-        ),
       ],
+    );
+  }
+
+  Widget _buildSharedAction(BuildContext context, WidgetRef ref, TransactionState state, String agentId, String amountText, FundingSource selectedSource) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: () {
+                final amount = Decimal.tryParse(amountText) ?? Decimal.zero;
+          if (amount <= Decimal.zero && serviceCode != 'BALANCE_INQUIRY') {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount')));
+            return;
+          }
+          final metadata = ref.read(transactionMetadataProvider);
+          if (state.status == TransactionStatus.waitingConsent) {
+            ref.read(transactionProvider.notifier).confirmConsent();
+          } else if (serviceCode == 'BALANCE_INQUIRY') {
+            ref.read(transactionProvider.notifier).balanceInquiry(agentId);
+          } else {
+            ref.read(transactionProvider.notifier).startTransaction(
+              amount, 
+              agentId, 
+              serviceCode: serviceCode,
+              fundingSource: selectedSource,
+              metadata: metadata,
+            );
+          }
+        },
+        key: const Key('btn_main_action'),
+        child: Text(
+          serviceCode == 'BALANCE_INQUIRY' ? 'PROCEED' : 
+          (state.status == TransactionStatus.waitingConsent) ? (selectedSource == FundingSource.CASH ? 'CONFIRM CASH' : 'AGREE & PROCEED') : 'GET QUOTE'
+        ),
+      ),
     );
   }
 

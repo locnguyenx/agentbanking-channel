@@ -13,16 +13,18 @@ part 'application_submit_request.g.dart';
 ///
 /// Properties:
 /// * [agentCode] - Unique agent code
-/// * [businessName] 
-/// * [tier] 
-/// * [mykadNumber] 
-/// * [phoneNumber] 
-/// * [merchantGpsLat] 
-/// * [merchantGpsLng] 
-/// * [email] 
-/// * [address] 
+/// * [businessName]
+/// * [tier]
+/// * [mykadNumber]
+/// * [phoneNumber]
+/// * [merchantGpsLat]
+/// * [merchantGpsLng]
+/// * [email]
+/// * [address]
 @BuiltValue()
-abstract class ApplicationSubmitRequest implements Built<ApplicationSubmitRequest, ApplicationSubmitRequestBuilder> {
+abstract class ApplicationSubmitRequest
+    implements
+        Built<ApplicationSubmitRequest, ApplicationSubmitRequestBuilder> {
   /// Unique agent code
   @BuiltValueField(wireName: r'agentCode')
   String get agentCode;
@@ -54,18 +56,25 @@ abstract class ApplicationSubmitRequest implements Built<ApplicationSubmitReques
 
   ApplicationSubmitRequest._();
 
-  factory ApplicationSubmitRequest([void updates(ApplicationSubmitRequestBuilder b)]) = _$ApplicationSubmitRequest;
+  factory ApplicationSubmitRequest(
+          [void updates(ApplicationSubmitRequestBuilder b)]) =
+      _$ApplicationSubmitRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ApplicationSubmitRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ApplicationSubmitRequest> get serializer => _$ApplicationSubmitRequestSerializer();
+  static Serializer<ApplicationSubmitRequest> get serializer =>
+      _$ApplicationSubmitRequestSerializer();
 }
 
-class _$ApplicationSubmitRequestSerializer implements PrimitiveSerializer<ApplicationSubmitRequest> {
+class _$ApplicationSubmitRequestSerializer
+    implements PrimitiveSerializer<ApplicationSubmitRequest> {
   @override
-  final Iterable<Type> types = const [ApplicationSubmitRequest, _$ApplicationSubmitRequest];
+  final Iterable<Type> types = const [
+    ApplicationSubmitRequest,
+    _$ApplicationSubmitRequest
+  ];
 
   @override
   final String wireName = r'ApplicationSubmitRequest';
@@ -132,7 +141,9 @@ class _$ApplicationSubmitRequestSerializer implements PrimitiveSerializer<Applic
     ApplicationSubmitRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -240,19 +251,23 @@ class _$ApplicationSubmitRequestSerializer implements PrimitiveSerializer<Applic
 }
 
 class ApplicationSubmitRequestTierEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MICRO')
-  static const ApplicationSubmitRequestTierEnum MICRO = _$applicationSubmitRequestTierEnum_MICRO;
+  static const ApplicationSubmitRequestTierEnum MICRO =
+      _$applicationSubmitRequestTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const ApplicationSubmitRequestTierEnum STANDARD = _$applicationSubmitRequestTierEnum_STANDARD;
+  static const ApplicationSubmitRequestTierEnum STANDARD =
+      _$applicationSubmitRequestTierEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const ApplicationSubmitRequestTierEnum PREMIUM = _$applicationSubmitRequestTierEnum_PREMIUM;
+  static const ApplicationSubmitRequestTierEnum PREMIUM =
+      _$applicationSubmitRequestTierEnum_PREMIUM;
 
-  static Serializer<ApplicationSubmitRequestTierEnum> get serializer => _$applicationSubmitRequestTierEnumSerializer;
+  static Serializer<ApplicationSubmitRequestTierEnum> get serializer =>
+      _$applicationSubmitRequestTierEnumSerializer;
 
-  const ApplicationSubmitRequestTierEnum._(String name): super(name);
+  const ApplicationSubmitRequestTierEnum._(String name) : super(name);
 
-  static BuiltSet<ApplicationSubmitRequestTierEnum> get values => _$applicationSubmitRequestTierEnumValues;
-  static ApplicationSubmitRequestTierEnum valueOf(String name) => _$applicationSubmitRequestTierEnumValueOf(name);
+  static BuiltSet<ApplicationSubmitRequestTierEnum> get values =>
+      _$applicationSubmitRequestTierEnumValues;
+  static ApplicationSubmitRequestTierEnum valueOf(String name) =>
+      _$applicationSubmitRequestTierEnumValueOf(name);
 }
-

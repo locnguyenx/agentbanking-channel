@@ -8,11 +8,11 @@ class BalanceInquiryResult extends StatefulWidget {
   final VoidCallback onDone;
 
   const BalanceInquiryResult({
-    Key? key,
+    super.key,
     required this.balance,
     required this.referenceId,
     required this.onDone,
-  }) : super(key: key);
+  });
 
   @override
   State<BalanceInquiryResult> createState() => _BalanceInquiryResultState();
@@ -32,6 +32,7 @@ class _BalanceInquiryResultState extends State<BalanceInquiryResult> {
         const SizedBox(height: 24),
         const Text(
           'Balance Inquiry Successful',
+          key: Key('status_success'),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),

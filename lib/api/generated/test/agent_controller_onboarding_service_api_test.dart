@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 
-
 /// tests for AgentControllerOnboardingServiceApi
 void main() {
   final instance = AgentApi().getAgentControllerOnboardingServiceApi();
@@ -31,6 +30,5 @@ void main() {
     test('test updateAgent', () async {
       // TODO
     });
-
   });
 }

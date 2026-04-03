@@ -11,11 +11,14 @@ part 'dashboard_response_daily_stats_inner.g.dart';
 /// DashboardResponseDailyStatsInner
 ///
 /// Properties:
-/// * [date] 
-/// * [transactionCount] 
-/// * [volume] 
+/// * [date]
+/// * [transactionCount]
+/// * [volume]
 @BuiltValue()
-abstract class DashboardResponseDailyStatsInner implements Built<DashboardResponseDailyStatsInner, DashboardResponseDailyStatsInnerBuilder> {
+abstract class DashboardResponseDailyStatsInner
+    implements
+        Built<DashboardResponseDailyStatsInner,
+            DashboardResponseDailyStatsInnerBuilder> {
   @BuiltValueField(wireName: r'date')
   String? get date;
 
@@ -27,18 +30,25 @@ abstract class DashboardResponseDailyStatsInner implements Built<DashboardRespon
 
   DashboardResponseDailyStatsInner._();
 
-  factory DashboardResponseDailyStatsInner([void updates(DashboardResponseDailyStatsInnerBuilder b)]) = _$DashboardResponseDailyStatsInner;
+  factory DashboardResponseDailyStatsInner(
+          [void updates(DashboardResponseDailyStatsInnerBuilder b)]) =
+      _$DashboardResponseDailyStatsInner;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DashboardResponseDailyStatsInnerBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DashboardResponseDailyStatsInner> get serializer => _$DashboardResponseDailyStatsInnerSerializer();
+  static Serializer<DashboardResponseDailyStatsInner> get serializer =>
+      _$DashboardResponseDailyStatsInnerSerializer();
 }
 
-class _$DashboardResponseDailyStatsInnerSerializer implements PrimitiveSerializer<DashboardResponseDailyStatsInner> {
+class _$DashboardResponseDailyStatsInnerSerializer
+    implements PrimitiveSerializer<DashboardResponseDailyStatsInner> {
   @override
-  final Iterable<Type> types = const [DashboardResponseDailyStatsInner, _$DashboardResponseDailyStatsInner];
+  final Iterable<Type> types = const [
+    DashboardResponseDailyStatsInner,
+    _$DashboardResponseDailyStatsInner
+  ];
 
   @override
   final String wireName = r'DashboardResponseDailyStatsInner';
@@ -77,7 +87,9 @@ class _$DashboardResponseDailyStatsInnerSerializer implements PrimitiveSerialize
     DashboardResponseDailyStatsInner object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -141,4 +153,3 @@ class _$DashboardResponseDailyStatsInnerSerializer implements PrimitiveSerialize
     return result.build();
   }
 }
-

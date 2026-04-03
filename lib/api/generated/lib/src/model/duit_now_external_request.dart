@@ -12,14 +12,15 @@ part 'duit_now_external_request.g.dart';
 /// DuitNowExternalRequest
 ///
 /// Properties:
-/// * [amount] 
-/// * [currency] 
-/// * [idempotencyKey] 
-/// * [proxyType] 
-/// * [proxyValue] 
-/// * [recipientName] 
+/// * [amount]
+/// * [currency]
+/// * [idempotencyKey]
+/// * [proxyType]
+/// * [proxyValue]
+/// * [recipientName]
 @BuiltValue()
-abstract class DuitNowExternalRequest implements Built<DuitNowExternalRequest, DuitNowExternalRequestBuilder> {
+abstract class DuitNowExternalRequest
+    implements Built<DuitNowExternalRequest, DuitNowExternalRequestBuilder> {
   @BuiltValueField(wireName: r'amount')
   num get amount;
 
@@ -42,18 +43,25 @@ abstract class DuitNowExternalRequest implements Built<DuitNowExternalRequest, D
 
   DuitNowExternalRequest._();
 
-  factory DuitNowExternalRequest([void updates(DuitNowExternalRequestBuilder b)]) = _$DuitNowExternalRequest;
+  factory DuitNowExternalRequest(
+          [void updates(DuitNowExternalRequestBuilder b)]) =
+      _$DuitNowExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DuitNowExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DuitNowExternalRequest> get serializer => _$DuitNowExternalRequestSerializer();
+  static Serializer<DuitNowExternalRequest> get serializer =>
+      _$DuitNowExternalRequestSerializer();
 }
 
-class _$DuitNowExternalRequestSerializer implements PrimitiveSerializer<DuitNowExternalRequest> {
+class _$DuitNowExternalRequestSerializer
+    implements PrimitiveSerializer<DuitNowExternalRequest> {
   @override
-  final Iterable<Type> types = const [DuitNowExternalRequest, _$DuitNowExternalRequest];
+  final Iterable<Type> types = const [
+    DuitNowExternalRequest,
+    _$DuitNowExternalRequest
+  ];
 
   @override
   final String wireName = r'DuitNowExternalRequest';
@@ -103,7 +111,9 @@ class _$DuitNowExternalRequestSerializer implements PrimitiveSerializer<DuitNowE
     DuitNowExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -190,34 +200,42 @@ class _$DuitNowExternalRequestSerializer implements PrimitiveSerializer<DuitNowE
 }
 
 class DuitNowExternalRequestCurrencyEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const DuitNowExternalRequestCurrencyEnum MYR = _$duitNowExternalRequestCurrencyEnum_MYR;
+  static const DuitNowExternalRequestCurrencyEnum MYR =
+      _$duitNowExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<DuitNowExternalRequestCurrencyEnum> get serializer => _$duitNowExternalRequestCurrencyEnumSerializer;
+  static Serializer<DuitNowExternalRequestCurrencyEnum> get serializer =>
+      _$duitNowExternalRequestCurrencyEnumSerializer;
 
-  const DuitNowExternalRequestCurrencyEnum._(String name): super(name);
+  const DuitNowExternalRequestCurrencyEnum._(String name) : super(name);
 
-  static BuiltSet<DuitNowExternalRequestCurrencyEnum> get values => _$duitNowExternalRequestCurrencyEnumValues;
-  static DuitNowExternalRequestCurrencyEnum valueOf(String name) => _$duitNowExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<DuitNowExternalRequestCurrencyEnum> get values =>
+      _$duitNowExternalRequestCurrencyEnumValues;
+  static DuitNowExternalRequestCurrencyEnum valueOf(String name) =>
+      _$duitNowExternalRequestCurrencyEnumValueOf(name);
 }
 
 class DuitNowExternalRequestProxyTypeEnum extends EnumClass {
-
   @BuiltValueEnumConst(wireName: r'IC')
-  static const DuitNowExternalRequestProxyTypeEnum IC = _$duitNowExternalRequestProxyTypeEnum_IC;
+  static const DuitNowExternalRequestProxyTypeEnum IC =
+      _$duitNowExternalRequestProxyTypeEnum_IC;
   @BuiltValueEnumConst(wireName: r'PHONE')
-  static const DuitNowExternalRequestProxyTypeEnum PHONE = _$duitNowExternalRequestProxyTypeEnum_PHONE;
+  static const DuitNowExternalRequestProxyTypeEnum PHONE =
+      _$duitNowExternalRequestProxyTypeEnum_PHONE;
   @BuiltValueEnumConst(wireName: r'EMAIL')
-  static const DuitNowExternalRequestProxyTypeEnum EMAIL = _$duitNowExternalRequestProxyTypeEnum_EMAIL;
+  static const DuitNowExternalRequestProxyTypeEnum EMAIL =
+      _$duitNowExternalRequestProxyTypeEnum_EMAIL;
   @BuiltValueEnumConst(wireName: r'TGAN')
-  static const DuitNowExternalRequestProxyTypeEnum TGAN = _$duitNowExternalRequestProxyTypeEnum_TGAN;
+  static const DuitNowExternalRequestProxyTypeEnum TGAN =
+      _$duitNowExternalRequestProxyTypeEnum_TGAN;
 
-  static Serializer<DuitNowExternalRequestProxyTypeEnum> get serializer => _$duitNowExternalRequestProxyTypeEnumSerializer;
+  static Serializer<DuitNowExternalRequestProxyTypeEnum> get serializer =>
+      _$duitNowExternalRequestProxyTypeEnumSerializer;
 
-  const DuitNowExternalRequestProxyTypeEnum._(String name): super(name);
+  const DuitNowExternalRequestProxyTypeEnum._(String name) : super(name);
 
-  static BuiltSet<DuitNowExternalRequestProxyTypeEnum> get values => _$duitNowExternalRequestProxyTypeEnumValues;
-  static DuitNowExternalRequestProxyTypeEnum valueOf(String name) => _$duitNowExternalRequestProxyTypeEnumValueOf(name);
+  static BuiltSet<DuitNowExternalRequestProxyTypeEnum> get values =>
+      _$duitNowExternalRequestProxyTypeEnumValues;
+  static DuitNowExternalRequestProxyTypeEnum valueOf(String name) =>
+      _$duitNowExternalRequestProxyTypeEnumValueOf(name);
 }
-

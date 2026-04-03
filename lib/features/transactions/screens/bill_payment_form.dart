@@ -5,7 +5,7 @@ import 'package:agentbanking_channel/core/utils/openapi_validators.dart';
 class BillPaymentForm extends StatefulWidget {
   final Function(String billerCode, String ref1, Decimal amount) onSubmit;
 
-  const BillPaymentForm({Key? key, required this.onSubmit}) : super(key: key);
+  const BillPaymentForm({super.key, required this.onSubmit});
 
   @override
   _BillPaymentFormState createState() => _BillPaymentFormState();
@@ -21,6 +21,8 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
     {'name': 'JomPAY', 'code': 'JOMPAY'},
     {'name': 'Tenaga Nasional Berhad (TNB)', 'code': '5454'},
     {'name': 'Telekom Malaysia (TM)', 'code': '8888'},
+    {'name': 'Astro RPN', 'code': 'ASTRO'},
+    {'name': 'EPF', 'code': 'EPF'},
     {'name': 'Air Selangor', 'code': '1234'},
     {'name': 'Indah Water Konsortium', 'code': '5566'},
   ];
@@ -57,15 +59,14 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
               },
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Please select a biller';
-                if (v == 'JOMPAY') return null;
-                return OpenApiValidators.regex(v, r'^[0-9]{3,10}$');
+                return null;
               },
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _refController,
               decoration: const InputDecoration(
-                labelText: 'Ref-1 (Account Number)',
+                labelText: 'Ref-1',
                 border: OutlineInputBorder(),
               ),
               validator: (v) => OpenApiValidators.length(v, minLen: 5, maxLen: 20),
@@ -74,19 +75,18 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(
-                labelText: 'Amount (RM)',
+                labelText: 'Amount',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
-              validator: (v) => OpenApiValidators.minMax(v, min: 0.01, max: 10000.0),
+              validator: (v) => OpenApiValidators.minMax(v, min: 0.01),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
               ),
+              key: const Key('btn_main_action'),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   widget.onSubmit(
@@ -96,7 +96,7 @@ class _BillPaymentFormState extends State<BillPaymentForm> {
                   );
                 }
               },
-              child: const Text('PROCEED', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text('PROCEED'),
             ),
           ],
         ),

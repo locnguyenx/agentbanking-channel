@@ -1,3 +1,4 @@
+import 'package:agentbanking_channel/features/agent_onboarding/screens/agent_onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
@@ -5,7 +6,7 @@ import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/dashboard/dashboard_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -133,6 +134,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           : () => ref.read(authProvider.notifier).loginBiometric(),
                       icon: const Icon(Icons.fingerprint),
                       label: const Text('Login via Biometric'),
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      key: const Key('btn_go_to_onboard'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const AgentOnboardingScreen()),
+                        );
+                      },
+                      child: const Text('New Agent? Register Now'),
                     ),
                   ],
                 ),
