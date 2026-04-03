@@ -64,6 +64,7 @@ class MockMyKadScanner extends Mock implements IMyKadScanner {}
 
 void main() {
   late TransactionNotifier notifier;
+  late ManualMockRef mockRef;
   late ComplianceNotifier complianceNotifier;
   late ManualMockTransactionRepository mockRepo;
   late MockICardReader mockCardReader;
@@ -83,9 +84,10 @@ void main() {
     complianceNotifier = ComplianceNotifier(secureStorage: fakeStorage);
 
     fakeEodTimer = FakeEodTimerService();
+    mockRef = ManualMockRef();
 
     notifier = TransactionNotifier(
-      ref: ManualMockRef(),
+      ref: mockRef,
       repository: mockRepo,
       cardReader: mockCardReader,
       pinPad: mockPinPad,
@@ -101,6 +103,7 @@ void main() {
   test('Locked merchant cannot start transaction', () async {
     // 1. Freeze
     complianceNotifier.freeze('VELOCITY_EXCEEDED');
+    mockRef.complianceOverride = complianceNotifier.state;
     expect(complianceNotifier.state.isFrozen, true);
 
     // 2. Try start transaction
@@ -126,6 +129,7 @@ void main() {
     expect(complianceNotifier.state.isFrozen, true);
     
     await unlockFuture;
+    mockRef.complianceOverride = complianceNotifier.state;
     expect(complianceNotifier.state.isFrozen, false);
 
     // 3. Start transaction now should work

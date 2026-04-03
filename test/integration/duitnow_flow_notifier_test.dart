@@ -5,19 +5,38 @@ import 'package:agentbanking_channel/features/transactions/providers/duitnow_flo
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
+import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
+import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:decimal/decimal.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 
 import 'test_fakes.dart';
 
 void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeFloatNotifier fakeFloat;
+  late FakeRef fakeRef;
+  late FakeGeolocator fakeGeolocator;
   late FakeReversalService fakeReversal;
   late ProviderContainer container;
 
   setUp(() {
     fakeRepo = FakeTransactionRepository();
     fakeFloat = FakeFloatNotifier();
+    fakeRef = FakeRef();
+    fakeGeolocator = FakeGeolocator();
     fakeReversal = FakeReversalService();
+
+    // Stub mandatory providers
+    final authNotifier = FakeAuthNotifier(user: AuthUser(agentId: 'AGENT-123', name: 'AHMAD', tier: 'PLATINUM'));
+    final complianceNotifier = FakeComplianceNotifier(frozen: false);
+    fakeRef.stubProvider(complianceProvider, complianceNotifier.state);
+    fakeRef.stubProvider(complianceProvider.notifier, complianceNotifier);
+    fakeRef.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService(locked: false));
+    fakeRef.stubProvider(authProvider, authNotifier.state);
+    fakeRef.stubProvider(authProvider.notifier, authNotifier);
+
     container = ProviderContainer(overrides: [
       authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
     ]);
@@ -43,7 +62,7 @@ void main() {
 
   DuitNowFlowNotifier createNotifier() {
     return DuitNowFlowNotifier(
-      ref: container.read(Provider((ref) => ref)),
+      ref: fakeRef,
       repository: fakeRepo,
       floatNotifier: fakeFloat,
       reversalService: fakeReversal,

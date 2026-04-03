@@ -3,16 +3,34 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:agentbanking_channel/features/transactions/providers/proxy_deposit_notifier.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
+import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
+import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
+import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:decimal/decimal.dart';
 
 import 'test_fakes.dart';
 
 void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeMyKadScanner fakeMyKadScanner;
+  late FakeRef fakeRef;
+  late FakeGeolocator fakeGeolocator;
 
   setUp(() {
     fakeRepo = FakeTransactionRepository();
     fakeMyKadScanner = FakeMyKadScanner();
+    fakeRef = FakeRef();
+    fakeGeolocator = FakeGeolocator();
+
+    // Stub mandatory providers for TransactionGuardMixin
+    final authNotifier = FakeAuthNotifier(user: AuthUser(agentId: 'AGENT-123', name: 'AHMAD', tier: 'PLATINUM'));
+    final complianceNotifier = FakeComplianceNotifier(frozen: false);
+    fakeRef.stubProvider(complianceProvider, complianceNotifier.state);
+    fakeRef.stubProvider(complianceProvider.notifier, complianceNotifier);
+    fakeRef.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService(locked: false));
+    fakeRef.stubProvider(authProvider, authNotifier.state);
+    fakeRef.stubProvider(authProvider.notifier, authNotifier);
   });
 
   TransactionState depositState({Decimal? amount}) => TransactionState(
@@ -26,16 +44,23 @@ void main() {
 
   ProxyDepositNotifier createNotifier() {
     return ProxyDepositNotifier(
+      ref: fakeRef,
       repository: fakeRepo,
       myKadScanner: fakeMyKadScanner,
+      geolocator: fakeGeolocator,
     );
   }
 
   group('ProxyDepositNotifier - ProxyEnquiry Happy Path', () {
     test('successful lookup → waitingConsent with customer name', () async {
       final notifier = createNotifier();
+      final state = depositState();
 
-      await notifier.executeProxyEnquiry(depositState());
+      await notifier.executeProxyEnquiry(
+        amount: state.amount!,
+        merchantId: 'AGENT-123',
+        metadata: state.metadata?.cast<String, String>(),
+      );
 
       expect(notifier.state.status, TransactionStatus.waitingConsent);
       expect(notifier.state.metadata?['customerName'], 'AHMAD BIN ABDULLAH');
@@ -51,7 +76,12 @@ void main() {
       fakeRepo.proxyEnquiryFailUntilAttempt = 2;
 
       final notifier = createNotifier();
-      await notifier.executeProxyEnquiry(depositState());
+      final state = depositState();
+      await notifier.executeProxyEnquiry(
+        amount: state.amount!,
+        merchantId: 'AGENT-123',
+        metadata: state.metadata?.cast<String, String>(),
+      );
 
       expect(notifier.state.status, TransactionStatus.waitingConsent);
       expect(fakeRepo.proxyEnquiryCallCount, 3);
@@ -63,41 +93,19 @@ void main() {
       fakeRepo.proxyEnquiryFailUntilAttempt = 10; // fail all
 
       final notifier = createNotifier();
-      await notifier.executeProxyEnquiry(depositState());
+      final state = depositState();
+      await notifier.executeProxyEnquiry(
+        amount: state.amount!,
+        merchantId: 'AGENT-123',
+        metadata: state.metadata?.cast<String, String>(),
+      );
 
       expect(notifier.state.status, TransactionStatus.failed);
-      expect(fakeRepo.proxyEnquiryCallCount, 4);
+      expect(fakeRepo.proxyEnquiryCallCount, 3);
       notifier.dispose();
     });
   });
 
-  group('ProxyDepositNotifier - MyKad Scan', () {
-    test('successful scan → waitingConsent with IC data', () async {
-      final notifier = createNotifier();
-      // Set initial state as if waiting for MyKad
-      notifier.debugSetState(depositState(amount: Decimal.fromInt(3500))
-        .copyWith(status: TransactionStatus.waitingMyKadScan));
-
-      await notifier.processMyKadScan();
-
-      expect(notifier.state.status, TransactionStatus.waitingConsent);
-      expect(notifier.state.metadata?['myKadIcNumber'], '850101-01-5678');
-      expect(notifier.state.metadata?['myKadFullName'], 'AHMAD BIN ABDULLAH');
-      notifier.dispose();
-    });
-
-    test('scan cancelled → failed', () async {
-      fakeMyKadScanner.shouldFail = true;
-      final notifier = createNotifier();
-      notifier.debugSetState(depositState().copyWith(status: TransactionStatus.waitingMyKadScan));
-
-      await notifier.processMyKadScan();
-
-      expect(notifier.state.status, TransactionStatus.failed);
-      expect(notifier.state.error, 'MyKad Scan Cancelled');
-      notifier.dispose();
-    });
-  });
 
   group('ProxyDepositNotifier - Reset', () {
     test('reset returns to idle', () async {

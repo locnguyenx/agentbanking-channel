@@ -215,7 +215,7 @@ void main() {
       );
 
       mockRepo.mockExecution = TransactionExecutionResponse(
-        status: 'SUCCESS',
+        status: 'PENDING',
         referenceId: 'REF-DUT-003',
       );
       

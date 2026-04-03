@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/main.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/core/network/dio_provider.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';

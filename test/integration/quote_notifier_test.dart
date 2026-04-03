@@ -80,11 +80,11 @@ void main() {
       notifier.dispose();
     });
 
-    test('RM 5,000 exactly → passes validation', () async {
+    test('RM 3,000 exactly for Card → passes validation', () async {
       final notifier = createNotifier();
 
       await notifier.startQuote(
-        Decimal.fromInt(5000), 'MERCHANT_001',
+        Decimal.fromInt(3000), 'MERCHANT_001',
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
@@ -103,15 +103,29 @@ void main() {
       );
 
       expect(notifier.state.status, TransactionStatus.waitingMyKadScan);
-      expect(notifier.state.error, contains('ERR_VAL_AMOUNT_EXCEEDS_LIMIT'));
+      // No error should be present for valid STP interrupt
+      expect(notifier.state.error, isNull);
       notifier.dispose();
     });
 
-    test('cash RM 3,000 exactly → passes (no MyKad needed)', () async {
+    test('cash RM 3,000 exactly → triggers MyKad Scan (STP threshold)', () async {
       final notifier = createNotifier();
 
       await notifier.startQuote(
         Decimal.fromInt(3000), 'MERCHANT_001',
+        serviceCode: 'CASH_DEPOSIT',
+        fundingSource: FundingSource.CASH,
+      );
+
+      expect(notifier.state.status, TransactionStatus.waitingMyKadScan);
+      notifier.dispose();
+    });
+
+    test('cash RM 2,999 → passes (no MyKad needed)', () async {
+      final notifier = createNotifier();
+
+      await notifier.startQuote(
+        Decimal.fromInt(2999), 'MERCHANT_001',
         serviceCode: 'CASH_DEPOSIT',
         fundingSource: FundingSource.CASH,
       );

@@ -44,7 +44,11 @@ class DuitNowFlowNotifier extends StateNotifier<TransactionState> {
         amount: state.amount ?? Decimal.zero,
       );
       if (!_mounted) return;
-      if (result.status == 'SUCCESS' || result.status == 'PENDING') {
+      if (result.status == 'SUCCESS') {
+        state = state.copyWith(status: TransactionStatus.success, result: result);
+        await floatNotifier.fetchLatestBalance();
+      } else if (result.status == 'PENDING') {
+        state = state.copyWith(result: result);
         await startDuitNowPolling(result.referenceId);
       } else {
         state = state.copyWith(status: TransactionStatus.failed, error: result.errorMessage);

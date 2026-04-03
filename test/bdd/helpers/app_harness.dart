@@ -241,8 +241,10 @@ class BddAppHarness {
           pollingInterval: const Duration(milliseconds: 100),
         )),
         billerFlowNotifierProvider.overrideWith((ref) => BillerFlowNotifier(
+          ref: ref,
           repository: ref.watch(transactionRepositoryProvider),
           floatNotifier: ref.watch(floatProvider.notifier),
+          geolocator: _geolocator,
           pollingInterval: const Duration(milliseconds: 100),
         )),
         cardFlowNotifierProvider.overrideWith((ref) => CardFlowNotifier(
@@ -255,8 +257,10 @@ class BddAppHarness {
           cardTimerDelay: const Duration(milliseconds: 100),
         )),
         proxyDepositNotifierProvider.overrideWith((ref) => ProxyDepositNotifier(
+          ref: ref,
           repository: ref.watch(transactionRepositoryProvider),
           myKadScanner: MockMyKadScanner(),
+          geolocator: _geolocator,
           pollingInterval: const Duration(milliseconds: 100),
         )),
         settlementStatusProvider.overrideWith(

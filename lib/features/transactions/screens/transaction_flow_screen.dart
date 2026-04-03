@@ -158,7 +158,7 @@ class TransactionFlowScreen extends ConsumerWidget {
               const Divider(height: 24),
               _buildSummaryRow('Total to Deduct', currencyFormat.format(state.quote?.total.toDouble() ?? 0), isBold: true),
               const SizedBox(height: 32),
-              if (selectedSource == FundingSource.CASH && serviceCode == 'CASH_DEPOSIT') 
+              if (selectedSource == FundingSource.CASH) 
                 Container(
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.only(bottom: 24),

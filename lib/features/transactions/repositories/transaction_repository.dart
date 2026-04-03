@@ -6,6 +6,9 @@ import 'package:agent_api/agent_api.dart';
 import 'package:uuid/uuid.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart' as merchant;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
 
 class TransactionRepository {
   final LedgerControllerLedgerServiceApi ledgerApi;
@@ -381,3 +384,16 @@ class TransactionRepository {
     return 'UNLOCKED';
   }
 }
+
+final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
+  return TransactionRepository(
+    ledgerApi: ref.watch(ledgerApiProvider),
+    merchantApi: ref.watch(merchantApiProvider),
+    billerApi: ref.watch(billerApiProvider),
+    switchApi: ref.watch(switchApiProvider),
+    onboardingApi: ref.watch(onboardingApiProvider),
+    esspApi: ref.watch(esspApiProvider),
+    ewalletApi: ref.watch(ewalletApiProvider),
+    dio: ref.watch(dioProvider),
+  );
+});
