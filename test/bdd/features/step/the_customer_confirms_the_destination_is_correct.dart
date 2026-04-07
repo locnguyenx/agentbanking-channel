@@ -6,8 +6,5 @@ Future<void> theCustomerConfirmsTheDestinationIsCorrect(
   await tester.pumpAndSettle();
   
   final agreeBtn = find.byKey(const Key('btn_confirm'));
-  if (agreeBtn.evaluate().isNotEmpty) {
-      await tester.tap(agreeBtn);
-      await tester.pumpAndSettle();
-  }
+  expect(agreeBtn, findsOneWidget, reason: "Consent details must be visible for customer to confirm");
 }

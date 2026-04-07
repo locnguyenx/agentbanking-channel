@@ -11,13 +11,12 @@ part 'cash_back_response.g.dart';
 /// CashBackResponse
 ///
 /// Properties:
-/// * [status]
-/// * [transactionId]
-/// * [cashBackAmount]
-/// * [commission]
+/// * [status] 
+/// * [transactionId] 
+/// * [cashBackAmount] 
+/// * [commission] 
 @BuiltValue()
-abstract class CashBackResponse
-    implements Built<CashBackResponse, CashBackResponseBuilder> {
+abstract class CashBackResponse implements Built<CashBackResponse, CashBackResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -25,26 +24,23 @@ abstract class CashBackResponse
   String? get transactionId;
 
   @BuiltValueField(wireName: r'cashBackAmount')
-  num? get cashBackAmount;
+  String? get cashBackAmount;
 
   @BuiltValueField(wireName: r'commission')
-  num? get commission;
+  String? get commission;
 
   CashBackResponse._();
 
-  factory CashBackResponse([void updates(CashBackResponseBuilder b)]) =
-      _$CashBackResponse;
+  factory CashBackResponse([void updates(CashBackResponseBuilder b)]) = _$CashBackResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CashBackResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CashBackResponse> get serializer =>
-      _$CashBackResponseSerializer();
+  static Serializer<CashBackResponse> get serializer => _$CashBackResponseSerializer();
 }
 
-class _$CashBackResponseSerializer
-    implements PrimitiveSerializer<CashBackResponse> {
+class _$CashBackResponseSerializer implements PrimitiveSerializer<CashBackResponse> {
   @override
   final Iterable<Type> types = const [CashBackResponse, _$CashBackResponse];
 
@@ -74,14 +70,14 @@ class _$CashBackResponseSerializer
       yield r'cashBackAmount';
       yield serializers.serialize(
         object.cashBackAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.commission != null) {
       yield r'commission';
       yield serializers.serialize(
         object.commission,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -92,9 +88,7 @@ class _$CashBackResponseSerializer
     CashBackResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -126,15 +120,15 @@ class _$CashBackResponseSerializer
         case r'cashBackAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.cashBackAmount = valueDes;
           break;
         case r'commission':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.commission = valueDes;
           break;
         default:
@@ -165,3 +159,4 @@ class _$CashBackResponseSerializer
     return result.build();
   }
 }
+

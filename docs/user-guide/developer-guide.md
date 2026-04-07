@@ -32,6 +32,9 @@ flutter pub get
 Run the following command to launch the app on your selected device:
 ```bash
 flutter run
+# This is only for local development. Do not use this method for production deployments. For CORS issues in web browser:
+flutter run -d chrome --web-browser-flag "--disable-web-security"
+
 ```
 
 ### Step 4: Run Automated Tests

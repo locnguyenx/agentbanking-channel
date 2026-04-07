@@ -9,7 +9,7 @@ import 'package:agent_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **merchantId** | **String** |  | 
-**cashBackAmount** | **num** |  | 
+**cashBackAmount** | **String** |  | 
 **cardData** | **String** |  | [optional] 
 **pinBlock** | **String** |  | [optional] 
 **idempotencyKey** | **String** |  | 

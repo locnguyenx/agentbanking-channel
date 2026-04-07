@@ -15,23 +15,28 @@ class RedactingLogger extends Interceptor {
   });
 
   // Regex patterns for PII
-  static final RegExp _myKadRegex = RegExp(r'\b\d{6}-?\d{2}-?\d{4}\b');
+  static final RegExp _myKadRegex = RegExp(r'\b\d{6}-?\d{2}-?\d{4}\b|\b\d{12}\b');
   static final RegExp _panRegex = RegExp(r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b');
-  static final RegExp _cvvRegex = RegExp(r'\b\d{3,4}\b');
+  static final RegExp _cvvKeyRegex = RegExp(r'"cvv"\s*:\s*"\d{3,4}"', caseSensitive: false);
+  static final RegExp _pinBlockKeyRegex = RegExp(r'"pinBlock"\s*:\s*"[^"]+"', caseSensitive: false);
 
   String redact(String text) {
     var redacted = text;
     
-    // Mask MyKad (NRIC) - Show only birth date part
+    // 1. Mask MyKad (NRIC) - Show only birth date part (first 6)
     redacted = redacted.replaceAllMapped(_myKadRegex, (match) {
       final s = match.group(0)!;
-      if (s.contains('-')) {
-        return '${s.substring(0, 6)}-**-****';
+      final clean = s.replaceAll('-', '');
+      if (clean.length == 12) {
+        if (s.contains('-')) {
+          return '${clean.substring(0, 6)}-**-****';
+        }
+        return '${clean.substring(0, 6)}******';
       }
-      return '${s.substring(0, 6)}******';
+      return s;
     });
 
-    // Mask PAN (Card Number) - Show first 4 and last 4
+    // 2. Mask PAN (Card Number) - Show first 4 and last 4
     redacted = redacted.replaceAllMapped(_panRegex, (match) {
       final s = match.group(0)!;
       final clean = s.replaceAll(RegExp(r'[ -]'), '');
@@ -40,6 +45,10 @@ class RedactingLogger extends Interceptor {
       }
       return '**** **** **** ****';
     });
+
+    // 3. Mask CVV and PIN Block fields specifically in JSON-like strings
+    redacted = redacted.replaceAllMapped(_cvvKeyRegex, (match) => '"cvv": "***"');
+    redacted = redacted.replaceAllMapped(_pinBlockKeyRegex, (match) => '"pinBlock": "[REDACTED]"');
 
     return redacted;
   }

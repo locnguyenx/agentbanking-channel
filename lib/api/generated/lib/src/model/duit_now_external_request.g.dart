@@ -137,7 +137,7 @@ class _$DuitNowExternalRequestProxyTypeEnumSerializer
 
 class _$DuitNowExternalRequest extends DuitNowExternalRequest {
   @override
-  final num amount;
+  final String amount;
   @override
   final DuitNowExternalRequestCurrencyEnum currency;
   @override
@@ -212,9 +212,9 @@ class DuitNowExternalRequestBuilder
     implements Builder<DuitNowExternalRequest, DuitNowExternalRequestBuilder> {
   _$DuitNowExternalRequest? _$v;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   DuitNowExternalRequestCurrencyEnum? _currency;
   DuitNowExternalRequestCurrencyEnum? get currency => _$this._currency;

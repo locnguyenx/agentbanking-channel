@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **walletProvider** | **String** |  | 
 **walletAccountId** | **String** |  | 
-**amount** | **num** |  | 
+**amount** | **String** |  | 
 **currency** | **String** |  | 
 **idempotencyKey** | **String** |  | 
 

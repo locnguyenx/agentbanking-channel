@@ -9,19 +9,34 @@ import 'package:agentbanking_channel/features/compliance/providers/compliance_pr
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
 import 'package:decimal/decimal.dart';
 
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:dio/dio.dart';
+
 import 'test_fakes.dart';
+import '../setup/test_credentials.dart';
+
+final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeMyKadScanner fakeMyKadScanner;
   late FakeRef fakeRef;
   late FakeGeolocator fakeGeolocator;
+  late ProviderContainer container;
 
   setUp(() {
     fakeRepo = FakeTransactionRepository();
     fakeMyKadScanner = FakeMyKadScanner();
     fakeRef = FakeRef();
     fakeGeolocator = FakeGeolocator();
+    container = ProviderContainer();
 
     // Stub mandatory providers for TransactionGuardMixin
     final authNotifier = FakeAuthNotifier(user: AuthUser(agentId: 'AGENT-123', name: 'AHMAD', tier: 'PLATINUM'));
@@ -43,11 +58,39 @@ void main() {
   );
 
   ProxyDepositNotifier createNotifier() {
+    final container = ProviderContainer(overrides: [
+      authProvider.overrideWith((ref) {
+        final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
+        if (isRealBackend) {
+           notifier.debugSetAuthenticated(AuthUser(agentId: 'AGT-E2E-001', name: 'AGENT', tier: 'GOLD'));
+           notifier.debugSetJwt(TestCredentials.agentJwt);
+        }
+        return notifier;
+      }),
+      dioProvider.overrideWith((ref) => Dio(BaseOptions(baseUrl: apiBaseUrl))),
+      secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+    ]);
+
+    if (isRealBackend) {
+      container.updateOverrides([
+        authProvider.overrideWith((ref) {
+          final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
+          if (isRealBackend) {
+             notifier.debugSetAuthenticated(AuthUser(agentId: 'AGT-E2E-001', name: 'AGENT', tier: 'GOLD'));
+             notifier.debugSetJwt(TestCredentials.agentJwt);
+          }
+          return notifier;
+        }),
+        dioProvider.overrideWith((ref) => Dio(BaseOptions(baseUrl: apiBaseUrl))..interceptors.add(AuthInterceptor(container.read(secureStorageManagerProvider)))),
+        secureStorageManagerProvider.overrideWithValue(container.read(secureStorageManagerProvider)),
+      ]);
+    }
+
     return ProxyDepositNotifier(
-      ref: fakeRef,
-      repository: fakeRepo,
-      myKadScanner: fakeMyKadScanner,
-      geolocator: fakeGeolocator,
+      ref: isRealBackend ? container.read(Provider((ref) => ref)) : fakeRef,
+      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
+      myKadScanner: isRealBackend ? container.read(myKadScannerProvider) : fakeMyKadScanner,
+      geolocator: isRealBackend ? container.read(geolocatorProvider) : fakeGeolocator,
     );
   }
 
@@ -59,6 +102,7 @@ void main() {
       await notifier.executeProxyEnquiry(
         amount: state.amount!,
         merchantId: 'AGENT-123',
+        fundingSource: FundingSource.CASH,
         metadata: state.metadata?.cast<String, String>(),
       );
 
@@ -80,6 +124,7 @@ void main() {
       await notifier.executeProxyEnquiry(
         amount: state.amount!,
         merchantId: 'AGENT-123',
+        fundingSource: FundingSource.CASH,
         metadata: state.metadata?.cast<String, String>(),
       );
 
@@ -97,6 +142,7 @@ void main() {
       await notifier.executeProxyEnquiry(
         amount: state.amount!,
         merchantId: 'AGENT-123',
+        fundingSource: FundingSource.CASH,
         metadata: state.metadata?.cast<String, String>(),
       );
 

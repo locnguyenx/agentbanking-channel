@@ -16,12 +16,11 @@ part 'jom_pay_external_request.g.dart';
 /// * [ref1] - JomPay reference 1 (bill account)
 /// * [ref2] - JomPay reference 2 (optional)
 /// * [amount] - Payment amount in MYR
-/// * [currency]
-/// * [idempotencyKey]
-/// * [customerMobile]
+/// * [currency] 
+/// * [idempotencyKey] 
+/// * [customerMobile] 
 @BuiltValue()
-abstract class JomPayExternalRequest
-    implements Built<JomPayExternalRequest, JomPayExternalRequestBuilder> {
+abstract class JomPayExternalRequest implements Built<JomPayExternalRequest, JomPayExternalRequestBuilder> {
   /// JomPay biller code
   @BuiltValueField(wireName: r'billerCode')
   String get billerCode;
@@ -36,7 +35,7 @@ abstract class JomPayExternalRequest
 
   /// Payment amount in MYR
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   @BuiltValueField(wireName: r'currency')
   JomPayExternalRequestCurrencyEnum get currency;
@@ -50,25 +49,19 @@ abstract class JomPayExternalRequest
 
   JomPayExternalRequest._();
 
-  factory JomPayExternalRequest(
-      [void updates(JomPayExternalRequestBuilder b)]) = _$JomPayExternalRequest;
+  factory JomPayExternalRequest([void updates(JomPayExternalRequestBuilder b)]) = _$JomPayExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(JomPayExternalRequestBuilder b) =>
-      b..currency = JomPayExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(JomPayExternalRequestBuilder b) => b
+      ..currency = JomPayExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<JomPayExternalRequest> get serializer =>
-      _$JomPayExternalRequestSerializer();
+  static Serializer<JomPayExternalRequest> get serializer => _$JomPayExternalRequestSerializer();
 }
 
-class _$JomPayExternalRequestSerializer
-    implements PrimitiveSerializer<JomPayExternalRequest> {
+class _$JomPayExternalRequestSerializer implements PrimitiveSerializer<JomPayExternalRequest> {
   @override
-  final Iterable<Type> types = const [
-    JomPayExternalRequest,
-    _$JomPayExternalRequest
-  ];
+  final Iterable<Type> types = const [JomPayExternalRequest, _$JomPayExternalRequest];
 
   @override
   final String wireName = r'JomPayExternalRequest';
@@ -98,7 +91,7 @@ class _$JomPayExternalRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
     yield r'currency';
     yield serializers.serialize(
@@ -125,9 +118,7 @@ class _$JomPayExternalRequestSerializer
     JomPayExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -166,8 +157,8 @@ class _$JomPayExternalRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'currency':
@@ -221,17 +212,15 @@ class _$JomPayExternalRequestSerializer
 }
 
 class JomPayExternalRequestCurrencyEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const JomPayExternalRequestCurrencyEnum MYR =
-      _$jomPayExternalRequestCurrencyEnum_MYR;
+  static const JomPayExternalRequestCurrencyEnum MYR = _$jomPayExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<JomPayExternalRequestCurrencyEnum> get serializer =>
-      _$jomPayExternalRequestCurrencyEnumSerializer;
+  static Serializer<JomPayExternalRequestCurrencyEnum> get serializer => _$jomPayExternalRequestCurrencyEnumSerializer;
 
-  const JomPayExternalRequestCurrencyEnum._(String name) : super(name);
+  const JomPayExternalRequestCurrencyEnum._(String name): super(name);
 
-  static BuiltSet<JomPayExternalRequestCurrencyEnum> get values =>
-      _$jomPayExternalRequestCurrencyEnumValues;
-  static JomPayExternalRequestCurrencyEnum valueOf(String name) =>
-      _$jomPayExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<JomPayExternalRequestCurrencyEnum> get values => _$jomPayExternalRequestCurrencyEnumValues;
+  static JomPayExternalRequestCurrencyEnum valueOf(String name) => _$jomPayExternalRequestCurrencyEnumValueOf(name);
 }
+

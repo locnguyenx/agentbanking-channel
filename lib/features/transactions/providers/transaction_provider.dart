@@ -25,6 +25,7 @@ import 'package:agentbanking_channel/features/settlement/services/eod_timer_serv
 import 'package:agentbanking_channel/core/location/geofence_service.dart';
 import 'package:agentbanking_channel/features/transactions/services/validation_service.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_guards.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 
 export 'package:decimal/decimal.dart';
 export 'package:agentbanking_channel/features/transactions/models/transaction_state.dart';
@@ -139,6 +140,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       await _proxyDepositNotifier.executeProxyEnquiry(
         amount: amount,
         merchantId: merchantId,
+        fundingSource: fundingSource,
         metadata: metadata,
       );
     } else if (serviceCode == 'BILL_PAY' || serviceCode == 'JOMPAY') {
@@ -182,6 +184,8 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
 
     if (state.fundingSource == FundingSource.CARD_EMV) {
       await _cardFlowNotifier.startCardFlow(state);
+    } else if (state.fundingSource == FundingSource.MYKAD_BIOMETRIC) {
+      await _executeMyKadBiometricFlow();
     } else if (state.serviceCode == 'DUITNOW_QR') {
       await _duitNowFlowNotifier.executeDuitNowQrFlow(state);
     } else if (state.serviceCode?.contains('DUITNOW') == true) {
@@ -190,6 +194,52 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
        await _billerFlowNotifier.executeBillerPayment(state);
     } else {
       await _executeStandardWorkflow();
+    }
+  }
+
+  Future<void> _executeMyKadBiometricFlow() async {
+    if (!_mounted || state.quote == null) return;
+    
+    state = state.copyWith(status: TransactionStatus.waitingMyKadScan);
+    try {
+      final myKadData = await myKadScanner.scanMyKad();
+      if (myKadData != null && _mounted) {
+        final updatedMetadata = Map<String, String>.from(state.metadata?.cast<String, String>() ?? {});
+        updatedMetadata['myKadReference'] = myKadData.icNumber;
+        updatedMetadata['myKadName'] = myKadData.fullName;
+        
+        state = state.copyWith(
+          status: TransactionStatus.processing,
+          metadata: updatedMetadata,
+        );
+
+        final agentId = ref.read(authProvider).user?.agentId ?? 'AGENT-123';
+        final result = await repository.executeTransaction(TransactionExecutionRequest(
+          quoteId: state.quote!.quoteId,
+          fundingSource: FundingSource.MYKAD_BIOMETRIC,
+          serviceCode: state.serviceCode,
+          amount: state.amount,
+          metadata: updatedMetadata,
+        ), agentId, idempotencyKey: state.idempotencyKey);
+
+        if (_mounted) {
+          if (result.status == 'SUCCESS') {
+            state = state.copyWith(status: TransactionStatus.success, result: result);
+            await floatNotifier.fetchLatestBalance();
+          } else {
+            state = state.copyWith(
+              status: TransactionStatus.failed, 
+              error: result.errorMessage ?? 'Transaction failed'
+            );
+          }
+        }
+      } else if (_mounted) {
+        state = state.copyWith(status: TransactionStatus.failed, error: 'MyKad/Biometric scan failed or cancelled');
+      }
+    } catch (e) {
+      if (_mounted) {
+        state = state.copyWith(status: TransactionStatus.failed, error: e.toString());
+      }
     }
   }
   
@@ -327,7 +377,8 @@ final transactionProvider = StateNotifierProvider<TransactionNotifier, Transacti
   final myKadScanner = ref.watch(myKadScannerProvider);
   final complianceNotifier = ref.watch(complianceProvider.notifier);
   final eodTimerService = ref.watch(eodTimerServiceProvider.notifier);
-
+  final geolocator = ref.watch(geolocatorProvider);
+  
   return TransactionNotifier(
     ref: ref,
     repository: repository,
@@ -338,6 +389,6 @@ final transactionProvider = StateNotifierProvider<TransactionNotifier, Transacti
     myKadScanner: myKadScanner,
     complianceNotifier: complianceNotifier,
     eodTimerService: eodTimerService,
-    geolocator: GeolocatorPlatform.instance,
+    geolocator: geolocator,
   );
 });

@@ -4,15 +4,18 @@
 
 import 'dart:async';
 
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/model/bill_pay_external_request.dart';
+import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/jom_pay_external_request.dart';
 import 'package:agent_api/src/model/topup_external_request.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 
 class BillerControllerBillerServiceApi {
+
   final Dio _dio;
 
   final Serializers _serializers;
@@ -20,10 +23,10 @@ class BillerControllerBillerServiceApi {
   const BillerControllerBillerServiceApi(this._dio, this._serializers);
 
   /// jomPay
-  ///
+  /// **DEPRECATED** - Use &#x60;POST /api/v1/transactions&#x60; with &#x60;transactionType: BILL_PAYMENT&#x60; instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
   ///
   /// Parameters:
-  /// * [jomPayExternalRequest]
+  /// * [jomPayExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -33,7 +36,8 @@ class BillerControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> jomPay({
+  @Deprecated('This operation has been deprecated')
+  Future<Response<TransactionResponse>> jomPay({ 
     required JomPayExternalRequest jomPayExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -49,7 +53,13 @@ class BillerControllerBillerServiceApi {
         ...?headers,
       },
       extra: <String, dynamic>{
-        'secure': <Map<String, String>>[],
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
         ...?extra,
       },
       contentType: 'application/json',
@@ -60,11 +70,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       const _type = FullType(JomPayExternalRequest);
-      _bodyData =
-          _serializers.serialize(jomPayExternalRequest, specifiedType: _type);
-    } catch (error, stackTrace) {
+      _bodyData = _serializers.serialize(jomPayExternalRequest, specifiedType: _type);
+
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(
+         requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -87,12 +97,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null
-          ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(TransactionResponse),
-            ) as TransactionResponse;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
+
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -116,10 +125,10 @@ class BillerControllerBillerServiceApi {
   }
 
   /// payBill
-  ///
+  /// **DEPRECATED** - Use &#x60;POST /api/v1/transactions&#x60; with &#x60;transactionType: BILL_PAYMENT&#x60; instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
   ///
   /// Parameters:
-  /// * [billPayExternalRequest]
+  /// * [billPayExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -129,7 +138,8 @@ class BillerControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> payBill({
+  @Deprecated('This operation has been deprecated')
+  Future<Response<TransactionResponse>> payBill({ 
     required BillPayExternalRequest billPayExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -145,7 +155,13 @@ class BillerControllerBillerServiceApi {
         ...?headers,
       },
       extra: <String, dynamic>{
-        'secure': <Map<String, String>>[],
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
         ...?extra,
       },
       contentType: 'application/json',
@@ -156,11 +172,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       const _type = FullType(BillPayExternalRequest);
-      _bodyData =
-          _serializers.serialize(billPayExternalRequest, specifiedType: _type);
-    } catch (error, stackTrace) {
+      _bodyData = _serializers.serialize(billPayExternalRequest, specifiedType: _type);
+
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(
+         requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -183,12 +199,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null
-          ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(TransactionResponse),
-            ) as TransactionResponse;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
+
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -212,10 +227,10 @@ class BillerControllerBillerServiceApi {
   }
 
   /// topup
-  ///
+  /// **DEPRECATED** - Use &#x60;POST /api/v1/transactions&#x60; with &#x60;transactionType: BILL_PAYMENT&#x60; instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
   ///
   /// Parameters:
-  /// * [topupExternalRequest]
+  /// * [topupExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -225,7 +240,8 @@ class BillerControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> topup({
+  @Deprecated('This operation has been deprecated')
+  Future<Response<TransactionResponse>> topup({ 
     required TopupExternalRequest topupExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -241,7 +257,13 @@ class BillerControllerBillerServiceApi {
         ...?headers,
       },
       extra: <String, dynamic>{
-        'secure': <Map<String, String>>[],
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
         ...?extra,
       },
       contentType: 'application/json',
@@ -252,11 +274,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       const _type = FullType(TopupExternalRequest);
-      _bodyData =
-          _serializers.serialize(topupExternalRequest, specifiedType: _type);
-    } catch (error, stackTrace) {
+      _bodyData = _serializers.serialize(topupExternalRequest, specifiedType: _type);
+
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(
+         requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -279,12 +301,11 @@ class BillerControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null
-          ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(TransactionResponse),
-            ) as TransactionResponse;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
+
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -306,4 +327,5 @@ class BillerControllerBillerServiceApi {
       extra: _response.extra,
     );
   }
+
 }

@@ -41,3 +41,18 @@ final ewalletApiProvider = Provider<EWalletControllerBillerServiceApi>((ref) {
   final dio = ref.watch(dioProvider);
   return EWalletControllerBillerServiceApi(dio, standardSerializers);
 });
+
+final transactionApiProvider = Provider<TransactionControllerSwitchAdapterServiceApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return TransactionControllerSwitchAdapterServiceApi(dio, standardSerializers);
+});
+
+final complianceApiProvider = Provider<ComplianceControllerRulesServiceApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return ComplianceControllerRulesServiceApi(dio, standardSerializers);
+});
+
+final orchestratorApiProvider = Provider<OrchestratorControllerOrchestratorServiceApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return OrchestratorControllerOrchestratorServiceApi(dio, standardSerializers);
+});

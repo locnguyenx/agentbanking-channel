@@ -12,14 +12,13 @@ part 'kyc_verify_response.g.dart';
 /// KycVerifyResponse
 ///
 /// Properties:
-/// * [verificationId]
-/// * [status]
-/// * [message]
-/// * [kycLevel]
-/// * [expiresAt]
+/// * [verificationId] 
+/// * [status] 
+/// * [message] 
+/// * [kycLevel] 
+/// * [expiresAt] 
 @BuiltValue()
-abstract class KycVerifyResponse
-    implements Built<KycVerifyResponse, KycVerifyResponseBuilder> {
+abstract class KycVerifyResponse implements Built<KycVerifyResponse, KycVerifyResponseBuilder> {
   @BuiltValueField(wireName: r'verificationId')
   String? get verificationId;
 
@@ -39,19 +38,16 @@ abstract class KycVerifyResponse
 
   KycVerifyResponse._();
 
-  factory KycVerifyResponse([void updates(KycVerifyResponseBuilder b)]) =
-      _$KycVerifyResponse;
+  factory KycVerifyResponse([void updates(KycVerifyResponseBuilder b)]) = _$KycVerifyResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(KycVerifyResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<KycVerifyResponse> get serializer =>
-      _$KycVerifyResponseSerializer();
+  static Serializer<KycVerifyResponse> get serializer => _$KycVerifyResponseSerializer();
 }
 
-class _$KycVerifyResponseSerializer
-    implements PrimitiveSerializer<KycVerifyResponse> {
+class _$KycVerifyResponseSerializer implements PrimitiveSerializer<KycVerifyResponse> {
   @override
   final Iterable<Type> types = const [KycVerifyResponse, _$KycVerifyResponse];
 
@@ -106,9 +102,7 @@ class _$KycVerifyResponseSerializer
     KycVerifyResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -188,45 +182,36 @@ class _$KycVerifyResponseSerializer
 }
 
 class KycVerifyResponseStatusEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'VERIFIED')
-  static const KycVerifyResponseStatusEnum VERIFIED =
-      _$kycVerifyResponseStatusEnum_VERIFIED;
+  static const KycVerifyResponseStatusEnum VERIFIED = _$kycVerifyResponseStatusEnum_VERIFIED;
   @BuiltValueEnumConst(wireName: r'PENDING')
-  static const KycVerifyResponseStatusEnum PENDING =
-      _$kycVerifyResponseStatusEnum_PENDING;
+  static const KycVerifyResponseStatusEnum PENDING = _$kycVerifyResponseStatusEnum_PENDING;
   @BuiltValueEnumConst(wireName: r'FAILED')
-  static const KycVerifyResponseStatusEnum FAILED =
-      _$kycVerifyResponseStatusEnum_FAILED;
+  static const KycVerifyResponseStatusEnum FAILED = _$kycVerifyResponseStatusEnum_FAILED;
 
-  static Serializer<KycVerifyResponseStatusEnum> get serializer =>
-      _$kycVerifyResponseStatusEnumSerializer;
+  static Serializer<KycVerifyResponseStatusEnum> get serializer => _$kycVerifyResponseStatusEnumSerializer;
 
-  const KycVerifyResponseStatusEnum._(String name) : super(name);
+  const KycVerifyResponseStatusEnum._(String name): super(name);
 
-  static BuiltSet<KycVerifyResponseStatusEnum> get values =>
-      _$kycVerifyResponseStatusEnumValues;
-  static KycVerifyResponseStatusEnum valueOf(String name) =>
-      _$kycVerifyResponseStatusEnumValueOf(name);
+  static BuiltSet<KycVerifyResponseStatusEnum> get values => _$kycVerifyResponseStatusEnumValues;
+  static KycVerifyResponseStatusEnum valueOf(String name) => _$kycVerifyResponseStatusEnumValueOf(name);
 }
 
 class KycVerifyResponseKycLevelEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'BASIC')
-  static const KycVerifyResponseKycLevelEnum BASIC =
-      _$kycVerifyResponseKycLevelEnum_BASIC;
+  static const KycVerifyResponseKycLevelEnum BASIC = _$kycVerifyResponseKycLevelEnum_BASIC;
   @BuiltValueEnumConst(wireName: r'INTERMEDIATE')
-  static const KycVerifyResponseKycLevelEnum INTERMEDIATE =
-      _$kycVerifyResponseKycLevelEnum_INTERMEDIATE;
+  static const KycVerifyResponseKycLevelEnum INTERMEDIATE = _$kycVerifyResponseKycLevelEnum_INTERMEDIATE;
   @BuiltValueEnumConst(wireName: r'ADVANCED')
-  static const KycVerifyResponseKycLevelEnum ADVANCED =
-      _$kycVerifyResponseKycLevelEnum_ADVANCED;
+  static const KycVerifyResponseKycLevelEnum ADVANCED = _$kycVerifyResponseKycLevelEnum_ADVANCED;
 
-  static Serializer<KycVerifyResponseKycLevelEnum> get serializer =>
-      _$kycVerifyResponseKycLevelEnumSerializer;
+  static Serializer<KycVerifyResponseKycLevelEnum> get serializer => _$kycVerifyResponseKycLevelEnumSerializer;
 
-  const KycVerifyResponseKycLevelEnum._(String name) : super(name);
+  const KycVerifyResponseKycLevelEnum._(String name): super(name);
 
-  static BuiltSet<KycVerifyResponseKycLevelEnum> get values =>
-      _$kycVerifyResponseKycLevelEnumValues;
-  static KycVerifyResponseKycLevelEnum valueOf(String name) =>
-      _$kycVerifyResponseKycLevelEnumValueOf(name);
+  static BuiltSet<KycVerifyResponseKycLevelEnum> get values => _$kycVerifyResponseKycLevelEnumValues;
+  static KycVerifyResponseKycLevelEnum valueOf(String name) => _$kycVerifyResponseKycLevelEnumValueOf(name);
 }
+

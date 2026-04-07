@@ -62,7 +62,7 @@ class _$WithdrawalExternalRequestCurrencyEnumSerializer
 
 class _$WithdrawalExternalRequest extends WithdrawalExternalRequest {
   @override
-  final num amount;
+  final String amount;
   @override
   final WithdrawalExternalRequestCurrencyEnum currency;
   @override
@@ -138,9 +138,9 @@ class WithdrawalExternalRequestBuilder
         Builder<WithdrawalExternalRequest, WithdrawalExternalRequestBuilder> {
   _$WithdrawalExternalRequest? _$v;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   WithdrawalExternalRequestCurrencyEnum? _currency;
   WithdrawalExternalRequestCurrencyEnum? get currency => _$this._currency;

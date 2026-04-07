@@ -4,5 +4,5 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> theLoginIsRejectedWithErrorCodeErrAuthDeviceNotWhitelisted(WidgetTester tester) async {
   // SnackBar might need some time to animate in
   await tester.pump(const Duration(milliseconds: 500));
-  expect(find.textContaining('ERR_AUTH_DEVICE_NOT_WHITELISTED'), findsOneWidget);
+  expect(find.textContaining('Device not whitelisted'), findsOneWidget);
 }

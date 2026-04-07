@@ -11,12 +11,11 @@ part 'reversal_request.g.dart';
 /// ReversalRequest
 ///
 /// Properties:
-/// * [originalTransactionId]
-/// * [originalReference]
-/// * [amount]
+/// * [originalTransactionId] 
+/// * [originalReference] 
+/// * [amount] 
 @BuiltValue()
-abstract class ReversalRequest
-    implements Built<ReversalRequest, ReversalRequestBuilder> {
+abstract class ReversalRequest implements Built<ReversalRequest, ReversalRequestBuilder> {
   @BuiltValueField(wireName: r'originalTransactionId')
   String get originalTransactionId;
 
@@ -24,23 +23,20 @@ abstract class ReversalRequest
   String get originalReference;
 
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   ReversalRequest._();
 
-  factory ReversalRequest([void updates(ReversalRequestBuilder b)]) =
-      _$ReversalRequest;
+  factory ReversalRequest([void updates(ReversalRequestBuilder b)]) = _$ReversalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ReversalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ReversalRequest> get serializer =>
-      _$ReversalRequestSerializer();
+  static Serializer<ReversalRequest> get serializer => _$ReversalRequestSerializer();
 }
 
-class _$ReversalRequestSerializer
-    implements PrimitiveSerializer<ReversalRequest> {
+class _$ReversalRequestSerializer implements PrimitiveSerializer<ReversalRequest> {
   @override
   final Iterable<Type> types = const [ReversalRequest, _$ReversalRequest];
 
@@ -65,7 +61,7 @@ class _$ReversalRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
   }
 
@@ -75,9 +71,7 @@ class _$ReversalRequestSerializer
     ReversalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -109,8 +103,8 @@ class _$ReversalRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         default:
@@ -141,3 +135,4 @@ class _$ReversalRequestSerializer
     return result.build();
   }
 }
+

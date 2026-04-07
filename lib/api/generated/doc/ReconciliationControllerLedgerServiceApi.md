@@ -24,7 +24,7 @@ Method | HTTP request | Description
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = caseId_example; // String | 
+final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
 
 try {
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -67,7 +67,7 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = caseId_example; // String | 
+final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
 
 try {
@@ -91,7 +91,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -110,7 +110,7 @@ No authorization required
 import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
-final String caseId = caseId_example; // String | 
+final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 final DiscrepancyMakerActionRequest discrepancyMakerActionRequest = ; // DiscrepancyMakerActionRequest | 
 
 try {
@@ -134,7 +134,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

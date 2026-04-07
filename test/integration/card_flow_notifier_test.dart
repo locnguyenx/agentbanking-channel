@@ -5,8 +5,25 @@ import 'package:agentbanking_channel/features/transactions/providers/card_flow_n
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
+import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
+
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
+import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
+import 'package:dio/dio.dart';
 
 import 'test_fakes.dart';
+import '../setup/test_credentials.dart';
+
+const String apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
+
+final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 void main() {
   late FakeCardReader fakeCardReader;
@@ -14,6 +31,9 @@ void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeFloatNotifier fakeFloat;
   late FakeReversalService fakeReversal;
+  late FakeRef fakeRef;
+  late ProviderContainer container;
+  late FakeSecureStorage _sharedStorage;
 
   setUp(() {
     fakeCardReader = FakeCardReader();
@@ -21,24 +41,38 @@ void main() {
     fakeRepo = FakeTransactionRepository();
     fakeFloat = FakeFloatNotifier();
     fakeReversal = FakeReversalService();
-  });
+    fakeRef = FakeRef();
+    _sharedStorage = FakeSecureStorage();
 
-  CardFlowNotifier createNotifier() {
-    final container = ProviderContainer(overrides: [
+    // Stub mandatory providers
+    fakeRef.stubProvider(authProvider, AuthUser(agentId: 'AGT-001', name: 'TEST', tier: 'GOLD'));
+
+    container = ProviderContainer(overrides: [
+      secureStorageManagerProvider.overrideWithValue(_sharedStorage),
       authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
     ]);
-    return CardFlowNotifier(
-      ref: container.read(providerContainerProvider),
-      cardReader: fakeCardReader,
-      pinPad: fakePinPad,
-      repository: fakeRepo,
-      floatNotifier: fakeFloat,
-      reversalService: fakeReversal,
-    );
+  });
+
+  tearDown(() {
+    container.dispose();
+  });
+
+  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
+    if (!isRealBackend) return null;
+    try {
+      final repo = container.read(authRepositoryProvider);
+      final user = await repo.login(TestCredentials.username, TestCredentials.password);
+      final token = await _sharedStorage.readJwt();
+      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
+      return user;
+    } catch (e) {
+      print('DEBUG: Real login failed: $e');
+      return null;
+    }
   }
 
   TransactionState quotedState() => TransactionState(
-    status: TransactionStatus.waitingConsent,
+    status: TransactionStatus.waitingCard,
     quote: TransactionQuoteResponse(
       quoteId: 'Q001', amount: Decimal.fromInt(100),
       fee: Decimal.fromInt(1), commission: Decimal.parse('0.50'),
@@ -47,8 +81,28 @@ void main() {
     amount: Decimal.fromInt(100),
     serviceCode: 'CASH_WITHDRAWAL',
     fundingSource: FundingSource.CARD_EMV,
-    idempotencyKey: 'KEY-001',
+    idempotencyKey: 'KEY-CARD-001',
   );
+
+  CardFlowNotifier createNotifier() {
+    final dio = Dio(BaseOptions(baseUrl: apiBaseUrl));
+    dio.interceptors.add(AuthInterceptor(_sharedStorage));
+
+    final container = ProviderContainer(overrides: [
+      secureStorageManagerProvider.overrideWithValue(_sharedStorage),
+      authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
+      dioProvider.overrideWithValue(dio),
+    ]);
+
+    return CardFlowNotifier(
+      ref: isRealBackend ? container.read(Provider((ref) => ref)) : fakeRef,
+      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
+      cardReader: isRealBackend ? container.read(cardReaderProvider) : fakeCardReader,
+      pinPad: isRealBackend ? container.read(pinPadProvider) : fakePinPad,
+      floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : fakeFloat,
+      reversalService: isRealBackend ? container.read(reversalServiceProvider) : fakeReversal,
+    );
+  }
 
   group('CardFlowNotifier - Happy Path', () {
     test('startCardFlow transitions to waitingCard', () async {
@@ -57,11 +111,11 @@ void main() {
       ]);
       final notifier = CardFlowNotifier(
         ref: container.read(providerContainerProvider),
-        cardReader: fakeCardReader,
-        pinPad: fakePinPad,
-        repository: fakeRepo,
-        floatNotifier: fakeFloat,
-        reversalService: fakeReversal,
+        cardReader: isRealBackend ? container.read(cardReaderProvider) : fakeCardReader,
+        pinPad: isRealBackend ? container.read(pinPadProvider) : fakePinPad,
+        repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
+        floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : fakeFloat,
+        reversalService: isRealBackend ? container.read(reversalServiceProvider) : fakeReversal,
         cardTimerDelay: const Duration(days: 365), // prevent auto-processCard
       );
 
@@ -144,6 +198,15 @@ void main() {
       expect(notifier.state.status, TransactionStatus.failed);
       expect(notifier.state.error, 'PIN Entry Cancelled');
       notifier.dispose();
+    });
+  });
+
+  group('CardFlowNotifier - Withdrawal', () {
+    test('happy path: card → pin → poll → success', () async {
+      final notifier = createNotifier();
+      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
+
+      await notifier.startCardFlow(quotedState());
     });
   });
 

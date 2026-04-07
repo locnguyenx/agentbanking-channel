@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **telco** | **String** | Telco provider | 
 **phoneNumber** | **String** | Mobile number (MSISDN format) | 
-**amount** | **num** | Top-up amount in MYR | 
+**amount** | **String** | Top-up amount in MYR | 
 **currency** | **String** |  | [default to 'MYR']
 **idempotencyKey** | **String** |  | 
 

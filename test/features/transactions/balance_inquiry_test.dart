@@ -5,7 +5,7 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/screens/balance_inquiry_screen.dart';
 import 'package:agentbanking_channel/api/api_providers.dart';
-import 'package:agent_api/agent_api.dart';
+import 'package:agent_api/agent_api.dart' as api;
 import 'package:mockito/mockito.dart' as mockito;
 import 'package:dio/dio.dart';
 import 'package:agentbanking_channel/core/network/dio_provider.dart';
@@ -103,10 +103,10 @@ class ManualFloatNotifier extends FloatNotifier {
   ManualFloatNotifier() : super(FakeFloatRepository(), 'AGENT-123', startTimer: false);
 }
 
-class ManualMockLedgerApi extends mockito.Mock implements LedgerControllerLedgerServiceApi {
+class ManualMockLedgerApi extends mockito.Mock implements api.LedgerControllerLedgerServiceApi {
   @override
-  Future<Response<BalanceResponse>> balanceInquiry({
-    BalanceInquiryExternalRequest? balanceInquiryExternalRequest,
+  Future<Response<api.BalanceResponse>> balanceInquiry({
+    api.BalanceInquiryExternalRequest? balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -116,12 +116,12 @@ class ManualMockLedgerApi extends mockito.Mock implements LedgerControllerLedger
   }) async {
     return super.noSuchMethod(
       Invocation.method(#balanceInquiry, [], {#balanceInquiryExternalRequest: balanceInquiryExternalRequest}),
-      returnValue: Future.value(Response<BalanceResponse>(requestOptions: RequestOptions(path: ''))),
+      returnValue: Future.value(Response<api.BalanceResponse>(requestOptions: RequestOptions(path: ''))),
     );
   }
 
   @override
-  Future<Response<BalanceResponse>> getBalance({
+  Future<Response<api.BalanceResponse>> getBalance({
     String? agentId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -132,7 +132,7 @@ class ManualMockLedgerApi extends mockito.Mock implements LedgerControllerLedger
   }) async {
     return super.noSuchMethod(
       Invocation.method(#getBalance, [], {#agentId: agentId}),
-      returnValue: Future.value(Response<BalanceResponse>(requestOptions: RequestOptions(path: ''))),
+      returnValue: Future.value(Response<api.BalanceResponse>(requestOptions: RequestOptions(path: ''))),
     );
   }
 }
@@ -176,8 +176,8 @@ void main() {
   });
 
   testWidgets('Balance Inquiry follows full card flow and shows success', (tester) async {
-    final balanceResponse = BalanceResponse((b) => b
-      ..availableBalance = 1234.56
+    final balanceResponse = api.BalanceResponse((b) => b
+      ..availableBalance = '1234.56'
       ..currency = 'MYR'
       ..lastTransactionId = 'TXN-123'
     );

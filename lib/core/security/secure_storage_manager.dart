@@ -18,6 +18,16 @@ class SecureStorageManager {
   Future<String?> readJwt() async =>
       await _storage.read(key: _jwtKey);
 
+  // Generic storage methods for other services (e.g. Compliance)
+  Future<void> write(String key, String value) async =>
+      await _storage.write(key: key, value: value);
+
+  Future<String?> read(String key) async =>
+      await _storage.read(key: key);
+
+  Future<void> delete(String key) async =>
+      await _storage.delete(key: key);
+
   static const String _complianceLockKey = 'compliance_locked';
 
   Future<void> setComplianceLock(bool isLocked) async =>

@@ -17,6 +17,7 @@ import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.da
 import 'package:agentbanking_channel/features/kyc/models/kyc_models.dart' as kyc_model;
 import 'package:agentbanking_channel/features/agent_onboarding/repositories/agent_onboarding_repository.dart';
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart' as merchant_model;
+import '../../setup/test_credentials.dart';
 
 // ─── Factory Functions ────────────────────────────────────────────────────
 
@@ -79,7 +80,7 @@ class MockAuthRepository extends Fake implements AuthRepository {
   Future<AuthUser> loginBiometric() async {
     if (!isDeviceWhitelisted) throw Exception('ERR_AUTH_DEVICE_NOT_WHITELISTED');
     final user = AuthUser(
-      agentId: 'AGENT-001', 
+      agentId: TestCredentials.username, 
       name: 'BDD Tester', 
       tier: 'PRO',
       registeredLat: 3.1390,

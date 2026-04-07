@@ -91,7 +91,7 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
     return Response(
       requestOptions: RequestOptions(path: ''),
       data: BalanceResponse((b) => b
-        ..availableBalance = 1000.0
+        ..availableBalance = '1000.0'
         ..currency = 'MYR'
         ..lastTransactionId = 'REF_123'
       ),
@@ -121,8 +121,8 @@ class MockMerchantApi extends Mock implements MerchantControllerLedgerServiceApi
       data: RetailSaleResponse((b) => b
         ..status = 'SUCCESS'
         ..transactionId = 'TRANS_123'
-        ..netToMerchant = 98.0
-        ..mdrAmount = 2.0
+        ..netToMerchant = '98.0'
+        ..mdrAmount = '2.0'
       ),
       statusCode: 200,
     );
@@ -167,7 +167,7 @@ class MockMerchantApi extends Mock implements MerchantControllerLedgerServiceApi
         ..status = 'SUCCESS'
         ..transactionId = 'PIN_123'
         ..pinCode = '8888-9999'
-        ..commission = 0.5
+        ..commission = '0.5'
       ),
       statusCode: 200,
     );
@@ -260,6 +260,45 @@ class MockSwitchApi extends Mock implements SwitchControllerSwitchAdapterService
 
 class MockOnboardingApi extends Mock implements OnboardingControllerOnboardingServiceApi {}
 
+class MockComplianceApi extends Mock implements ComplianceControllerRulesServiceApi {}
+
+class MockTransactionApi extends Mock implements TransactionControllerSwitchAdapterServiceApi {}
+
+class MockOrchestratorApi extends Fake implements OrchestratorControllerOrchestratorServiceApi {
+  TransactionStartRequest? lastStartRequest;
+  Future<Response<TransactionStartResponse>> Function(TransactionStartRequest)? startStub;
+  Future<Response<TransactionStatusResponse>> Function(String)? statusStub;
+
+  @override
+  Future<Response<TransactionStartResponse>> startTransaction({
+    required TransactionStartRequest transactionStartRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    lastStartRequest = transactionStartRequest;
+    if (startStub != null) return startStub!(transactionStartRequest);
+    return Future.error(UnimplementedError());
+  }
+
+  @override
+  Future<Response<TransactionStatusResponse>> getTransactionStatus({
+    required String workflowId,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    if (statusStub != null) return statusStub!(workflowId);
+    return Future.error(UnimplementedError());
+  }
+}
+
 class MockEsspApi extends Mock implements EsspControllerBillerServiceApi {
   @override
   Future<Response<TransactionResponse>> purchase({
@@ -333,6 +372,9 @@ void main() {
   late MockOnboardingApi mockOnboardingApi;
   late MockEsspApi mockEsspApi;
   late MockEWalletApi mockEWalletApi;
+  late MockTransactionApi mockTransactionApi;
+  late MockOrchestratorApi mockOrchestratorApi;
+  late MockComplianceApi mockComplianceApi;
   late MockDio mockDio;
 
   setUp(() {
@@ -343,6 +385,9 @@ void main() {
     mockOnboardingApi = MockOnboardingApi();
     mockEsspApi = MockEsspApi();
     mockEWalletApi = MockEWalletApi();
+    mockTransactionApi = MockTransactionApi();
+    mockOrchestratorApi = MockOrchestratorApi();
+    mockComplianceApi = MockComplianceApi();
     mockDio = MockDio();
     repository = TransactionRepository(
       ledgerApi: mockLedgerApi,
@@ -352,101 +397,67 @@ void main() {
       onboardingApi: mockOnboardingApi,
       esspApi: mockEsspApi,
       ewalletApi: mockEWalletApi,
+      transactionApi: mockTransactionApi,
+      orchestratorApi: mockOrchestratorApi,
+      complianceApi: mockComplianceApi,
       dio: mockDio,
     );
   });
 
   group('TransactionRepository', () {
-    test('executeTransaction (ESSP_PURCHASE) returns success', () async {
+    test('executeTransaction handles unified start and poll flow', () async {
       final request = TransactionExecutionRequest(
         quoteId: 'QUOTE_ESSP',
         fundingSource: FundingSource.CASH,
         serviceCode: 'ESSP_PURCHASE',
         amount: Decimal.parse('20.0'),
-        metadata: {'productCode': 'ESSP_TOKEN_V2'},
-      );
-
-      final response = await repository.executeTransaction(request, 'AGENT007');
-
-      expect(response.status, 'SUCCESS');
-      expect(response.referenceId, equals('ESSP_REF_123'));
-    });
-
-    test('executeTransaction (Withdrawal) returns success with metadata mapping', () async {
-      final request = TransactionExecutionRequest(
-        quoteId: 'QUOTE123',
-        fundingSource: FundingSource.CARD_EMV,
-        pinBlock: 'PIN_BLOCK',
-        cardToken: 'TOKEN_123',
-        serviceCode: 'CASH_WITHDRAWAL',
-        amount: Decimal.parse('100.0'),
         metadata: {
+          'productCode': 'ESSP_TOKEN_V2',
           'geofenceLat': '3.1390',
           'geofenceLng': '101.6869',
-          'customerCardMasked': 'XXXX-XXXX-XXXX-1234',
         },
       );
+
+      // 1. Stub startTransaction
+      mockOrchestratorApi.startStub = (req) async => Response(
+            data: TransactionStartResponse((b) => b
+              ..status = TransactionStartResponseStatusEnum.PENDING
+              ..workflowId = 'WORKFLOW_123'
+            ),
+            statusCode: 202,
+            requestOptions: RequestOptions(path: ''),
+          );
+
+      // 2. Stub getTransactionStatus (polling - return running then completed)
+      var pollCount = 0;
+      mockOrchestratorApi.statusStub = (workflowId) async {
+        pollCount++;
+        return Response(
+          data: TransactionStatusResponse((b) => b
+            ..status = pollCount < 2 
+                ? TransactionStatusResponseStatusEnum.RUNNING 
+                : TransactionStatusResponseStatusEnum.COMPLETED
+            ..workflowId = workflowId
+            ..referenceNumber = 'REF_123'
+            ..amount = 20.0
+          ),
+          statusCode: 200,
+          requestOptions: RequestOptions(path: ''),
+        );
+      };
 
       final response = await repository.executeTransaction(request, 'AGENT007');
 
       expect(response.status, 'SUCCESS');
       expect(response.referenceId, equals('REF_123'));
+      expect(pollCount, equals(2));
       
-      // Verify the withdrawal request mapping
-      final captured = mockLedgerApi.lastWithdrawalRequest!;
-      expect(captured.location?.latitude, 3.1390);
-      expect(captured.location?.longitude, 101.6869);
-      expect(captured.customerCard, 'XXXX-XXXX-XXXX-1234');
-      expect(captured.amount, 100.0);
-    });
-
-    test('executeTransaction (Deposit) returns success with destinationAccount', () async {
-      final request = TransactionExecutionRequest(
-        quoteId: 'QUOTE123',
-        fundingSource: FundingSource.CASH,
-        serviceCode: 'CASH_DEPOSIT',
-        amount: Decimal.parse('500.0'),
-        metadata: {
-          'destinationAccount': '1234567890',
-        },
-      );
-
-      final response = await repository.executeTransaction(request, 'AGENT007');
-
-      expect(response.status, 'SUCCESS');
-      expect(response.referenceId, equals('REF_123'));
-
-      final captured = mockLedgerApi.lastDepositRequest!;
-      expect(captured.amount, 500.0);
-      expect(captured.customerAccount, '1234567890');
-    });
-
-    test('executeTransaction (BILL_PAY) returns success', () async {
-      final request = TransactionExecutionRequest(
-        quoteId: 'QUOTE_BILL',
-        fundingSource: FundingSource.CASH,
-        serviceCode: 'BILL_PAY',
-        amount: Decimal.parse('50.0'),
-      );
-
-      final response = await repository.executeTransaction(request, 'AGENT007');
-
-      expect(response.status, 'SUCCESS');
-      expect(response.referenceId, equals('BILL_REF_123'));
-    });
-
-    test('executeTransaction (TOP_UP) returns success', () async {
-      final request = TransactionExecutionRequest(
-        quoteId: 'QUOTE_TOPUP',
-        fundingSource: FundingSource.CASH,
-        serviceCode: 'TOP_UP',
-        amount: Decimal.parse('30.0'),
-      );
-
-      final response = await repository.executeTransaction(request, 'AGENT007');
-
-      expect(response.status, 'SUCCESS');
-      expect(response.referenceId, equals('TOPUP_REF_123'));
+      // Verify start request
+      final capturedRequest = mockOrchestratorApi.lastStartRequest!;
+      
+      expect(capturedRequest.transactionType, TransactionType.ESSP_PURCHASE);
+      expect(capturedRequest.amount, 20.0);
+      expect(capturedRequest.geofenceLat, 3.1390);
     });
 
     test('initiateDuitNow returns success', () async {
@@ -463,20 +474,21 @@ void main() {
       final response = await repository.executeRetailSale(Decimal.parse('100.0'), 'AGENT007');
       expect(response.receiptReference, 'TRANS_123');
       expect(response.floatCreditAmount, Decimal.parse('98.0'));
-      expect(mockMerchantApi.lastRetailSaleCommand?.amount, 100.0);
+      expect(mockMerchantApi.lastRetailSaleCommand?.amount, '100');
     });
 
     test('executeCashback returns success', () async {
       final response = await repository.executeCashback(Decimal.parse('100.0'), Decimal.parse('20.0'), 'AGENT007');
       expect(response.receiptReference, 'TRANS_456');
       expect(response.cashBackAmount, Decimal.parse('20.0'));
-      expect(mockMerchantApi.lastCashBackCommand?.cashBackAmount, 20.0);
+      expect(mockMerchantApi.lastCashBackCommand?.cashBackAmount, '20');
     });
 
     test('executePinPurchase returns success', () async {
       final response = await repository.executePinPurchase(Decimal.parse('50.0'), 'AGENT007', 'CELCOM_50');
       expect(response.pinCode, '8888-9999');
       expect(response.receiptReference, 'PIN_123');
+      expect(mockMerchantApi.lastPinPurchaseCommand?.amount, '50');
     });
   });
 }

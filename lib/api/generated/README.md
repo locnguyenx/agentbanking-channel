@@ -71,9 +71,13 @@ Class | Method | HTTP request | Description
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**listAgents**](doc/AgentControllerOnboardingServiceApi.md#listagents) | **GET** /api/v1/backoffice/agents | 
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**updateAgent**](doc/AgentControllerOnboardingServiceApi.md#updateagent) | **PUT** /api/v1/backoffice/agents/{id} | 
 [*AuditLogControllerOnboardingServiceApi*](doc/AuditLogControllerOnboardingServiceApi.md) | [**getAuditLogs**](doc/AuditLogControllerOnboardingServiceApi.md#getauditlogs) | **GET** /api/v1/backoffice/audit-logs | 
+[*AuthControllerAuthIamServiceApi*](doc/AuthControllerAuthIamServiceApi.md) | [**authenticateUser**](doc/AuthControllerAuthIamServiceApi.md#authenticateuser) | **POST** /api/v1/auth/token | 
+[*AuthControllerAuthIamServiceApi*](doc/AuthControllerAuthIamServiceApi.md) | [**refreshToken**](doc/AuthControllerAuthIamServiceApi.md#refreshtoken) | **POST** /api/v1/auth/refresh | 
+[*AuthControllerAuthIamServiceApi*](doc/AuthControllerAuthIamServiceApi.md) | [**revokeToken**](doc/AuthControllerAuthIamServiceApi.md#revoketoken) | **POST** /api/v1/auth/revoke | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**jomPay**](doc/BillerControllerBillerServiceApi.md#jompay) | **POST** /api/v1/billpayment/jompay | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**payBill**](doc/BillerControllerBillerServiceApi.md#paybill) | **POST** /api/v1/bill/pay | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**topup**](doc/BillerControllerBillerServiceApi.md#topup) | **POST** /api/v1/topup | 
+[*ComplianceControllerRulesServiceApi*](doc/ComplianceControllerRulesServiceApi.md) | [**getComplianceStatus**](doc/ComplianceControllerRulesServiceApi.md#getcompliancestatus) | **GET** /api/v1/compliance/status | 
 [*EWalletControllerBillerServiceApi*](doc/EWalletControllerBillerServiceApi.md) | [**topup1**](doc/EWalletControllerBillerServiceApi.md#topup1) | **POST** /api/v1/ewallet/topup | 
 [*EWalletControllerBillerServiceApi*](doc/EWalletControllerBillerServiceApi.md) | [**withdrawal**](doc/EWalletControllerBillerServiceApi.md#withdrawal) | **POST** /api/v1/ewallet/withdraw | 
 [*EsspControllerBillerServiceApi*](doc/EsspControllerBillerServiceApi.md) | [**purchase**](doc/EsspControllerBillerServiceApi.md#purchase) | **POST** /api/v1/essp/purchase | 
@@ -90,18 +94,32 @@ Class | Method | HTTP request | Description
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**biometricMatch**](doc/OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**getKycReviewQueue**](doc/OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**submitApplication**](doc/OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
-[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyKyc**](doc/OnboardingControllerOnboardingServiceApi.md#verifykyc) | **POST** /api/v1/kyc/verify | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKad**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKadKyc**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykadkyc) | **POST** /api/v1/kyc/verify | 
+[*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**forceResolveTransaction**](doc/OrchestratorControllerOrchestratorServiceApi.md#forceresolvetransaction) | **POST** /api/v1/transactions/{workflowId}/force-resolve | Force resolve a stuck transaction workflow
+[*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**getTransactionStatus**](doc/OrchestratorControllerOrchestratorServiceApi.md#gettransactionstatus) | **GET** /api/v1/transactions/{workflowId}/status | Get transaction workflow status
+[*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**startTransaction**](doc/OrchestratorControllerOrchestratorServiceApi.md#starttransaction) | **POST** /api/v1/transactions | Start a new transaction via Temporal SAGA orchestration
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerApprove**](doc/ReconciliationControllerLedgerServiceApi.md#checkerapprove) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerReject**](doc/ReconciliationControllerLedgerServiceApi.md#checkerreject) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
 [*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**makerPropose**](doc/ReconciliationControllerLedgerServiceApi.md#makerpropose) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerApproveResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerapproveresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-approve | Checker approves proposed resolution
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerRejectResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerrejectresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-reject | Checker rejects proposed resolution
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**makerProposeResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#makerproposeresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/maker-propose | Maker proposes resolution for a transaction
 [*RulesControllerRulesServiceApi*](doc/RulesControllerRulesServiceApi.md) | [**createFeeConfig**](doc/RulesControllerRulesServiceApi.md#createfeeconfig) | **POST** /api/v1/rules/fees | 
 [*SwitchControllerSwitchAdapterServiceApi*](doc/SwitchControllerSwitchAdapterServiceApi.md) | [**duitNowTransfer**](doc/SwitchControllerSwitchAdapterServiceApi.md#duitnowtransfer) | **POST** /api/v1/transfer/duitnow | 
+[*SwitchControllerSwitchAdapterServiceApi*](doc/SwitchControllerSwitchAdapterServiceApi.md) | [**proxyEnquiry**](doc/SwitchControllerSwitchAdapterServiceApi.md#proxyenquiry) | **GET** /api/v1/transfer/proxy/enquiry | 
+[*TransactionControllerSwitchAdapterServiceApi*](doc/TransactionControllerSwitchAdapterServiceApi.md) | [**getTransactionQuote**](doc/TransactionControllerSwitchAdapterServiceApi.md#gettransactionquote) | **POST** /api/v1/transactions/quote | 
+[*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**changePassword**](doc/UserManagementControllerAuthIamServiceApi.md#changepassword) | **POST** /api/v1/auth/password/change | 
+[*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**createAgentUser**](doc/UserManagementControllerAuthIamServiceApi.md#createagentuser) | **POST** /api/v1/backoffice/agents/{agentId}/create-user | 
+[*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**forgotPassword**](doc/UserManagementControllerAuthIamServiceApi.md#forgotpassword) | **POST** /api/v1/auth/password/forgot | 
+[*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**getAgentUserStatus**](doc/UserManagementControllerAuthIamServiceApi.md#getagentuserstatus) | **GET** /api/v1/backoffice/agents/{agentId}/user-status | 
+[*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**resetPassword**](doc/UserManagementControllerAuthIamServiceApi.md#resetpassword) | **POST** /api/v1/auth/password/reset | 
 
 
 ## Documentation For Models
 
  - [AgentResponse](doc/AgentResponse.md)
+ - [AgentUserStatusResponse](doc/AgentUserStatusResponse.md)
  - [ApplicationSubmitRequest](doc/ApplicationSubmitRequest.md)
  - [ApplicationSubmitResponse](doc/ApplicationSubmitResponse.md)
  - [BalanceInquiryExternalRequest](doc/BalanceInquiryExternalRequest.md)
@@ -111,7 +129,11 @@ Class | Method | HTTP request | Description
  - [CardAuthRequest](doc/CardAuthRequest.md)
  - [CashBackCommand](doc/CashBackCommand.md)
  - [CashBackResponse](doc/CashBackResponse.md)
+ - [ChangePasswordRequest](doc/ChangePasswordRequest.md)
+ - [ChangePasswordResponse](doc/ChangePasswordResponse.md)
+ - [CheckerActionRequest](doc/CheckerActionRequest.md)
  - [CreateAgentExternalRequest](doc/CreateAgentExternalRequest.md)
+ - [CreateAgentUserRequest](doc/CreateAgentUserRequest.md)
  - [DashboardResponse](doc/DashboardResponse.md)
  - [DashboardResponseDailyStatsInner](doc/DashboardResponseDailyStatsInner.md)
  - [DepositExternalRequest](doc/DepositExternalRequest.md)
@@ -126,29 +148,52 @@ Class | Method | HTTP request | Description
  - [EsspExternalRequest](doc/EsspExternalRequest.md)
  - [FeeConfigRequest](doc/FeeConfigRequest.md)
  - [FeeConfigResponse](doc/FeeConfigResponse.md)
+ - [ForceResolveRequest](doc/ForceResolveRequest.md)
+ - [ForceResolveTransaction200Response](doc/ForceResolveTransaction200Response.md)
+ - [ForgotPasswordRequest](doc/ForgotPasswordRequest.md)
+ - [ForgotPasswordResponse](doc/ForgotPasswordResponse.md)
  - [GeoLocation](doc/GeoLocation.md)
  - [JomPayExternalRequest](doc/JomPayExternalRequest.md)
  - [KycVerifyResponse](doc/KycVerifyResponse.md)
+ - [MakerProposalRequest](doc/MakerProposalRequest.md)
  - [MyKadVerifyRequest](doc/MyKadVerifyRequest.md)
  - [PinPurchaseCommand](doc/PinPurchaseCommand.md)
  - [PinPurchaseResponse](doc/PinPurchaseResponse.md)
+ - [RefreshTokenRequest](doc/RefreshTokenRequest.md)
+ - [ResetPasswordRequest](doc/ResetPasswordRequest.md)
+ - [ResetPasswordResponse](doc/ResetPasswordResponse.md)
+ - [ResolutionResponse](doc/ResolutionResponse.md)
  - [RetailCashbackExternalRequest](doc/RetailCashbackExternalRequest.md)
  - [RetailPinPurchaseExternalRequest](doc/RetailPinPurchaseExternalRequest.md)
  - [RetailSaleCommand](doc/RetailSaleCommand.md)
  - [RetailSaleExternalRequest](doc/RetailSaleExternalRequest.md)
  - [RetailSaleResponse](doc/RetailSaleResponse.md)
  - [ReversalRequest](doc/ReversalRequest.md)
+ - [RevokeTokenRequest](doc/RevokeTokenRequest.md)
  - [SettlementResponse](doc/SettlementResponse.md)
+ - [TokenRequest](doc/TokenRequest.md)
+ - [TokenResponse](doc/TokenResponse.md)
  - [TopupExternalRequest](doc/TopupExternalRequest.md)
  - [TransactionListResponse](doc/TransactionListResponse.md)
+ - [TransactionQuoteRequest](doc/TransactionQuoteRequest.md)
+ - [TransactionQuoteResponse](doc/TransactionQuoteResponse.md)
  - [TransactionResponse](doc/TransactionResponse.md)
+ - [TransactionStartRequest](doc/TransactionStartRequest.md)
+ - [TransactionStartResponse](doc/TransactionStartResponse.md)
+ - [TransactionStatusResponse](doc/TransactionStatusResponse.md)
+ - [TransactionType](doc/TransactionType.md)
  - [UpdateAgentRequest](doc/UpdateAgentRequest.md)
+ - [UserResponse](doc/UserResponse.md)
  - [WithdrawalExternalRequest](doc/WithdrawalExternalRequest.md)
 
 
 ## Documentation For Authorization
 
-Endpoints do not require authorization.
+
+Authentication schemes defined for the API:
+### bearerAuth
+
+- **Type**: HTTP Bearer Token authentication (JWT)
 
 
 ## Author

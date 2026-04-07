@@ -12,14 +12,13 @@ part 'error_response_error.g.dart';
 /// ErrorResponseError
 ///
 /// Properties:
-/// * [code]
-/// * [message]
-/// * [actionCode]
-/// * [traceId]
-/// * [timestamp]
+/// * [code] 
+/// * [message] 
+/// * [actionCode] 
+/// * [traceId] 
+/// * [timestamp] 
 @BuiltValue()
-abstract class ErrorResponseError
-    implements Built<ErrorResponseError, ErrorResponseErrorBuilder> {
+abstract class ErrorResponseError implements Built<ErrorResponseError, ErrorResponseErrorBuilder> {
   @BuiltValueField(wireName: r'code')
   String? get code;
 
@@ -38,19 +37,16 @@ abstract class ErrorResponseError
 
   ErrorResponseError._();
 
-  factory ErrorResponseError([void updates(ErrorResponseErrorBuilder b)]) =
-      _$ErrorResponseError;
+  factory ErrorResponseError([void updates(ErrorResponseErrorBuilder b)]) = _$ErrorResponseError;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ErrorResponseErrorBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ErrorResponseError> get serializer =>
-      _$ErrorResponseErrorSerializer();
+  static Serializer<ErrorResponseError> get serializer => _$ErrorResponseErrorSerializer();
 }
 
-class _$ErrorResponseErrorSerializer
-    implements PrimitiveSerializer<ErrorResponseError> {
+class _$ErrorResponseErrorSerializer implements PrimitiveSerializer<ErrorResponseError> {
   @override
   final Iterable<Type> types = const [ErrorResponseError, _$ErrorResponseError];
 
@@ -105,9 +101,7 @@ class _$ErrorResponseErrorSerializer
     ErrorResponseError object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -187,23 +181,19 @@ class _$ErrorResponseErrorSerializer
 }
 
 class ErrorResponseErrorActionCodeEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'DECLINE')
-  static const ErrorResponseErrorActionCodeEnum DECLINE =
-      _$errorResponseErrorActionCodeEnum_DECLINE;
+  static const ErrorResponseErrorActionCodeEnum DECLINE = _$errorResponseErrorActionCodeEnum_DECLINE;
   @BuiltValueEnumConst(wireName: r'RETRY')
-  static const ErrorResponseErrorActionCodeEnum RETRY =
-      _$errorResponseErrorActionCodeEnum_RETRY;
+  static const ErrorResponseErrorActionCodeEnum RETRY = _$errorResponseErrorActionCodeEnum_RETRY;
   @BuiltValueEnumConst(wireName: r'REVIEW')
-  static const ErrorResponseErrorActionCodeEnum REVIEW =
-      _$errorResponseErrorActionCodeEnum_REVIEW;
+  static const ErrorResponseErrorActionCodeEnum REVIEW = _$errorResponseErrorActionCodeEnum_REVIEW;
 
-  static Serializer<ErrorResponseErrorActionCodeEnum> get serializer =>
-      _$errorResponseErrorActionCodeEnumSerializer;
+  static Serializer<ErrorResponseErrorActionCodeEnum> get serializer => _$errorResponseErrorActionCodeEnumSerializer;
 
-  const ErrorResponseErrorActionCodeEnum._(String name) : super(name);
+  const ErrorResponseErrorActionCodeEnum._(String name): super(name);
 
-  static BuiltSet<ErrorResponseErrorActionCodeEnum> get values =>
-      _$errorResponseErrorActionCodeEnumValues;
-  static ErrorResponseErrorActionCodeEnum valueOf(String name) =>
-      _$errorResponseErrorActionCodeEnumValueOf(name);
+  static BuiltSet<ErrorResponseErrorActionCodeEnum> get values => _$errorResponseErrorActionCodeEnumValues;
+  static ErrorResponseErrorActionCodeEnum valueOf(String name) => _$errorResponseErrorActionCodeEnumValueOf(name);
 }
+

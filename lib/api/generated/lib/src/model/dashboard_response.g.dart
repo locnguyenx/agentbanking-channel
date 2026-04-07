@@ -14,7 +14,7 @@ class _$DashboardResponse extends DashboardResponse {
   @override
   final int? totalTransactions;
   @override
-  final num? totalVolume;
+  final String? totalVolume;
   @override
   final num? successRate;
   @override
@@ -95,9 +95,9 @@ class DashboardResponseBuilder
   set totalTransactions(int? totalTransactions) =>
       _$this._totalTransactions = totalTransactions;
 
-  num? _totalVolume;
-  num? get totalVolume => _$this._totalVolume;
-  set totalVolume(num? totalVolume) => _$this._totalVolume = totalVolume;
+  String? _totalVolume;
+  String? get totalVolume => _$this._totalVolume;
+  set totalVolume(String? totalVolume) => _$this._totalVolume = totalVolume;
 
   num? _successRate;
   num? get successRate => _$this._successRate;

@@ -12,9 +12,9 @@ class _$CashBackResponse extends CashBackResponse {
   @override
   final String? transactionId;
   @override
-  final num? cashBackAmount;
+  final String? cashBackAmount;
   @override
-  final num? commission;
+  final String? commission;
 
   factory _$CashBackResponse(
           [void Function(CashBackResponseBuilder)? updates]) =>
@@ -76,14 +76,14 @@ class CashBackResponseBuilder
   set transactionId(String? transactionId) =>
       _$this._transactionId = transactionId;
 
-  num? _cashBackAmount;
-  num? get cashBackAmount => _$this._cashBackAmount;
-  set cashBackAmount(num? cashBackAmount) =>
+  String? _cashBackAmount;
+  String? get cashBackAmount => _$this._cashBackAmount;
+  set cashBackAmount(String? cashBackAmount) =>
       _$this._cashBackAmount = cashBackAmount;
 
-  num? _commission;
-  num? get commission => _$this._commission;
-  set commission(num? commission) => _$this._commission = commission;
+  String? _commission;
+  String? get commission => _$this._commission;
+  set commission(String? commission) => _$this._commission = commission;
 
   CashBackResponseBuilder() {
     CashBackResponse._defaults(this);

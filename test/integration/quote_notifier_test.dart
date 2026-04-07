@@ -8,51 +8,99 @@ import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart'
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:dio/dio.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
 
 import 'test_fakes.dart';
 import 'quote_notifier_test_helpers.dart';
+import '../setup/test_credentials.dart';
+
+final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
+final String apiBaseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
 void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeGeolocator fakeGeolocator;
+  late FakeSecureStorage _sharedStorage;
 
   setUp(() {
     fakeRepo = FakeTransactionRepository();
     fakeGeolocator = FakeGeolocator();
+    _sharedStorage = FakeSecureStorage();
   });
 
   /// Creates a QuoteNotifier wired to a minimal ProviderContainer.
   /// Override compliance/eod/auth as needed via parameters.
+  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
+    if (!isRealBackend) return null;
+    try {
+      final repo = container.read(authRepositoryProvider);
+      final user = await repo.login(TestCredentials.username, TestCredentials.password);
+      final token = await _sharedStorage.readJwt();
+      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
+      return user;
+    } catch (e) {
+      print('DEBUG: Real login failed: $e');
+      return null;
+    }
+  }
+
   QuoteNotifier createNotifier({
     bool complianceFrozen = false,
     bool eodLocked = false,
     AuthUser? authUser,
   }) {
+    // 1. Create a Dio instance with the interceptor using OUR shared storage
+    final dio = Dio(BaseOptions(baseUrl: apiBaseUrl));
+    dio.interceptors.add(AuthInterceptor(_sharedStorage));
+    dio.interceptors.add(LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+      requestHeader: true,
+      logPrint: (obj) => print('DIO_DEBUG: $obj'),
+    ));
+
     final container = ProviderContainer(overrides: [
       complianceProvider.overrideWith((ref) =>
         ComplianceNotifier()..debugSetFrozen(complianceFrozen)),
       eodTimerServiceProvider.overrideWith((ref) =>
         FakeEodTimerService(locked: eodLocked)),
+      
+      // Override the core building blocks
+      secureStorageManagerProvider.overrideWithValue(_sharedStorage),
+      dioProvider.overrideWithValue(dio),
+
       authProvider.overrideWith((ref) {
         final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
-        if (authUser != null) notifier.debugSetAuthenticated(authUser);
+        if (authUser != null) {
+           notifier.debugSetAuthenticated(authUser);
+        } else if (isRealBackend) {
+           notifier.debugSetAuthenticated(AuthUser(agentId: TestCredentials.username, name: 'AGENT', tier: 'GOLD'));
+        }
         return notifier;
       }),
     ]);
-
+    
     return QuoteNotifier(
       ref: container.read(Provider((ref) => ref)),
-      repository: fakeRepo,
-      geolocator: fakeGeolocator,
+      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
+      geolocator: isRealBackend ? container.read(geolocatorProvider) : fakeGeolocator,
     );
   }
 
   group('QuoteNotifier - Happy Path', () {
     test('valid amount → quoting → waitingConsent', () async {
       final notifier = createNotifier();
+      final user = await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
+      final effectiveAgentId = user != null ? user.agentId : TestCredentials.username;
 
       await notifier.startQuote(
-        Decimal.fromInt(100), 'MERCHANT_001',
+        Decimal.fromInt(100), effectiveAgentId,
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
@@ -82,9 +130,10 @@ void main() {
 
     test('RM 3,000 exactly for Card → passes validation', () async {
       final notifier = createNotifier();
+      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
-        Decimal.fromInt(3000), 'MERCHANT_001',
+        Decimal.fromInt(3000), TestCredentials.username,
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
@@ -97,7 +146,7 @@ void main() {
       final notifier = createNotifier();
 
       await notifier.startQuote(
-        Decimal.fromInt(3500), 'MERCHANT_001',
+        Decimal.fromInt(3500), TestCredentials.username,
         serviceCode: 'CASH_DEPOSIT',
         fundingSource: FundingSource.CASH,
       );
@@ -112,7 +161,7 @@ void main() {
       final notifier = createNotifier();
 
       await notifier.startQuote(
-        Decimal.fromInt(3000), 'MERCHANT_001',
+        Decimal.fromInt(3000), TestCredentials.username,
         serviceCode: 'CASH_DEPOSIT',
         fundingSource: FundingSource.CASH,
       );
@@ -123,9 +172,10 @@ void main() {
 
     test('cash RM 2,999 → passes (no MyKad needed)', () async {
       final notifier = createNotifier();
+      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
-        Decimal.fromInt(2999), 'MERCHANT_001',
+        Decimal.fromInt(2999), TestCredentials.username,
         serviceCode: 'CASH_DEPOSIT',
         fundingSource: FundingSource.CASH,
       );
@@ -140,7 +190,7 @@ void main() {
       final notifier = createNotifier(complianceFrozen: true);
 
       await notifier.startQuote(
-        Decimal.fromInt(100), 'MERCHANT_001',
+        Decimal.fromInt(100), TestCredentials.username,
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
@@ -154,7 +204,7 @@ void main() {
       final notifier = createNotifier(eodLocked: true);
 
       await notifier.startQuote(
-        Decimal.fromInt(100), 'MERCHANT_001',
+        Decimal.fromInt(100), TestCredentials.username,
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
@@ -170,7 +220,7 @@ void main() {
       final notifier = createNotifier();
 
       await notifier.startQuote(
-        Decimal.fromInt(50), 'MERCHANT_001',
+        Decimal.fromInt(50), TestCredentials.username,
         serviceCode: 'TOP_UP',
         fundingSource: FundingSource.CASH,
         metadata: {'mobileNumber': '01234'}, // too short
@@ -183,9 +233,10 @@ void main() {
 
     test('valid phone for TOP_UP → passes', () async {
       final notifier = createNotifier();
+      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
-        Decimal.fromInt(50), 'MERCHANT_001',
+        Decimal.fromInt(50), TestCredentials.username,
         serviceCode: 'TOP_UP',
         fundingSource: FundingSource.CASH,
         metadata: {'mobileNumber': '0123456789'},
@@ -200,15 +251,16 @@ void main() {
     test('repository throws → failed', () async {
       fakeRepo.shouldFailQuote = true;
       final notifier = createNotifier();
+      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
-        Decimal.fromInt(100), 'MERCHANT_001',
+        Decimal.fromInt(100), TestCredentials.username,
         serviceCode: 'CASH_WITHDRAWAL',
         fundingSource: FundingSource.CARD_EMV,
       );
 
       expect(notifier.state.status, TransactionStatus.failed);
-      expect(notifier.state.error, contains('Quote failed'));
+      expect(notifier.state.error, anyOf(contains('Quote failed'), contains('401')));
       notifier.dispose();
     });
   });

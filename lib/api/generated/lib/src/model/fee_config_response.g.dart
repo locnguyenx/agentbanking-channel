@@ -79,9 +79,9 @@ class _$FeeConfigResponse extends FeeConfigResponse {
   @override
   final String? feeType;
   @override
-  final num? feeAmount;
+  final String? feeAmount;
   @override
-  final num? percentage;
+  final String? percentage;
   @override
   final FeeConfigResponseStatusEnum? status;
   @override
@@ -180,13 +180,13 @@ class FeeConfigResponseBuilder
   String? get feeType => _$this._feeType;
   set feeType(String? feeType) => _$this._feeType = feeType;
 
-  num? _feeAmount;
-  num? get feeAmount => _$this._feeAmount;
-  set feeAmount(num? feeAmount) => _$this._feeAmount = feeAmount;
+  String? _feeAmount;
+  String? get feeAmount => _$this._feeAmount;
+  set feeAmount(String? feeAmount) => _$this._feeAmount = feeAmount;
 
-  num? _percentage;
-  num? get percentage => _$this._percentage;
-  set percentage(num? percentage) => _$this._percentage = percentage;
+  String? _percentage;
+  String? get percentage => _$this._percentage;
+  set percentage(String? percentage) => _$this._percentage = percentage;
 
   FeeConfigResponseStatusEnum? _status;
   FeeConfigResponseStatusEnum? get status => _$this._status;

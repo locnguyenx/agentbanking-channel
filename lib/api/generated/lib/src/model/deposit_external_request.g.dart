@@ -60,7 +60,7 @@ class _$DepositExternalRequestCurrencyEnumSerializer
 
 class _$DepositExternalRequest extends DepositExternalRequest {
   @override
-  final num amount;
+  final String amount;
   @override
   final DepositExternalRequestCurrencyEnum currency;
   @override
@@ -135,9 +135,9 @@ class DepositExternalRequestBuilder
     implements Builder<DepositExternalRequest, DepositExternalRequestBuilder> {
   _$DepositExternalRequest? _$v;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   DepositExternalRequestCurrencyEnum? _currency;
   DepositExternalRequestCurrencyEnum? get currency => _$this._currency;

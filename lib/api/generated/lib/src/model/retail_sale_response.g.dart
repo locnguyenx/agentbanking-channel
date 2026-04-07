@@ -12,11 +12,11 @@ class _$RetailSaleResponse extends RetailSaleResponse {
   @override
   final String? transactionId;
   @override
-  final num? amount;
+  final String? amount;
   @override
-  final num? mdrAmount;
+  final String? mdrAmount;
   @override
-  final num? netToMerchant;
+  final String? netToMerchant;
 
   factory _$RetailSaleResponse(
           [void Function(RetailSaleResponseBuilder)? updates]) =>
@@ -86,17 +86,17 @@ class RetailSaleResponseBuilder
   set transactionId(String? transactionId) =>
       _$this._transactionId = transactionId;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
-  num? _mdrAmount;
-  num? get mdrAmount => _$this._mdrAmount;
-  set mdrAmount(num? mdrAmount) => _$this._mdrAmount = mdrAmount;
+  String? _mdrAmount;
+  String? get mdrAmount => _$this._mdrAmount;
+  set mdrAmount(String? mdrAmount) => _$this._mdrAmount = mdrAmount;
 
-  num? _netToMerchant;
-  num? get netToMerchant => _$this._netToMerchant;
-  set netToMerchant(num? netToMerchant) =>
+  String? _netToMerchant;
+  String? get netToMerchant => _$this._netToMerchant;
+  set netToMerchant(String? netToMerchant) =>
       _$this._netToMerchant = netToMerchant;
 
   RetailSaleResponseBuilder() {

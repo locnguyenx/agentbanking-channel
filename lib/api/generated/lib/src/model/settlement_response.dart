@@ -12,16 +12,15 @@ part 'settlement_response.g.dart';
 /// SettlementResponse
 ///
 /// Properties:
-/// * [settlementId]
-/// * [agentId]
-/// * [date]
-/// * [totalTransactions]
-/// * [totalAmount]
-/// * [commission]
-/// * [status]
+/// * [settlementId] 
+/// * [agentId] 
+/// * [date] 
+/// * [totalTransactions] 
+/// * [totalAmount] 
+/// * [commission] 
+/// * [status] 
 @BuiltValue()
-abstract class SettlementResponse
-    implements Built<SettlementResponse, SettlementResponseBuilder> {
+abstract class SettlementResponse implements Built<SettlementResponse, SettlementResponseBuilder> {
   @BuiltValueField(wireName: r'settlementId')
   String? get settlementId;
 
@@ -35,29 +34,26 @@ abstract class SettlementResponse
   int? get totalTransactions;
 
   @BuiltValueField(wireName: r'totalAmount')
-  num? get totalAmount;
+  String? get totalAmount;
 
   @BuiltValueField(wireName: r'commission')
-  num? get commission;
+  String? get commission;
 
   @BuiltValueField(wireName: r'status')
   String? get status;
 
   SettlementResponse._();
 
-  factory SettlementResponse([void updates(SettlementResponseBuilder b)]) =
-      _$SettlementResponse;
+  factory SettlementResponse([void updates(SettlementResponseBuilder b)]) = _$SettlementResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(SettlementResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<SettlementResponse> get serializer =>
-      _$SettlementResponseSerializer();
+  static Serializer<SettlementResponse> get serializer => _$SettlementResponseSerializer();
 }
 
-class _$SettlementResponseSerializer
-    implements PrimitiveSerializer<SettlementResponse> {
+class _$SettlementResponseSerializer implements PrimitiveSerializer<SettlementResponse> {
   @override
   final Iterable<Type> types = const [SettlementResponse, _$SettlementResponse];
 
@@ -101,14 +97,14 @@ class _$SettlementResponseSerializer
       yield r'totalAmount';
       yield serializers.serialize(
         object.totalAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.commission != null) {
       yield r'commission';
       yield serializers.serialize(
         object.commission,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.status != null) {
@@ -126,9 +122,7 @@ class _$SettlementResponseSerializer
     SettlementResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -174,15 +168,15 @@ class _$SettlementResponseSerializer
         case r'totalAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.totalAmount = valueDes;
           break;
         case r'commission':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.commission = valueDes;
           break;
         case r'status':
@@ -220,3 +214,4 @@ class _$SettlementResponseSerializer
     return result.build();
   }
 }
+

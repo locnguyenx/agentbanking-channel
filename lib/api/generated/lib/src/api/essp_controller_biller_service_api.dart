@@ -4,13 +4,16 @@
 
 import 'dart:async';
 
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
+import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/essp_external_request.dart';
 import 'package:agent_api/src/model/transaction_response.dart';
 
 class EsspControllerBillerServiceApi {
+
   final Dio _dio;
 
   final Serializers _serializers;
@@ -18,10 +21,10 @@ class EsspControllerBillerServiceApi {
   const EsspControllerBillerServiceApi(this._dio, this._serializers);
 
   /// purchase
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [esspExternalRequest]
+  /// * [esspExternalRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -31,7 +34,7 @@ class EsspControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> purchase({
+  Future<Response<TransactionResponse>> purchase({ 
     required EsspExternalRequest esspExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -47,7 +50,13 @@ class EsspControllerBillerServiceApi {
         ...?headers,
       },
       extra: <String, dynamic>{
-        'secure': <Map<String, String>>[],
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
         ...?extra,
       },
       contentType: 'application/json',
@@ -58,11 +67,11 @@ class EsspControllerBillerServiceApi {
 
     try {
       const _type = FullType(EsspExternalRequest);
-      _bodyData =
-          _serializers.serialize(esspExternalRequest, specifiedType: _type);
-    } catch (error, stackTrace) {
+      _bodyData = _serializers.serialize(esspExternalRequest, specifiedType: _type);
+
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(
+         requestOptions: _options.compose(
           _dio.options,
           _path,
         ),
@@ -85,12 +94,11 @@ class EsspControllerBillerServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null
-          ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(TransactionResponse),
-            ) as TransactionResponse;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(TransactionResponse),
+      ) as TransactionResponse;
+
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -112,4 +120,5 @@ class EsspControllerBillerServiceApi {
       extra: _response.extra,
     );
   }
+
 }

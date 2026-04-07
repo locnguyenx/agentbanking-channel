@@ -10,7 +10,7 @@ class _$RetailCashbackExternalRequest extends RetailCashbackExternalRequest {
   @override
   final String merchantId;
   @override
-  final num cashBackAmount;
+  final String cashBackAmount;
   @override
   final String? cardData;
   @override
@@ -83,9 +83,9 @@ class RetailCashbackExternalRequestBuilder
   String? get merchantId => _$this._merchantId;
   set merchantId(String? merchantId) => _$this._merchantId = merchantId;
 
-  num? _cashBackAmount;
-  num? get cashBackAmount => _$this._cashBackAmount;
-  set cashBackAmount(num? cashBackAmount) =>
+  String? _cashBackAmount;
+  String? get cashBackAmount => _$this._cashBackAmount;
+  set cashBackAmount(String? cashBackAmount) =>
       _$this._cashBackAmount = cashBackAmount;
 
   String? _cardData;

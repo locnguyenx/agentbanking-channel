@@ -40,6 +40,10 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
   void initState() {
     super.initState();
     _selectedBillerCode = widget.fixedBillerCode;
+    final allowed = FundingSource.allowedFor(widget.serviceCode);
+    if (allowed.isNotEmpty) {
+      _fundingSource = allowed.first;
+    }
   }
 
   @override
@@ -116,6 +120,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
 
               // Metadata Input (Ref-1 / Account Number / Phone)
               TextFormField(
+                key: Key(widget.metadataKey),
                 controller: _metadataController,
                 decoration: InputDecoration(
                   labelText: widget.metadataLabel,
@@ -134,6 +139,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
 
               // Amount
               TextFormField(
+                key: const Key('field_amount'),
                 controller: _amountController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: const InputDecoration(
@@ -147,28 +153,19 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
 
               // Funding Source Toggle
               const Text('Funding Method', style: TextStyle(fontWeight: FontWeight.bold)),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<FundingSource>(
-                      key: const Key('funding_source_CASH'),
-                      title: const Text('Cash'),
-                      value: FundingSource.CASH,
-                      groupValue: _fundingSource,
-                      onChanged: (val) => setState(() => _fundingSource = val!),
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile<FundingSource>(
-                      key: const Key('funding_source_CARD_EMV'),
-                      title: const Text('Card'),
-                      value: FundingSource.CARD_EMV,
-                      groupValue: _fundingSource,
-                      onChanged: (val) => setState(() => _fundingSource = val!),
-                    ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 8),
+              ...FundingSource.allowedFor(widget.serviceCode).map((source) => RadioListTile<FundingSource>(
+                key: Key('funding_source_${source.name}'),
+                title: Text(source.label),
+                value: source,
+                groupValue: _fundingSource,
+                onChanged: (val) {
+                  debugPrint('DEBUG BILLPAY: Funding source changed to \${val?.name}');
+                  setState(() => _fundingSource = val!);
+                },
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              )),
               const SizedBox(height: 32),
 
               // Action Button
@@ -179,6 +176,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                     child: Text(trState.error!, style: const TextStyle(color: Colors.red)),
                   ),
                 ElevatedButton(
+                  key: const Key('btn_main_action'),
                   onPressed: _submit,
                   style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                   child: const Text('PROCEED'),
@@ -195,6 +193,7 @@ class _BillPaymentBaseScreenState extends ConsumerState<BillPaymentBaseScreen> {
                 Text('Total: RM ${trState.quote!.total}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
                 ElevatedButton(
+                  key: const Key('btn_confirm'),
                   onPressed: () => trNotifier.confirmConsent(),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
                   child: const Text('Confirm'),

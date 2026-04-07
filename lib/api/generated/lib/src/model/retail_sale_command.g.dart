@@ -10,7 +10,7 @@ class _$RetailSaleCommand extends RetailSaleCommand {
   @override
   final String? merchantId;
   @override
-  final num? amount;
+  final String? amount;
   @override
   final String? cardData;
   @override
@@ -80,9 +80,9 @@ class RetailSaleCommandBuilder
   String? get merchantId => _$this._merchantId;
   set merchantId(String? merchantId) => _$this._merchantId = merchantId;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   String? _cardData;
   String? get cardData => _$this._cardData;

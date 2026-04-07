@@ -66,7 +66,7 @@ class _$BillPayExternalRequest extends BillPayExternalRequest {
   @override
   final String? ref2;
   @override
-  final num amount;
+  final String amount;
   @override
   final BillPayExternalRequestCurrencyEnum currency;
   @override
@@ -153,9 +153,9 @@ class BillPayExternalRequestBuilder
   String? get ref2 => _$this._ref2;
   set ref2(String? ref2) => _$this._ref2 = ref2;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   BillPayExternalRequestCurrencyEnum? _currency;
   BillPayExternalRequestCurrencyEnum? get currency => _$this._currency;

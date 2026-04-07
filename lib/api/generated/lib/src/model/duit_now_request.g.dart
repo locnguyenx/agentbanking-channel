@@ -14,7 +14,7 @@ class _$DuitNowRequest extends DuitNowRequest {
   @override
   final String proxyValue;
   @override
-  final num amount;
+  final String amount;
 
   factory _$DuitNowRequest([void Function(DuitNowRequestBuilder)? updates]) =>
       (DuitNowRequestBuilder()..update(updates))._build();
@@ -81,9 +81,9 @@ class DuitNowRequestBuilder
   String? get proxyValue => _$this._proxyValue;
   set proxyValue(String? proxyValue) => _$this._proxyValue = proxyValue;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   DuitNowRequestBuilder() {
     DuitNowRequest._defaults(this);

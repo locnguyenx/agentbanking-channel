@@ -11,20 +11,18 @@ part 'retail_sale_external_request.g.dart';
 /// RetailSaleExternalRequest
 ///
 /// Properties:
-/// * [merchantId]
-/// * [amount]
-/// * [cardData]
-/// * [pinBlock]
-/// * [idempotencyKey]
+/// * [merchantId] 
+/// * [amount] 
+/// * [cardData] 
+/// * [pinBlock] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class RetailSaleExternalRequest
-    implements
-        Built<RetailSaleExternalRequest, RetailSaleExternalRequestBuilder> {
+abstract class RetailSaleExternalRequest implements Built<RetailSaleExternalRequest, RetailSaleExternalRequestBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String get merchantId;
 
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   @BuiltValueField(wireName: r'cardData')
   String? get cardData;
@@ -37,25 +35,18 @@ abstract class RetailSaleExternalRequest
 
   RetailSaleExternalRequest._();
 
-  factory RetailSaleExternalRequest(
-          [void updates(RetailSaleExternalRequestBuilder b)]) =
-      _$RetailSaleExternalRequest;
+  factory RetailSaleExternalRequest([void updates(RetailSaleExternalRequestBuilder b)]) = _$RetailSaleExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailSaleExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailSaleExternalRequest> get serializer =>
-      _$RetailSaleExternalRequestSerializer();
+  static Serializer<RetailSaleExternalRequest> get serializer => _$RetailSaleExternalRequestSerializer();
 }
 
-class _$RetailSaleExternalRequestSerializer
-    implements PrimitiveSerializer<RetailSaleExternalRequest> {
+class _$RetailSaleExternalRequestSerializer implements PrimitiveSerializer<RetailSaleExternalRequest> {
   @override
-  final Iterable<Type> types = const [
-    RetailSaleExternalRequest,
-    _$RetailSaleExternalRequest
-  ];
+  final Iterable<Type> types = const [RetailSaleExternalRequest, _$RetailSaleExternalRequest];
 
   @override
   final String wireName = r'RetailSaleExternalRequest';
@@ -73,7 +64,7 @@ class _$RetailSaleExternalRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
     if (object.cardData != null) {
       yield r'cardData';
@@ -102,9 +93,7 @@ class _$RetailSaleExternalRequestSerializer
     RetailSaleExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -129,8 +118,8 @@ class _$RetailSaleExternalRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'cardData':
@@ -182,3 +171,4 @@ class _$RetailSaleExternalRequestSerializer
     return result.build();
   }
 }
+

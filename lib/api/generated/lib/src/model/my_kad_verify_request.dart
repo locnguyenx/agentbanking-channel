@@ -14,11 +14,10 @@ part 'my_kad_verify_request.g.dart';
 /// Properties:
 /// * [mykadNumber] - MyKad number (12 digits)
 /// * [name] - Full name from MyKad
-/// * [dateOfBirth]
-/// * [address]
+/// * [dateOfBirth] 
+/// * [address] 
 @BuiltValue()
-abstract class MyKadVerifyRequest
-    implements Built<MyKadVerifyRequest, MyKadVerifyRequestBuilder> {
+abstract class MyKadVerifyRequest implements Built<MyKadVerifyRequest, MyKadVerifyRequestBuilder> {
   /// MyKad number (12 digits)
   @BuiltValueField(wireName: r'mykadNumber')
   String get mykadNumber;
@@ -35,19 +34,16 @@ abstract class MyKadVerifyRequest
 
   MyKadVerifyRequest._();
 
-  factory MyKadVerifyRequest([void updates(MyKadVerifyRequestBuilder b)]) =
-      _$MyKadVerifyRequest;
+  factory MyKadVerifyRequest([void updates(MyKadVerifyRequestBuilder b)]) = _$MyKadVerifyRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(MyKadVerifyRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<MyKadVerifyRequest> get serializer =>
-      _$MyKadVerifyRequestSerializer();
+  static Serializer<MyKadVerifyRequest> get serializer => _$MyKadVerifyRequestSerializer();
 }
 
-class _$MyKadVerifyRequestSerializer
-    implements PrimitiveSerializer<MyKadVerifyRequest> {
+class _$MyKadVerifyRequestSerializer implements PrimitiveSerializer<MyKadVerifyRequest> {
   @override
   final Iterable<Type> types = const [MyKadVerifyRequest, _$MyKadVerifyRequest];
 
@@ -91,9 +87,7 @@ class _$MyKadVerifyRequestSerializer
     MyKadVerifyRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -164,3 +158,4 @@ class _$MyKadVerifyRequestSerializer
     return result.build();
   }
 }
+

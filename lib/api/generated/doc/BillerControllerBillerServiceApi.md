@@ -19,6 +19,8 @@ Method | HTTP request | Description
 
 
 
+**DEPRECATED** - Use `POST /api/v1/transactions` with `transactionType: BILL_PAYMENT` instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
+
 ### Example
 ```dart
 import 'package:agent_api/api.dart';
@@ -46,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -59,6 +61,8 @@ No authorization required
 > TransactionResponse payBill(billPayExternalRequest)
 
 
+
+**DEPRECATED** - Use `POST /api/v1/transactions` with `transactionType: BILL_PAYMENT` instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
 
 ### Example
 ```dart
@@ -87,7 +91,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
@@ -100,6 +104,8 @@ No authorization required
 > TransactionResponse topup(topupExternalRequest)
 
 
+
+**DEPRECATED** - Use `POST /api/v1/transactions` with `transactionType: BILL_PAYMENT` instead. This endpoint will be removed in a future version. See [API Changelog](/docs/api/CHANGELOG-2026-04-05-transaction-orchestrator.md) for migration guide. 
 
 ### Example
 ```dart
@@ -128,7 +134,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

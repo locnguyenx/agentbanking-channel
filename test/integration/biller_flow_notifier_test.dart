@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:agentbanking_channel/features/transactions/providers/biller_flow_notifier.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
@@ -9,21 +10,38 @@ import 'package:agentbanking_channel/features/compliance/providers/compliance_pr
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
 import 'package:decimal/decimal.dart';
 
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
+import 'package:dio/dio.dart';
+
 import 'test_fakes.dart';
+import '../setup/test_credentials.dart';
+
+const apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
+
+final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 void main() {
   late FakeTransactionRepository fakeRepo;
   late FakeFloatNotifier fakeFloat;
   late FakeRef fakeRef;
   late FakeGeolocator fakeGeolocator;
+  late ProviderContainer container;
+  late FakeSecureStorage _sharedStorage;
 
   setUp(() {
     fakeRepo = FakeTransactionRepository();
     fakeFloat = FakeFloatNotifier();
     fakeRef = FakeRef();
     fakeGeolocator = FakeGeolocator();
+    _sharedStorage = FakeSecureStorage();
 
-    // Stub mandatory providers for TransactionGuardMixin
+    // Stub mandatory providers
     final authNotifier = FakeAuthNotifier(user: AuthUser(agentId: 'AGENT-123', name: 'AHMAD', tier: 'PLATINUM'));
     final complianceNotifier = FakeComplianceNotifier(frozen: false);
     fakeRef.stubProvider(complianceProvider, complianceNotifier.state);
@@ -31,7 +49,44 @@ void main() {
     fakeRef.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService(locked: false));
     fakeRef.stubProvider(authProvider, authNotifier.state);
     fakeRef.stubProvider(authProvider.notifier, authNotifier);
+
+    container = ProviderContainer(overrides: [
+      secureStorageManagerProvider.overrideWithValue(_sharedStorage),
+      authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
+    ]);
   });
+
+  tearDown(() {
+    container.dispose();
+  });
+
+  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
+    if (!isRealBackend) return null;
+    try {
+      final repo = container.read(authRepositoryProvider);
+      final user = await repo.login(TestCredentials.username, TestCredentials.password);
+      final token = await _sharedStorage.readJwt();
+      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
+      return user;
+    } catch (e) {
+      print('DEBUG: Real login failed: $e');
+      return null;
+    }
+  }
+
+  TransactionState quotedState() => TransactionState(
+    status: TransactionStatus.waitingConsent,
+    quote: TransactionQuoteResponse(
+      quoteId: 'Q001', amount: Decimal.fromInt(100),
+      fee: Decimal.fromInt(1), commission: Decimal.parse('0.50'),
+      total: Decimal.fromInt(101),
+    ),
+    amount: Decimal.fromInt(100),
+    serviceCode: 'UTILITY_BILL',
+    fundingSource: FundingSource.CASH,
+    idempotencyKey: 'KEY-BILL-001',
+    metadata: {'billerCode': 'TNB001', 'accountNumber': '123456789'},
+  );
 
   TransactionState billerState() => TransactionState(
     status: TransactionStatus.quoting,
@@ -43,11 +98,20 @@ void main() {
   );
 
   BillerFlowNotifier createNotifier() {
+    final dio = Dio(BaseOptions(baseUrl: apiBaseUrl));
+    dio.interceptors.add(AuthInterceptor(_sharedStorage));
+
+    final container = ProviderContainer(overrides: [
+      secureStorageManagerProvider.overrideWithValue(_sharedStorage),
+      authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
+      dioProvider.overrideWithValue(dio),
+    ]);
+
     return BillerFlowNotifier(
-      ref: fakeRef,
-      repository: fakeRepo,
-      floatNotifier: fakeFloat,
-      geolocator: fakeGeolocator,
+      ref: isRealBackend ? container.read(Provider((ref) => ref)) : fakeRef,
+      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
+      floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : fakeFloat,
+      geolocator: isRealBackend ? container.read(geolocatorProvider) : fakeGeolocator,
     );
   }
 
@@ -85,6 +149,23 @@ void main() {
 
       expect(notifier.state.status, TransactionStatus.failed);
       expect(notifier.state.error, contains('Quote failed'));
+      notifier.dispose();
+    });
+  });
+
+  group('BillerFlowNotifier - Utility Payment', () {
+    test('happy path: initiate → poll → success', () async {
+      final notifier = createNotifier();
+      final user = await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
+      final effectiveAgentId = user?.agentId ?? 'AGT-E2E-001';
+
+      await notifier.executeBillerPayment(quotedState());
+      notifier.debugSetState(notifier.state.copyWith(status: TransactionStatus.processing));
+
+      fakeFloat.resetFetchCount();
+      await notifier.startBillerPolling('TXN_001');
+
+      expect(notifier.state.status, TransactionStatus.success);
       notifier.dispose();
     });
   });

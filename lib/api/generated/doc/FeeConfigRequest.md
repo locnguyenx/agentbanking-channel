@@ -11,10 +11,10 @@ Name | Type | Description | Notes
 **agentType** | **String** |  | 
 **transactionType** | **String** |  | 
 **feeType** | **String** |  | 
-**feeAmount** | **num** |  | [optional] 
-**percentage** | **num** |  | [optional] 
-**minFee** | **num** |  | [optional] 
-**maxFee** | **num** |  | [optional] 
+**feeAmount** | **String** |  | [optional] 
+**percentage** | **String** |  | [optional] 
+**minFee** | **String** |  | [optional] 
+**maxFee** | **String** |  | [optional] 
 **currency** | **String** |  | 
 **effectiveFrom** | [**DateTime**](DateTime.md) |  | 
 **effectiveTo** | [**DateTime**](DateTime.md) |  | [optional] 

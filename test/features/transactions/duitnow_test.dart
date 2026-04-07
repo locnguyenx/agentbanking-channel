@@ -12,6 +12,7 @@ import 'package:agentbanking_channel/features/compliance/providers/compliance_pr
 import 'package:geolocator/geolocator.dart';
 import 'package:mockito/mockito.dart';
 import '../../test_utils.dart';
+import '../../setup/test_credentials.dart';
 
 class FakeFloatRepository extends Fake implements FloatRepository {
   @override
@@ -166,7 +167,7 @@ void main() {
 
       await notifier.startTransaction(
         Decimal.parse('100.0'),
-        'AGENT-001',
+        TestCredentials.username,
         serviceCode: 'DUITNOW_TRANSFER',
         fundingSource: FundingSource.DUITNOW_MOBILE,
       );
@@ -194,7 +195,7 @@ void main() {
 
       await notifier.startTransaction(
         Decimal.parse('100.0'),
-        'AGENT-001',
+        TestCredentials.username,
         serviceCode: 'DUITNOW_TRANSFER',
         fundingSource: FundingSource.DUITNOW_MOBILE,
       );
@@ -224,7 +225,7 @@ void main() {
 
       await notifier.startTransaction(
         Decimal.parse('100.0'),
-        'AGENT-001',
+        TestCredentials.username,
         serviceCode: 'DUITNOW_TRANSFER',
         fundingSource: FundingSource.DUITNOW_MOBILE,
       );

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **billerCode** | **String** | JomPay biller code | 
 **ref1** | **String** | JomPay reference 1 (bill account) | 
 **ref2** | **String** | JomPay reference 2 (optional) | [optional] 
-**amount** | **num** | Payment amount in MYR | 
+**amount** | **String** | Payment amount in MYR | 
 **currency** | **String** |  | [default to 'MYR']
 **idempotencyKey** | **String** |  | 
 **customerMobile** | **String** |  | [optional] 

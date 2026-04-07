@@ -12,14 +12,11 @@ part 'discrepancy_maker_action_request.g.dart';
 /// DiscrepancyMakerActionRequest
 ///
 /// Properties:
-/// * [action]
-/// * [notes]
-/// * [adjustmentAmount]
+/// * [action] 
+/// * [notes] 
+/// * [adjustmentAmount] 
 @BuiltValue()
-abstract class DiscrepancyMakerActionRequest
-    implements
-        Built<DiscrepancyMakerActionRequest,
-            DiscrepancyMakerActionRequestBuilder> {
+abstract class DiscrepancyMakerActionRequest implements Built<DiscrepancyMakerActionRequest, DiscrepancyMakerActionRequestBuilder> {
   @BuiltValueField(wireName: r'action')
   DiscrepancyMakerActionRequestActionEnum get action;
   // enum actionEnum {  PROPOSE,  ESCALATE,  };
@@ -28,29 +25,22 @@ abstract class DiscrepancyMakerActionRequest
   String get notes;
 
   @BuiltValueField(wireName: r'adjustmentAmount')
-  num? get adjustmentAmount;
+  String? get adjustmentAmount;
 
   DiscrepancyMakerActionRequest._();
 
-  factory DiscrepancyMakerActionRequest(
-          [void updates(DiscrepancyMakerActionRequestBuilder b)]) =
-      _$DiscrepancyMakerActionRequest;
+  factory DiscrepancyMakerActionRequest([void updates(DiscrepancyMakerActionRequestBuilder b)]) = _$DiscrepancyMakerActionRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DiscrepancyMakerActionRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DiscrepancyMakerActionRequest> get serializer =>
-      _$DiscrepancyMakerActionRequestSerializer();
+  static Serializer<DiscrepancyMakerActionRequest> get serializer => _$DiscrepancyMakerActionRequestSerializer();
 }
 
-class _$DiscrepancyMakerActionRequestSerializer
-    implements PrimitiveSerializer<DiscrepancyMakerActionRequest> {
+class _$DiscrepancyMakerActionRequestSerializer implements PrimitiveSerializer<DiscrepancyMakerActionRequest> {
   @override
-  final Iterable<Type> types = const [
-    DiscrepancyMakerActionRequest,
-    _$DiscrepancyMakerActionRequest
-  ];
+  final Iterable<Type> types = const [DiscrepancyMakerActionRequest, _$DiscrepancyMakerActionRequest];
 
   @override
   final String wireName = r'DiscrepancyMakerActionRequest';
@@ -74,7 +64,7 @@ class _$DiscrepancyMakerActionRequestSerializer
       yield r'adjustmentAmount';
       yield serializers.serialize(
         object.adjustmentAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -85,9 +75,7 @@ class _$DiscrepancyMakerActionRequestSerializer
     DiscrepancyMakerActionRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -105,8 +93,7 @@ class _$DiscrepancyMakerActionRequestSerializer
         case r'action':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType:
-                const FullType(DiscrepancyMakerActionRequestActionEnum),
+            specifiedType: const FullType(DiscrepancyMakerActionRequestActionEnum),
           ) as DiscrepancyMakerActionRequestActionEnum;
           result.action = valueDes;
           break;
@@ -120,8 +107,8 @@ class _$DiscrepancyMakerActionRequestSerializer
         case r'adjustmentAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.adjustmentAmount = valueDes;
           break;
         default:
@@ -154,20 +141,17 @@ class _$DiscrepancyMakerActionRequestSerializer
 }
 
 class DiscrepancyMakerActionRequestActionEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'PROPOSE')
-  static const DiscrepancyMakerActionRequestActionEnum PROPOSE =
-      _$discrepancyMakerActionRequestActionEnum_PROPOSE;
+  static const DiscrepancyMakerActionRequestActionEnum PROPOSE = _$discrepancyMakerActionRequestActionEnum_PROPOSE;
   @BuiltValueEnumConst(wireName: r'ESCALATE')
-  static const DiscrepancyMakerActionRequestActionEnum ESCALATE =
-      _$discrepancyMakerActionRequestActionEnum_ESCALATE;
+  static const DiscrepancyMakerActionRequestActionEnum ESCALATE = _$discrepancyMakerActionRequestActionEnum_ESCALATE;
 
-  static Serializer<DiscrepancyMakerActionRequestActionEnum> get serializer =>
-      _$discrepancyMakerActionRequestActionEnumSerializer;
+  static Serializer<DiscrepancyMakerActionRequestActionEnum> get serializer => _$discrepancyMakerActionRequestActionEnumSerializer;
 
-  const DiscrepancyMakerActionRequestActionEnum._(String name) : super(name);
+  const DiscrepancyMakerActionRequestActionEnum._(String name): super(name);
 
-  static BuiltSet<DiscrepancyMakerActionRequestActionEnum> get values =>
-      _$discrepancyMakerActionRequestActionEnumValues;
-  static DiscrepancyMakerActionRequestActionEnum valueOf(String name) =>
-      _$discrepancyMakerActionRequestActionEnumValueOf(name);
+  static BuiltSet<DiscrepancyMakerActionRequestActionEnum> get values => _$discrepancyMakerActionRequestActionEnumValues;
+  static DiscrepancyMakerActionRequestActionEnum valueOf(String name) => _$discrepancyMakerActionRequestActionEnumValueOf(name);
 }
+

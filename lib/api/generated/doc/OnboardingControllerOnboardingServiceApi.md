@@ -12,8 +12,8 @@ Method | HTTP request | Description
 [**biometricMatch**](OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
 [**getKycReviewQueue**](OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
 [**submitApplication**](OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
-[**verifyKyc**](OnboardingControllerOnboardingServiceApi.md#verifykyc) | **POST** /api/v1/kyc/verify | 
 [**verifyMyKad**](OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
+[**verifyMyKadKyc**](OnboardingControllerOnboardingServiceApi.md#verifymykadkyc) | **POST** /api/v1/kyc/verify | 
 
 
 # **biometricMatch**
@@ -48,12 +48,12 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -91,12 +91,12 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: */*
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -132,53 +132,12 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 
  - **Content-Type**: application/json
  - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **verifyKyc**
-> BuiltMap<String, JsonObject> verifyKyc(requestBody)
-
-
-
-### Example
-```dart
-import 'package:agent_api/api.dart';
-
-final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
-final BuiltMap<String, String> requestBody = ; // BuiltMap<String, String> | 
-
-try {
-    final response = api.verifyKyc(requestBody);
-    print(response);
-} on DioException catch (e) {
-    print('Exception when calling OnboardingControllerOnboardingServiceApi->verifyKyc: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **requestBody** | [**BuiltMap&lt;String, String&gt;**](String.md)|  | 
-
-### Return type
-
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: */*
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -214,7 +173,48 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-No authorization required
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **verifyMyKadKyc**
+> BuiltMap<String, JsonObject> verifyMyKadKyc(requestBody)
+
+
+
+### Example
+```dart
+import 'package:agent_api/api.dart';
+
+final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
+final BuiltMap<String, String> requestBody = ; // BuiltMap<String, String> | 
+
+try {
+    final response = api.verifyMyKadKyc(requestBody);
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling OnboardingControllerOnboardingServiceApi->verifyMyKadKyc: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **requestBody** | [**BuiltMap&lt;String, String&gt;**](String.md)|  | 
+
+### Return type
+
+[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

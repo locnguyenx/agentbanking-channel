@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **totalAgents** | **int** |  | [optional] 
 **activeAgents** | **int** |  | [optional] 
 **totalTransactions** | **int** |  | [optional] 
-**totalVolume** | **num** |  | [optional] 
+**totalVolume** | **String** |  | [optional] 
 **successRate** | **num** |  | [optional] 
 **dailyStats** | [**BuiltList&lt;DashboardResponseDailyStatsInner&gt;**](DashboardResponseDailyStatsInner.md) |  | [optional] 
 

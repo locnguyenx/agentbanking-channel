@@ -11,19 +11,18 @@ part 'cash_back_command.g.dart';
 /// CashBackCommand
 ///
 /// Properties:
-/// * [merchantId]
-/// * [cashBackAmount]
-/// * [cardData]
-/// * [pinBlock]
-/// * [idempotencyKey]
+/// * [merchantId] 
+/// * [cashBackAmount] 
+/// * [cardData] 
+/// * [pinBlock] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class CashBackCommand
-    implements Built<CashBackCommand, CashBackCommandBuilder> {
+abstract class CashBackCommand implements Built<CashBackCommand, CashBackCommandBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String? get merchantId;
 
   @BuiltValueField(wireName: r'cashBackAmount')
-  num? get cashBackAmount;
+  String? get cashBackAmount;
 
   @BuiltValueField(wireName: r'cardData')
   String? get cardData;
@@ -36,19 +35,16 @@ abstract class CashBackCommand
 
   CashBackCommand._();
 
-  factory CashBackCommand([void updates(CashBackCommandBuilder b)]) =
-      _$CashBackCommand;
+  factory CashBackCommand([void updates(CashBackCommandBuilder b)]) = _$CashBackCommand;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CashBackCommandBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CashBackCommand> get serializer =>
-      _$CashBackCommandSerializer();
+  static Serializer<CashBackCommand> get serializer => _$CashBackCommandSerializer();
 }
 
-class _$CashBackCommandSerializer
-    implements PrimitiveSerializer<CashBackCommand> {
+class _$CashBackCommandSerializer implements PrimitiveSerializer<CashBackCommand> {
   @override
   final Iterable<Type> types = const [CashBackCommand, _$CashBackCommand];
 
@@ -71,7 +67,7 @@ class _$CashBackCommandSerializer
       yield r'cashBackAmount';
       yield serializers.serialize(
         object.cashBackAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.cardData != null) {
@@ -103,9 +99,7 @@ class _$CashBackCommandSerializer
     CashBackCommand object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -130,8 +124,8 @@ class _$CashBackCommandSerializer
         case r'cashBackAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.cashBackAmount = valueDes;
           break;
         case r'cardData':
@@ -183,3 +177,4 @@ class _$CashBackCommandSerializer
     return result.build();
   }
 }
+

@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **status** | **String** |  | [optional] 
 **transactionId** | **String** |  | [optional] 
-**amount** | **num** |  | [optional] 
+**amount** | **String** |  | [optional] 
 **currency** | **String** |  | [optional] 
 **transactionType** | **String** |  | [optional] 
 **timestamp** | [**DateTime**](DateTime.md) |  | [optional] 

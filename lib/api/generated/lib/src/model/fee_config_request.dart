@@ -12,19 +12,18 @@ part 'fee_config_request.g.dart';
 /// FeeConfigRequest
 ///
 /// Properties:
-/// * [agentType]
-/// * [transactionType]
-/// * [feeType]
-/// * [feeAmount]
-/// * [percentage]
-/// * [minFee]
-/// * [maxFee]
-/// * [currency]
-/// * [effectiveFrom]
-/// * [effectiveTo]
+/// * [agentType] 
+/// * [transactionType] 
+/// * [feeType] 
+/// * [feeAmount] 
+/// * [percentage] 
+/// * [minFee] 
+/// * [maxFee] 
+/// * [currency] 
+/// * [effectiveFrom] 
+/// * [effectiveTo] 
 @BuiltValue()
-abstract class FeeConfigRequest
-    implements Built<FeeConfigRequest, FeeConfigRequestBuilder> {
+abstract class FeeConfigRequest implements Built<FeeConfigRequest, FeeConfigRequestBuilder> {
   @BuiltValueField(wireName: r'agentType')
   FeeConfigRequestAgentTypeEnum get agentType;
   // enum agentTypeEnum {  MICRO,  STANDARD,  PREMIER,  };
@@ -38,16 +37,16 @@ abstract class FeeConfigRequest
   // enum feeTypeEnum {  FIXED,  PERCENTAGE,  };
 
   @BuiltValueField(wireName: r'feeAmount')
-  num? get feeAmount;
+  String? get feeAmount;
 
   @BuiltValueField(wireName: r'percentage')
-  num? get percentage;
+  String? get percentage;
 
   @BuiltValueField(wireName: r'minFee')
-  num? get minFee;
+  String? get minFee;
 
   @BuiltValueField(wireName: r'maxFee')
-  num? get maxFee;
+  String? get maxFee;
 
   @BuiltValueField(wireName: r'currency')
   FeeConfigRequestCurrencyEnum get currency;
@@ -61,19 +60,16 @@ abstract class FeeConfigRequest
 
   FeeConfigRequest._();
 
-  factory FeeConfigRequest([void updates(FeeConfigRequestBuilder b)]) =
-      _$FeeConfigRequest;
+  factory FeeConfigRequest([void updates(FeeConfigRequestBuilder b)]) = _$FeeConfigRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(FeeConfigRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<FeeConfigRequest> get serializer =>
-      _$FeeConfigRequestSerializer();
+  static Serializer<FeeConfigRequest> get serializer => _$FeeConfigRequestSerializer();
 }
 
-class _$FeeConfigRequestSerializer
-    implements PrimitiveSerializer<FeeConfigRequest> {
+class _$FeeConfigRequestSerializer implements PrimitiveSerializer<FeeConfigRequest> {
   @override
   final Iterable<Type> types = const [FeeConfigRequest, _$FeeConfigRequest];
 
@@ -104,28 +100,28 @@ class _$FeeConfigRequestSerializer
       yield r'feeAmount';
       yield serializers.serialize(
         object.feeAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.percentage != null) {
       yield r'percentage';
       yield serializers.serialize(
         object.percentage,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.minFee != null) {
       yield r'minFee';
       yield serializers.serialize(
         object.minFee,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.maxFee != null) {
       yield r'maxFee';
       yield serializers.serialize(
         object.maxFee,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     yield r'currency';
@@ -153,9 +149,7 @@ class _$FeeConfigRequestSerializer
     FeeConfigRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -194,29 +188,29 @@ class _$FeeConfigRequestSerializer
         case r'feeAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.feeAmount = valueDes;
           break;
         case r'percentage':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.percentage = valueDes;
           break;
         case r'minFee':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.minFee = valueDes;
           break;
         case r'maxFee':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.maxFee = valueDes;
           break;
         case r'currency':
@@ -270,98 +264,76 @@ class _$FeeConfigRequestSerializer
 }
 
 class FeeConfigRequestAgentTypeEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'MICRO')
-  static const FeeConfigRequestAgentTypeEnum MICRO =
-      _$feeConfigRequestAgentTypeEnum_MICRO;
+  static const FeeConfigRequestAgentTypeEnum MICRO = _$feeConfigRequestAgentTypeEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const FeeConfigRequestAgentTypeEnum STANDARD =
-      _$feeConfigRequestAgentTypeEnum_STANDARD;
+  static const FeeConfigRequestAgentTypeEnum STANDARD = _$feeConfigRequestAgentTypeEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIER')
-  static const FeeConfigRequestAgentTypeEnum PREMIER =
-      _$feeConfigRequestAgentTypeEnum_PREMIER;
+  static const FeeConfigRequestAgentTypeEnum PREMIER = _$feeConfigRequestAgentTypeEnum_PREMIER;
 
-  static Serializer<FeeConfigRequestAgentTypeEnum> get serializer =>
-      _$feeConfigRequestAgentTypeEnumSerializer;
+  static Serializer<FeeConfigRequestAgentTypeEnum> get serializer => _$feeConfigRequestAgentTypeEnumSerializer;
 
-  const FeeConfigRequestAgentTypeEnum._(String name) : super(name);
+  const FeeConfigRequestAgentTypeEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigRequestAgentTypeEnum> get values =>
-      _$feeConfigRequestAgentTypeEnumValues;
-  static FeeConfigRequestAgentTypeEnum valueOf(String name) =>
-      _$feeConfigRequestAgentTypeEnumValueOf(name);
+  static BuiltSet<FeeConfigRequestAgentTypeEnum> get values => _$feeConfigRequestAgentTypeEnumValues;
+  static FeeConfigRequestAgentTypeEnum valueOf(String name) => _$feeConfigRequestAgentTypeEnumValueOf(name);
 }
 
 class FeeConfigRequestTransactionTypeEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'CASH_WITHDRAWAL')
-  static const FeeConfigRequestTransactionTypeEnum CASH_WITHDRAWAL =
-      _$feeConfigRequestTransactionTypeEnum_CASH_WITHDRAWAL;
+  static const FeeConfigRequestTransactionTypeEnum CASH_WITHDRAWAL = _$feeConfigRequestTransactionTypeEnum_CASH_WITHDRAWAL;
   @BuiltValueEnumConst(wireName: r'CASH_DEPOSIT')
-  static const FeeConfigRequestTransactionTypeEnum CASH_DEPOSIT =
-      _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT;
+  static const FeeConfigRequestTransactionTypeEnum CASH_DEPOSIT = _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT;
   @BuiltValueEnumConst(wireName: r'BALANCE_INQUIRY')
-  static const FeeConfigRequestTransactionTypeEnum BALANCE_INQUIRY =
-      _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY;
+  static const FeeConfigRequestTransactionTypeEnum BALANCE_INQUIRY = _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY;
   @BuiltValueEnumConst(wireName: r'DUITNOW_TRANSFER')
-  static const FeeConfigRequestTransactionTypeEnum DUITNOW_TRANSFER =
-      _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER;
+  static const FeeConfigRequestTransactionTypeEnum DUITNOW_TRANSFER = _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER;
   @BuiltValueEnumConst(wireName: r'JOMPAY')
-  static const FeeConfigRequestTransactionTypeEnum JOMPAY =
-      _$feeConfigRequestTransactionTypeEnum_JOMPAY;
+  static const FeeConfigRequestTransactionTypeEnum JOMPAY = _$feeConfigRequestTransactionTypeEnum_JOMPAY;
   @BuiltValueEnumConst(wireName: r'CELCOM_TOPUP')
-  static const FeeConfigRequestTransactionTypeEnum CELCOM_TOPUP =
-      _$feeConfigRequestTransactionTypeEnum_CELCOM_TOPUP;
+  static const FeeConfigRequestTransactionTypeEnum CELCOM_TOPUP = _$feeConfigRequestTransactionTypeEnum_CELCOM_TOPUP;
   @BuiltValueEnumConst(wireName: r'M1_TOPUP')
-  static const FeeConfigRequestTransactionTypeEnum m1TOPUP =
-      _$feeConfigRequestTransactionTypeEnum_m1TOPUP;
+  static const FeeConfigRequestTransactionTypeEnum m1TOPUP = _$feeConfigRequestTransactionTypeEnum_m1TOPUP;
   @BuiltValueEnumConst(wireName: r'ESSP_PURCHASE')
-  static const FeeConfigRequestTransactionTypeEnum ESSP_PURCHASE =
-      _$feeConfigRequestTransactionTypeEnum_ESSP_PURCHASE;
+  static const FeeConfigRequestTransactionTypeEnum ESSP_PURCHASE = _$feeConfigRequestTransactionTypeEnum_ESSP_PURCHASE;
   @BuiltValueEnumConst(wireName: r'PIN_PURCHASE')
-  static const FeeConfigRequestTransactionTypeEnum PIN_PURCHASE =
-      _$feeConfigRequestTransactionTypeEnum_PIN_PURCHASE;
+  static const FeeConfigRequestTransactionTypeEnum PIN_PURCHASE = _$feeConfigRequestTransactionTypeEnum_PIN_PURCHASE;
 
-  static Serializer<FeeConfigRequestTransactionTypeEnum> get serializer =>
-      _$feeConfigRequestTransactionTypeEnumSerializer;
+  static Serializer<FeeConfigRequestTransactionTypeEnum> get serializer => _$feeConfigRequestTransactionTypeEnumSerializer;
 
-  const FeeConfigRequestTransactionTypeEnum._(String name) : super(name);
+  const FeeConfigRequestTransactionTypeEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigRequestTransactionTypeEnum> get values =>
-      _$feeConfigRequestTransactionTypeEnumValues;
-  static FeeConfigRequestTransactionTypeEnum valueOf(String name) =>
-      _$feeConfigRequestTransactionTypeEnumValueOf(name);
+  static BuiltSet<FeeConfigRequestTransactionTypeEnum> get values => _$feeConfigRequestTransactionTypeEnumValues;
+  static FeeConfigRequestTransactionTypeEnum valueOf(String name) => _$feeConfigRequestTransactionTypeEnumValueOf(name);
 }
 
 class FeeConfigRequestFeeTypeEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'FIXED')
-  static const FeeConfigRequestFeeTypeEnum FIXED =
-      _$feeConfigRequestFeeTypeEnum_FIXED;
+  static const FeeConfigRequestFeeTypeEnum FIXED = _$feeConfigRequestFeeTypeEnum_FIXED;
   @BuiltValueEnumConst(wireName: r'PERCENTAGE')
-  static const FeeConfigRequestFeeTypeEnum PERCENTAGE =
-      _$feeConfigRequestFeeTypeEnum_PERCENTAGE;
+  static const FeeConfigRequestFeeTypeEnum PERCENTAGE = _$feeConfigRequestFeeTypeEnum_PERCENTAGE;
 
-  static Serializer<FeeConfigRequestFeeTypeEnum> get serializer =>
-      _$feeConfigRequestFeeTypeEnumSerializer;
+  static Serializer<FeeConfigRequestFeeTypeEnum> get serializer => _$feeConfigRequestFeeTypeEnumSerializer;
 
-  const FeeConfigRequestFeeTypeEnum._(String name) : super(name);
+  const FeeConfigRequestFeeTypeEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigRequestFeeTypeEnum> get values =>
-      _$feeConfigRequestFeeTypeEnumValues;
-  static FeeConfigRequestFeeTypeEnum valueOf(String name) =>
-      _$feeConfigRequestFeeTypeEnumValueOf(name);
+  static BuiltSet<FeeConfigRequestFeeTypeEnum> get values => _$feeConfigRequestFeeTypeEnumValues;
+  static FeeConfigRequestFeeTypeEnum valueOf(String name) => _$feeConfigRequestFeeTypeEnumValueOf(name);
 }
 
 class FeeConfigRequestCurrencyEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const FeeConfigRequestCurrencyEnum MYR =
-      _$feeConfigRequestCurrencyEnum_MYR;
+  static const FeeConfigRequestCurrencyEnum MYR = _$feeConfigRequestCurrencyEnum_MYR;
 
-  static Serializer<FeeConfigRequestCurrencyEnum> get serializer =>
-      _$feeConfigRequestCurrencyEnumSerializer;
+  static Serializer<FeeConfigRequestCurrencyEnum> get serializer => _$feeConfigRequestCurrencyEnumSerializer;
 
-  const FeeConfigRequestCurrencyEnum._(String name) : super(name);
+  const FeeConfigRequestCurrencyEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigRequestCurrencyEnum> get values =>
-      _$feeConfigRequestCurrencyEnumValues;
-  static FeeConfigRequestCurrencyEnum valueOf(String name) =>
-      _$feeConfigRequestCurrencyEnumValueOf(name);
+  static BuiltSet<FeeConfigRequestCurrencyEnum> get values => _$feeConfigRequestCurrencyEnumValues;
+  static FeeConfigRequestCurrencyEnum valueOf(String name) => _$feeConfigRequestCurrencyEnumValueOf(name);
 }
+

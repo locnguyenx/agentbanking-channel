@@ -11,5 +11,5 @@ Future<void> theAgentInsertsTheMykadIntoTheSmartCardReader(WidgetTester tester) 
   final startButton = find.text('START MYKAD SCAN');
   expect(startButton, findsOneWidget);
   await tester.tap(startButton);
-  await tester.pump(); // Start scanning
+  await tester.pumpAndSettle(); // Wait for scan to complete and state to transition
 }

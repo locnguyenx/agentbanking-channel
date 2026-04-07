@@ -583,7 +583,28 @@ class TransactionFlowScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
-        ] else 
+        ],
+        // NRIC for MyKad Withdrawal
+        if (serviceCode == 'CASH_WITHDRAWAL' && selectedSource == FundingSource.MYKAD_BIOMETRIC) ...[
+           const Text('NRIC Number', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+           const SizedBox(height: 12),
+           TextField(
+             key: const Key('nric'),
+             onChanged: (v) {
+               ref.read(transactionMetadataProvider.notifier).state = {
+                 ...ref.read(transactionMetadataProvider),
+                 'nric': v,
+               };
+             },
+             decoration: InputDecoration(
+               hintText: 'e.g. 850101-01-5678',
+               filled: true,
+               fillColor: Colors.grey.shade50,
+               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+             ),
+           ),
+           const SizedBox(height: 24),
+        ],
           const Column(
             children: [
               Text('Balance Inquiry', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),

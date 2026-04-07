@@ -4,7 +4,7 @@ import 'package:built_value/json_object.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:agent_api/agent_api.dart';
 import 'package:uuid/uuid.dart';
-import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart' as models;
 import 'package:agentbanking_channel/features/merchant/models/merchant_models.dart' as merchant;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/api/api_providers.dart';
@@ -18,6 +18,10 @@ class TransactionRepository {
   final OnboardingControllerOnboardingServiceApi onboardingApi;
   final EsspControllerBillerServiceApi esspApi;
   final EWalletControllerBillerServiceApi ewalletApi;
+  final TransactionControllerSwitchAdapterServiceApi transactionApi;
+  final OrchestratorControllerOrchestratorServiceApi orchestratorApi;
+  final ComplianceControllerRulesServiceApi complianceApi;
+  final Duration pollingInterval;
   final Dio _dio;
 
   TransactionRepository({
@@ -28,224 +32,135 @@ class TransactionRepository {
     required this.onboardingApi,
     required this.esspApi,
     required this.ewalletApi,
+    required this.transactionApi,
+    required this.orchestratorApi,
+    required this.complianceApi,
     required Dio dio,
+    this.pollingInterval = const Duration(seconds: 2),
   }) : _dio = dio;
 
   String _generateIdempotencyKey() => Uuid().v4();
 
-  Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async {
-    // Phase 2 Fix: Call real Gateway Quote service as per BDD requirements.
-    // We use _dio directly because the quote endpoint might not be in the current OpenAPI spec batch.
-    try {
-      final response = await _dio.post('/api/v1/transactions/quote', data: {
-        'serviceCode': request.serviceCode,
-        'amount': request.amount.toDouble(),
-        'agentId': request.agentId, 
-        'fundingSource': request.fundingSource.toString().split('.').last,
-      });
+  Future<models.TransactionQuoteResponse> getQuote(models.TransactionQuoteRequest request) async {
+    final apiRequest = TransactionQuoteRequest((b) => b
+      ..serviceCode = request.serviceCode
+      ..amount = request.amount.toString()
+      ..agentId = request.agentId
+      ..fundingSource = TransactionQuoteRequestFundingSourceEnum.valueOf(request.fundingSource.name)
+      ..billerRouting = request.billerRouting != null ? TransactionQuoteRequestBillerRoutingEnum.valueOf(request.billerRouting!.name) : null
+    );
 
-      final data = response.data;
-      return TransactionQuoteResponse(
-        amount: request.amount,
-        fee: data['fee'] != null ? Decimal.parse(data['fee'].toString()) : Decimal.zero,
-        commission: data['commission'] != null ? Decimal.parse(data['commission'].toString()) : Decimal.zero,
-        total: data['total'] != null ? Decimal.parse(data['total'].toString()) : request.amount ?? Decimal.zero,
-        quoteId: data['quoteId'] ?? 'GTW_QUOTE_${DateTime.now().millisecondsSinceEpoch}',
-      );
-    } catch (e) {
-      // Fallback for missing/simulated backend services
-      return TransactionQuoteResponse(
-        amount: request.amount,
-        fee: Decimal.zero,
-        commission: Decimal.zero,
-        total: request.amount,
-        quoteId: 'LOCAL_FALLBACK_${request.serviceCode}_${DateTime.now().millisecondsSinceEpoch}',
-      );
-    }
+    final response = await transactionApi.getTransactionQuote(transactionQuoteRequest: apiRequest);
+    final data = response.data;
+    
+    if (data == null) throw Exception('Quote failed: empty response');
+
+    return models.TransactionQuoteResponse(
+      amount: request.amount,
+      fee: Decimal.parse(data.fee.toString()),
+      commission: Decimal.parse(data.commission.toString()),
+      total: Decimal.parse(data.total.toString()),
+      quoteId: data.quoteId,
+    );
   }
 
-  Future<TransactionExecutionResponse> executeTransaction(TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
+  Future<models.TransactionExecutionResponse> executeTransaction(models.TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
     final effectiveKey = idempotencyKey ?? _generateIdempotencyKey();
+    
     try {
-      if (request.serviceCode == 'CASH_WITHDRAWAL') {
-        final apiRequest = WithdrawalExternalRequest((b) => b
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..idempotencyKey = effectiveKey
-          ..customerCard = request.metadata?['customerCardMasked'] ?? 'XXXX-XXXX-XXXX-0000'
-          ..customerPin = request.pinBlock ?? ''
-          ..location = request.metadata?['geofenceLat'] != null ? GeoLocation((l) => l
-            ..latitude = double.tryParse(request.metadata!['geofenceLat']!) ?? 0.0
-            ..longitude = double.tryParse(request.metadata!['geofenceLng'] ?? '0.0') ?? 0.0
-          ).toBuilder() : null
-        );
-        final response = await ledgerApi.debit(withdrawalExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'CASH_DEPOSIT') {
-        final apiRequest = DepositExternalRequest((b) => b
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..idempotencyKey = effectiveKey
-          ..customerAccount = request.metadata?['destinationAccount'] ?? 'UNKNOWN'
-          ..customerName = request.metadata?['customerName']
-          ..location = request.metadata?['geofenceLat'] != null ? GeoLocation((l) => l
-            ..latitude = double.tryParse(request.metadata!['geofenceLat']!) ?? 0.0
-            ..longitude = double.tryParse(request.metadata!['geofenceLng'] ?? '0.0') ?? 0.0
-          ).toBuilder() : null
-        );
-        final response = await ledgerApi.credit(depositExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'BILL_PAYMENT' || request.serviceCode == 'BILL_PAY') {
-        final apiRequest = BillPayExternalRequest((b) => b
-          ..billerCode = request.metadata?['billerCode'] ?? ''
-          ..ref1 = request.metadata?['accountNumber'] ?? ''
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..idempotencyKey = effectiveKey
-        );
-        final response = await billerApi.payBill(billPayExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'TOP_UP') {
-        final apiRequest = TopupExternalRequest((b) => b
-          ..telco = TopupExternalRequestTelcoEnum.valueOf(request.metadata?['telcoProvider'] ?? 'CELCOM')
-          ..phoneNumber = request.metadata?['mobileNumber'] ?? ''
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await billerApi.topup(topupExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'JOMPAY') {
-        final apiRequest = JomPayExternalRequest((b) => b
-          ..billerCode = request.metadata?['billerCode'] ?? ''
-          ..ref1 = request.metadata?['ref1'] ?? ''
-          ..ref2 = request.metadata?['ref2']
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..currency = JomPayExternalRequestCurrencyEnum.MYR
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await billerApi.jomPay(jomPayExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'EWALLET_TOPUP' || request.serviceCode == 'SARAWAK_PAY') {
-        final apiRequest = EWalletTopupExternalRequest((b) => b
-          ..walletProvider = EWalletTopupExternalRequestWalletProviderEnum.SARAWAK_PAY
-          ..walletAccountId = request.metadata?['walletAccountId'] ?? 'UNKNOWN'
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..currency = EWalletTopupExternalRequestCurrencyEnum.MYR
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await ewalletApi.topup1(eWalletTopupExternalRequest: apiRequest);
-        final dynamic data = response.data;
-        
-        if (data is BuiltMap<String, JsonObject>) {
-          return TransactionExecutionResponse(
-            status: data['status']?.value.toString() ?? 'UNKNOWN',
-            referenceId: data['transactionId']?.value.toString() ?? '',
-            errorMessage: data['message']?.value.toString(),
-          );
-        } else if (data is Map) {
-          return TransactionExecutionResponse(
-            status: data['status']?.toString() ?? 'UNKNOWN',
-            referenceId: data['transactionId']?.toString() ?? '',
-            errorMessage: data['message']?.toString(),
-          );
-        }
-        return TransactionExecutionResponse(status: 'UNKNOWN', referenceId: '');
-      } else if (request.serviceCode == 'EWALLET_WITHDRAW' || request.serviceCode == 'SARAWAK_PAY_WITHDRAW') {
-        final apiRequest = EWalletWithdrawExternalRequest((b) => b
-          ..walletProvider = EWalletWithdrawExternalRequestWalletProviderEnum.SARAWAK_PAY
-          ..walletAccountId = request.metadata?['walletAccountId'] ?? 'UNKNOWN'
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..currency = EWalletWithdrawExternalRequestCurrencyEnum.MYR
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await ewalletApi.withdrawal(eWalletWithdrawExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
-        );
-      } else if (request.serviceCode == 'CASHLESS_PAY') {
-        if (request.fundingSource == FundingSource.DUITNOW_QR) {
-          final qrData = await generateQrSale(request.amount ?? Decimal.zero, agentId);
-          return TransactionExecutionResponse(
-            status: 'PENDING',
-            referenceId: qrData['referenceId'] ?? '',
-            qrPayload: qrData['qrPayload'],
-          );
-        }
-        
-        final apiRequest = RetailSaleCommand((b) => b
-          ..merchantId = request.metadata?['merchantId'] ?? agentId
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..cardData = request.cardToken ?? ''
-          ..pinBlock = request.pinBlock ?? ''
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await merchantApi.processRetailSale(retailSaleCommand: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-        );
-      } else if (request.serviceCode == 'PIN_PURCHASE') {
-        final apiRequest = PinPurchaseCommand((b) => b
-          ..agentId = request.metadata?['agentId'] ?? agentId
-          ..productCode = request.metadata?['productCode'] ?? 'TELCO_PIN'
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await merchantApi.processPinPurchase(pinPurchaseCommand: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-        );
-      } else if (request.serviceCode == 'BALANCE_INQUIRY') {
-        return balanceInquiry(request, agentId);
-      } else if (request.serviceCode == 'ESSP_PURCHASE') {
-        final apiRequest = EsspExternalRequest((b) => b
-          ..productCode = request.metadata?['productCode'] ?? 'ESSP_TOKEN'
-          ..amount = request.amount?.toDouble() ?? 0.0
-          ..currency = EsspExternalRequestCurrencyEnum.MYR
-          ..idempotencyKey = _generateIdempotencyKey()
-        );
-        final response = await esspApi.purchase(esspExternalRequest: apiRequest);
-        final data = response.data;
-        return TransactionExecutionResponse(
-          status: data?.status?.name ?? 'UNKNOWN',
-          referenceId: data?.transactionId ?? '',
-          errorMessage: data?.message,
+      final transactionType = _mapServiceCodeToType(request.serviceCode);
+      
+      final apiRequest = TransactionStartRequest((b) => b
+        ..transactionType = transactionType
+        ..agentId = agentId
+        ..amount = request.amount?.toDouble() ?? 0.0
+        ..idempotencyKey = effectiveKey
+        ..geofenceLat = double.tryParse(request.metadata?['geofenceLat'] ?? '')
+        ..geofenceLng = double.tryParse(request.metadata?['geofenceLng'] ?? '')
+        // Type-specific field mapping
+        ..pan = request.metadata?['customerCardMasked']
+        ..pinBlock = request.pinBlock
+        ..customerCardMasked = request.metadata?['customerCardMasked']
+        ..destinationAccount = request.metadata?['destinationAccount']
+        ..billerCode = request.metadata?['billerCode']
+        ..ref1 = request.metadata?['accountNumber'] ?? request.metadata?['ref1']
+        ..ref2 = request.metadata?['ref2']
+        ..proxyType = request.metadata?['proxyType'] != null ? TransactionStartRequestProxyTypeEnum.valueOf(request.metadata!['proxyType']!) : null
+        ..proxyValue = request.metadata?['proxyValue']
+        ..agentTier = TransactionStartRequestAgentTierEnum.tIER1 // Default for now
+      );
+
+      final response = await orchestratorApi.startTransaction(transactionStartRequest: apiRequest);
+      final startData = response.data;
+      
+      if (startData == null) throw Exception('Transaction failed to start: empty response');
+      
+      if (startData.status == TransactionStartResponseStatusEnum.PENDING) {
+        return _pollTransactionStatus(startData.workflowId!);
+      } else {
+        return models.TransactionExecutionResponse(
+          status: startData.status?.name ?? 'UNKNOWN',
+          referenceId: startData.workflowId ?? '',
         );
       }
-      
-      // Fallback for other services
-      throw UnimplementedError('Service ${request.serviceCode} refactoring in progress');
     } catch (e) {
       rethrow;
     }
+  }
+
+  TransactionType _mapServiceCodeToType(String? serviceCode) {
+    switch (serviceCode) {
+      case 'CASH_WITHDRAWAL': return TransactionType.CASH_WITHDRAWAL;
+      case 'CASH_DEPOSIT': return TransactionType.CASH_DEPOSIT;
+      case 'BILL_PAYMENT':
+      case 'BILL_PAY':
+      case 'JOMPAY': return TransactionType.BILL_PAYMENT;
+      case 'TOP_UP': return TransactionType.PREPAID_TOPUP;
+      case 'DUITNOW_TRANSFER': return TransactionType.DUITNOW_TRANSFER;
+      case 'CASHLESS_PAY': return TransactionType.CASHLESS_PAYMENT;
+      case 'EWALLET_TOPUP':
+      case 'SARAWAK_PAY': return TransactionType.EWALLET_TOPUP;
+      case 'EWALLET_WITHDRAW':
+      case 'SARAWAK_PAY_WITHDRAW': return TransactionType.EWALLET_WITHDRAWAL;
+      case 'ESSP_PURCHASE': return TransactionType.ESSP_PURCHASE;
+      case 'PIN_PURCHASE': return TransactionType.PIN_PURCHASE;
+      default: return TransactionType.CASH_WITHDRAWAL;
+    }
+  }
+
+  Future<models.TransactionExecutionResponse> _pollTransactionStatus(String workflowId) async {
+    int attempts = 0;
+    const maxAttempts = 30; // 60 seconds (2s interval)
+    
+    print('DEBUG: Polling status for $workflowId');
+    while (attempts < maxAttempts) {
+      final statusResponse = await orchestratorApi.getTransactionStatus(workflowId: workflowId);
+      final statusData = statusResponse.data;
+      
+      print('DEBUG: Status for $workflowId: ${statusData?.status}');
+      
+      if (statusData == null) throw Exception('Failed to get transaction status');
+      
+      if (statusData.status == TransactionStatusResponseStatusEnum.COMPLETED) {
+        return models.TransactionExecutionResponse(
+          status: 'SUCCESS',
+          referenceId: statusData.referenceNumber ?? workflowId,
+          amount: statusData.amount != null ? Decimal.parse(statusData.amount.toString()) : null,
+        );
+      } else if (statusData.status == TransactionStatusResponseStatusEnum.FAILED) {
+        return models.TransactionExecutionResponse(
+          status: 'FAILED',
+          referenceId: statusData.referenceNumber ?? workflowId,
+          errorMessage: statusData.errorMessage ?? 'Transaction failed',
+        );
+      }
+      
+      // Still pending, running, or compensating
+      await Future.delayed(pollingInterval);
+      attempts++;
+    }
+    
+    throw Exception('Transaction timed out after polling for status');
   }
 
   Future<String> getBillerStatus(String transactionId) async {
@@ -254,24 +169,11 @@ class TransactionRepository {
   }
 
   Future<String> performProxyEnquiry(String proxyId, String proxyType) async {
-    // US-CA-11: Enforce ProxyEnquiry displaying masked recipient name with US-CA-15 Exponential Backoff
-    int retries = 0;
-    while (retries < 3) {
-      try {
-        // Removed hardcoded delay to prevent timer leaks in tests
-        return 'MOHD A***D BIN AL*';
-      } catch (e) {
-        retries++;
-        if (retries >= 3) rethrow;
-        // Exponential Backoff in production, but immediate in BDD/Mock
-        // final backoff = Duration(seconds: 1 << (retries - 1));
-        // await Future.delayed(backoff);
-      }
-    }
-    throw Exception('Retry limit exceeded');
+    final response = await switchApi.proxyEnquiry(proxyId: proxyId, proxyType: proxyType);
+    return response.data?.toString() ?? '';
   }
 
-  Future<TransactionExecutionResponse> balanceInquiry(TransactionExecutionRequest request, String agentId) async {
+  Future<models.TransactionExecutionResponse> balanceInquiry(models.TransactionExecutionRequest request, String agentId) async {
     final apiRequest = BalanceInquiryExternalRequest((b) => b
       ..encryptedCardData = request.cardToken ?? ''
       ..pinBlock = request.pinBlock ?? ''
@@ -279,7 +181,7 @@ class TransactionRepository {
     final response = await ledgerApi.balanceInquiry(balanceInquiryExternalRequest: apiRequest);
     final data = response.data;
     
-    return TransactionExecutionResponse(
+    return models.TransactionExecutionResponse(
       status: data?.currency != null ? 'SUCCESS' : 'UNKNOWN',
       referenceId: data?.lastTransactionId ?? '',
       balance: data?.availableBalance != null ? Decimal.parse(data!.availableBalance!.toString()) : null,
@@ -287,7 +189,7 @@ class TransactionRepository {
     );
   }
 
-  Future<TransactionExecutionResponse> initiateDuitNow({
+  Future<models.TransactionExecutionResponse> initiateDuitNow({
     required String quoteId,
     required String proxyId,
     required String proxyType,
@@ -297,13 +199,13 @@ class TransactionRepository {
       ..internalTransactionId = quoteId
       ..proxyType = proxyType
       ..proxyValue = proxyId
-      ..amount = amount.toDouble()
+      ..amount = amount.toString()
     );
     
     final response = await switchApi.duitNowTransfer(duitNowRequest: apiRequest);
     final data = response.data;
     
-    return TransactionExecutionResponse(
+    return models.TransactionExecutionResponse(
       status: data?.status?.name ?? 'UNKNOWN',
       referenceId: data?.transactionId ?? '',
     );
@@ -330,7 +232,7 @@ class TransactionRepository {
   Future<merchant.RetailSaleResponse> executeRetailSale(Decimal amount, String agentId, {String? pinBlock, String? cardToken}) async {
     final apiRequest = RetailSaleCommand((b) => b
       ..merchantId = agentId
-      ..amount = amount.toDouble()
+      ..amount = amount.toString()
       ..cardData = cardToken ?? ''
       ..pinBlock = pinBlock ?? ''
       ..idempotencyKey = _generateIdempotencyKey()
@@ -348,7 +250,7 @@ class TransactionRepository {
   Future<merchant.CashbackResponse> executeCashback(Decimal purchaseAmount, Decimal cashbackAmount, String agentId, {String? pinBlock, String? cardToken}) async {
     final apiRequest = CashBackCommand((b) => b
       ..merchantId = agentId
-      ..cashBackAmount = cashbackAmount.toDouble()
+      ..cashBackAmount = cashbackAmount.toString()
       ..cardData = cardToken ?? ''
       ..pinBlock = pinBlock ?? ''
       ..idempotencyKey = _generateIdempotencyKey()
@@ -367,7 +269,7 @@ class TransactionRepository {
     final apiRequest = PinPurchaseCommand((b) => b
       ..agentId = agentId
       ..productCode = productCode
-      ..amount = amount.toDouble()
+      ..amount = amount.toString()
       ..idempotencyKey = _generateIdempotencyKey()
     );
     final response = await merchantApi.processPinPurchase(pinPurchaseCommand: apiRequest);
@@ -381,7 +283,8 @@ class TransactionRepository {
   }
 
   Future<String> getComplianceStatus() async {
-    return 'UNLOCKED';
+    final response = await complianceApi.getComplianceStatus();
+    return response.data ?? 'UNLOCKED';
   }
 }
 
@@ -394,6 +297,10 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
     onboardingApi: ref.watch(onboardingApiProvider),
     esspApi: ref.watch(esspApiProvider),
     ewalletApi: ref.watch(ewalletApiProvider),
+    transactionApi: ref.watch(transactionApiProvider),
+    orchestratorApi: ref.watch(orchestratorApiProvider),
+    complianceApi: ref.watch(complianceApiProvider),
     dio: ref.watch(dioProvider),
+    pollingInterval: const Duration(seconds: 2),
   );
 });

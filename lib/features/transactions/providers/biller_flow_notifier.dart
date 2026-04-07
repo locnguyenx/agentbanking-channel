@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:decimal/decimal.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_state.dart';
@@ -189,10 +190,11 @@ class BillerFlowNotifier extends StateNotifier<TransactionState> with Transactio
 }
 
 final billerFlowNotifierProvider = StateNotifierProvider<BillerFlowNotifier, TransactionState>((ref) {
+  final geolocator = ref.watch(geolocatorProvider);
   return BillerFlowNotifier(
     ref: ref,
     repository: ref.watch(transactionRepositoryProvider),
     floatNotifier: ref.watch(floatProvider.notifier),
-    geolocator: GeolocatorPlatform.instance,
+    geolocator: geolocator,
   );
 });

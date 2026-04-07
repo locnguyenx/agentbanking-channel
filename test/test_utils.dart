@@ -8,6 +8,7 @@ import 'package:agentbanking_channel/features/compliance/providers/compliance_pr
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'setup/test_credentials.dart';
 
 class ManualMockRef extends Mock implements Ref {
   ComplianceState? complianceOverride;
@@ -17,7 +18,7 @@ class ManualMockRef extends Mock implements Ref {
     if (provider == authProvider) {
       return AuthState(
         status: AuthStatus.authenticated,
-        user: AuthUser(agentId: 'AGENT-001', name: 'Test Agent', tier: 'PREMIER'),
+        user: AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'PREMIER'),
       ) as T;
     }
     if (provider == complianceProvider) {

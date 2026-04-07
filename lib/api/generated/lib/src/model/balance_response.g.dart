@@ -10,11 +10,11 @@ class _$BalanceResponse extends BalanceResponse {
   @override
   final String? agentId;
   @override
-  final num? availableBalance;
+  final String? availableBalance;
   @override
-  final num? ledgerBalance;
+  final String? ledgerBalance;
   @override
-  final num? pendingBalance;
+  final String? pendingBalance;
   @override
   final String? currency;
   @override
@@ -90,19 +90,19 @@ class BalanceResponseBuilder
   String? get agentId => _$this._agentId;
   set agentId(String? agentId) => _$this._agentId = agentId;
 
-  num? _availableBalance;
-  num? get availableBalance => _$this._availableBalance;
-  set availableBalance(num? availableBalance) =>
+  String? _availableBalance;
+  String? get availableBalance => _$this._availableBalance;
+  set availableBalance(String? availableBalance) =>
       _$this._availableBalance = availableBalance;
 
-  num? _ledgerBalance;
-  num? get ledgerBalance => _$this._ledgerBalance;
-  set ledgerBalance(num? ledgerBalance) =>
+  String? _ledgerBalance;
+  String? get ledgerBalance => _$this._ledgerBalance;
+  set ledgerBalance(String? ledgerBalance) =>
       _$this._ledgerBalance = ledgerBalance;
 
-  num? _pendingBalance;
-  num? get pendingBalance => _$this._pendingBalance;
-  set pendingBalance(num? pendingBalance) =>
+  String? _pendingBalance;
+  String? get pendingBalance => _$this._pendingBalance;
+  set pendingBalance(String? pendingBalance) =>
       _$this._pendingBalance = pendingBalance;
 
   String? _currency;

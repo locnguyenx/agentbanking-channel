@@ -11,27 +11,26 @@ part 'balance_response.g.dart';
 /// BalanceResponse
 ///
 /// Properties:
-/// * [agentId]
-/// * [availableBalance]
-/// * [ledgerBalance]
-/// * [pendingBalance]
-/// * [currency]
-/// * [lastTransactionId]
-/// * [lastUpdated]
+/// * [agentId] 
+/// * [availableBalance] 
+/// * [ledgerBalance] 
+/// * [pendingBalance] 
+/// * [currency] 
+/// * [lastTransactionId] 
+/// * [lastUpdated] 
 @BuiltValue()
-abstract class BalanceResponse
-    implements Built<BalanceResponse, BalanceResponseBuilder> {
+abstract class BalanceResponse implements Built<BalanceResponse, BalanceResponseBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
   @BuiltValueField(wireName: r'availableBalance')
-  num? get availableBalance;
+  String? get availableBalance;
 
   @BuiltValueField(wireName: r'ledgerBalance')
-  num? get ledgerBalance;
+  String? get ledgerBalance;
 
   @BuiltValueField(wireName: r'pendingBalance')
-  num? get pendingBalance;
+  String? get pendingBalance;
 
   @BuiltValueField(wireName: r'currency')
   String? get currency;
@@ -44,19 +43,16 @@ abstract class BalanceResponse
 
   BalanceResponse._();
 
-  factory BalanceResponse([void updates(BalanceResponseBuilder b)]) =
-      _$BalanceResponse;
+  factory BalanceResponse([void updates(BalanceResponseBuilder b)]) = _$BalanceResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(BalanceResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<BalanceResponse> get serializer =>
-      _$BalanceResponseSerializer();
+  static Serializer<BalanceResponse> get serializer => _$BalanceResponseSerializer();
 }
 
-class _$BalanceResponseSerializer
-    implements PrimitiveSerializer<BalanceResponse> {
+class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse> {
   @override
   final Iterable<Type> types = const [BalanceResponse, _$BalanceResponse];
 
@@ -79,21 +75,21 @@ class _$BalanceResponseSerializer
       yield r'availableBalance';
       yield serializers.serialize(
         object.availableBalance,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.ledgerBalance != null) {
       yield r'ledgerBalance';
       yield serializers.serialize(
         object.ledgerBalance,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.pendingBalance != null) {
       yield r'pendingBalance';
       yield serializers.serialize(
         object.pendingBalance,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.currency != null) {
@@ -125,9 +121,7 @@ class _$BalanceResponseSerializer
     BalanceResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -152,22 +146,22 @@ class _$BalanceResponseSerializer
         case r'availableBalance':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.availableBalance = valueDes;
           break;
         case r'ledgerBalance':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.ledgerBalance = valueDes;
           break;
         case r'pendingBalance':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.pendingBalance = valueDes;
           break;
         case r'currency':
@@ -219,3 +213,4 @@ class _$BalanceResponseSerializer
     return result.build();
   }
 }
+

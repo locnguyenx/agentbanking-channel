@@ -12,7 +12,7 @@ class _$CardAuthRequest extends CardAuthRequest {
   @override
   final String pan;
   @override
-  final num amount;
+  final String amount;
 
   factory _$CardAuthRequest([void Function(CardAuthRequestBuilder)? updates]) =>
       (CardAuthRequestBuilder()..update(updates))._build();
@@ -71,9 +71,9 @@ class CardAuthRequestBuilder
   String? get pan => _$this._pan;
   set pan(String? pan) => _$this._pan = pan;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   CardAuthRequestBuilder() {
     CardAuthRequest._defaults(this);

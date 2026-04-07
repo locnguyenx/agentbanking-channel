@@ -14,7 +14,7 @@ class _$PinPurchaseResponse extends PinPurchaseResponse {
   @override
   final String? pinCode;
   @override
-  final num? commission;
+  final String? commission;
   @override
   final String? timestamp;
 
@@ -90,9 +90,9 @@ class PinPurchaseResponseBuilder
   String? get pinCode => _$this._pinCode;
   set pinCode(String? pinCode) => _$this._pinCode = pinCode;
 
-  num? _commission;
-  num? get commission => _$this._commission;
-  set commission(num? commission) => _$this._commission = commission;
+  String? _commission;
+  String? get commission => _$this._commission;
+  set commission(String? commission) => _$this._commission = commission;
 
   String? _timestamp;
   String? get timestamp => _$this._timestamp;

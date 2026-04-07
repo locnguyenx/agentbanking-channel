@@ -43,6 +43,6 @@ void main() {
     expect(submittedReq, isNotNull);
     expect(submittedReq!.billerCode, '5454');
     expect(submittedReq!.ref1, '1234567890');
-    expect(submittedReq!.amount, 100.0);
+    expect(submittedReq!.amount, '100.0');
   });
 }

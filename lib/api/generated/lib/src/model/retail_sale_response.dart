@@ -11,14 +11,13 @@ part 'retail_sale_response.g.dart';
 /// RetailSaleResponse
 ///
 /// Properties:
-/// * [status]
-/// * [transactionId]
-/// * [amount]
-/// * [mdrAmount]
-/// * [netToMerchant]
+/// * [status] 
+/// * [transactionId] 
+/// * [amount] 
+/// * [mdrAmount] 
+/// * [netToMerchant] 
 @BuiltValue()
-abstract class RetailSaleResponse
-    implements Built<RetailSaleResponse, RetailSaleResponseBuilder> {
+abstract class RetailSaleResponse implements Built<RetailSaleResponse, RetailSaleResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -26,29 +25,26 @@ abstract class RetailSaleResponse
   String? get transactionId;
 
   @BuiltValueField(wireName: r'amount')
-  num? get amount;
+  String? get amount;
 
   @BuiltValueField(wireName: r'mdrAmount')
-  num? get mdrAmount;
+  String? get mdrAmount;
 
   @BuiltValueField(wireName: r'netToMerchant')
-  num? get netToMerchant;
+  String? get netToMerchant;
 
   RetailSaleResponse._();
 
-  factory RetailSaleResponse([void updates(RetailSaleResponseBuilder b)]) =
-      _$RetailSaleResponse;
+  factory RetailSaleResponse([void updates(RetailSaleResponseBuilder b)]) = _$RetailSaleResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailSaleResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailSaleResponse> get serializer =>
-      _$RetailSaleResponseSerializer();
+  static Serializer<RetailSaleResponse> get serializer => _$RetailSaleResponseSerializer();
 }
 
-class _$RetailSaleResponseSerializer
-    implements PrimitiveSerializer<RetailSaleResponse> {
+class _$RetailSaleResponseSerializer implements PrimitiveSerializer<RetailSaleResponse> {
   @override
   final Iterable<Type> types = const [RetailSaleResponse, _$RetailSaleResponse];
 
@@ -78,21 +74,21 @@ class _$RetailSaleResponseSerializer
       yield r'amount';
       yield serializers.serialize(
         object.amount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.mdrAmount != null) {
       yield r'mdrAmount';
       yield serializers.serialize(
         object.mdrAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.netToMerchant != null) {
       yield r'netToMerchant';
       yield serializers.serialize(
         object.netToMerchant,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -103,9 +99,7 @@ class _$RetailSaleResponseSerializer
     RetailSaleResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -137,22 +131,22 @@ class _$RetailSaleResponseSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'mdrAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.mdrAmount = valueDes;
           break;
         case r'netToMerchant':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.netToMerchant = valueDes;
           break;
         default:
@@ -183,3 +177,4 @@ class _$RetailSaleResponseSerializer
     return result.build();
   }
 }
+

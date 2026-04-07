@@ -10,8 +10,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **status** | **String** |  | [optional] 
 **transactionId** | **String** |  | [optional] 
-**cashBackAmount** | **num** |  | [optional] 
-**commission** | **num** |  | [optional] 
+**cashBackAmount** | **String** |  | [optional] 
+**commission** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

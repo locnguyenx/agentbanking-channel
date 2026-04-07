@@ -15,39 +15,35 @@ Future<void> theCustomerPlacesTheirMykadInTheReaderAndPressesThumbOnBiometricSca
       await tester.pumpAndSettle();
   }
 
-  await selectFundingSourceIfNeeded(tester);
-  
-  // If we are ALREADY in waitingConsent, it means a previous step triggered the quote.
-  // We can skip directly to confirmation.
-  if (bddContainer.read(transactionProvider).status == TransactionStatus.waitingConsent) {
-    debugPrint('BDD: MyKad Withdrawal ALREADY in waitingConsent phase, skipping form entry.');
-  } else {
-    // Poll for the form to appear
-    bool found = false;
-    for (int i = 0; i < 20; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-      if (find.byKey(const Key('field_amount')).evaluate().isNotEmpty) {
-        found = true;
-        break;
-      }
-    }
-    
-    if (!found) {
-      throw TestFailure('MyKad Withdrawal Form Failure. Status: ${bddContainer.read(transactionProvider).status}');
-    }
-
-    // MyKad Biometric Withdrawal flow
-    await tester.enterText(find.byKey(const Key('field_amount')), '100.00');
-    await tester.pumpAndSettle();
-    
-    await tester.tap(find.byKey(const Key('btn_main_action')));
+  // Select Funding Source: MyKad Biometric
+  final mykadRadio = find.byKey(const Key('funding_source_MYKAD_BIOMETRIC'));
+  if (mykadRadio.evaluate().isNotEmpty) {
+    await tester.tap(mykadRadio);
     await tester.pumpAndSettle();
   }
+
+  // Enter amount
+  await tester.enterText(find.byKey(const Key('field_amount')), '100.00');
+  await tester.pumpAndSettle();
   
-  // Handle AGREE
+  // Enter NRIC (metadata)
+  await tester.enterText(find.byKey(const Key('nric')), '850101-01-5678');
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.byKey(const Key('btn_main_action')));
+  await tester.pumpAndSettle();
+  
+  // Handle AGREE / Confirm Consent
   final agreeBtn = find.byKey(const Key('btn_confirm'));
   if (agreeBtn.evaluate().isNotEmpty) {
       await tester.tap(agreeBtn);
-      await tester.pumpAndSettle();
+      // Don't pumpAndSettle yet, we want to see the "Waiting for MyKad" state
+      await tester.pump(); 
   }
+
+  // Verify that it went into waitingMyKadScan state
+  expect(find.textContaining('Please Scan MyKad & Thumb'), findsOneWidget);
+  
+  // Let the mock finish
+  await tester.pumpAndSettle();
 }

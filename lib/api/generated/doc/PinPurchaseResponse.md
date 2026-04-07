@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **status** | **String** |  | [optional] 
 **transactionId** | **String** |  | [optional] 
 **pinCode** | **String** |  | [optional] 
-**commission** | **num** |  | [optional] 
+**commission** | **String** |  | [optional] 
 **timestamp** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

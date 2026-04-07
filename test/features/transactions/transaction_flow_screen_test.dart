@@ -15,6 +15,7 @@ import 'package:agentbanking_channel/features/transactions/services/reversal_ser
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../setup/test_credentials.dart';
 
 
 class MockTransactionNotifier extends StateNotifier<TransactionState> implements TransactionNotifier {
@@ -77,7 +78,7 @@ void main() {
         overrides: [
           authProvider.overrideWith((ref) => AuthNotifier(repository: FakeAuthRepository())..state = AuthState(
             status: AuthStatus.authenticated,
-            user: AuthUser(agentId: 'AGENT01', name: 'Test Agent', tier: 'GOLD'),
+            user: AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'GOLD'),
           )),
           transactionProvider.overrideWith((ref) => MockTransactionNotifier()),
         ],

@@ -13,11 +13,10 @@ part 'error_response.g.dart';
 /// ErrorResponse
 ///
 /// Properties:
-/// * [status]
-/// * [error]
+/// * [status] 
+/// * [error] 
 @BuiltValue()
-abstract class ErrorResponse
-    implements Built<ErrorResponse, ErrorResponseBuilder> {
+abstract class ErrorResponse implements Built<ErrorResponse, ErrorResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   ErrorResponseStatusEnum get status;
   // enum statusEnum {  FAILED,  };
@@ -27,15 +26,13 @@ abstract class ErrorResponse
 
   ErrorResponse._();
 
-  factory ErrorResponse([void updates(ErrorResponseBuilder b)]) =
-      _$ErrorResponse;
+  factory ErrorResponse([void updates(ErrorResponseBuilder b)]) = _$ErrorResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ErrorResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<ErrorResponse> get serializer =>
-      _$ErrorResponseSerializer();
+  static Serializer<ErrorResponse> get serializer => _$ErrorResponseSerializer();
 }
 
 class _$ErrorResponseSerializer implements PrimitiveSerializer<ErrorResponse> {
@@ -68,9 +65,7 @@ class _$ErrorResponseSerializer implements PrimitiveSerializer<ErrorResponse> {
     ErrorResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -129,17 +124,15 @@ class _$ErrorResponseSerializer implements PrimitiveSerializer<ErrorResponse> {
 }
 
 class ErrorResponseStatusEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'FAILED')
-  static const ErrorResponseStatusEnum FAILED =
-      _$errorResponseStatusEnum_FAILED;
+  static const ErrorResponseStatusEnum FAILED = _$errorResponseStatusEnum_FAILED;
 
-  static Serializer<ErrorResponseStatusEnum> get serializer =>
-      _$errorResponseStatusEnumSerializer;
+  static Serializer<ErrorResponseStatusEnum> get serializer => _$errorResponseStatusEnumSerializer;
 
-  const ErrorResponseStatusEnum._(String name) : super(name);
+  const ErrorResponseStatusEnum._(String name): super(name);
 
-  static BuiltSet<ErrorResponseStatusEnum> get values =>
-      _$errorResponseStatusEnumValues;
-  static ErrorResponseStatusEnum valueOf(String name) =>
-      _$errorResponseStatusEnumValueOf(name);
+  static BuiltSet<ErrorResponseStatusEnum> get values => _$errorResponseStatusEnumValues;
+  static ErrorResponseStatusEnum valueOf(String name) => _$errorResponseStatusEnumValueOf(name);
 }
+

@@ -7,6 +7,7 @@ class MockCardReader implements ICardReader {
 
   @override
   Future<CardData?> readCard() async {
+    await Future.delayed(const Duration(milliseconds: 50));
     return CardData(
       maskedPan: '411111******1111',
       cardToken: 'MOCK_TOKEN_EYJ123',
@@ -20,6 +21,7 @@ class MockPinPad implements IPinPad {
 
   @override
   Future<String?> capturePin() async {
+    await Future.delayed(const Duration(milliseconds: 50));
     // Simulate customer entering 6-digit PIN
     return 'ENCRYPTED_PIN_BLOCK_ABC';
   }
@@ -43,10 +45,12 @@ class MockMyKadScanner implements IMyKadScanner {
   @override
   Future<MyKadData?> scanMyKad() async {
     // Simulate chip reading latency
+    await Future.delayed(const Duration(milliseconds: 50));
     return MyKadData(
       fullName: 'AHMAD BIN ABDULLAH',
       icNumber: '850101-01-5678',
       address: 'LOT 123, JALAN AMPANG, 50450 KUALA LUMPUR',
+      photoBase64: 'base64_photo_here',
     );
   }
 }
@@ -55,7 +59,10 @@ class MockMerchantTerminal implements IMerchantTerminal {
   @override
   Future<bool> isAvailable() async => true;
   @override
-  Future<bool> displayQrCode(String qrPayload) async => true;
+  Future<bool> displayQrCode(String qrPayload) async {
+    await Future.delayed(const Duration(milliseconds: 50));
+    return true;
+  }
   @override
   Future<void> clearDisplay() async {}
 }

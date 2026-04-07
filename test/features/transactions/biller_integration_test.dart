@@ -20,6 +20,7 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
 import 'package:agentbanking_channel/features/settlement/models/float_models.dart';
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
 import 'manual_mock_dio.dart';
 
 class FakeSecureStorageManager extends Fake implements SecureStorageManager {
@@ -119,26 +120,33 @@ void main() {
       
       // 1. Setup Mock Responses
       // Quote Response
-      mockDio.setResponse('/api/v1/ledger/quote', {
+      mockDio.setResponse('/api/v1/transactions/quote', {
         'quoteId': 'QUOTE-JOM-123',
-        'amount': 100.0,
-        'fee': 1.0,
-        'total': 101.0,
-        'commission': 0.5,
+        'amount': '100.0',
+        'fee': '1.0',
+        'total': '101.0',
+        'commission': '0.5',
       });
 
       // Execution Response (PENDING)
-      mockDio.setResponse('/api/v1/billpayment/jompay', {
+      mockDio.setResponse('/api/v1/transactions', {
         'status': 'PENDING',
-        'transactionId': 'TX-JOM-456',
-        'message': 'Transaction pending processing',
+        'workflowId': 'WF-JOM-456',
+        'pollUrl': '/api/v1/transactions/WF-JOM-456/status',
       });
 
       // Status Polling Responses
       // Sequence of responses for polling
-      mockDio.setResponse('/api/v1/bill/status/TX-JOM-456', [
-        {'status': 'PENDING'},
-        {'status': 'SUCCESS'},
+      mockDio.setResponse('/api/v1/transactions/WF-JOM-456/status', [
+        {'status': 'PENDING', 'workflowId': 'WF-JOM-456'},
+        {
+          'status': 'COMPLETED',
+          'workflowId': 'WF-JOM-456',
+          'referenceNumber': 'TX-JOM-999',
+          'amount': 100.0,
+          'customerFee': 1.0,
+          'transactionType': 'BILL_PAYMENT',
+        },
       ]);
       
       // 2. Start App
@@ -151,6 +159,20 @@ void main() {
             reversalServiceProvider.overrideWith((ref) => ManualReversalService()),
             floatProvider.overrideWith((ref) => ManualFloatNotifier()),
             offlineQueueServiceProvider.overrideWith((ref) => ManualOfflineQueueService()),
+            transactionRepositoryProvider.overrideWith((ref) => TransactionRepository(
+              ledgerApi: ref.watch(ledgerApiProvider),
+              merchantApi: ref.watch(merchantApiProvider),
+              billerApi: ref.watch(billerApiProvider),
+              switchApi: ref.watch(switchApiProvider),
+              onboardingApi: ref.watch(onboardingApiProvider),
+              esspApi: ref.watch(esspApiProvider),
+              ewalletApi: ref.watch(ewalletApiProvider),
+              transactionApi: ref.watch(transactionApiProvider),
+              orchestratorApi: ref.watch(orchestratorApiProvider),
+              complianceApi: ref.watch(complianceApiProvider),
+              dio: ref.watch(dioProvider),
+              pollingInterval: const Duration(milliseconds: 1),
+            )),
             transactionProvider.overrideWith((ref) => TransactionNotifier(
               ref: ref,
               repository: ref.watch(transactionRepositoryProvider),
@@ -199,10 +221,17 @@ void main() {
       // 5. Confirm Transaction
       expect(find.text('Confirm Details'), findsOneWidget);
       
-      // Update mock for next status poll: PENDING then SUCCESS
-      mockDio.setResponse('/api/v1/bill/status/TX-JOM-456', [
-        {'status': 'PENDING'},
-        {'status': 'SUCCESS'},
+      // Update mock for next status poll: PENDING then COMPLETED
+      mockDio.setResponse('/api/v1/transactions/WF-JOM-456/status', [
+        {'status': 'PENDING', 'workflowId': 'WF-JOM-456'},
+        {
+          'status': 'COMPLETED',
+          'workflowId': 'WF-JOM-456',
+          'referenceNumber': 'TX-JOM-999',
+          'amount': 100.0,
+          'customerFee': 1.0,
+          'transactionType': 'BILL_PAYMENT',
+        },
       ]);
       
       await tester.tap(find.byKey(const Key('btn_confirm')));
@@ -226,7 +255,7 @@ void main() {
       }
       expect(found, isTrue, reason: 'Transaction should have completed successfully');
       expect(find.text('Reference ID'), findsOneWidget);
-      expect(find.text('TX-JOM-456'), findsOneWidget);
+      expect(find.text('TX-JOM-999'), findsOneWidget);
       
       // Final cleanup frames
       await tester.pump(const Duration(seconds: 1));

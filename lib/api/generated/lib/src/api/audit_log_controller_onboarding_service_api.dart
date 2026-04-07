@@ -9,9 +9,12 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
+import 'package:agent_api/src/model/error_response.dart';
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 
 class AuditLogControllerOnboardingServiceApi {
+
   final Dio _dio;
 
   final Serializers _serializers;
@@ -19,14 +22,14 @@ class AuditLogControllerOnboardingServiceApi {
   const AuditLogControllerOnboardingServiceApi(this._dio, this._serializers);
 
   /// getAuditLogs
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [entityType]
-  /// * [fromDate]
-  /// * [toDate]
-  /// * [page]
-  /// * [size]
+  /// * [entityType] 
+  /// * [fromDate] 
+  /// * [toDate] 
+  /// * [page] 
+  /// * [size] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -36,7 +39,7 @@ class AuditLogControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltMap<String, JsonObject>>> getAuditLogs({
+  Future<Response<BuiltMap<String, JsonObject>>> getAuditLogs({ 
     String? entityType,
     DateTime? fromDate,
     DateTime? toDate,
@@ -56,26 +59,24 @@ class AuditLogControllerOnboardingServiceApi {
         ...?headers,
       },
       extra: <String, dynamic>{
-        'secure': <Map<String, String>>[],
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
         ...?extra,
       },
       validateStatus: validateStatus,
     );
 
     final _queryParameters = <String, dynamic>{
-      if (entityType != null)
-        r'entityType': encodeQueryParameter(
-            _serializers, entityType, const FullType(String)),
-      if (fromDate != null)
-        r'fromDate': encodeQueryParameter(
-            _serializers, fromDate, const FullType(DateTime)),
-      if (toDate != null)
-        r'toDate': encodeQueryParameter(
-            _serializers, toDate, const FullType(DateTime)),
-      if (page != null)
-        r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
-      if (size != null)
-        r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
+      if (entityType != null) r'entityType': encodeQueryParameter(_serializers, entityType, const FullType(String)),
+      if (fromDate != null) r'fromDate': encodeQueryParameter(_serializers, fromDate, const FullType(DateTime)),
+      if (toDate != null) r'toDate': encodeQueryParameter(_serializers, toDate, const FullType(DateTime)),
+      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(int)),
+      if (size != null) r'size': encodeQueryParameter(_serializers, size, const FullType(int)),
     };
 
     final _response = await _dio.request<Object>(
@@ -91,13 +92,11 @@ class AuditLogControllerOnboardingServiceApi {
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null
-          ? null
-          : _serializers.deserialize(
-              rawResponse,
-              specifiedType: const FullType(
-                  BuiltMap, [FullType(String), FullType(JsonObject)]),
-            ) as BuiltMap<String, JsonObject>;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),
+      ) as BuiltMap<String, JsonObject>;
+
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -119,4 +118,5 @@ class AuditLogControllerOnboardingServiceApi {
       extra: _response.extra,
     );
   }
+
 }

@@ -11,13 +11,12 @@ part 'pin_purchase_command.g.dart';
 /// PinPurchaseCommand
 ///
 /// Properties:
-/// * [agentId]
-/// * [productCode]
-/// * [amount]
-/// * [idempotencyKey]
+/// * [agentId] 
+/// * [productCode] 
+/// * [amount] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class PinPurchaseCommand
-    implements Built<PinPurchaseCommand, PinPurchaseCommandBuilder> {
+abstract class PinPurchaseCommand implements Built<PinPurchaseCommand, PinPurchaseCommandBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
@@ -25,26 +24,23 @@ abstract class PinPurchaseCommand
   String? get productCode;
 
   @BuiltValueField(wireName: r'amount')
-  num? get amount;
+  String? get amount;
 
   @BuiltValueField(wireName: r'idempotencyKey')
   String? get idempotencyKey;
 
   PinPurchaseCommand._();
 
-  factory PinPurchaseCommand([void updates(PinPurchaseCommandBuilder b)]) =
-      _$PinPurchaseCommand;
+  factory PinPurchaseCommand([void updates(PinPurchaseCommandBuilder b)]) = _$PinPurchaseCommand;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(PinPurchaseCommandBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PinPurchaseCommand> get serializer =>
-      _$PinPurchaseCommandSerializer();
+  static Serializer<PinPurchaseCommand> get serializer => _$PinPurchaseCommandSerializer();
 }
 
-class _$PinPurchaseCommandSerializer
-    implements PrimitiveSerializer<PinPurchaseCommand> {
+class _$PinPurchaseCommandSerializer implements PrimitiveSerializer<PinPurchaseCommand> {
   @override
   final Iterable<Type> types = const [PinPurchaseCommand, _$PinPurchaseCommand];
 
@@ -74,7 +70,7 @@ class _$PinPurchaseCommandSerializer
       yield r'amount';
       yield serializers.serialize(
         object.amount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.idempotencyKey != null) {
@@ -92,9 +88,7 @@ class _$PinPurchaseCommandSerializer
     PinPurchaseCommand object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -126,8 +120,8 @@ class _$PinPurchaseCommandSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'idempotencyKey':
@@ -165,3 +159,4 @@ class _$PinPurchaseCommandSerializer
     return result.build();
   }
 }
+

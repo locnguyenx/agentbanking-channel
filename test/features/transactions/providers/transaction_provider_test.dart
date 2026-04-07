@@ -13,6 +13,7 @@ import 'package:mockito/mockito.dart' as mockito;
 import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import '../../../test_utils.dart';
+import '../../../setup/test_credentials.dart';
 
 class FakeFloatRepository extends mockito.Fake implements FloatRepository {
   @override
@@ -180,7 +181,7 @@ void main() {
         quoteId: 'Q-999',
       );
       
-      await notifier.startTransaction(amount, 'AGENT007', serviceCode: 'BILL_PAY', fundingSource: FundingSource.CARD_EMV);
+      await notifier.startTransaction(amount, TestCredentials.username, serviceCode: 'BILL_PAY', fundingSource: FundingSource.CARD_EMV);
       
       expect(notifier.state.status, TransactionStatus.waitingConsent);
       expect(notifier.state.quote?.quoteId, 'Q-999');

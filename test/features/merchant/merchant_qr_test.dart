@@ -11,6 +11,7 @@ import 'package:agentbanking_channel/features/settlement/models/float_models.dar
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:mockito/mockito.dart';
 import '../../test_utils.dart';
+import '../../setup/test_credentials.dart';
 
 class FakeFloatRepository extends Fake implements FloatRepository {
   @override
@@ -117,7 +118,7 @@ void main() {
       merchantTerminal: mockTerminal,
       floatNotifier: mockFloatNotifier,
       complianceNotifier: mockComplianceNotifier,
-      agentId: 'AGENT-001',
+      agentId: TestCredentials.username,
     );
   });
 

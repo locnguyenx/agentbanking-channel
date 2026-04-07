@@ -12,8 +12,8 @@ Name | Type | Description | Notes
 **agentId** | **String** |  | [optional] 
 **date** | [**Date**](Date.md) |  | [optional] 
 **totalTransactions** | **int** |  | [optional] 
-**totalAmount** | **num** |  | [optional] 
-**commission** | **num** |  | [optional] 
+**totalAmount** | **String** |  | [optional] 
+**commission** | **String** |  | [optional] 
 **status** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

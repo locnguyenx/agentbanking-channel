@@ -9,9 +9,9 @@ import 'package:agent_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **agentId** | **String** |  | [optional] 
-**availableBalance** | **num** |  | [optional] 
-**ledgerBalance** | **num** |  | [optional] 
-**pendingBalance** | **num** |  | [optional] 
+**availableBalance** | **String** |  | [optional] 
+**ledgerBalance** | **String** |  | [optional] 
+**pendingBalance** | **String** |  | [optional] 
 **currency** | **String** |  | [optional] 
 **lastTransactionId** | **String** |  | [optional] 
 **lastUpdated** | [**DateTime**](DateTime.md) |  | [optional] 

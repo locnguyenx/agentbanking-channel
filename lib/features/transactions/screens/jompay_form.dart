@@ -77,7 +77,7 @@ class _JomPayFormState extends State<JomPayForm> {
                     ..billerCode = _billerController.text
                     ..ref1 = _ref1Controller.text
                     ..ref2 = _ref2Controller.text.isEmpty ? null : _ref2Controller.text
-                    ..amount = num.parse(_amountController.text)
+                    ..amount = _amountController.text
                     ..currency = JomPayExternalRequestCurrencyEnum.MYR
                     ..idempotencyKey = const Uuid().v4()
                   );

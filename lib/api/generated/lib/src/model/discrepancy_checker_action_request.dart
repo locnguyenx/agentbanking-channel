@@ -12,13 +12,10 @@ part 'discrepancy_checker_action_request.g.dart';
 /// DiscrepancyCheckerActionRequest
 ///
 /// Properties:
-/// * [action]
-/// * [notes]
+/// * [action] 
+/// * [notes] 
 @BuiltValue()
-abstract class DiscrepancyCheckerActionRequest
-    implements
-        Built<DiscrepancyCheckerActionRequest,
-            DiscrepancyCheckerActionRequestBuilder> {
+abstract class DiscrepancyCheckerActionRequest implements Built<DiscrepancyCheckerActionRequest, DiscrepancyCheckerActionRequestBuilder> {
   @BuiltValueField(wireName: r'action')
   DiscrepancyCheckerActionRequestActionEnum get action;
   // enum actionEnum {  APPROVE,  REJECT,  };
@@ -28,25 +25,18 @@ abstract class DiscrepancyCheckerActionRequest
 
   DiscrepancyCheckerActionRequest._();
 
-  factory DiscrepancyCheckerActionRequest(
-          [void updates(DiscrepancyCheckerActionRequestBuilder b)]) =
-      _$DiscrepancyCheckerActionRequest;
+  factory DiscrepancyCheckerActionRequest([void updates(DiscrepancyCheckerActionRequestBuilder b)]) = _$DiscrepancyCheckerActionRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DiscrepancyCheckerActionRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DiscrepancyCheckerActionRequest> get serializer =>
-      _$DiscrepancyCheckerActionRequestSerializer();
+  static Serializer<DiscrepancyCheckerActionRequest> get serializer => _$DiscrepancyCheckerActionRequestSerializer();
 }
 
-class _$DiscrepancyCheckerActionRequestSerializer
-    implements PrimitiveSerializer<DiscrepancyCheckerActionRequest> {
+class _$DiscrepancyCheckerActionRequestSerializer implements PrimitiveSerializer<DiscrepancyCheckerActionRequest> {
   @override
-  final Iterable<Type> types = const [
-    DiscrepancyCheckerActionRequest,
-    _$DiscrepancyCheckerActionRequest
-  ];
+  final Iterable<Type> types = const [DiscrepancyCheckerActionRequest, _$DiscrepancyCheckerActionRequest];
 
   @override
   final String wireName = r'DiscrepancyCheckerActionRequest';
@@ -74,9 +64,7 @@ class _$DiscrepancyCheckerActionRequestSerializer
     DiscrepancyCheckerActionRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -94,8 +82,7 @@ class _$DiscrepancyCheckerActionRequestSerializer
         case r'action':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType:
-                const FullType(DiscrepancyCheckerActionRequestActionEnum),
+            specifiedType: const FullType(DiscrepancyCheckerActionRequestActionEnum),
           ) as DiscrepancyCheckerActionRequestActionEnum;
           result.action = valueDes;
           break;
@@ -136,20 +123,17 @@ class _$DiscrepancyCheckerActionRequestSerializer
 }
 
 class DiscrepancyCheckerActionRequestActionEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'APPROVE')
-  static const DiscrepancyCheckerActionRequestActionEnum APPROVE =
-      _$discrepancyCheckerActionRequestActionEnum_APPROVE;
+  static const DiscrepancyCheckerActionRequestActionEnum APPROVE = _$discrepancyCheckerActionRequestActionEnum_APPROVE;
   @BuiltValueEnumConst(wireName: r'REJECT')
-  static const DiscrepancyCheckerActionRequestActionEnum REJECT =
-      _$discrepancyCheckerActionRequestActionEnum_REJECT;
+  static const DiscrepancyCheckerActionRequestActionEnum REJECT = _$discrepancyCheckerActionRequestActionEnum_REJECT;
 
-  static Serializer<DiscrepancyCheckerActionRequestActionEnum> get serializer =>
-      _$discrepancyCheckerActionRequestActionEnumSerializer;
+  static Serializer<DiscrepancyCheckerActionRequestActionEnum> get serializer => _$discrepancyCheckerActionRequestActionEnumSerializer;
 
-  const DiscrepancyCheckerActionRequestActionEnum._(String name) : super(name);
+  const DiscrepancyCheckerActionRequestActionEnum._(String name): super(name);
 
-  static BuiltSet<DiscrepancyCheckerActionRequestActionEnum> get values =>
-      _$discrepancyCheckerActionRequestActionEnumValues;
-  static DiscrepancyCheckerActionRequestActionEnum valueOf(String name) =>
-      _$discrepancyCheckerActionRequestActionEnumValueOf(name);
+  static BuiltSet<DiscrepancyCheckerActionRequestActionEnum> get values => _$discrepancyCheckerActionRequestActionEnumValues;
+  static DiscrepancyCheckerActionRequestActionEnum valueOf(String name) => _$discrepancyCheckerActionRequestActionEnumValueOf(name);
 }
+

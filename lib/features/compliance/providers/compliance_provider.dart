@@ -52,7 +52,7 @@ class ComplianceNotifier extends StateNotifier<ComplianceState> {
   /// BDD Feature 14: Compliance Check Async Unlock (@US-CA-21).
   Future<void> simulateWebhookUnlock() async {
     if (!_mounted) return;
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(Duration.zero);
     if (!_mounted) return;
     unlock();
   }

@@ -5,8 +5,10 @@
 library;
 import 'dart:async';
 import 'package:decimal/decimal.dart';
+import 'package:dio/dio.dart';
+import 'package:agent_api/agent_api.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
-import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart' as models;
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
@@ -18,6 +20,7 @@ import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart'
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
 import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockito/mockito.dart';
@@ -89,13 +92,13 @@ class FakeMyKadScanner implements IMyKadScanner {
 // ─── Transaction Repository ───────────────────────────────────────────────
 
 class FakeTransactionRepository implements TransactionRepository {
-  TransactionQuoteResponse? quoteToReturn;
-  TransactionExecutionResponse? executionToReturn;
+  models.TransactionQuoteResponse? quoteToReturn;
+  models.TransactionExecutionResponse? executionToReturn;
   String? billerStatusToReturn;
   String? proxyEnquiryNameToReturn;
   Map<String, String>? duitNowStatusToReturn;
   Map<String, String>? qrSaleToReturn;
-  TransactionExecutionResponse? duitNowInitiateToReturn;
+  models.TransactionExecutionResponse? duitNowInitiateToReturn;
 
   bool shouldFailQuote = false;
   bool shouldFailExecute = false;
@@ -103,23 +106,24 @@ class FakeTransactionRepository implements TransactionRepository {
   bool shouldTimeout = false;
   int proxyEnquiryCallCount = 0;
   int proxyEnquiryFailUntilAttempt = 0; // fail first N attempts
+  int duitNowPollCount = 0;
 
   FakeTransactionRepository() {
-    quoteToReturn = TransactionQuoteResponse(
+    quoteToReturn = models.TransactionQuoteResponse(
       quoteId: 'FAKE_QUOTE_001',
       amount: Decimal.fromInt(100),
       fee: Decimal.fromInt(1),
       commission: Decimal.parse('0.50'),
       total: Decimal.fromInt(101),
     );
-    executionToReturn = TransactionExecutionResponse(
+    executionToReturn = models.TransactionExecutionResponse(
       status: 'SUCCESS',
       referenceId: 'FAKE_REF_001',
     );
     billerStatusToReturn = 'SUCCESS';
     proxyEnquiryNameToReturn = 'AHMAD BIN ABDULLAH';
     duitNowStatusToReturn = {'status': 'SUCCESS', 'transactionId': 'DN_REF_001'};
-    duitNowInitiateToReturn = TransactionExecutionResponse(
+    duitNowInitiateToReturn = models.TransactionExecutionResponse(
       status: 'PENDING',
       referenceId: 'DN_REF_001',
     );
@@ -127,14 +131,14 @@ class FakeTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<TransactionQuoteResponse> getQuote(TransactionQuoteRequest request) async {
+  Future<models.TransactionQuoteResponse> getQuote(models.TransactionQuoteRequest request) async {
     if (shouldFailQuote) throw Exception('Quote failed');
     return quoteToReturn!;
   }
 
   @override
-  Future<TransactionExecutionResponse> executeTransaction(
-    TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
+  Future<models.TransactionExecutionResponse> executeTransaction(
+    models.TransactionExecutionRequest request, String agentId, {String? idempotencyKey}) async {
     if (shouldTimeout) {
       throw DioExceptionForTest(type: 'receiveTimeout');
     }
@@ -157,17 +161,22 @@ class FakeTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<TransactionExecutionResponse> initiateDuitNow({
+  Future<models.TransactionExecutionResponse> initiateDuitNow({
     required String quoteId,
     required String proxyId,
     required String proxyType,
     required Decimal amount,
   }) async {
+    duitNowPollCount = 0;
     return duitNowInitiateToReturn!;
   }
 
   @override
   Future<Map<String, String>> getDuitNowStatus(String referenceId) async {
+    duitNowPollCount++;
+    if (duitNowPollCount <= 2) {
+      return {'status': 'PENDING', 'transactionId': referenceId};
+    }
     return duitNowStatusToReturn!;
   }
 
@@ -177,8 +186,8 @@ class FakeTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<TransactionExecutionResponse> balanceInquiry(
-    TransactionExecutionRequest request, String merchantId) async {
+  Future<models.TransactionExecutionResponse> balanceInquiry(
+    models.TransactionExecutionRequest request, String merchantId) async {
     if (shouldFailExecute) throw Exception('Balance inquiry failed');
     return executionToReturn!;
   }
@@ -344,3 +353,84 @@ class FakeRef extends Mock implements Ref {
   @override
   T watch<T>(ProviderListenable<T> provider) => read(provider);
 }
+
+// ─── Secure Storage ───────────────────────────────────────────────────────
+
+class FakeSecureStorage extends Fake implements SecureStorageManager {
+  final Map<String, String> _data = {};
+
+  @override
+  Future<void> saveJwt(String jwt) async => _data['agent_jwt'] = jwt;
+
+  @override
+  Future<String?> readJwt() async => _data['agent_jwt'];
+
+  @override
+  Future<void> clearJwt() async => _data.remove('agent_jwt');
+
+  @override
+  Future<void> write(String key, String value) async => _data[key] = value;
+
+  @override
+  Future<String?> read(String key) async => _data[key];
+
+  @override
+  Future<void> delete(String key) async => _data.remove(key);
+
+  @override
+  Future<String> getSqlCipherPassphrase() async => 'fake-passphrase';
+
+  @override
+  Future<void> setComplianceLock(bool isLocked) async => _data['compliance_locked'] = isLocked.toString();
+
+  @override
+  Future<bool> getComplianceLocked() async => _data['compliance_locked'] == 'true';
+}
+
+// ─── API Mocks ────────────────────────────────────────────────────────────
+
+class ManualMockOrchestratorApi extends Mock implements OrchestratorControllerOrchestratorServiceApi {
+  @override
+  Future<Response<TransactionStartResponse>> startTransaction({
+    required TransactionStartRequest transactionStartRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      data: TransactionStartResponse((b) => b
+        ..status = TransactionStartResponseStatusEnum.PENDING
+        ..workflowId = 'WORKFLOW_${transactionStartRequest.idempotencyKey ?? "123"}'
+      ),
+      statusCode: 202,
+      requestOptions: RequestOptions(path: ''),
+    );
+  }
+
+  @override
+  Future<Response<TransactionStatusResponse>> getTransactionStatus({
+    required String workflowId,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    return Response(
+      data: TransactionStatusResponse((b) => b
+        ..status = TransactionStatusResponseStatusEnum.COMPLETED
+        ..workflowId = workflowId
+        ..referenceNumber = 'REF_$workflowId'
+        ..amount = 100.0
+      ),
+      statusCode: 200,
+      requestOptions: RequestOptions(path: ''),
+    );
+  }
+}
+
+class ManualMockResolutionApi extends Mock implements ResolutionControllerOrchestratorServiceApi {}

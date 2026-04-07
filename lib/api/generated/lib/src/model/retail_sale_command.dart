@@ -11,19 +11,18 @@ part 'retail_sale_command.g.dart';
 /// RetailSaleCommand
 ///
 /// Properties:
-/// * [merchantId]
-/// * [amount]
-/// * [cardData]
-/// * [pinBlock]
-/// * [idempotencyKey]
+/// * [merchantId] 
+/// * [amount] 
+/// * [cardData] 
+/// * [pinBlock] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class RetailSaleCommand
-    implements Built<RetailSaleCommand, RetailSaleCommandBuilder> {
+abstract class RetailSaleCommand implements Built<RetailSaleCommand, RetailSaleCommandBuilder> {
   @BuiltValueField(wireName: r'merchantId')
   String? get merchantId;
 
   @BuiltValueField(wireName: r'amount')
-  num? get amount;
+  String? get amount;
 
   @BuiltValueField(wireName: r'cardData')
   String? get cardData;
@@ -36,19 +35,16 @@ abstract class RetailSaleCommand
 
   RetailSaleCommand._();
 
-  factory RetailSaleCommand([void updates(RetailSaleCommandBuilder b)]) =
-      _$RetailSaleCommand;
+  factory RetailSaleCommand([void updates(RetailSaleCommandBuilder b)]) = _$RetailSaleCommand;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailSaleCommandBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailSaleCommand> get serializer =>
-      _$RetailSaleCommandSerializer();
+  static Serializer<RetailSaleCommand> get serializer => _$RetailSaleCommandSerializer();
 }
 
-class _$RetailSaleCommandSerializer
-    implements PrimitiveSerializer<RetailSaleCommand> {
+class _$RetailSaleCommandSerializer implements PrimitiveSerializer<RetailSaleCommand> {
   @override
   final Iterable<Type> types = const [RetailSaleCommand, _$RetailSaleCommand];
 
@@ -71,7 +67,7 @@ class _$RetailSaleCommandSerializer
       yield r'amount';
       yield serializers.serialize(
         object.amount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.cardData != null) {
@@ -103,9 +99,7 @@ class _$RetailSaleCommandSerializer
     RetailSaleCommand object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -130,8 +124,8 @@ class _$RetailSaleCommandSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'cardData':
@@ -183,3 +177,4 @@ class _$RetailSaleCommandSerializer
     return result.build();
   }
 }
+

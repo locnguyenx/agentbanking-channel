@@ -39,8 +39,10 @@ class AgentOnboardingRepository {
       });
       return true;
     } catch (e) {
-      // Mock success if endpoint 404s in dev environment
-      return true;
+      if (const bool.fromEnvironment('IS_MOCK_ONBOARDING', defaultValue: false)) {
+        return true;
+      }
+      rethrow;
     }
   }
 
@@ -54,8 +56,10 @@ class AgentOnboardingRepository {
       });
       return response.statusCode == 200;
     } catch (e) {
-      // Mock verification success for '123456'
-      return otp == '123456';
+      if (const bool.fromEnvironment('IS_MOCK_ONBOARDING', defaultValue: false)) {
+        return otp == '123456';
+      }
+      rethrow;
     }
   }
 

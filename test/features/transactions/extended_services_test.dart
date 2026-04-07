@@ -12,6 +12,7 @@ import 'package:agentbanking_channel/features/settlement/services/eod_timer_serv
 import 'package:geolocator/geolocator.dart';
 import 'package:mockito/mockito.dart';
 import '../../test_utils.dart';
+import '../../setup/test_credentials.dart';
 
 class FakeFloatRepository extends Fake implements FloatRepository {
   @override
@@ -149,7 +150,7 @@ void main() {
     test('ESSP Purchase flow sets state to success', () async {
       final amount = Decimal.parse('10.0');
       
-      await notifier.startTransaction(amount, 'AGENT-001', 
+      await notifier.startTransaction(amount, TestCredentials.username, 
         serviceCode: 'ESSP_PURCHASE', 
         fundingSource: FundingSource.CASH,
         metadata: {'productCode': 'ESSP_TOKEN'}
@@ -171,7 +172,7 @@ void main() {
     test('ESSP Purchase failure sets state to failed', () async {
       final amount = Decimal.parse('10.0');
       
-      await notifier.startTransaction(amount, 'AGENT-001', 
+      await notifier.startTransaction(amount, TestCredentials.username, 
         serviceCode: 'ESSP_PURCHASE', 
         fundingSource: FundingSource.CASH,
         metadata: {'productCode': 'ESSP_TOKEN'}

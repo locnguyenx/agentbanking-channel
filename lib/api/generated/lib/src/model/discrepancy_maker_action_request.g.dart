@@ -74,7 +74,7 @@ class _$DiscrepancyMakerActionRequest extends DiscrepancyMakerActionRequest {
   @override
   final String notes;
   @override
-  final num? adjustmentAmount;
+  final String? adjustmentAmount;
 
   factory _$DiscrepancyMakerActionRequest(
           [void Function(DiscrepancyMakerActionRequestBuilder)? updates]) =>
@@ -136,9 +136,9 @@ class DiscrepancyMakerActionRequestBuilder
   String? get notes => _$this._notes;
   set notes(String? notes) => _$this._notes = notes;
 
-  num? _adjustmentAmount;
-  num? get adjustmentAmount => _$this._adjustmentAmount;
-  set adjustmentAmount(num? adjustmentAmount) =>
+  String? _adjustmentAmount;
+  String? get adjustmentAmount => _$this._adjustmentAmount;
+  set adjustmentAmount(String? adjustmentAmount) =>
       _$this._adjustmentAmount = adjustmentAmount;
 
   DiscrepancyMakerActionRequestBuilder() {

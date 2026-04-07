@@ -22,10 +22,4 @@ Future<void> theAgentRunsProxyenquiryAndShowsMaskedDestinationNameToCustomer(
   await tester.tap(find.byKey(const Key('btn_main_action')));
   await tester.pumpAndSettle();
   
-  // Handle AGREE
-  final agreeBtn = find.byKey(const Key('btn_confirm'));
-  if (agreeBtn.evaluate().isNotEmpty) {
-      await tester.tap(agreeBtn);
-      await tester.pumpAndSettle();
-  }
 }

@@ -8,24 +8,16 @@ class FloatRepository {
   FloatRepository(this.ledgerApi);
 
   Future<FloatLedger> getFloatStatus(String agentId) async {
-    try {
-      final response = await ledgerApi.getBalance(agentId: agentId);
-      final data = response.data;
-      
-      if (data == null) {
-        throw Exception('Empty response from balance API');
-      }
-
-      return FloatLedger(
-        currentBalance: Decimal.parse(data.availableBalance?.toString() ?? '0.0'),
-        limit: Decimal.parse('10000.0'), // Limit might come from another endpoint or be fixed
-      );
-    } catch (e) {
-      // Mock fallback if API not ready
-      return FloatLedger(
-        currentBalance: Decimal.parse('5000.0'),
-        limit: Decimal.parse('10000.0'),
-      );
+    final response = await ledgerApi.getBalance(agentId: agentId);
+    final data = response.data;
+    
+    if (data == null) {
+      throw Exception('Empty response from balance API');
     }
+
+    return FloatLedger(
+      currentBalance: Decimal.parse(data.availableBalance?.toString() ?? '0.0'),
+      limit: Decimal.parse('10000.0'), // Limit might come from another endpoint or be fixed
+    );
   }
 }

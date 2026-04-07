@@ -8,14 +8,18 @@ import 'package:agentbanking_channel/core/network/timeout_interceptor.dart';
 import 'package:agentbanking_channel/core/network/gps_interceptor.dart';
 import 'package:agentbanking_channel/core/network/idempotency_interceptor.dart';
 import 'package:agentbanking_channel/core/network/mock_gateway_interceptor.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 import 'package:agentbanking_channel/core/network/redacting_logger.dart';
 import 'package:agentbanking_channel/core/network/retry_interceptor.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final reversalService = ref.watch(reversalServiceProvider);
   
   final dio = Dio(BaseOptions(
-    baseUrl: const String.fromEnvironment('API_BASE_URL', defaultValue: 'https://api.agentbanking.example.com'),
+    baseUrl: const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080'),
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 25), // Design §4.2 25s limit
   ));
@@ -36,11 +40,18 @@ final dioProvider = Provider<Dio>((ref) {
     };
   }
 
+  if (const bool.fromEnvironment('IS_MOCK_GATEWAY', defaultValue: false)) {
+    dio.interceptors.add(MockGatewayInterceptor());
+  }
+
+  final geolocator = ref.watch(geolocatorProvider);
+  final secureStorage = ref.watch(secureStorageManagerProvider);
+  
   dio.interceptors.addAll([
-    MockGatewayInterceptor(),
+    AuthInterceptor(secureStorage),
     RetryInterceptor(dio: dio), // BDD @US-CA-23 FR-CA-10.1: Exponential Backoff
     TimeoutInterceptor(reversalService: reversalService),
-    GpsInterceptor(),
+    GpsInterceptor(geolocator: geolocator),
     IdempotencyInterceptor(),
     RedactingLogger(), // PII Redaction Interceptor (US-CA-30)
   ]);

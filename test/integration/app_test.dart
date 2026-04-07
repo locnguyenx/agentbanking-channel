@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:agentbanking_channel/main.dart';
@@ -19,6 +20,9 @@ import 'package:agentbanking_channel/features/auth/repositories/auth_repository.
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+import 'package:geolocator/geolocator.dart';
+import '../setup/test_credentials.dart';
 
 class FakeAuthRepository extends Fake implements AuthRepository {
   @override
@@ -29,12 +33,12 @@ class FakeAuthRepository extends Fake implements AuthRepository {
 
   @override
   Future<AuthUser> login(String agentId, String password) async {
-    return AuthUser(agentId: 'AGENT01', name: 'Test Agent', tier: 'GOLD');
+    return AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'GOLD');
   }
 
   @override
   Future<AuthUser> loginBiometric() async {
-    return AuthUser(agentId: 'AGENT01', name: 'Test Agent', tier: 'GOLD');
+    return AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'GOLD');
   }
 }
 
@@ -141,7 +145,26 @@ class FakeMyKadScanner extends Fake implements IMyKadScanner {
   Future<MyKadData?> scanMyKad() async => MyKadData(fullName: 'JOHN DOE', icNumber: '123456789012', address: '123 Test St');
 }
 
+class FakeGeolocator extends Fake implements GeolocatorPlatform {
+  @override
+  Future<Position> getCurrentPosition({LocationSettings? locationSettings}) async {
+    return Position(
+      latitude: 3.1390,
+      longitude: 101.6869,
+      timestamp: DateTime.now(),
+      accuracy: 10.0,
+      altitude: 0.0,
+      heading: 0.0,
+      speed: 0.0,
+      speedAccuracy: 0.0,
+      altitudeAccuracy: 0.0,
+      headingAccuracy: 0.0,
+    );
+  }
+}
+
 void main() {
+  HttpOverrides.global = null;
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('End-to-End Onboarding and Transaction Flow', () {
@@ -160,19 +183,23 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
+      final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
       final mockRepo = FakeTransactionRepository();
       final mockFloatRepo = FakeFloatRepository();
       final mockKycRepo = FakeKycRepository();
       
       await tester.pumpWidget(ProviderScope(
         overrides: [
-          transactionRepositoryProvider.overrideWithValue(mockRepo),
-          floatRepositoryProvider.overrideWithValue(mockFloatRepo),
-          floatProvider.overrideWith((ref) => FloatNotifier(mockFloatRepo, 'AGENT01')),
-          kycRepositoryProvider.overrideWithValue(mockKycRepo),
-          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
-          secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          if (!isRealBackend) ...[
+            transactionRepositoryProvider.overrideWithValue(mockRepo),
+            floatRepositoryProvider.overrideWithValue(mockFloatRepo),
+            kycRepositoryProvider.overrideWithValue(mockKycRepo),
+            authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+            secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          ],
+          floatProvider.overrideWith((ref) => FloatNotifier(ref.watch(floatRepositoryProvider), "AGENT01", startTimer: false)),
+pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
+          geolocatorProvider.overrideWithValue(FakeGeolocator()),
           cardReaderProvider.overrideWithValue(FakeCardReader()),
           pinPadProvider.overrideWithValue(FakePinPad()),
           myKadScannerProvider.overrideWithValue(FakeMyKadScanner()),
@@ -181,8 +208,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(0), 'AGENT01');
-      await tester.enterText(find.byType(TextField).at(1), '123456');
+      await tester.enterText(find.byType(TextField).at(0), TestCredentials.username);
+      await tester.enterText(find.byType(TextField).at(1), TestCredentials.password);
       await tester.tap(find.text('LOGIN'));
       await waitFor(tester, find.byType(DashboardScreen));
 
@@ -240,19 +267,23 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
+      final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
       final mockRepo = FakeTransactionRepository();
       final mockFloatRepo = FakeFloatRepository();
       final mockKycRepo = FakeKycRepository();
 
       await tester.pumpWidget(ProviderScope(
         overrides: [
-          transactionRepositoryProvider.overrideWithValue(mockRepo),
-          floatRepositoryProvider.overrideWithValue(mockFloatRepo),
-          floatProvider.overrideWith((ref) => FloatNotifier(mockFloatRepo, 'AGENT01')),
-          kycRepositoryProvider.overrideWithValue(mockKycRepo),
-          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
-          secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          if (!isRealBackend) ...[
+            transactionRepositoryProvider.overrideWithValue(mockRepo),
+            floatRepositoryProvider.overrideWithValue(mockFloatRepo),
+            kycRepositoryProvider.overrideWithValue(mockKycRepo),
+            authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+            secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          ],
+          floatProvider.overrideWith((ref) => FloatNotifier(ref.watch(floatRepositoryProvider), "AGENT01", startTimer: false)),
+pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
+          geolocatorProvider.overrideWithValue(FakeGeolocator()),
           cardReaderProvider.overrideWithValue(FakeCardReader()),
           pinPadProvider.overrideWithValue(FakePinPad()),
         ],
@@ -260,8 +291,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(0), 'AGENT01');
-      await tester.enterText(find.byType(TextField).at(1), '123456');
+      await tester.enterText(find.byType(TextField).at(0), TestCredentials.username);
+      await tester.enterText(find.byType(TextField).at(1), TestCredentials.password);
       await tester.tap(find.text('LOGIN'));
       await waitFor(tester, find.byType(DashboardScreen));
 
@@ -304,19 +335,23 @@ void main() {
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
 
+      final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
       final mockRepo = FakeTransactionRepository();
       final mockFloatRepo = FakeFloatRepository();
       final mockKycRepo = FakeKycRepository();
 
       await tester.pumpWidget(ProviderScope(
         overrides: [
-          transactionRepositoryProvider.overrideWithValue(mockRepo),
-          floatRepositoryProvider.overrideWithValue(mockFloatRepo),
-          floatProvider.overrideWith((ref) => FloatNotifier(mockFloatRepo, 'AGENT01')),
-          kycRepositoryProvider.overrideWithValue(mockKycRepo),
-          pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
-          authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
-          secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          if (!isRealBackend) ...[
+            transactionRepositoryProvider.overrideWithValue(mockRepo),
+            floatRepositoryProvider.overrideWithValue(mockFloatRepo),
+            kycRepositoryProvider.overrideWithValue(mockKycRepo),
+            authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+            secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+          ],
+          floatProvider.overrideWith((ref) => FloatNotifier(ref.watch(floatRepositoryProvider), "AGENT01", startTimer: false)),
+pendingQueueCountProvider.overrideWith((ref) => const Stream.empty()),
+          geolocatorProvider.overrideWithValue(FakeGeolocator()),
           cardReaderProvider.overrideWithValue(FakeCardReader()),
           pinPadProvider.overrideWithValue(FakePinPad()),
         ],
@@ -324,8 +359,8 @@ void main() {
       ));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextField).at(0), 'AGENT01');
-      await tester.enterText(find.byType(TextField).at(1), '123456');
+      await tester.enterText(find.byType(TextField).at(0), TestCredentials.username);
+      await tester.enterText(find.byType(TextField).at(1), TestCredentials.password);
       await tester.tap(find.text('LOGIN'));
       await waitFor(tester, find.byType(DashboardScreen));
 

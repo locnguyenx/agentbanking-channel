@@ -12,18 +12,17 @@ part 'fee_config_response.g.dart';
 /// FeeConfigResponse
 ///
 /// Properties:
-/// * [feeConfigId]
-/// * [agentType]
-/// * [transactionType]
-/// * [feeType]
-/// * [feeAmount]
-/// * [percentage]
-/// * [status]
-/// * [effectiveFrom]
-/// * [effectiveTo]
+/// * [feeConfigId] 
+/// * [agentType] 
+/// * [transactionType] 
+/// * [feeType] 
+/// * [feeAmount] 
+/// * [percentage] 
+/// * [status] 
+/// * [effectiveFrom] 
+/// * [effectiveTo] 
 @BuiltValue()
-abstract class FeeConfigResponse
-    implements Built<FeeConfigResponse, FeeConfigResponseBuilder> {
+abstract class FeeConfigResponse implements Built<FeeConfigResponse, FeeConfigResponseBuilder> {
   @BuiltValueField(wireName: r'feeConfigId')
   String? get feeConfigId;
 
@@ -37,10 +36,10 @@ abstract class FeeConfigResponse
   String? get feeType;
 
   @BuiltValueField(wireName: r'feeAmount')
-  num? get feeAmount;
+  String? get feeAmount;
 
   @BuiltValueField(wireName: r'percentage')
-  num? get percentage;
+  String? get percentage;
 
   @BuiltValueField(wireName: r'status')
   FeeConfigResponseStatusEnum? get status;
@@ -54,19 +53,16 @@ abstract class FeeConfigResponse
 
   FeeConfigResponse._();
 
-  factory FeeConfigResponse([void updates(FeeConfigResponseBuilder b)]) =
-      _$FeeConfigResponse;
+  factory FeeConfigResponse([void updates(FeeConfigResponseBuilder b)]) = _$FeeConfigResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(FeeConfigResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<FeeConfigResponse> get serializer =>
-      _$FeeConfigResponseSerializer();
+  static Serializer<FeeConfigResponse> get serializer => _$FeeConfigResponseSerializer();
 }
 
-class _$FeeConfigResponseSerializer
-    implements PrimitiveSerializer<FeeConfigResponse> {
+class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResponse> {
   @override
   final Iterable<Type> types = const [FeeConfigResponse, _$FeeConfigResponse];
 
@@ -110,14 +106,14 @@ class _$FeeConfigResponseSerializer
       yield r'feeAmount';
       yield serializers.serialize(
         object.feeAmount,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.percentage != null) {
       yield r'percentage';
       yield serializers.serialize(
         object.percentage,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.status != null) {
@@ -149,9 +145,7 @@ class _$FeeConfigResponseSerializer
     FeeConfigResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -197,15 +191,15 @@ class _$FeeConfigResponseSerializer
         case r'feeAmount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.feeAmount = valueDes;
           break;
         case r'percentage':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.percentage = valueDes;
           break;
         case r'status':
@@ -259,23 +253,19 @@ class _$FeeConfigResponseSerializer
 }
 
 class FeeConfigResponseStatusEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'CREATED')
-  static const FeeConfigResponseStatusEnum CREATED =
-      _$feeConfigResponseStatusEnum_CREATED;
+  static const FeeConfigResponseStatusEnum CREATED = _$feeConfigResponseStatusEnum_CREATED;
   @BuiltValueEnumConst(wireName: r'ACTIVE')
-  static const FeeConfigResponseStatusEnum ACTIVE =
-      _$feeConfigResponseStatusEnum_ACTIVE;
+  static const FeeConfigResponseStatusEnum ACTIVE = _$feeConfigResponseStatusEnum_ACTIVE;
   @BuiltValueEnumConst(wireName: r'INACTIVE')
-  static const FeeConfigResponseStatusEnum INACTIVE =
-      _$feeConfigResponseStatusEnum_INACTIVE;
+  static const FeeConfigResponseStatusEnum INACTIVE = _$feeConfigResponseStatusEnum_INACTIVE;
 
-  static Serializer<FeeConfigResponseStatusEnum> get serializer =>
-      _$feeConfigResponseStatusEnumSerializer;
+  static Serializer<FeeConfigResponseStatusEnum> get serializer => _$feeConfigResponseStatusEnumSerializer;
 
-  const FeeConfigResponseStatusEnum._(String name) : super(name);
+  const FeeConfigResponseStatusEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigResponseStatusEnum> get values =>
-      _$feeConfigResponseStatusEnumValues;
-  static FeeConfigResponseStatusEnum valueOf(String name) =>
-      _$feeConfigResponseStatusEnumValueOf(name);
+  static BuiltSet<FeeConfigResponseStatusEnum> get values => _$feeConfigResponseStatusEnumValues;
+  static FeeConfigResponseStatusEnum valueOf(String name) => _$feeConfigResponseStatusEnumValueOf(name);
 }
+

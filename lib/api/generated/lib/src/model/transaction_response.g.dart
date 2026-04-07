@@ -77,7 +77,7 @@ class _$TransactionResponse extends TransactionResponse {
   @override
   final String? transactionId;
   @override
-  final num? amount;
+  final String? amount;
   @override
   final String? currency;
   @override
@@ -169,9 +169,9 @@ class TransactionResponseBuilder
   set transactionId(String? transactionId) =>
       _$this._transactionId = transactionId;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   String? _currency;
   String? get currency => _$this._currency;

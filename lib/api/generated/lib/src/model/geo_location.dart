@@ -11,8 +11,8 @@ part 'geo_location.g.dart';
 /// GeoLocation
 ///
 /// Properties:
-/// * [latitude]
-/// * [longitude]
+/// * [latitude] 
+/// * [longitude] 
 @BuiltValue()
 abstract class GeoLocation implements Built<GeoLocation, GeoLocationBuilder> {
   @BuiltValueField(wireName: r'latitude')
@@ -62,9 +62,7 @@ class _$GeoLocationSerializer implements PrimitiveSerializer<GeoLocation> {
     GeoLocation object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -121,3 +119,4 @@ class _$GeoLocationSerializer implements PrimitiveSerializer<GeoLocation> {
     return result.build();
   }
 }
+

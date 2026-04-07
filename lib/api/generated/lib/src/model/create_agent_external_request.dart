@@ -19,12 +19,10 @@ part 'create_agent_external_request.g.dart';
 /// * [phoneNumber] - Contact number
 /// * [merchantGpsLat] - Merchant GPS latitude
 /// * [merchantGpsLng] - Merchant GPS longitude
-/// * [email]
-/// * [address]
+/// * [email] 
+/// * [address] 
 @BuiltValue()
-abstract class CreateAgentExternalRequest
-    implements
-        Built<CreateAgentExternalRequest, CreateAgentExternalRequestBuilder> {
+abstract class CreateAgentExternalRequest implements Built<CreateAgentExternalRequest, CreateAgentExternalRequestBuilder> {
   /// Unique agent code
   @BuiltValueField(wireName: r'agentCode')
   String get agentCode;
@@ -62,25 +60,18 @@ abstract class CreateAgentExternalRequest
 
   CreateAgentExternalRequest._();
 
-  factory CreateAgentExternalRequest(
-          [void updates(CreateAgentExternalRequestBuilder b)]) =
-      _$CreateAgentExternalRequest;
+  factory CreateAgentExternalRequest([void updates(CreateAgentExternalRequestBuilder b)]) = _$CreateAgentExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(CreateAgentExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<CreateAgentExternalRequest> get serializer =>
-      _$CreateAgentExternalRequestSerializer();
+  static Serializer<CreateAgentExternalRequest> get serializer => _$CreateAgentExternalRequestSerializer();
 }
 
-class _$CreateAgentExternalRequestSerializer
-    implements PrimitiveSerializer<CreateAgentExternalRequest> {
+class _$CreateAgentExternalRequestSerializer implements PrimitiveSerializer<CreateAgentExternalRequest> {
   @override
-  final Iterable<Type> types = const [
-    CreateAgentExternalRequest,
-    _$CreateAgentExternalRequest
-  ];
+  final Iterable<Type> types = const [CreateAgentExternalRequest, _$CreateAgentExternalRequest];
 
   @override
   final String wireName = r'CreateAgentExternalRequest';
@@ -147,9 +138,7 @@ class _$CreateAgentExternalRequestSerializer
     CreateAgentExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -257,28 +246,22 @@ class _$CreateAgentExternalRequestSerializer
 }
 
 class CreateAgentExternalRequestTierEnum extends EnumClass {
+
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'MICRO')
-  static const CreateAgentExternalRequestTierEnum MICRO =
-      _$createAgentExternalRequestTierEnum_MICRO;
-
+  static const CreateAgentExternalRequestTierEnum MICRO = _$createAgentExternalRequestTierEnum_MICRO;
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const CreateAgentExternalRequestTierEnum STANDARD =
-      _$createAgentExternalRequestTierEnum_STANDARD;
-
+  static const CreateAgentExternalRequestTierEnum STANDARD = _$createAgentExternalRequestTierEnum_STANDARD;
   /// Agent tier level
   @BuiltValueEnumConst(wireName: r'PREMIER')
-  static const CreateAgentExternalRequestTierEnum PREMIER =
-      _$createAgentExternalRequestTierEnum_PREMIER;
+  static const CreateAgentExternalRequestTierEnum PREMIER = _$createAgentExternalRequestTierEnum_PREMIER;
 
-  static Serializer<CreateAgentExternalRequestTierEnum> get serializer =>
-      _$createAgentExternalRequestTierEnumSerializer;
+  static Serializer<CreateAgentExternalRequestTierEnum> get serializer => _$createAgentExternalRequestTierEnumSerializer;
 
-  const CreateAgentExternalRequestTierEnum._(String name) : super(name);
+  const CreateAgentExternalRequestTierEnum._(String name): super(name);
 
-  static BuiltSet<CreateAgentExternalRequestTierEnum> get values =>
-      _$createAgentExternalRequestTierEnumValues;
-  static CreateAgentExternalRequestTierEnum valueOf(String name) =>
-      _$createAgentExternalRequestTierEnumValueOf(name);
+  static BuiltSet<CreateAgentExternalRequestTierEnum> get values => _$createAgentExternalRequestTierEnumValues;
+  static CreateAgentExternalRequestTierEnum valueOf(String name) => _$createAgentExternalRequestTierEnumValueOf(name);
 }
+

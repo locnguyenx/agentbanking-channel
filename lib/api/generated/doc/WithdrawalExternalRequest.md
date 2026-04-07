@@ -8,7 +8,7 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**amount** | **num** | Transaction amount in MYR | 
+**amount** | **String** | Transaction amount in MYR | 
 **currency** | **String** |  | [default to 'MYR']
 **idempotencyKey** | **String** | Unique key to prevent duplicate transactions | 
 **customerCard** | **String** | Customer card number (PAN) | 

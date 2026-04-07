@@ -141,7 +141,7 @@ class _$TopupExternalRequest extends TopupExternalRequest {
   @override
   final String phoneNumber;
   @override
-  final num amount;
+  final String amount;
   @override
   final TopupExternalRequestCurrencyEnum currency;
   @override
@@ -214,9 +214,9 @@ class TopupExternalRequestBuilder
   String? get phoneNumber => _$this._phoneNumber;
   set phoneNumber(String? phoneNumber) => _$this._phoneNumber = phoneNumber;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   TopupExternalRequestCurrencyEnum? _currency;
   TopupExternalRequestCurrencyEnum? get currency => _$this._currency;

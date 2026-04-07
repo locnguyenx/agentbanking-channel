@@ -7,7 +7,21 @@ import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart'
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
+import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
+import 'package:agentbanking_channel/core/network/dio_provider.dart';
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:dio/dio.dart';
+
 import 'test_fakes.dart';
+import '../setup/test_credentials.dart';
+
+final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
+final String apiBaseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
 /// Integration test: Verify TransactionNotifier (façade) delegates
 /// to sub-notifiers instead of performing logic inline.
@@ -17,41 +31,74 @@ import 'test_fakes.dart';
 void main() {
   group('TransactionNotifier Façade Routing', () {
     late TransactionNotifier notifier;
-    late FakeRef ref;
-    late FakeTransactionRepository repo;
-    late FakeFloatNotifier floatNotifier;
+    late ProviderContainer container;
 
     setUp(() {
       ref = FakeRef();
       repo = FakeTransactionRepository();
       floatNotifier = FakeFloatNotifier();
+      
+      if (isRealBackend) {
+        container = ProviderContainer(overrides: [
+          authProvider.overrideWith((ref) {
+            final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
+            notifier.debugSetAuthenticated(AuthUser(
+              agentId: 'AGT-E2E-001',
+              name: 'AGENT',
+              tier: 'GOLD',
+            ));
+            notifier.debugSetJwt(TestCredentials.agentJwt);
+            return notifier;
+          }),
+          dioProvider.overrideWith((ref) => Dio(BaseOptions(baseUrl: apiBaseUrl))),
+          secureStorageManagerProvider.overrideWithValue(FakeSecureStorage()),
+        ]);
+        
+        container.updateOverrides([
+          authProvider.overrideWith((ref) {
+            final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
+            notifier.debugSetAuthenticated(AuthUser(
+              agentId: 'AGT-E2E-001',
+              name: 'AGENT',
+              tier: 'GOLD',
+            ));
+            notifier.debugSetJwt(TestCredentials.agentJwt);
+            return notifier;
+          }),
+          dioProvider.overrideWith((ref) => Dio(BaseOptions(baseUrl: apiBaseUrl))..interceptors.add(AuthInterceptor(container.read(secureStorageManagerProvider)))),
+          secureStorageManagerProvider.overrideWithValue(container.read(secureStorageManagerProvider)),
+        ]);
+      } else {
+        container = ProviderContainer();
+      }
 
-      // Stub authProvider so startTransaction geofence/validation works
-      ref.stubProvider(authProvider, AuthState(
-        status: AuthStatus.authenticated,
-        user: AuthUser(
-          agentId: 'AGENT-001',
-          name: 'Test Agent',
-          tier: 'GOLD',
-          registeredLat: null, // Skip geofence for these tests
-          registeredLng: null,
-        ),
-      ));
-
-      ref.stubProvider(complianceProvider, ComplianceState(isFrozen: false));
-      ref.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService());
+      // Stub authProvider so startTransaction geofence/validation works for FAKE mode
+      if (!isRealBackend) {
+        ref.stubProvider(authProvider, AuthState(
+          status: AuthStatus.authenticated,
+          user: AuthUser(
+            agentId: TestCredentials.username,
+            name: 'Test Agent',
+            tier: 'GOLD',
+            registeredLat: null, // Skip geofence for these tests
+            registeredLng: null,
+          ),
+        ));
+        ref.stubProvider(complianceProvider, ComplianceState(isFrozen: false));
+        ref.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService());
+      }
 
       notifier = TransactionNotifier(
-        ref: ref,
-        repository: repo,
-        cardReader: FakeCardReader(),
-        pinPad: FakePinPad(),
-        floatNotifier: floatNotifier,
-        reversalService: FakeReversalService(),
-        myKadScanner: FakeMyKadScanner(),
-        complianceNotifier: FakeComplianceNotifier(),
-        eodTimerService: FakeEodTimerService(),
-        geolocator: FakeGeolocator(),
+        ref: isRealBackend ? container.read(Provider((ref) => ref)) : ref,
+        repository: isRealBackend ? container.read(transactionRepositoryProvider) : repo,
+        cardReader: isRealBackend ? container.read(cardReaderProvider) : FakeCardReader(),
+        pinPad: isRealBackend ? container.read(pinPadProvider) : FakePinPad(),
+        floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : floatNotifier,
+        reversalService: isRealBackend ? container.read(reversalServiceProvider) : FakeReversalService(),
+        myKadScanner: isRealBackend ? container.read(myKadScannerProvider) : FakeMyKadScanner(),
+        complianceNotifier: isRealBackend ? container.read(complianceProvider.notifier) : FakeComplianceNotifier(),
+        eodTimerService: isRealBackend ? container.read(eodTimerServiceProvider.notifier) : FakeEodTimerService(),
+        geolocator: isRealBackend ? container.read(geolocatorProvider) : FakeGeolocator(),
       );
     });
 

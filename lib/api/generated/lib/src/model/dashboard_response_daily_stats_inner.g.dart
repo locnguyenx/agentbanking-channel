@@ -13,7 +13,7 @@ class _$DashboardResponseDailyStatsInner
   @override
   final int? transactionCount;
   @override
-  final num? volume;
+  final String? volume;
 
   factory _$DashboardResponseDailyStatsInner(
           [void Function(DashboardResponseDailyStatsInnerBuilder)? updates]) =>
@@ -75,9 +75,9 @@ class DashboardResponseDailyStatsInnerBuilder
   set transactionCount(int? transactionCount) =>
       _$this._transactionCount = transactionCount;
 
-  num? _volume;
-  num? get volume => _$this._volume;
-  set volume(num? volume) => _$this._volume = volume;
+  String? _volume;
+  String? get volume => _$this._volume;
+  set volume(String? volume) => _$this._volume = volume;
 
   DashboardResponseDailyStatsInnerBuilder() {
     DashboardResponseDailyStatsInner._defaults(this);

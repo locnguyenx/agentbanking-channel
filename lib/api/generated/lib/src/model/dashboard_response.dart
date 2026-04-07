@@ -13,15 +13,14 @@ part 'dashboard_response.g.dart';
 /// DashboardResponse
 ///
 /// Properties:
-/// * [totalAgents]
-/// * [activeAgents]
-/// * [totalTransactions]
-/// * [totalVolume]
-/// * [successRate]
-/// * [dailyStats]
+/// * [totalAgents] 
+/// * [activeAgents] 
+/// * [totalTransactions] 
+/// * [totalVolume] 
+/// * [successRate] 
+/// * [dailyStats] 
 @BuiltValue()
-abstract class DashboardResponse
-    implements Built<DashboardResponse, DashboardResponseBuilder> {
+abstract class DashboardResponse implements Built<DashboardResponse, DashboardResponseBuilder> {
   @BuiltValueField(wireName: r'totalAgents')
   int? get totalAgents;
 
@@ -32,7 +31,7 @@ abstract class DashboardResponse
   int? get totalTransactions;
 
   @BuiltValueField(wireName: r'totalVolume')
-  num? get totalVolume;
+  String? get totalVolume;
 
   @BuiltValueField(wireName: r'successRate')
   num? get successRate;
@@ -42,19 +41,16 @@ abstract class DashboardResponse
 
   DashboardResponse._();
 
-  factory DashboardResponse([void updates(DashboardResponseBuilder b)]) =
-      _$DashboardResponse;
+  factory DashboardResponse([void updates(DashboardResponseBuilder b)]) = _$DashboardResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DashboardResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DashboardResponse> get serializer =>
-      _$DashboardResponseSerializer();
+  static Serializer<DashboardResponse> get serializer => _$DashboardResponseSerializer();
 }
 
-class _$DashboardResponseSerializer
-    implements PrimitiveSerializer<DashboardResponse> {
+class _$DashboardResponseSerializer implements PrimitiveSerializer<DashboardResponse> {
   @override
   final Iterable<Type> types = const [DashboardResponse, _$DashboardResponse];
 
@@ -91,7 +87,7 @@ class _$DashboardResponseSerializer
       yield r'totalVolume';
       yield serializers.serialize(
         object.totalVolume,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.successRate != null) {
@@ -105,8 +101,7 @@ class _$DashboardResponseSerializer
       yield r'dailyStats';
       yield serializers.serialize(
         object.dailyStats,
-        specifiedType: const FullType(
-            BuiltList, [FullType(DashboardResponseDailyStatsInner)]),
+        specifiedType: const FullType(BuiltList, [FullType(DashboardResponseDailyStatsInner)]),
       );
     }
   }
@@ -117,9 +112,7 @@ class _$DashboardResponseSerializer
     DashboardResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -158,8 +151,8 @@ class _$DashboardResponseSerializer
         case r'totalVolume':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.totalVolume = valueDes;
           break;
         case r'successRate':
@@ -172,8 +165,7 @@ class _$DashboardResponseSerializer
         case r'dailyStats':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(
-                BuiltList, [FullType(DashboardResponseDailyStatsInner)]),
+            specifiedType: const FullType(BuiltList, [FullType(DashboardResponseDailyStatsInner)]),
           ) as BuiltList<DashboardResponseDailyStatsInner>;
           result.dailyStats.replace(valueDes);
           break;
@@ -205,3 +197,4 @@ class _$DashboardResponseSerializer
     return result.build();
   }
 }
+

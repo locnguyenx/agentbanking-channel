@@ -11,14 +11,13 @@ part 'pin_purchase_response.g.dart';
 /// PinPurchaseResponse
 ///
 /// Properties:
-/// * [status]
-/// * [transactionId]
-/// * [pinCode]
-/// * [commission]
-/// * [timestamp]
+/// * [status] 
+/// * [transactionId] 
+/// * [pinCode] 
+/// * [commission] 
+/// * [timestamp] 
 @BuiltValue()
-abstract class PinPurchaseResponse
-    implements Built<PinPurchaseResponse, PinPurchaseResponseBuilder> {
+abstract class PinPurchaseResponse implements Built<PinPurchaseResponse, PinPurchaseResponseBuilder> {
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -29,31 +28,25 @@ abstract class PinPurchaseResponse
   String? get pinCode;
 
   @BuiltValueField(wireName: r'commission')
-  num? get commission;
+  String? get commission;
 
   @BuiltValueField(wireName: r'timestamp')
   String? get timestamp;
 
   PinPurchaseResponse._();
 
-  factory PinPurchaseResponse([void updates(PinPurchaseResponseBuilder b)]) =
-      _$PinPurchaseResponse;
+  factory PinPurchaseResponse([void updates(PinPurchaseResponseBuilder b)]) = _$PinPurchaseResponse;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(PinPurchaseResponseBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<PinPurchaseResponse> get serializer =>
-      _$PinPurchaseResponseSerializer();
+  static Serializer<PinPurchaseResponse> get serializer => _$PinPurchaseResponseSerializer();
 }
 
-class _$PinPurchaseResponseSerializer
-    implements PrimitiveSerializer<PinPurchaseResponse> {
+class _$PinPurchaseResponseSerializer implements PrimitiveSerializer<PinPurchaseResponse> {
   @override
-  final Iterable<Type> types = const [
-    PinPurchaseResponse,
-    _$PinPurchaseResponse
-  ];
+  final Iterable<Type> types = const [PinPurchaseResponse, _$PinPurchaseResponse];
 
   @override
   final String wireName = r'PinPurchaseResponse';
@@ -88,7 +81,7 @@ class _$PinPurchaseResponseSerializer
       yield r'commission';
       yield serializers.serialize(
         object.commission,
-        specifiedType: const FullType(num),
+        specifiedType: const FullType(String),
       );
     }
     if (object.timestamp != null) {
@@ -106,9 +99,7 @@ class _$PinPurchaseResponseSerializer
     PinPurchaseResponse object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -147,8 +138,8 @@ class _$PinPurchaseResponseSerializer
         case r'commission':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.commission = valueDes;
           break;
         case r'timestamp':
@@ -186,3 +177,4 @@ class _$PinPurchaseResponseSerializer
     return result.build();
   }
 }
+

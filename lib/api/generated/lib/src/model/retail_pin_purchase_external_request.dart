@@ -11,44 +11,34 @@ part 'retail_pin_purchase_external_request.g.dart';
 /// RetailPinPurchaseExternalRequest
 ///
 /// Properties:
-/// * [productCode]
-/// * [amount]
-/// * [idempotencyKey]
+/// * [productCode] 
+/// * [amount] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class RetailPinPurchaseExternalRequest
-    implements
-        Built<RetailPinPurchaseExternalRequest,
-            RetailPinPurchaseExternalRequestBuilder> {
+abstract class RetailPinPurchaseExternalRequest implements Built<RetailPinPurchaseExternalRequest, RetailPinPurchaseExternalRequestBuilder> {
   @BuiltValueField(wireName: r'productCode')
   String get productCode;
 
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   @BuiltValueField(wireName: r'idempotencyKey')
   String get idempotencyKey;
 
   RetailPinPurchaseExternalRequest._();
 
-  factory RetailPinPurchaseExternalRequest(
-          [void updates(RetailPinPurchaseExternalRequestBuilder b)]) =
-      _$RetailPinPurchaseExternalRequest;
+  factory RetailPinPurchaseExternalRequest([void updates(RetailPinPurchaseExternalRequestBuilder b)]) = _$RetailPinPurchaseExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(RetailPinPurchaseExternalRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<RetailPinPurchaseExternalRequest> get serializer =>
-      _$RetailPinPurchaseExternalRequestSerializer();
+  static Serializer<RetailPinPurchaseExternalRequest> get serializer => _$RetailPinPurchaseExternalRequestSerializer();
 }
 
-class _$RetailPinPurchaseExternalRequestSerializer
-    implements PrimitiveSerializer<RetailPinPurchaseExternalRequest> {
+class _$RetailPinPurchaseExternalRequestSerializer implements PrimitiveSerializer<RetailPinPurchaseExternalRequest> {
   @override
-  final Iterable<Type> types = const [
-    RetailPinPurchaseExternalRequest,
-    _$RetailPinPurchaseExternalRequest
-  ];
+  final Iterable<Type> types = const [RetailPinPurchaseExternalRequest, _$RetailPinPurchaseExternalRequest];
 
   @override
   final String wireName = r'RetailPinPurchaseExternalRequest';
@@ -66,7 +56,7 @@ class _$RetailPinPurchaseExternalRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
     yield r'idempotencyKey';
     yield serializers.serialize(
@@ -81,9 +71,7 @@ class _$RetailPinPurchaseExternalRequestSerializer
     RetailPinPurchaseExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -108,8 +96,8 @@ class _$RetailPinPurchaseExternalRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'idempotencyKey':
@@ -147,3 +135,4 @@ class _$RetailPinPurchaseExternalRequestSerializer
     return result.build();
   }
 }
+

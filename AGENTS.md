@@ -38,9 +38,11 @@ The Channel App lives exclusively in **Tier 1: Channel Layer**.
 *   **Data:** Repositories implementing Domain interfaces. Includes REST API clients (`dio`), local database (`sqflite`), and device secure storage.
 *   **Hardware Abstraction Layer (HAL):** Abstraction wrappers around physical POS peripherals (printers, EMV readers) using Android `MethodChannel`.
 
-### CRITICAL RULES (NON NEGOTIABLE)
+## CRITICAL RULES (NON NEGOTIABLE)
 
-**The app is a consumer.** It never implements business rules that belong to the backend (float balances, fee calculation, velocity checks, AML). Those are backend responsibilities accessed via API calls.
+* **The app is a consumer.** It never implements business rules that belong to the backend (float balances, fee calculation, velocity checks, AML). Those are backend responsibilities accessed via API calls.
+* NEVER HARDCODED
+* DO NOT MOCK device's features that are supported by the device
 
 ## 2. Core Technical Components
 

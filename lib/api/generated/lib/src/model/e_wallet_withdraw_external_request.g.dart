@@ -128,7 +128,7 @@ class _$EWalletWithdrawExternalRequest extends EWalletWithdrawExternalRequest {
   @override
   final String walletAccountId;
   @override
-  final num amount;
+  final String amount;
   @override
   final EWalletWithdrawExternalRequestCurrencyEnum currency;
   @override
@@ -219,9 +219,9 @@ class EWalletWithdrawExternalRequestBuilder
   set walletAccountId(String? walletAccountId) =>
       _$this._walletAccountId = walletAccountId;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   EWalletWithdrawExternalRequestCurrencyEnum? _currency;
   EWalletWithdrawExternalRequestCurrencyEnum? get currency => _$this._currency;

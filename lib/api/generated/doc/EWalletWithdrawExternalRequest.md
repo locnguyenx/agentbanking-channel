@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **walletProvider** | **String** | E-wallet provider | 
 **walletAccountId** | **String** | E-wallet account ID | 
-**amount** | **num** | Withdrawal amount in MYR | 
+**amount** | **String** | Withdrawal amount in MYR | 
 **currency** | **String** |  | [default to 'MYR']
 **idempotencyKey** | **String** |  | 
 **customerCard** | **String** | Customer card for card-based withdrawal | [optional] 

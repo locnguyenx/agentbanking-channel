@@ -7,10 +7,12 @@ Future<void> theCustomerInsertsTheirMykadAndPressesThumbOnBiometricScanner(Widge
   await tester.pumpAndSettle();
 
   // 1. If we are at waitingConsent (has quote), tap CONFIRM
-  if (find.byKey(const Key('btn_confirm')).evaluate().isNotEmpty) {
-     await tester.tap(find.byKey(const Key('btn_confirm')));
-     await tester.pumpAndSettle();
+  final agreeBtn = find.byKey(const Key('btn_confirm'));
+  if (agreeBtn.evaluate().isNotEmpty) {
+     await tester.tap(agreeBtn);
+     await tester.pump();
   }
+
   
   // 2. Wait for next state (waitingMyKadScan OR success if very fast)
   bool found = false;

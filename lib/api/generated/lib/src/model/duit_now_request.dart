@@ -11,13 +11,12 @@ part 'duit_now_request.g.dart';
 /// DuitNowRequest
 ///
 /// Properties:
-/// * [internalTransactionId]
-/// * [proxyType]
-/// * [proxyValue]
-/// * [amount]
+/// * [internalTransactionId] 
+/// * [proxyType] 
+/// * [proxyValue] 
+/// * [amount] 
 @BuiltValue()
-abstract class DuitNowRequest
-    implements Built<DuitNowRequest, DuitNowRequestBuilder> {
+abstract class DuitNowRequest implements Built<DuitNowRequest, DuitNowRequestBuilder> {
   @BuiltValueField(wireName: r'internalTransactionId')
   String get internalTransactionId;
 
@@ -28,23 +27,20 @@ abstract class DuitNowRequest
   String get proxyValue;
 
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   DuitNowRequest._();
 
-  factory DuitNowRequest([void updates(DuitNowRequestBuilder b)]) =
-      _$DuitNowRequest;
+  factory DuitNowRequest([void updates(DuitNowRequestBuilder b)]) = _$DuitNowRequest;
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(DuitNowRequestBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<DuitNowRequest> get serializer =>
-      _$DuitNowRequestSerializer();
+  static Serializer<DuitNowRequest> get serializer => _$DuitNowRequestSerializer();
 }
 
-class _$DuitNowRequestSerializer
-    implements PrimitiveSerializer<DuitNowRequest> {
+class _$DuitNowRequestSerializer implements PrimitiveSerializer<DuitNowRequest> {
   @override
   final Iterable<Type> types = const [DuitNowRequest, _$DuitNowRequest];
 
@@ -74,7 +70,7 @@ class _$DuitNowRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
   }
 
@@ -84,9 +80,7 @@ class _$DuitNowRequestSerializer
     DuitNowRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -125,8 +119,8 @@ class _$DuitNowRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         default:
@@ -157,3 +151,4 @@ class _$DuitNowRequestSerializer
     return result.build();
   }
 }
+

@@ -8,7 +8,7 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**amount** | **num** |  | 
+**amount** | **String** |  | 
 **currency** | **String** |  | 
 **idempotencyKey** | **String** |  | 
 **proxyType** | **String** |  | 

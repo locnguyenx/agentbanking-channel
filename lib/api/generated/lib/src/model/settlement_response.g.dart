@@ -16,9 +16,9 @@ class _$SettlementResponse extends SettlementResponse {
   @override
   final int? totalTransactions;
   @override
-  final num? totalAmount;
+  final String? totalAmount;
   @override
-  final num? commission;
+  final String? commission;
   @override
   final String? status;
 
@@ -106,13 +106,13 @@ class SettlementResponseBuilder
   set totalTransactions(int? totalTransactions) =>
       _$this._totalTransactions = totalTransactions;
 
-  num? _totalAmount;
-  num? get totalAmount => _$this._totalAmount;
-  set totalAmount(num? totalAmount) => _$this._totalAmount = totalAmount;
+  String? _totalAmount;
+  String? get totalAmount => _$this._totalAmount;
+  set totalAmount(String? totalAmount) => _$this._totalAmount = totalAmount;
 
-  num? _commission;
-  num? get commission => _$this._commission;
-  set commission(num? commission) => _$this._commission = commission;
+  String? _commission;
+  String? get commission => _$this._commission;
+  set commission(String? commission) => _$this._commission = commission;
 
   String? _status;
   String? get status => _$this._status;

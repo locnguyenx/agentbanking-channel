@@ -46,6 +46,9 @@ import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart'
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
 import 'package:agentbanking_channel/features/hardware/mock_hardware_impl.dart';
 
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+
+import '../../setup/test_credentials.dart';
 import 'mock_factory.dart';
 
 /// The current container for the active BDD scenario.
@@ -58,6 +61,8 @@ ProviderContainer get bddContainer {
   }
   return bddContainerVar!;
 }
+
+bool get isRealBackend => const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 /// Builder-pattern harness for BDD tests.
 ///
@@ -157,22 +162,25 @@ class BddAppHarness {
     container = ProviderContainer(
       overrides: [
         // Auth
-        authRepositoryProvider.overrideWithValue(_authRepo),
-        authProvider.overrideWith((ref) {
-          final notifier = AuthNotifier(repository: _authRepo);
-          if (_isAuthenticated) {
-            notifier.debugSetAuthenticated(
-              AuthUser(
-                agentId: 'AGENT-001', 
-                name: 'BDD Tester', 
-                tier: 'PRO',
-                registeredLat: 3.1390,
-                registeredLng: 101.6869,
-              ),
-            );
-          }
-          return notifier;
-        }),
+        if (!isRealBackend) ...[
+          authRepositoryProvider.overrideWithValue(_authRepo),
+          authProvider.overrideWith((ref) {
+            final notifier = AuthNotifier(repository: _authRepo);
+            if (_isAuthenticated) {
+              notifier.debugSetAuthenticated(
+                AuthUser(
+          agentId: TestCredentials.username,
+                  name: 'BDD Tester', 
+                  tier: 'PRO',
+                  registeredLat: 3.1390,
+                  registeredLng: 101.6869,
+                ),
+              );
+            }
+            return notifier;
+          }),
+        ],
+        geolocatorProvider.overrideWithValue(_geolocator),
         secureStorageManagerProvider.overrideWithValue(_secureStorage),
         complianceProvider.overrideWith((ref) {
           final secureStorage = ref.watch(secureStorageManagerProvider);
@@ -180,26 +188,31 @@ class BddAppHarness {
         }),
 
         // Float
-        floatRepositoryProvider.overrideWithValue(FakeFloatRepository()),
-        floatProvider.overrideWith((ref) {
-          final repo = ref.watch(floatRepositoryProvider);
-          final authState = ref.watch(authProvider);
-          return FloatNotifier(repo, authState.user?.agentId, startTimer: false);
-        }),
+        if (!isRealBackend) ...[
+          floatRepositoryProvider.overrideWithValue(FakeFloatRepository()),
+          floatProvider.overrideWith((ref) {
+            final repo = ref.watch(floatRepositoryProvider);
+            final authState = ref.watch(authProvider);
+            return FloatNotifier(repo, authState.user?.agentId, startTimer: false);
+          }),
+        ],
 
         // Network
-        dioProvider.overrideWith((ref) {
-          final dio = Dio();
-          dio.interceptors.addAll([
-            GpsInterceptor(geolocator: _geolocator),
-            IdempotencyInterceptor(),
-          ]);
-          return dio;
-        }),
+        if (!isRealBackend)
+          dioProvider.overrideWith((ref) {
+            final dio = Dio();
+            dio.interceptors.addAll([
+              GpsInterceptor(geolocator: _geolocator),
+              IdempotencyInterceptor(),
+            ]);
+            return dio;
+          }),
 
         // Transactions
-        transactionRepositoryProvider.overrideWith((ref) => _txnRepo),
-        offlineQueueServiceProvider.overrideWithValue(MockOfflineQueueService()),
+        if (!isRealBackend) ...[
+          transactionRepositoryProvider.overrideWith((ref) => _txnRepo),
+          offlineQueueServiceProvider.overrideWithValue(MockOfflineQueueService()),
+        ],
 
         // EOD
         eodTimerServiceProvider.overrideWith(
@@ -207,16 +220,18 @@ class BddAppHarness {
         ),
 
         // KYC / Onboarding
-        kycRepositoryProvider.overrideWithValue(FakeKycRepository()),
-        onboardingProvider.overrideWith((ref) => OnboardingNotifier(
-          kycRepository: FakeKycRepository(),
-          myKadScanner: MockMyKadScanner(),
-        )),
-        agentOnboardingRepositoryProvider.overrideWithValue(FakeAgentOnboardingRepository()),
-        agentOnboardingProvider.overrideWith((ref) => AgentOnboardingNotifier(
-          repository: ref.watch(agentOnboardingRepositoryProvider),
-          myKadScanner: MockMyKadScanner(),
-        )),
+        if (!isRealBackend) ...[
+          kycRepositoryProvider.overrideWithValue(FakeKycRepository()),
+          onboardingProvider.overrideWith((ref) => OnboardingNotifier(
+            kycRepository: FakeKycRepository(),
+            myKadScanner: MockMyKadScanner(),
+          )),
+          agentOnboardingRepositoryProvider.overrideWithValue(FakeAgentOnboardingRepository()),
+          agentOnboardingProvider.overrideWith((ref) => AgentOnboardingNotifier(
+            repository: ref.watch(agentOnboardingRepositoryProvider),
+            myKadScanner: MockMyKadScanner(),
+          )),
+        ],
 
         // Transaction state machine
         transactionProvider.overrideWith((ref) => TransactionNotifier(

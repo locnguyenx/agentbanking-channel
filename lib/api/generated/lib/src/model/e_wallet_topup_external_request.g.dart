@@ -128,7 +128,7 @@ class _$EWalletTopupExternalRequest extends EWalletTopupExternalRequest {
   @override
   final String walletAccountId;
   @override
-  final num amount;
+  final String amount;
   @override
   final EWalletTopupExternalRequestCurrencyEnum currency;
   @override
@@ -207,9 +207,9 @@ class EWalletTopupExternalRequestBuilder
   set walletAccountId(String? walletAccountId) =>
       _$this._walletAccountId = walletAccountId;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   EWalletTopupExternalRequestCurrencyEnum? _currency;
   EWalletTopupExternalRequestCurrencyEnum? get currency => _$this._currency;

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:decimal/decimal.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
@@ -44,6 +45,7 @@ class ProxyDepositNotifier extends StateNotifier<TransactionState> with Transact
   Future<void> executeProxyEnquiry({
     required Decimal amount,
     required String merchantId,
+    required FundingSource fundingSource,
     Map<String, String>? metadata,
   }) async {
     if (!_mounted) return;
@@ -51,7 +53,7 @@ class ProxyDepositNotifier extends StateNotifier<TransactionState> with Transact
     final guardError = await performGuards(
       amount: amount,
       serviceCode: 'CASH_DEPOSIT',
-      fundingSource: FundingSource.CASH,
+      fundingSource: fundingSource,
       metadata: metadata,
     );
     if (guardError != null) {
@@ -64,7 +66,7 @@ class ProxyDepositNotifier extends StateNotifier<TransactionState> with Transact
       status: TransactionStatus.quoting, // Transition to quoting first
       amount: amount,
       serviceCode: 'CASH_DEPOSIT',
-      fundingSource: FundingSource.CASH,
+      fundingSource: fundingSource,
       metadata: metadata,
       idempotencyKey: idempotencyKey,
     );
@@ -153,10 +155,11 @@ class ProxyDepositNotifier extends StateNotifier<TransactionState> with Transact
 }
 
 final proxyDepositNotifierProvider = StateNotifierProvider<ProxyDepositNotifier, TransactionState>((ref) {
+  final geolocator = ref.watch(geolocatorProvider);
   return ProxyDepositNotifier(
     ref: ref,
     repository: ref.watch(transactionRepositoryProvider),
     myKadScanner: ref.watch(myKadScannerProvider),
-    geolocator: GeolocatorPlatform.instance,
+    geolocator: geolocator,
   );
 });

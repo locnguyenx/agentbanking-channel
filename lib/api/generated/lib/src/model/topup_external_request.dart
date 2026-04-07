@@ -15,11 +15,10 @@ part 'topup_external_request.g.dart';
 /// * [telco] - Telco provider
 /// * [phoneNumber] - Mobile number (MSISDN format)
 /// * [amount] - Top-up amount in MYR
-/// * [currency]
-/// * [idempotencyKey]
+/// * [currency] 
+/// * [idempotencyKey] 
 @BuiltValue()
-abstract class TopupExternalRequest
-    implements Built<TopupExternalRequest, TopupExternalRequestBuilder> {
+abstract class TopupExternalRequest implements Built<TopupExternalRequest, TopupExternalRequestBuilder> {
   /// Telco provider
   @BuiltValueField(wireName: r'telco')
   TopupExternalRequestTelcoEnum get telco;
@@ -31,7 +30,7 @@ abstract class TopupExternalRequest
 
   /// Top-up amount in MYR
   @BuiltValueField(wireName: r'amount')
-  num get amount;
+  String get amount;
 
   @BuiltValueField(wireName: r'currency')
   TopupExternalRequestCurrencyEnum get currency;
@@ -42,25 +41,19 @@ abstract class TopupExternalRequest
 
   TopupExternalRequest._();
 
-  factory TopupExternalRequest([void updates(TopupExternalRequestBuilder b)]) =
-      _$TopupExternalRequest;
+  factory TopupExternalRequest([void updates(TopupExternalRequestBuilder b)]) = _$TopupExternalRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(TopupExternalRequestBuilder b) =>
-      b..currency = TopupExternalRequestCurrencyEnum.valueOf('MYR');
+  static void _defaults(TopupExternalRequestBuilder b) => b
+      ..currency = TopupExternalRequestCurrencyEnum.valueOf('MYR');
 
   @BuiltValueSerializer(custom: true)
-  static Serializer<TopupExternalRequest> get serializer =>
-      _$TopupExternalRequestSerializer();
+  static Serializer<TopupExternalRequest> get serializer => _$TopupExternalRequestSerializer();
 }
 
-class _$TopupExternalRequestSerializer
-    implements PrimitiveSerializer<TopupExternalRequest> {
+class _$TopupExternalRequestSerializer implements PrimitiveSerializer<TopupExternalRequest> {
   @override
-  final Iterable<Type> types = const [
-    TopupExternalRequest,
-    _$TopupExternalRequest
-  ];
+  final Iterable<Type> types = const [TopupExternalRequest, _$TopupExternalRequest];
 
   @override
   final String wireName = r'TopupExternalRequest';
@@ -83,7 +76,7 @@ class _$TopupExternalRequestSerializer
     yield r'amount';
     yield serializers.serialize(
       object.amount,
-      specifiedType: const FullType(num),
+      specifiedType: const FullType(String),
     );
     yield r'currency';
     yield serializers.serialize(
@@ -103,9 +96,7 @@ class _$TopupExternalRequestSerializer
     TopupExternalRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object,
-            specifiedType: specifiedType)
-        .toList();
+    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
   }
 
   void _deserializeProperties(
@@ -137,8 +128,8 @@ class _$TopupExternalRequestSerializer
         case r'amount':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(num),
-          ) as num;
+            specifiedType: const FullType(String),
+          ) as String;
           result.amount = valueDes;
           break;
         case r'currency':
@@ -185,54 +176,41 @@ class _$TopupExternalRequestSerializer
 }
 
 class TopupExternalRequestTelcoEnum extends EnumClass {
+
   /// Telco provider
   @BuiltValueEnumConst(wireName: r'CELCOM')
-  static const TopupExternalRequestTelcoEnum CELCOM =
-      _$topupExternalRequestTelcoEnum_CELCOM;
-
+  static const TopupExternalRequestTelcoEnum CELCOM = _$topupExternalRequestTelcoEnum_CELCOM;
   /// Telco provider
   @BuiltValueEnumConst(wireName: r'M1')
-  static const TopupExternalRequestTelcoEnum m1 =
-      _$topupExternalRequestTelcoEnum_m1;
-
+  static const TopupExternalRequestTelcoEnum m1 = _$topupExternalRequestTelcoEnum_m1;
   /// Telco provider
   @BuiltValueEnumConst(wireName: r'UMOBILE')
-  static const TopupExternalRequestTelcoEnum UMOBILE =
-      _$topupExternalRequestTelcoEnum_UMOBILE;
-
+  static const TopupExternalRequestTelcoEnum UMOBILE = _$topupExternalRequestTelcoEnum_UMOBILE;
   /// Telco provider
   @BuiltValueEnumConst(wireName: r'MAXIS')
-  static const TopupExternalRequestTelcoEnum MAXIS =
-      _$topupExternalRequestTelcoEnum_MAXIS;
-
+  static const TopupExternalRequestTelcoEnum MAXIS = _$topupExternalRequestTelcoEnum_MAXIS;
   /// Telco provider
   @BuiltValueEnumConst(wireName: r'DIGI')
-  static const TopupExternalRequestTelcoEnum DIGI =
-      _$topupExternalRequestTelcoEnum_DIGI;
+  static const TopupExternalRequestTelcoEnum DIGI = _$topupExternalRequestTelcoEnum_DIGI;
 
-  static Serializer<TopupExternalRequestTelcoEnum> get serializer =>
-      _$topupExternalRequestTelcoEnumSerializer;
+  static Serializer<TopupExternalRequestTelcoEnum> get serializer => _$topupExternalRequestTelcoEnumSerializer;
 
-  const TopupExternalRequestTelcoEnum._(String name) : super(name);
+  const TopupExternalRequestTelcoEnum._(String name): super(name);
 
-  static BuiltSet<TopupExternalRequestTelcoEnum> get values =>
-      _$topupExternalRequestTelcoEnumValues;
-  static TopupExternalRequestTelcoEnum valueOf(String name) =>
-      _$topupExternalRequestTelcoEnumValueOf(name);
+  static BuiltSet<TopupExternalRequestTelcoEnum> get values => _$topupExternalRequestTelcoEnumValues;
+  static TopupExternalRequestTelcoEnum valueOf(String name) => _$topupExternalRequestTelcoEnumValueOf(name);
 }
 
 class TopupExternalRequestCurrencyEnum extends EnumClass {
+
   @BuiltValueEnumConst(wireName: r'MYR')
-  static const TopupExternalRequestCurrencyEnum MYR =
-      _$topupExternalRequestCurrencyEnum_MYR;
+  static const TopupExternalRequestCurrencyEnum MYR = _$topupExternalRequestCurrencyEnum_MYR;
 
-  static Serializer<TopupExternalRequestCurrencyEnum> get serializer =>
-      _$topupExternalRequestCurrencyEnumSerializer;
+  static Serializer<TopupExternalRequestCurrencyEnum> get serializer => _$topupExternalRequestCurrencyEnumSerializer;
 
-  const TopupExternalRequestCurrencyEnum._(String name) : super(name);
+  const TopupExternalRequestCurrencyEnum._(String name): super(name);
 
-  static BuiltSet<TopupExternalRequestCurrencyEnum> get values =>
-      _$topupExternalRequestCurrencyEnumValues;
-  static TopupExternalRequestCurrencyEnum valueOf(String name) =>
-      _$topupExternalRequestCurrencyEnumValueOf(name);
+  static BuiltSet<TopupExternalRequestCurrencyEnum> get values => _$topupExternalRequestCurrencyEnumValues;
+  static TopupExternalRequestCurrencyEnum valueOf(String name) => _$topupExternalRequestCurrencyEnumValueOf(name);
 }
+

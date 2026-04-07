@@ -300,13 +300,13 @@ class _$FeeConfigRequest extends FeeConfigRequest {
   @override
   final FeeConfigRequestFeeTypeEnum feeType;
   @override
-  final num? feeAmount;
+  final String? feeAmount;
   @override
-  final num? percentage;
+  final String? percentage;
   @override
-  final num? minFee;
+  final String? minFee;
   @override
-  final num? maxFee;
+  final String? maxFee;
   @override
   final FeeConfigRequestCurrencyEnum currency;
   @override
@@ -408,21 +408,21 @@ class FeeConfigRequestBuilder
   set feeType(FeeConfigRequestFeeTypeEnum? feeType) =>
       _$this._feeType = feeType;
 
-  num? _feeAmount;
-  num? get feeAmount => _$this._feeAmount;
-  set feeAmount(num? feeAmount) => _$this._feeAmount = feeAmount;
+  String? _feeAmount;
+  String? get feeAmount => _$this._feeAmount;
+  set feeAmount(String? feeAmount) => _$this._feeAmount = feeAmount;
 
-  num? _percentage;
-  num? get percentage => _$this._percentage;
-  set percentage(num? percentage) => _$this._percentage = percentage;
+  String? _percentage;
+  String? get percentage => _$this._percentage;
+  set percentage(String? percentage) => _$this._percentage = percentage;
 
-  num? _minFee;
-  num? get minFee => _$this._minFee;
-  set minFee(num? minFee) => _$this._minFee = minFee;
+  String? _minFee;
+  String? get minFee => _$this._minFee;
+  set minFee(String? minFee) => _$this._minFee = minFee;
 
-  num? _maxFee;
-  num? get maxFee => _$this._maxFee;
-  set maxFee(num? maxFee) => _$this._maxFee = maxFee;
+  String? _maxFee;
+  String? get maxFee => _$this._maxFee;
+  set maxFee(String? maxFee) => _$this._maxFee = maxFee;
 
   FeeConfigRequestCurrencyEnum? _currency;
   FeeConfigRequestCurrencyEnum? get currency => _$this._currency;

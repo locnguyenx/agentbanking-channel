@@ -9,7 +9,7 @@ import 'package:agent_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **productCode** | **String** |  | 
-**amount** | **num** |  | 
+**amount** | **String** |  | 
 **currency** | **String** |  | 
 **idempotencyKey** | **String** |  | 
 **customerMobile** | **String** |  | [optional] 

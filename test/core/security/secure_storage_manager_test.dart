@@ -1,41 +1,89 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'secure_storage_manager_test.mocks.dart';
+class FakeFlutterSecureStorage extends Fake implements FlutterSecureStorage {
+  final Map<String, String> _data = {};
 
-@GenerateMocks([FlutterSecureStorage])
+  @override
+  Future<void> write({
+    required String key,
+    required String? value,
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+    WebOptions? webOptions,
+  }) async {
+    if (value == null) {
+      _data.remove(key);
+    } else {
+      _data[key] = value;
+    }
+  }
+
+  @override
+  Future<String?> read({
+    required String key,
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+    WebOptions? webOptions,
+  }) async {
+    return _data[key];
+  }
+
+  @override
+  Future<void> delete({
+    required String key,
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+    WebOptions? webOptions,
+  }) async {
+    _data.remove(key);
+  }
+}
+
 void main() {
+  late FakeFlutterSecureStorage fakeStorage;
   late SecureStorageManager manager;
-  late MockFlutterSecureStorage mockStorage;
 
   setUp(() {
-    mockStorage = MockFlutterSecureStorage();
-    manager = SecureStorageManager(mockStorage);
+    fakeStorage = FakeFlutterSecureStorage();
+    manager = SecureStorageManager(fakeStorage);
   });
 
-  group('SecureStorageManager - SQLCipher Passphrase', () {
-    test('returns existing passphrase if it exists in storage', () async {
-      when(mockStorage.read(key: 'sqlcipher_passphrase'))
-          .thenAnswer((_) async => 'existing_secret');
-
-      final passphrase = await manager.getSqlCipherPassphrase();
-
-      expect(passphrase, equals('existing_secret'));
-      verify(mockStorage.read(key: 'sqlcipher_passphrase')).called(1);
+  group('SecureStorageManager', () {
+    test('saveJwt writes to correct key', () async {
+      await manager.saveJwt('test-jwt');
+      expect(await fakeStorage.read(key: 'agent_jwt'), 'test-jwt');
     });
 
-    test('generates and saves new passphrase if none exists', () async {
-      when(mockStorage.read(key: 'sqlcipher_passphrase'))
-          .thenAnswer((_) async => null);
-      
-      final passphrase = await manager.getSqlCipherPassphrase();
+    test('readJwt reads from correct key', () async {
+      await fakeStorage.write(key: 'agent_jwt', value: 'read-jwt');
+      final result = await manager.readJwt();
+      expect(result, 'read-jwt');
+    });
 
-      expect(passphrase, isNotNull);
-      expect(passphrase.length, greaterThanOrEqualTo(32));
-      verify(mockStorage.write(key: 'sqlcipher_passphrase', value: passphrase)).called(1);
+    test('clearJwt deletes correct key', () async {
+      await fakeStorage.write(key: 'agent_jwt', value: 'to-be-deleted');
+      await manager.clearJwt();
+      expect(await fakeStorage.read(key: 'agent_jwt'), null);
+    });
+
+    test('getSqlCipherPassphrase generates and persists passphrase', () async {
+      final p1 = await manager.getSqlCipherPassphrase();
+      expect(p1, isNotEmpty);
+      expect(p1.length, 32);
+
+      final p2 = await manager.getSqlCipherPassphrase();
+      expect(p1, p2); // Should be persisted
     });
   });
 }

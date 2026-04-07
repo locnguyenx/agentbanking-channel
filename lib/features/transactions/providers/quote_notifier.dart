@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
@@ -104,9 +106,10 @@ class QuoteNotifier extends StateNotifier<TransactionState> with TransactionGuar
 }
 
 final quoteNotifierProvider = StateNotifierProvider<QuoteNotifier, TransactionState>((ref) {
+  final geolocator = ref.watch(geolocatorProvider);
   return QuoteNotifier(
     ref: ref,
     repository: ref.watch(transactionRepositoryProvider),
-    geolocator: GeolocatorPlatform.instance,
+    geolocator: geolocator,
   );
 });

@@ -12,7 +12,7 @@ class _$ReversalRequest extends ReversalRequest {
   @override
   final String originalReference;
   @override
-  final num amount;
+  final String amount;
 
   factory _$ReversalRequest([void Function(ReversalRequestBuilder)? updates]) =>
       (ReversalRequestBuilder()..update(updates))._build();
@@ -72,9 +72,9 @@ class ReversalRequestBuilder
   set originalReference(String? originalReference) =>
       _$this._originalReference = originalReference;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   ReversalRequestBuilder() {
     ReversalRequest._defaults(this);

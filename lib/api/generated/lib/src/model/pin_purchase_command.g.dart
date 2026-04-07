@@ -12,7 +12,7 @@ class _$PinPurchaseCommand extends PinPurchaseCommand {
   @override
   final String? productCode;
   @override
-  final num? amount;
+  final String? amount;
   @override
   final String? idempotencyKey;
 
@@ -76,9 +76,9 @@ class PinPurchaseCommandBuilder
   String? get productCode => _$this._productCode;
   set productCode(String? productCode) => _$this._productCode = productCode;
 
-  num? _amount;
-  num? get amount => _$this._amount;
-  set amount(num? amount) => _$this._amount = amount;
+  String? _amount;
+  String? get amount => _$this._amount;
+  set amount(String? amount) => _$this._amount = amount;
 
   String? _idempotencyKey;
   String? get idempotencyKey => _$this._idempotencyKey;

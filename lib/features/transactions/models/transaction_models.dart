@@ -12,6 +12,18 @@ enum FundingSource {
   MYKAD_BIOMETRIC, // MyKad chip + thumbprint (for MyKad withdrawal)
   DUITNOW_QR;     // NEW: DuitNow Dynamic QR (for Retail Sale)
 
+  String get label {
+    switch (this) {
+      case CARD_EMV: return 'ATM Card';
+      case CASH: return 'Cash';
+      case DUITNOW_MOBILE: return 'DuitNow Mobile';
+      case DUITNOW_MYKAD: return 'DuitNow MyKad';
+      case DUITNOW_BRN: return 'DuitNow BRN';
+      case MYKAD_BIOMETRIC: return 'MyKad Biometric';
+      case DUITNOW_QR: return 'DuitNow QR';
+    }
+  }
+
   static List<FundingSource> allowedFor(String serviceCode) {
     switch (serviceCode) {
       case 'CASH_WITHDRAWAL':
@@ -101,6 +113,7 @@ class TransactionExecutionResponse {
   final Decimal? balance;
   final String? currency;
   final String? qrPayload; // NEW: For DuitNow QR dynamic payload
+  final Decimal? amount; // NEW: Amount for confirmation
 
   TransactionExecutionResponse({
     required this.status,
@@ -109,5 +122,6 @@ class TransactionExecutionResponse {
     this.balance,
     this.currency,
     this.qrPayload,
+    this.amount,
   });
 }
