@@ -13,12 +13,18 @@
 /// Default behavior is "happy path" — authenticated, within geofence,
 /// no compliance lock, standard float balance.
 library;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:agent_api/agent_api.dart' as agent_api;
+import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
 
 import 'package:agentbanking_channel/main.dart';
+import 'package:agentbanking_channel/api/api_providers.dart';
+import 'package:agentbanking_channel/features/settlement/repositories/float_repository.dart';
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
@@ -39,7 +45,9 @@ import 'package:agentbanking_channel/features/merchant/providers/merchant_provid
 import 'package:agentbanking_channel/features/hardware/hardware_providers.dart';
 import 'package:agentbanking_channel/features/transactions/services/reversal_service.dart';
 import 'package:agentbanking_channel/features/settlement/services/eod_timer_service.dart';
+import 'package:agentbanking_channel/features/kyc/providers/onboarding_provider.dart';
 import 'package:agentbanking_channel/features/kyc/repositories/kyc_repository.dart';
+import '../../setup/test_mocks.dart';
 import 'package:agentbanking_channel/features/agent_onboarding/repositories/agent_onboarding_repository.dart';
 import 'package:agentbanking_channel/features/transactions/repositories/transaction_repository.dart';
 import 'package:agentbanking_channel/features/hardware/hardware_interfaces.dart';
@@ -69,6 +77,20 @@ bool get isRealBackend => const bool.fromEnvironment('USE_REAL_BACKEND', default
 /// Defaults to a happy-path authenticated agent within geofence,
 /// with standard float, no compliance lock, and open EOD.
 /// Each `.with*()` overrides only what the scenario needs.
+class _RealHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    final old = HttpOverrides.current;
+    HttpOverrides.global = null;
+    try {
+      return HttpClient(context: context)
+        ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    } finally {
+      HttpOverrides.global = old;
+    }
+  }
+}
+
 class BddAppHarness {
   final WidgetTester tester;
 
@@ -138,11 +160,16 @@ class BddAppHarness {
   // ─── Build ────────────────────────────────────────────────────────────
 
   Future<void> build() async {
+    setupTestMocks();
     _authRepo.secureStorage = _secureStorage;
+    
+    if (isRealBackend) {
+      HttpOverrides.global = _RealHttpOverrides();
+    }
     
     // Only set if explicitly requested via with* methods or if we want happy path defaults
     // But don't overwrite if it's already there (to allow persistence tests)
-    if (_secureStorage.jwt == null && _isAuthenticated) {
+    if (_secureStorage.jwt == null && _isAuthenticated && !isRealBackend) {
       _secureStorage.jwt = 'BDD_TEST_JWT';
     } else if (!_isAuthenticated) {
       _secureStorage.jwt = null;
@@ -154,11 +181,11 @@ class BddAppHarness {
     // If _complianceLocked is false, we DON'T explicitly set it to false in storage 
     // to allow persistence of a 'true' value from a previous step during "restart".
 
-    tester.view.physicalSize = const Size(1000, 2500);
-    tester.view.devicePixelRatio = 1.0;
-
+    print('BDD_DEBUG: build() starting. physicalSize=${tester.view.physicalSize}');
+    
     late final ProviderContainer container;
 
+    print('BDD_DEBUG: Creating ProviderContainer with overrides...');
     container = ProviderContainer(
       overrides: [
         // Auth
@@ -188,30 +215,66 @@ class BddAppHarness {
         }),
 
         // Float
-        if (!isRealBackend) ...[
-          floatRepositoryProvider.overrideWithValue(FakeFloatRepository()),
-          floatProvider.overrideWith((ref) {
-            final repo = ref.watch(floatRepositoryProvider);
-            final authState = ref.watch(authProvider);
-            return FloatNotifier(repo, authState.user?.agentId, startTimer: false);
-          }),
-        ],
+        floatRepositoryProvider.overrideWith((ref) {
+          if (isRealBackend) {
+            final ledgerApi = ref.watch(ledgerApiProvider);
+            return FloatRepository(ledgerApi);
+          }
+          return FakeFloatRepository();
+        }),
+        floatProvider.overrideWith((ref) {
+          final repo = ref.watch(floatRepositoryProvider);
+          final authState = ref.watch(authProvider);
+          return FloatNotifier(repo, authState.user?.agentId, startTimer: false);
+        }),
 
         // Network
-        if (!isRealBackend)
-          dioProvider.overrideWith((ref) {
-            final dio = Dio();
+        dioProvider.overrideWith((ref) {
+          final baseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
+          final dio = Dio(BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(seconds: 10),
+            receiveTimeout: const Duration(seconds: 25),
+          ));
+
+          if (isRealBackend) {
+            debugPrint('BDD_DEBUG: Forcing real HttpClient in AppHarness override');
+            (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+              return HttpClient()..badCertificateCallback = (cert, host, port) => true;
+            };
+            
+            dio.interceptors.addAll([
+              InterceptorsWrapper(
+                onRequest: (options, handler) {
+                  debugPrint('DIO_RAW_DEBUG: onRequest to ${options.path}');
+                  handler.next(options);
+                },
+              ),
+              LogInterceptor(requestBody: true, responseBody: true, logPrint: (obj) => debugPrint('DIO_DEBUG: $obj')),
+              AuthInterceptor(_secureStorage),
+              RetryInterceptor(dio: dio),
+              GpsInterceptor(geolocator: _geolocator),
+            ]);
+          } else {
             dio.interceptors.addAll([
               GpsInterceptor(geolocator: _geolocator),
               IdempotencyInterceptor(),
             ]);
-            return dio;
-          }),
+          }
+          return dio;
+        }),
+
+        authApiProvider.overrideWith((ref) {
+          final dio = ref.watch(dioProvider);
+          debugPrint('BDD_DEBUG: authApiProvider.overrideWith - creating API with dio: $dio');
+          return agent_api.AuthControllerAuthIamServiceApi(dio, agent_api.standardSerializers);
+        }),
+
+        offlineQueueServiceProvider.overrideWithValue(MockOfflineQueueService()),
 
         // Transactions
         if (!isRealBackend) ...[
           transactionRepositoryProvider.overrideWith((ref) => _txnRepo),
-          offlineQueueServiceProvider.overrideWithValue(MockOfflineQueueService()),
         ],
 
         // EOD
@@ -245,22 +308,22 @@ class BddAppHarness {
           complianceNotifier: ref.watch(complianceProvider.notifier),
           eodTimerService: ref.watch(eodTimerServiceProvider.notifier),
           geolocator: _geolocator,
-          pollingInterval: const Duration(milliseconds: 100),
-          cardTimerDelay: const Duration(milliseconds: 100),
+          pollingInterval: Duration.zero,
+          cardTimerDelay: Duration.zero,
         )),
         duitNowFlowNotifierProvider.overrideWith((ref) => DuitNowFlowNotifier(
           ref: ref,
           repository: ref.watch(transactionRepositoryProvider),
           floatNotifier: ref.watch(floatProvider.notifier),
           reversalService: ref.watch(reversalServiceProvider),
-          pollingInterval: const Duration(milliseconds: 100),
+          pollingInterval: Duration.zero,
         )),
         billerFlowNotifierProvider.overrideWith((ref) => BillerFlowNotifier(
           ref: ref,
           repository: ref.watch(transactionRepositoryProvider),
           floatNotifier: ref.watch(floatProvider.notifier),
           geolocator: _geolocator,
-          pollingInterval: const Duration(milliseconds: 100),
+          pollingInterval: Duration.zero,
         )),
         cardFlowNotifierProvider.overrideWith((ref) => CardFlowNotifier(
           ref: ref,
@@ -269,14 +332,14 @@ class BddAppHarness {
           repository: ref.watch(transactionRepositoryProvider),
           floatNotifier: ref.watch(floatProvider.notifier),
           reversalService: ref.watch(reversalServiceProvider),
-          cardTimerDelay: const Duration(milliseconds: 100),
+          cardTimerDelay: Duration.zero,
         )),
         proxyDepositNotifierProvider.overrideWith((ref) => ProxyDepositNotifier(
           ref: ref,
           repository: ref.watch(transactionRepositoryProvider),
           myKadScanner: MockMyKadScanner(),
           geolocator: _geolocator,
-          pollingInterval: const Duration(milliseconds: 100),
+          pollingInterval: Duration.zero,
         )),
         settlementStatusProvider.overrideWith(
           (ref) => SettlementNotifier(startMonitor: false),
@@ -290,11 +353,12 @@ class BddAppHarness {
           floatNotifier: ref.watch(floatProvider.notifier),
           complianceNotifier: ref.watch(complianceProvider.notifier),
           agentId: 'AGENT-001',
-          pollingInterval: const Duration(milliseconds: 100),
+          pollingInterval: Duration.zero,
         )),
       ],
     );
 
+    print('BDD_DEBUG: ProviderContainer created.');
     bddContainerVar = container;
     await container.read(complianceProvider.notifier).init();
 
@@ -303,27 +367,30 @@ class BddAppHarness {
     }
 
     addTearDown(() async {
+      if (isRealBackend) {
+        HttpOverrides.global = null;
+      }
       // 1. Dispose the container explicitly to halt all timers in notifiers
       container.dispose();
       bddContainerVar = null;
 
-      // 2. Unmount the widget tree to close all provider listeners
+      // 2. Unmount the widget tree
       await tester.pumpWidget(const SizedBox());
       
-      // 3. Aggressively flush any remaining tasks (like Riverpod dispose logic)
-      for (int i = 0; i < 5; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
+      // 3. Flush microtasks only, NO clock advancement to avoid re-triggering timers
+      await tester.pump();
 
       debugPrint('AppHarness Teardown Complete');
     });
 
+    print('BDD_DEBUG: Calling pumpWidget...');
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
         child: const AgentBankingApp(),
       ),
     );
-    await tester.pumpAndSettle();
+    print('BDD_DEBUG: pumpWidget finished.');
+    await tester.pump();
   }
 }

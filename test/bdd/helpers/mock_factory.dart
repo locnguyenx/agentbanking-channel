@@ -152,13 +152,13 @@ class MockTransactionRepository extends Fake implements TransactionRepository {
     if (shouldFail) throw Exception('INSUFFICIENT_FUNDS');
     return model.TransactionExecutionResponse(status: 'SUCCESS', referenceId: 'REF_123');
   }
-
   @override
   Future<model.TransactionExecutionResponse> initiateDuitNow({
     required String quoteId,
     required String proxyId,
     required String proxyType,
     required Decimal amount,
+    required String agentId,
   }) async {
     lastQrAmount = amount;
     return model.TransactionExecutionResponse(

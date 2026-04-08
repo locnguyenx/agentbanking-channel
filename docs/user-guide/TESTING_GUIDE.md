@@ -21,21 +21,21 @@ This guide covers all types of testing implemented in the Agent Banking Channel 
 1. **`app_test.dart`**: Focuses on end-to-end user journeys and high-level business flows.
     - **Case 1: "Complete e-KYC Onboarding and a Bill Payment"**: A long-running saga starting from Login, performing a full MyKad-based onboarding, and finishing with a successful bill payment.
       ```bash
-      flutter test test/integration/app_test.dart --plain-name "Complete e-KYC Onboarding and a Bill Payment" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+      flutter test test/integration/app_test.dart --plain-name "Complete e-KYC Onboarding and a Bill Payment" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
       ```
     - **Case 2: "Bill Payment with CARD should require card insertion"**: Validates the Hardware Abstraction Layer (HAL) integration, ensuring the app waits for physical card events during a transaction.
       ```bash
-      flutter test test/integration/app_test.dart --plain-name "Bill Payment with CARD should require card insertion" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+      flutter test test/integration/app_test.dart --plain-name "Bill Payment with CARD should require card insertion" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
       ```
     - **Case 3: "Bill Payment with DUITNOW should NOT require card insertion"**: Verifies that digital-only funding sources correctly bypass the card reader state machine.
       ```bash
-      flutter test test/integration/app_test.dart --plain-name "Bill Payment with DUITNOW should NOT require card insertion" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+      flutter test test/integration/app_test.dart --plain-name "Bill Payment with DUITNOW should NOT require card insertion" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
       ```
 
 2. **`full_system_test.dart`**: Focuses on deep contract verification and payload integrity.
     - **Case: "JomPay Full Flow - Contract Verification"**: Specifically intercepts network traffic to ensure that `Idempotency-Keys` are valid UUIDs and that the JSON payloads strictly match the OpenAPI specification.
       ```bash
-      flutter test test/integration/full_system_test.dart --plain-name "JomPay Full Flow - Contract Verification" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+      flutter test test/integration/full_system_test.dart --plain-name "JomPay Full Flow - Contract Verification" --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
       ```
 
 3. **Difference between `app_test.dart` and `full_system_test.dart`**: While both are integration tests, they target different levels of the application stack.
@@ -54,19 +54,30 @@ This guide covers all types of testing implemented in the Agent Banking Channel 
 **Run Command**:
 ```bash
 # app_test
-flutter test test/integration/app_test.dart --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+flutter test test/integration/app_test.dart --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
 # full_system_test
-flutter test test/integration/full_system_test.dart --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+flutter test test/integration/full_system_test.dart --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
+# transaction_facade_test.dart
+flutter test test/integration/transaction_facade_test.dart --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
+# bdd test
+flutter test test/bdd/features/ --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
+# turn off debug
+ --dart-define=DISABLE_DIO_LOGS=true
 ```
 
 **Run Command (All Integration Tests)**:
 ```bash
-flutter test test/integration/ --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://localhost:8080
+flutter test test/integration/ --dart-define=USE_REAL_BACKEND=true --dart-define=API_BASE_URL=http://127.0.0.1:8080
+```
+
+**Run Command (All but exclude Integration Tests)**:
+```bash
+flutter test test/features/ test/core/ test/contract/
 ```
 
 #### Troubleshooting Real Backend Mode:
 - **`IS_MOCK_AUTH=true`**: Bypasses real login checks by allowing `123456` as a password. Use this if the auth backend is not whitelisted for your test environment.
-- **Real Credentials**: For tests with a real backend, use the account `AGT-E2E-001` with password `12345678`.
+- **Real Credentials**: For tests with a real backend, use the account `NEW-AGT-001` with password `12345678`.
 - **`IS_MOCK_KYC=true`**: Bypasses real MyKad/eKYC validation by using a fake scanner response. (Note: Only works if enabled in `app_test.dart`).
 - **`HttpOverrides`**: All integration tests now include `HttpOverrides.global = null` to allow real network requests from `testWidgets`.
 
@@ -103,7 +114,7 @@ You can point tests to a live backend API (e.g., a local Spring Boot instance or
 ```bash
 flutter test <test_path> \
   --dart-define=USE_REAL_BACKEND=true \
-  --dart-define=API_BASE_URL=http://localhost:8080
+  --dart-define=API_BASE_URL=http://127.0.0.1:8080
 ```
 
 > [!IMPORTANT]

@@ -124,7 +124,7 @@ class TransactionFlowScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             _buildServiceSpecificInput(context, ref, agentId, amountText, selectedSource),
-            if (!['BILL_PAY', 'JOMPAY', 'TOP_UP', 'SARAWAK_PAY', 'CASHLESS_PAY', 'ESSP_PURCHASE', 'PIN_PURCHASE'].contains(serviceCode)) ...[
+            if (!['BILL_PAYMENT', 'JOMPAY', 'PREPAID_TOPUP', 'SARAWAK_PAY', 'CASHLESS_PAYMENT', 'ESSP_PURCHASE', 'PIN_PURCHASE'].contains(serviceCode)) ...[
               const SizedBox(height: 32),
               _buildSharedAction(context, ref, state, agentId, amountText, selectedSource),
             ],
@@ -446,7 +446,7 @@ class TransactionFlowScreen extends ConsumerWidget {
   }
 
   Widget _buildServiceSpecificInput(BuildContext context, WidgetRef ref, String agentId, String amountText, FundingSource selectedSource) {
-    if (serviceCode == 'BILL_PAY') {
+    if (serviceCode == 'BILL_PAYMENT') {
       return BillPaymentForm(
         onSubmit: (biller, ref1, amount) {
           ref.read(transactionProvider.notifier).startTransaction(
@@ -470,7 +470,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           );
         },
       );
-    } else if (serviceCode == 'TOP_UP') {
+    } else if (serviceCode == 'PREPAID_TOPUP') {
       return TopUpForm(
         onSubmit: (telco, mobile, amount) {
           ref.read(transactionProvider.notifier).startTransaction(
@@ -494,7 +494,7 @@ class TransactionFlowScreen extends ConsumerWidget {
           );
         },
       );
-    } else if (serviceCode == 'CASHLESS_PAY') {
+    } else if (serviceCode == 'CASHLESS_PAYMENT') {
       return CashlessPaymentForm(
         onSubmit: (_, amount) {
           final source = ref.read(fundingSourceProvider);

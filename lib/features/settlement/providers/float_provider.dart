@@ -32,7 +32,7 @@ class FloatNotifier extends StateNotifier<FloatLedger> {
     limit: Decimal.zero,
   )) {
     // Initial fetch if authenticated
-    if (_agentId != null) {
+    if (_agentId != null && startTimer) {
       fetchLatestBalance();
     }
     

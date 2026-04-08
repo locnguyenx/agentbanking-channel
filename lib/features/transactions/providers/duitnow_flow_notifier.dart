@@ -37,11 +37,13 @@ class DuitNowFlowNotifier extends StateNotifier<TransactionState> {
     if (!_mounted) return;
     state = quotedState.copyWith(status: TransactionStatus.processing);
     try {
+      final agentId = ref.read(authProvider).user?.agentId ?? 'AGENT_UNKNOWN';
       final result = await repository.initiateDuitNow(
         quoteId: state.quote!.quoteId,
         proxyId: state.metadata?['duitNowProxyId'] ?? '',
         proxyType: _proxyTypeFromFundingSource(state.fundingSource!),
         amount: state.amount ?? Decimal.zero,
+        agentId: agentId,
       );
       if (!_mounted) return;
       if (result.status == 'SUCCESS') {

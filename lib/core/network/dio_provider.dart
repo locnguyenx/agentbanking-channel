@@ -18,8 +18,13 @@ import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
 final dioProvider = Provider<Dio>((ref) {
   final reversalService = ref.watch(reversalServiceProvider);
   
+  final baseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
+  if (const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false)) {
+    print('DIO_DEBUG: Initializing dioProvider with baseUrl: $baseUrl');
+  }
+
   final dio = Dio(BaseOptions(
-    baseUrl: const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080'),
+    baseUrl: baseUrl,
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 25), // Design §4.2 25s limit
   ));
@@ -31,6 +36,10 @@ final dioProvider = Provider<Dio>((ref) {
   // Only apply IOHttpClientAdapter configuration on non-web platforms
   if (!kIsWeb && dio.httpClientAdapter is IOHttpClientAdapter) {
     (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+      if (const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false)) {
+        print('DIO_DEBUG: onHttpClientCreate - Forcing real HttpClient to bypass BDD mocks');
+        return HttpClient()..badCertificateCallback = (cert, host, port) => true;
+      }
       client.badCertificateCallback = (X509Certificate cert, String host, int port) {
         // In production, we reject all self-signed or invalid certs.
         // The pinning is handled via the fingerprint check below.
@@ -54,6 +63,8 @@ final dioProvider = Provider<Dio>((ref) {
     GpsInterceptor(geolocator: geolocator),
     IdempotencyInterceptor(),
     RedactingLogger(), // PII Redaction Interceptor (US-CA-30)
+    if (const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false))
+      LogInterceptor(requestBody: true, responseBody: true, logPrint: (obj) => print('DIO_DEBUG: $obj')),
   ]);
 
   return dio;

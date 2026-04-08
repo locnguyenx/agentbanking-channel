@@ -11,9 +11,14 @@ class AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    print('DEBUG: AuthInterceptor.onRequest started');
     final jwt = await _storage.readJwt();
     if (jwt != null && jwt.isNotEmpty) {
+      print('DEBUG: AuthInterceptor adding token (len: ${jwt.length})');
+      options.headers['authorization'] = 'Bearer $jwt';
       options.headers['Authorization'] = 'Bearer $jwt';
+    } else {
+      print('DEBUG: AuthInterceptor NO TOKEN FOUND');
     }
     
     return handler.next(options);

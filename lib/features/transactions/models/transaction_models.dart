@@ -29,15 +29,15 @@ enum FundingSource {
       case 'CASH_WITHDRAWAL':
         return [CARD_EMV, MYKAD_BIOMETRIC];
       case 'CASH_DEPOSIT':
-      case 'BILL_PAY':
-      case 'TOP_UP':
+      case 'BILL_PAYMENT':
+      case 'PREPAID_TOPUP':
       case 'SARAWAK_PAY':
       case 'ESSP_PURCHASE':
       case 'JOMPAY':
         return [CASH, CARD_EMV, DUITNOW_MOBILE];
       case 'PIN_PURCHASE':
         return [CASH, CARD_EMV];
-      case 'CASHLESS_PAY':
+      case 'CASHLESS_PAYMENT':
         return [CARD_EMV, DUITNOW_QR];
       case 'DUITNOW_TRANSFER':
         return [DUITNOW_MOBILE, DUITNOW_MYKAD, DUITNOW_BRN];

@@ -43,7 +43,7 @@ class TransactionRepository {
 
   Future<models.TransactionQuoteResponse> getQuote(models.TransactionQuoteRequest request) async {
     final apiRequest = TransactionQuoteRequest((b) => b
-      ..serviceCode = request.serviceCode
+      ..serviceCode = _mapServiceCodeToType(request.serviceCode).name
       ..amount = request.amount.toString()
       ..agentId = request.agentId
       ..fundingSource = TransactionQuoteRequestFundingSourceEnum.valueOf(request.fundingSource.name)
@@ -113,18 +113,24 @@ class TransactionRepository {
       case 'CASH_WITHDRAWAL': return TransactionType.CASH_WITHDRAWAL;
       case 'CASH_DEPOSIT': return TransactionType.CASH_DEPOSIT;
       case 'BILL_PAYMENT':
-      case 'BILL_PAY':
       case 'JOMPAY': return TransactionType.BILL_PAYMENT;
-      case 'TOP_UP': return TransactionType.PREPAID_TOPUP;
+      case 'PREPAID_TOPUP': return TransactionType.PREPAID_TOPUP;
       case 'DUITNOW_TRANSFER': return TransactionType.DUITNOW_TRANSFER;
-      case 'CASHLESS_PAY': return TransactionType.CASHLESS_PAYMENT;
+      case 'CASHLESS_PAYMENT': return TransactionType.CASHLESS_PAYMENT;
       case 'EWALLET_TOPUP':
       case 'SARAWAK_PAY': return TransactionType.EWALLET_TOPUP;
       case 'EWALLET_WITHDRAW':
       case 'SARAWAK_PAY_WITHDRAW': return TransactionType.EWALLET_WITHDRAWAL;
       case 'ESSP_PURCHASE': return TransactionType.ESSP_PURCHASE;
       case 'PIN_PURCHASE': return TransactionType.PIN_PURCHASE;
-      default: return TransactionType.CASH_WITHDRAWAL;
+      case 'RETAIL_SALE': return TransactionType.RETAIL_SALE;
+      default: 
+        // If it's a valid enum name but not in our switch, try to use it
+        try {
+          return TransactionType.valueOf(serviceCode ?? '');
+        } catch (_) {
+          return TransactionType.CASH_WITHDRAWAL;
+        }
     }
   }
 
@@ -194,21 +200,31 @@ class TransactionRepository {
     required String proxyId,
     required String proxyType,
     required Decimal amount,
+    required String agentId,
   }) async {
-    final apiRequest = DuitNowRequest((b) => b
-      ..internalTransactionId = quoteId
-      ..proxyType = proxyType
-      ..proxyValue = proxyId
-      ..amount = amount.toString()
+    return executeTransaction(
+      models.TransactionExecutionRequest(
+        quoteId: quoteId,
+        fundingSource: _mapProxyTypeToFundingSource(proxyType),
+        serviceCode: 'DUITNOW_TRANSFER',
+        amount: amount,
+        metadata: {
+          'proxyType': proxyType,
+          'proxyValue': proxyId,
+          'duitNowProxyId': proxyId,
+        },
+      ),
+      agentId,
     );
-    
-    final response = await switchApi.duitNowTransfer(duitNowRequest: apiRequest);
-    final data = response.data;
-    
-    return models.TransactionExecutionResponse(
-      status: data?.status?.name ?? 'UNKNOWN',
-      referenceId: data?.transactionId ?? '',
-    );
+  }
+
+  models.FundingSource _mapProxyTypeToFundingSource(String proxyType) {
+    switch (proxyType) {
+      case 'MOBILE': return models.FundingSource.DUITNOW_MOBILE;
+      case 'MYKAD': return models.FundingSource.DUITNOW_MYKAD;
+      case 'BRN': return models.FundingSource.DUITNOW_BRN;
+      default: return models.FundingSource.DUITNOW_MOBILE;
+    }
   }
 
   Future<Map<String, String>> generateQrSale(Decimal amount, String agentId) async {

@@ -7,8 +7,10 @@ Future<void> theAgentIsLoggedInAndActive(WidgetTester tester) async {
   if (find.byType(MaterialApp).evaluate().isEmpty) {
     await pumpBddApp(tester, isAuthenticated: true);
   }
-  await tester.pumpAndSettle();
   
-  // Verify either logout icon or a dashboard signifier
-  expect(find.byIcon(Icons.logout).evaluate().isNotEmpty || find.text('Withdrawal').evaluate().isNotEmpty, true);
+  // Wait for either logout icon or a dashboard signifier
+  await waitFor(tester, find.byElementPredicate((element) {
+    return find.byIcon(Icons.logout).evaluate().isNotEmpty || 
+           find.text('Withdrawal').evaluate().isNotEmpty;
+  }), timeout: const Duration(seconds: 15));
 }

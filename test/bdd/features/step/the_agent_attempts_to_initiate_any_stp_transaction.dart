@@ -5,12 +5,26 @@ import 'package:agentbanking_channel/features/transactions/providers/transaction
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
 import '../../bdd_test_helper.dart';
 
+const bool isRealBackend = bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
+
 Future<void> theAgentAttemptsToInitiateAnyStpTransaction(WidgetTester tester) async {
   final notifier = bddContainer.read(transactionProvider.notifier);
-  await notifier.startTransaction(
-    Decimal.fromInt(100),
-    'MERCHANT-123',
-    serviceCode: 'CASH_DEPOSIT',
-    fundingSource: FundingSource.CASH,
-  );
+  
+  if (isRealBackend) {
+    await tester.runAsync(() async {
+      await notifier.startTransaction(
+        Decimal.fromInt(100),
+        'MERCHANT-123',
+        serviceCode: 'CASH_DEPOSIT',
+        fundingSource: FundingSource.CASH,
+      );
+    });
+  } else {
+    await notifier.startTransaction(
+      Decimal.fromInt(100),
+      'MERCHANT-123',
+      serviceCode: 'CASH_DEPOSIT',
+      fundingSource: FundingSource.CASH,
+    );
+  }
 }

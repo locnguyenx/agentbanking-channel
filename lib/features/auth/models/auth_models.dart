@@ -21,6 +21,22 @@ class AuthUser {
     this.registeredLat,
     this.registeredLng,
   });
+
+  AuthUser copyWith({
+    String? agentId,
+    String? name,
+    String? tier,
+    double? registeredLat,
+    double? registeredLng,
+  }) {
+    return AuthUser(
+      agentId: agentId ?? this.agentId,
+      name: name ?? this.name,
+      tier: tier ?? this.tier,
+      registeredLat: registeredLat ?? this.registeredLat,
+      registeredLng: registeredLng ?? this.registeredLng,
+    );
+  }
 }
 
 class AuthState {

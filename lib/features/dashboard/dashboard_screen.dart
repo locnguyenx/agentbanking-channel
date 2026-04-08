@@ -368,7 +368,7 @@ class DashboardScreen extends ConsumerWidget {
               Colors.redAccent,
               () {
                 ref.read(transactionProvider.notifier).reset();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Bill Payment', serviceCode: 'BILL_PAY')));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Bill Payment', serviceCode: 'BILL_PAYMENT')));
               },
               isTablet,
               key: const Key('btn_bill_payment'),
@@ -380,7 +380,7 @@ class DashboardScreen extends ConsumerWidget {
               Colors.green,
               () {
                 ref.read(transactionProvider.notifier).reset();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Top Up', serviceCode: 'TOP_UP')));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Top Up', serviceCode: 'PREPAID_TOPUP')));
               },
               isTablet,
               key: const Key('btn_top_up'),
@@ -416,7 +416,7 @@ class DashboardScreen extends ConsumerWidget {
               Colors.deepPurple,
               () {
                 ref.read(transactionProvider.notifier).reset();
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Cashless Payment', serviceCode: 'CASHLESS_PAY')));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const TransactionFlowScreen(title: 'Cashless Payment', serviceCode: 'CASHLESS_PAYMENT')));
               },
               isTablet,
               key: const Key('btn_cashless'),

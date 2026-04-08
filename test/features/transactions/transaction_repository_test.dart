@@ -461,13 +461,39 @@ void main() {
     });
 
     test('initiateDuitNow returns success', () async {
+      // 1. Stub startTransaction
+      mockOrchestratorApi.startStub = (req) async => Response(
+            data: TransactionStartResponse((b) => b
+              ..status = TransactionStartResponseStatusEnum.PENDING
+              ..workflowId = 'WF-DN-123'
+            ),
+            statusCode: 202,
+            requestOptions: RequestOptions(path: ''),
+          );
+
+      // 2. Stub getTransactionStatus
+      mockOrchestratorApi.statusStub = (workflowId) async {
+        return Response(
+          data: TransactionStatusResponse((b) => b
+            ..status = TransactionStatusResponseStatusEnum.COMPLETED
+            ..workflowId = workflowId
+            ..referenceNumber = 'DN_REF_123'
+            ..amount = 50.0
+          ),
+          statusCode: 200,
+          requestOptions: RequestOptions(path: ''),
+        );
+      };
+
       final response = await repository.initiateDuitNow(
         quoteId: 'QUOTE_DN',
         proxyId: '0123456789',
-        proxyType: 'MSISDN',
+        proxyType: 'PHONE',
         amount: Decimal.parse('50.0'),
+        agentId: 'AGENT007',
       );
       expect(response.status, 'SUCCESS');
+      expect(response.referenceId, 'DN_REF_123');
     });
 
     test('executeRetailSale returns success', () async {

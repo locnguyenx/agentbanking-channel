@@ -88,3 +88,19 @@ Future<void> pumpBddApp(
 
   await harness.build();
 }
+
+Future<void> waitFor(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final end = DateTime.now().add(timeout);
+  while (DateTime.now().isBefore(end)) {
+    if (finder.evaluate().isNotEmpty) return;
+    await tester.runAsync(() => Future.delayed(const Duration(milliseconds: 100)));
+    await tester.pump();
+  }
+  if (finder.evaluate().isEmpty) {
+    throw Exception('Timeout waiting for $finder');
+  }
+}

@@ -143,7 +143,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
         fundingSource: fundingSource,
         metadata: metadata,
       );
-    } else if (serviceCode == 'BILL_PAY' || serviceCode == 'JOMPAY') {
+    } else if (serviceCode == 'BILL_PAYMENT' || serviceCode == 'JOMPAY') {
       await _billerFlowNotifier.executeBillerWorkflow(
         amount: amount,
         merchantId: merchantId,
@@ -190,7 +190,7 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
       await _duitNowFlowNotifier.executeDuitNowQrFlow(state);
     } else if (state.serviceCode?.contains('DUITNOW') == true) {
        await _duitNowFlowNotifier.executeDuitNowTransfer(state);
-    } else if (state.serviceCode == 'BILL_PAY' || state.serviceCode == 'JOMPAY') {
+    } else if (state.serviceCode == 'BILL_PAYMENT' || state.serviceCode == 'JOMPAY') {
        await _billerFlowNotifier.executeBillerPayment(state);
     } else {
       await _executeStandardWorkflow();
@@ -287,6 +287,8 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
         if (result.status == 'SUCCESS') {
           state = state.copyWith(status: TransactionStatus.success, result: result);
           await floatNotifier.fetchLatestBalance();
+        } else if (result.status == 'PENDING') {
+          state = state.copyWith(status: TransactionStatus.processing, result: result);
         } else {
           state = state.copyWith(
             status: TransactionStatus.failed, 

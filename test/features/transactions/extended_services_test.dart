@@ -43,13 +43,13 @@ class ManualMockTransactionRepository extends Mock implements TransactionReposit
       referenceId: 'REF-EXT-001',
     );
   }
-
   @override
   Future<TransactionExecutionResponse> initiateDuitNow({
     required String quoteId,
     required String proxyId,
     required String proxyType,
     required Decimal amount,
+    required String agentId,
   }) async {
     return mockExecution ?? TransactionExecutionResponse(
       status: 'SUCCESS',

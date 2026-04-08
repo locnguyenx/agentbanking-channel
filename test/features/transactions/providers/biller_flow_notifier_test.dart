@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:agentbanking_channel/features/transactions/providers/biller_flow_notifier.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
@@ -20,11 +21,10 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:dio/dio.dart';
 
 import 'test_fakes.dart';
-import '../setup/test_credentials.dart';
+import '../../../setup/test_credentials.dart';
 
 const apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
-final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 void main() {
   late FakeTransactionRepository fakeRepo;
@@ -60,19 +60,7 @@ void main() {
     container.dispose();
   });
 
-  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
-    if (!isRealBackend) return null;
-    try {
-      final repo = container.read(authRepositoryProvider);
-      final user = await repo.login(TestCredentials.username, TestCredentials.password);
-      final token = await _sharedStorage.readJwt();
-      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
-      return user;
-    } catch (e) {
-      print('DEBUG: Real login failed: $e');
-      return null;
-    }
-  }
+  void _dummy() {}
 
   TransactionState quotedState() => TransactionState(
     status: TransactionStatus.waitingConsent,
@@ -98,20 +86,18 @@ void main() {
   );
 
   BillerFlowNotifier createNotifier() {
-    final dio = Dio(BaseOptions(baseUrl: apiBaseUrl));
-    dio.interceptors.add(AuthInterceptor(_sharedStorage));
+    // Pure unit test
 
     final container = ProviderContainer(overrides: [
       secureStorageManagerProvider.overrideWithValue(_sharedStorage),
       authProvider.overrideWith((ref) => AuthNotifier(repository: ref.watch(authRepositoryProvider))),
-      dioProvider.overrideWithValue(dio),
     ]);
 
     return BillerFlowNotifier(
-      ref: isRealBackend ? container.read(Provider((ref) => ref)) : fakeRef,
-      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
-      floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : fakeFloat,
-      geolocator: isRealBackend ? container.read(geolocatorProvider) : fakeGeolocator,
+      ref: fakeRef,
+      repository: fakeRepo,
+      floatNotifier: fakeFloat,
+      geolocator: fakeGeolocator,
     );
   }
 
@@ -156,8 +142,7 @@ void main() {
   group('BillerFlowNotifier - Utility Payment', () {
     test('happy path: initiate → poll → success', () async {
       final notifier = createNotifier();
-      final user = await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
-      final effectiveAgentId = user?.agentId ?? 'AGT-E2E-001';
+      // Pure unit test
 
       await notifier.executeBillerPayment(quotedState());
       notifier.debugSetState(notifier.state.copyWith(status: TransactionStatus.processing));

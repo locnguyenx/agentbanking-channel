@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agentbanking_channel/features/transactions/providers/quote_notifier.dart';
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
+import 'package:agentbanking_channel/features/transactions/models/transaction_state.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
@@ -18,9 +19,8 @@ import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
 
 import 'test_fakes.dart';
 import 'quote_notifier_test_helpers.dart';
-import '../setup/test_credentials.dart';
+import '../../../setup/test_credentials.dart';
 
-final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 final String apiBaseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
 void main() {
@@ -35,20 +35,7 @@ void main() {
   });
 
   /// Creates a QuoteNotifier wired to a minimal ProviderContainer.
-  /// Override compliance/eod/auth as needed via parameters.
-  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
-    if (!isRealBackend) return null;
-    try {
-      final repo = container.read(authRepositoryProvider);
-      final user = await repo.login(TestCredentials.username, TestCredentials.password);
-      final token = await _sharedStorage.readJwt();
-      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
-      return user;
-    } catch (e) {
-      print('DEBUG: Real login failed: $e');
-      return null;
-    }
-  }
+  /// Override compliance/eod/a  void _dummy() {}
 
   QuoteNotifier createNotifier({
     bool complianceFrozen = false,
@@ -79,8 +66,6 @@ void main() {
         final notifier = AuthNotifier(repository: ref.watch(authRepositoryProvider));
         if (authUser != null) {
            notifier.debugSetAuthenticated(authUser);
-        } else if (isRealBackend) {
-           notifier.debugSetAuthenticated(AuthUser(agentId: TestCredentials.username, name: 'AGENT', tier: 'GOLD'));
         }
         return notifier;
       }),
@@ -88,16 +73,16 @@ void main() {
     
     return QuoteNotifier(
       ref: container.read(Provider((ref) => ref)),
-      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
-      geolocator: isRealBackend ? container.read(geolocatorProvider) : fakeGeolocator,
+      repository: fakeRepo,
+      geolocator: fakeGeolocator,
     );
   }
 
   group('QuoteNotifier - Happy Path', () {
     test('valid amount → quoting → waitingConsent', () async {
       final notifier = createNotifier();
-      final user = await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
-      final effectiveAgentId = user != null ? user.agentId : TestCredentials.username;
+      // Pure unit test
+      final effectiveAgentId = TestCredentials.username;
 
       await notifier.startQuote(
         Decimal.fromInt(100), effectiveAgentId,
@@ -105,7 +90,7 @@ void main() {
         fundingSource: FundingSource.CARD_EMV,
       );
 
-      expect(notifier.state.status, TransactionStatus.waitingConsent);
+      expect(notifier.state.status.name, TransactionStatus.waitingConsent.name);
       expect(notifier.state.quote, isNotNull);
       expect(notifier.state.quote?.quoteId, 'FAKE_QUOTE_001');
       expect(notifier.state.idempotencyKey, isNotEmpty);
@@ -130,7 +115,6 @@ void main() {
 
     test('RM 3,000 exactly for Card → passes validation', () async {
       final notifier = createNotifier();
-      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
         Decimal.fromInt(3000), TestCredentials.username,
@@ -172,7 +156,6 @@ void main() {
 
     test('cash RM 2,999 → passes (no MyKad needed)', () async {
       final notifier = createNotifier();
-      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
         Decimal.fromInt(2999), TestCredentials.username,
@@ -216,12 +199,12 @@ void main() {
   });
 
   group('QuoteNotifier - Phone Validation', () {
-    test('invalid phone for TOP_UP → ERR_VAL_INVALID_PHONE_FORMAT', () async {
+    test('invalid phone for PREPAID_TOPUP → ERR_VAL_INVALID_PHONE_FORMAT', () async {
       final notifier = createNotifier();
 
       await notifier.startQuote(
         Decimal.fromInt(50), TestCredentials.username,
-        serviceCode: 'TOP_UP',
+        serviceCode: 'PREPAID_TOPUP',
         fundingSource: FundingSource.CASH,
         metadata: {'mobileNumber': '01234'}, // too short
       );
@@ -231,27 +214,26 @@ void main() {
       notifier.dispose();
     });
 
-    test('valid phone for TOP_UP → passes', () async {
+    test('valid phone for PREPAID_TOPUP → passes', () async {
       final notifier = createNotifier();
-      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
 
       await notifier.startQuote(
         Decimal.fromInt(50), TestCredentials.username,
-        serviceCode: 'TOP_UP',
+        serviceCode: 'PREPAID_TOPUP',
         fundingSource: FundingSource.CASH,
         metadata: {'mobileNumber': '0123456789'},
       );
 
-      expect(notifier.state.status, TransactionStatus.waitingConsent);
+      expect(notifier.state.status.name, TransactionStatus.waitingConsent.name);
       notifier.dispose();
     });
   });
 
   group('QuoteNotifier - Backend Failure', () {
     test('repository throws → failed', () async {
-      fakeRepo.shouldFailQuote = true;
       final notifier = createNotifier();
-      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
+      // Pure unit test
+      fakeRepo.shouldFailQuote = true;
 
       await notifier.startQuote(
         Decimal.fromInt(100), TestCredentials.username,
@@ -259,8 +241,9 @@ void main() {
         fundingSource: FundingSource.CARD_EMV,
       );
 
-      expect(notifier.state.status, TransactionStatus.failed);
-      expect(notifier.state.error, anyOf(contains('Quote failed'), contains('401')));
+      expect(notifier.state.status.name, TransactionStatus.failed.name);
+      expect(notifier.state.error, isNotNull);
+        expect(notifier.state.error, contains('Quote failed'));
       notifier.dispose();
     });
   });

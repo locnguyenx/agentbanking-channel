@@ -61,6 +61,7 @@ class ManualMockTransactionRepository extends mockito.Mock implements Transactio
     required String proxyId,
     required String proxyType,
     required Decimal amount,
+    required String agentId,
   }) async {
     return mockExecution ?? TransactionExecutionResponse(
       status: 'SUCCESS',

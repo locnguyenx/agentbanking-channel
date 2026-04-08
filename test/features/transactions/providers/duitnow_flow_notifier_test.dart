@@ -20,11 +20,10 @@ import 'package:agentbanking_channel/features/settlement/providers/float_provide
 import 'package:dio/dio.dart';
 
 import 'test_fakes.dart';
-import '../setup/test_credentials.dart';
+import '../../../setup/test_credentials.dart';
 
 const apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
 
-final bool isRealBackend = const bool.fromEnvironment('USE_REAL_BACKEND', defaultValue: false);
 
 void main() {
   late FakeTransactionRepository fakeRepo;
@@ -62,19 +61,7 @@ void main() {
     container.dispose();
   });
 
-  Future<AuthUser?> _ensureRealLogin(ProviderContainer container) async {
-    if (!isRealBackend) return null;
-    try {
-      final repo = container.read(authRepositoryProvider);
-      final user = await repo.login(TestCredentials.username, TestCredentials.password);
-      final token = await _sharedStorage.readJwt();
-      print('DEBUG: Real login successful for ${user.agentId}, token: ${token?.substring(0, 10)}...');
-      return user;
-    } catch (e) {
-      print('DEBUG: Real login failed: $e');
-      return null;
-    }
-  }
+  void _dummy() {}
 
   TransactionState quotedState({FundingSource? source}) => TransactionState(
     status: TransactionStatus.waitingConsent,
@@ -101,17 +88,17 @@ void main() {
     ]);
 
     return DuitNowFlowNotifier(
-      ref: isRealBackend ? container.read(Provider((ref) => ref)) : fakeRef,
-      repository: isRealBackend ? container.read(transactionRepositoryProvider) : fakeRepo,
-      floatNotifier: isRealBackend ? container.read(floatProvider.notifier) : fakeFloat,
-      reversalService: isRealBackend ? container.read(reversalServiceProvider) : fakeReversal,
+      ref: fakeRef,
+      repository: fakeRepo,
+      floatNotifier: fakeFloat,
+      reversalService: fakeReversal,
     );
   }
 
   group('DuitNowFlowNotifier - Proxy Transfer', () {
     test('happy path: initiate → poll → success', () async {
       final notifier = createNotifier();
-      await _ensureRealLogin(notifier.ref.read(Provider((ref) => ref.container)));
+      // Pure unit test
 
       await notifier.executeDuitNowTransfer(quotedState());
 

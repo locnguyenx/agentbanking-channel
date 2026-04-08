@@ -37,12 +37,12 @@ class ManualMockTransactionRepository extends Mock implements TransactionReposit
     );
   }
 
-  @override
   Future<TransactionExecutionResponse> initiateDuitNow({
     required String quoteId,
     required String proxyId,
     required String proxyType,
     required Decimal amount,
+    required String agentId,
   }) async {
     if (mockExecution == null) throw UnimplementedError('mockExecution not set');
     return mockExecution!;

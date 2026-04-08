@@ -52,10 +52,10 @@ mixin TransactionGuardMixin on StateNotifier<TransactionState> {
 
     // 4. Phone Validation
     final phone = metadata?['mobileNumber'] ?? metadata?['mobile'] ?? metadata?['identifier'] ?? '';
-    bool shouldValidatePhone = serviceCode.contains('TOP_UP') || serviceCode == 'ESSP' || serviceCode == 'PIN_PURCHASE';
+    bool shouldValidatePhone = serviceCode.contains('PREPAID_TOPUP') || serviceCode == 'ESSP' || serviceCode == 'PIN_PURCHASE';
     if (shouldValidatePhone && phone.isNotEmpty) {
       bool isTopUpPrefix = phone.startsWith('01');
-      bool isExplicitTopUp = serviceCode.contains('TOP_UP');
+      bool isExplicitTopUp = serviceCode.contains('PREPAID_TOPUP');
       if (isTopUpPrefix || isExplicitTopUp) {
         if (!ValidationService.isValidPhoneNumber(phone)) {
           return 'ERR_VAL_INVALID_PHONE_FORMAT';

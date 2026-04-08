@@ -14,6 +14,8 @@ class RedactingLogger extends Interceptor {
     this.logError = true,
   });
 
+  bool get _disabled => const bool.fromEnvironment('DISABLE_DIO_LOGS', defaultValue: false);
+
   // Regex patterns for PII
   static final RegExp _myKadRegex = RegExp(r'\b\d{6}-?\d{2}-?\d{4}\b|\b\d{12}\b');
   static final RegExp _panRegex = RegExp(r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b');
@@ -55,7 +57,7 @@ class RedactingLogger extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (logRequest) {
+    if (logRequest && !_disabled) {
       final message = 'NETWORK REQUEST: [${options.method}] ${options.uri}\n'
           'Headers: ${options.headers}\n'
           'Body: ${redact(options.data?.toString() ?? 'EMPTY')}';
@@ -66,7 +68,7 @@ class RedactingLogger extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (logResponse) {
+    if (logResponse && !_disabled) {
       final message = 'NETWORK RESPONSE: [${response.statusCode}] ${response.requestOptions.uri}\n'
           'Data: ${redact(response.data?.toString() ?? 'EMPTY')}';
       dev.log(message, name: 'AgentBanking.Network');
@@ -76,7 +78,7 @@ class RedactingLogger extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (logError) {
+    if (logError && !_disabled) {
       final message = 'NETWORK ERROR: ${err.message}\n'
           'Path: ${err.requestOptions.uri}\n'
           'Error Data: ${redact(err.response?.data?.toString() ?? 'EMPTY')}';
