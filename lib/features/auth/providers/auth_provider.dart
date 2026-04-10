@@ -87,8 +87,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  void logout() {
-    repository.secureStorage.clearJwt();
+  Future<void> logout() async {
+    await repository.secureStorage.clearJwt();
     state = AuthState(status: AuthStatus.unauthenticated);
   }
 

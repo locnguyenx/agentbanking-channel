@@ -167,6 +167,12 @@ class BddAppHarness {
       HttpOverrides.global = _RealHttpOverrides();
     }
     
+    // Set a standard logical size for POS/Tablet layout
+    tester.view.physicalSize = const Size(1280, 1024);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+    addTearDown(() => tester.view.resetDevicePixelRatio());
+    
     // Only set if explicitly requested via with* methods or if we want happy path defaults
     // But don't overwrite if it's already there (to allow persistence tests)
     if (_secureStorage.jwt == null && _isAuthenticated && !isRealBackend) {
@@ -233,8 +239,8 @@ class BddAppHarness {
           final baseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'http://localhost:8080');
           final dio = Dio(BaseOptions(
             baseUrl: baseUrl,
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 25),
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
           ));
 
           if (isRealBackend) {

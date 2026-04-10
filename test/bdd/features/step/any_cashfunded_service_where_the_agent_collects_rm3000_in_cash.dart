@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/bdd_step_utils.dart';
+import '../../bdd_test_helper.dart';
 
 Future<void> anyCashfundedServiceWhereTheAgentCollectsRm3000InCash(
     WidgetTester tester) async {
@@ -24,7 +25,7 @@ Future<void> anyCashfundedServiceWhereTheAgentCollectsRm3000InCash(
   await tester.pumpAndSettle();
   
   await tester.tap(find.byKey(const Key('btn_main_action')));
-  await tester.pumpAndSettle();
+  await waitFor(tester, find.byKey(const Key('btn_confirm')));
   
   // MUST tap AGREE for large cash consent
   final agreeBtn = find.byKey(const Key('btn_confirm'));

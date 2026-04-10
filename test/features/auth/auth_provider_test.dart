@@ -82,7 +82,7 @@ void main() {
       expect(await fakeStorage.readJwt(), isNotNull);
       
       // When: agent logs out
-      auth.logout();
+      await auth.logout();
       
       // Then: state is unauthenticated
       expect(auth.state.status, AuthStatus.unauthenticated);

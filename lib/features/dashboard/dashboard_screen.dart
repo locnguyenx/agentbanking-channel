@@ -43,12 +43,15 @@ class DashboardScreen extends ConsumerWidget {
         centerTitle: false,
         actions: [
           IconButton(
+            key: const Key('btn_logout'),
             icon: const Icon(Icons.logout, size: 20),
-            onPressed: () {
-              ref.read(authProvider.notifier).logout();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-              );
+            onPressed: () async {
+              await ref.read(authProvider.notifier).logout();
+              if (context.mounted) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+              }
             },
           ),
           const Padding(

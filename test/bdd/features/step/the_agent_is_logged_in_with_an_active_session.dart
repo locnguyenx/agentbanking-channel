@@ -32,6 +32,7 @@ Future<void> theAgentIsLoggedInWithAnActiveSession(WidgetTester tester) async {
       // Wait for the Dashboard to appear using our async-aware waitFor
       await waitFor(tester, find.byType(DashboardScreen), timeout: const Duration(seconds: 60));
       print('BDD_DEBUG: DashboardScreen found!');
+      await tester.pumpAndSettle();
   } else {
       await tester.tap(find.text('LOGIN'));
       await tester.pumpAndSettle();
