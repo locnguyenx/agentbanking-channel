@@ -14,7 +14,7 @@ export 'package:agent_api/src/api/agent_controller_onboarding_service_api.dart';
 export 'package:agent_api/src/api/audit_log_controller_onboarding_service_api.dart';
 export 'package:agent_api/src/api/auth_controller_auth_iam_service_api.dart';
 export 'package:agent_api/src/api/biller_controller_biller_service_api.dart';
-export 'package:agent_api/src/api/compliance_controller_rules_service_api.dart';
+export 'package:agent_api/src/api/compliance_controller_onboarding_service_api.dart';
 export 'package:agent_api/src/api/e_wallet_controller_biller_service_api.dart';
 export 'package:agent_api/src/api/essp_controller_biller_service_api.dart';
 export 'package:agent_api/src/api/ledger_controller_ledger_service_api.dart';
@@ -24,8 +24,9 @@ export 'package:agent_api/src/api/orchestrator_controller_orchestrator_service_a
 export 'package:agent_api/src/api/reconciliation_controller_ledger_service_api.dart';
 export 'package:agent_api/src/api/resolution_controller_orchestrator_service_api.dart';
 export 'package:agent_api/src/api/rules_controller_rules_service_api.dart';
+export 'package:agent_api/src/api/switch_controller_biller_service_api.dart';
 export 'package:agent_api/src/api/switch_controller_switch_adapter_service_api.dart';
-export 'package:agent_api/src/api/transaction_controller_switch_adapter_service_api.dart';
+export 'package:agent_api/src/api/transaction_controller_rules_service_api.dart';
 export 'package:agent_api/src/api/user_management_controller_auth_iam_service_api.dart';
 
 export 'package:agent_api/src/model/agent_response.dart';
@@ -67,6 +68,7 @@ export 'package:agent_api/src/model/jom_pay_external_request.dart';
 export 'package:agent_api/src/model/kyc_verify_response.dart';
 export 'package:agent_api/src/model/maker_proposal_request.dart';
 export 'package:agent_api/src/model/my_kad_verify_request.dart';
+export 'package:agent_api/src/model/my_profile_response.dart';
 export 'package:agent_api/src/model/pin_purchase_command.dart';
 export 'package:agent_api/src/model/pin_purchase_response.dart';
 export 'package:agent_api/src/model/refresh_token_request.dart';

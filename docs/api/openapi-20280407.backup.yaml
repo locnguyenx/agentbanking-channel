@@ -453,7 +453,6 @@ paths:
       tags:
       - e-wallet-controller (biller-service)
       operationId: topup_1
-      deprecated: true
       security:
         - bearerAuth: []
       requestBody:
@@ -478,7 +477,6 @@ paths:
       tags:
       - essp-controller (biller-service)
       operationId: purchase
-      deprecated: true
       security:
         - bearerAuth: []
       requestBody:
@@ -656,7 +654,6 @@ paths:
       tags:
       - merchant-controller (ledger-service)
       operationId: processRetailSale
-      deprecated: true
       security:
         - bearerAuth: []
       requestBody:
@@ -689,7 +686,6 @@ paths:
       tags:
       - merchant-controller (ledger-service)
       operationId: processPinPurchase
-      deprecated: true
       security:
         - bearerAuth: []
       requestBody:
@@ -722,7 +718,6 @@ paths:
       tags:
       - merchant-controller (ledger-service)
       operationId: processCashBack
-      deprecated: true
       security:
         - bearerAuth: []
       requestBody:
@@ -849,7 +844,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /api/v1/backoffice/ledger-transactions:
+  /api/v1/backoffice/transactions:
     get:
       tags:
       - ledger-controller (ledger-service)
@@ -1495,7 +1490,7 @@ paths:
     post:
       tags:
       - resolution-controller (orchestrator-service)
-      operationId: makerProposeResolution
+      operationId: makerPropose
       summary: Maker proposes resolution for a transaction
       description: First step in four-eyes approval - maker proposes an action (COMMIT, ROLLBACK, ESCALATE)
       security:
@@ -1536,7 +1531,7 @@ paths:
     post:
       tags:
       - resolution-controller (orchestrator-service)
-      operationId: checkerApproveResolution
+      operationId: checkerApprove
       summary: Checker approves proposed resolution
       description: Second step in four-eyes approval - checker approves the maker's proposal
       security:
@@ -1583,7 +1578,7 @@ paths:
     post:
       tags:
       - resolution-controller (orchestrator-service)
-      operationId: checkerRejectResolution
+      operationId: checkerReject
       summary: Checker rejects proposed resolution
       description: Second step in four-eyes approval - checker rejects the maker's proposal, returning to maker
       security:
@@ -2642,7 +2637,6 @@ components:
       - transactionType
       - agentId
       - amount
-      - idempotencyKey
       type: object
       properties:
         transactionType:

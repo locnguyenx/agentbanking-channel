@@ -15,7 +15,7 @@ Method | HTTP request | Description
 [**getBalance**](LedgerControllerLedgerServiceApi.md#getbalance) | **GET** /api/v1/agent/balance | 
 [**getDashboard**](LedgerControllerLedgerServiceApi.md#getdashboard) | **GET** /api/v1/backoffice/dashboard | 
 [**getSettlement**](LedgerControllerLedgerServiceApi.md#getsettlement) | **GET** /api/v1/backoffice/settlement | 
-[**getTransactions**](LedgerControllerLedgerServiceApi.md#gettransactions) | **GET** /api/v1/backoffice/transactions | 
+[**getTransactions**](LedgerControllerLedgerServiceApi.md#gettransactions) | **GET** /api/v1/backoffice/ledger-transactions | 
 
 
 # **balanceInquiry**

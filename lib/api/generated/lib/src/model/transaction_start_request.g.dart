@@ -161,7 +161,7 @@ class _$TransactionStartRequest extends TransactionStartRequest {
   @override
   final double amount;
   @override
-  final String? idempotencyKey;
+  final String idempotencyKey;
   @override
   final String? pan;
   @override
@@ -201,7 +201,7 @@ class _$TransactionStartRequest extends TransactionStartRequest {
       {required this.transactionType,
       required this.agentId,
       required this.amount,
-      this.idempotencyKey,
+      required this.idempotencyKey,
       this.pan,
       this.pinBlock,
       this.customerCardMasked,
@@ -446,7 +446,8 @@ class TransactionStartRequestBuilder
               agentId, r'TransactionStartRequest', 'agentId'),
           amount: BuiltValueNullFieldError.checkNotNull(
               amount, r'TransactionStartRequest', 'amount'),
-          idempotencyKey: idempotencyKey,
+          idempotencyKey: BuiltValueNullFieldError.checkNotNull(
+              idempotencyKey, r'TransactionStartRequest', 'idempotencyKey'),
           pan: pan,
           pinBlock: pinBlock,
           customerCardMasked: customerCardMasked,

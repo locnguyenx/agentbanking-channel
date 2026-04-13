@@ -36,7 +36,7 @@ part 'transaction_start_request.g.dart';
 abstract class TransactionStartRequest implements Built<TransactionStartRequest, TransactionStartRequestBuilder> {
   @BuiltValueField(wireName: r'transactionType')
   TransactionType get transactionType;
-  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  };
+  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  BALANCE_INQUIRY,  };
 
   /// Unique identifier of the agent
   @BuiltValueField(wireName: r'agentId')
@@ -48,7 +48,7 @@ abstract class TransactionStartRequest implements Built<TransactionStartRequest,
 
   /// Optional unique key to prevent duplicate transactions. If not provided, server will generate one.
   @BuiltValueField(wireName: r'idempotencyKey')
-  String? get idempotencyKey;
+  String get idempotencyKey;
 
   /// Card number (PAN) - required for CASH_WITHDRAWAL
   @BuiltValueField(wireName: r'pan')
@@ -151,13 +151,11 @@ class _$TransactionStartRequestSerializer implements PrimitiveSerializer<Transac
       object.amount,
       specifiedType: const FullType(double),
     );
-    if (object.idempotencyKey != null) {
-      yield r'idempotencyKey';
-      yield serializers.serialize(
-        object.idempotencyKey,
-        specifiedType: const FullType(String),
-      );
-    }
+    yield r'idempotencyKey';
+    yield serializers.serialize(
+      object.idempotencyKey,
+      specifiedType: const FullType(String),
+    );
     if (object.pan != null) {
       yield r'pan';
       yield serializers.serialize(

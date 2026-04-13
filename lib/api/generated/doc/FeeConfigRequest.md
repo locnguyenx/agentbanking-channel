@@ -8,8 +8,8 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**agentType** | **String** |  | 
-**transactionType** | **String** |  | 
+**agentTier** | **String** |  | 
+**transactionType** | **String** | Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP. | 
 **feeType** | **String** |  | 
 **feeAmount** | **String** |  | [optional] 
 **percentage** | **String** |  | [optional] 

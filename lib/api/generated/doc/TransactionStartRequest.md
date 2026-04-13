@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **transactionType** | [**TransactionType**](TransactionType.md) |  | 
 **agentId** | **String** | Unique identifier of the agent | 
 **amount** | **double** | Transaction amount in MYR | 
-**idempotencyKey** | **String** | Optional unique key to prevent duplicate transactions. If not provided, server will generate one. | [optional] 
+**idempotencyKey** | **String** | Optional unique key to prevent duplicate transactions. If not provided, server will generate one. | 
 **pan** | **String** | Card number (PAN) - required for CASH_WITHDRAWAL | [optional] 
 **pinBlock** | **String** | Encrypted PIN block - required for CASH_WITHDRAWAL | [optional] 
 **customerCardMasked** | **String** | Masked card number for display (e.g., 411111******1111) | [optional] 

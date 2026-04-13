@@ -13,7 +13,7 @@ part 'fee_config_response.g.dart';
 ///
 /// Properties:
 /// * [feeConfigId] 
-/// * [agentType] 
+/// * [agentTier] 
 /// * [transactionType] 
 /// * [feeType] 
 /// * [feeAmount] 
@@ -26,8 +26,8 @@ abstract class FeeConfigResponse implements Built<FeeConfigResponse, FeeConfigRe
   @BuiltValueField(wireName: r'feeConfigId')
   String? get feeConfigId;
 
-  @BuiltValueField(wireName: r'agentType')
-  String? get agentType;
+  @BuiltValueField(wireName: r'agentTier')
+  String? get agentTier;
 
   @BuiltValueField(wireName: r'transactionType')
   String? get transactionType;
@@ -81,10 +81,10 @@ class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResp
         specifiedType: const FullType(String),
       );
     }
-    if (object.agentType != null) {
-      yield r'agentType';
+    if (object.agentTier != null) {
+      yield r'agentTier';
       yield serializers.serialize(
-        object.agentType,
+        object.agentTier,
         specifiedType: const FullType(String),
       );
     }
@@ -167,12 +167,12 @@ class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResp
           ) as String;
           result.feeConfigId = valueDes;
           break;
-        case r'agentType':
+        case r'agentTier':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(String),
           ) as String;
-          result.agentType = valueDes;
+          result.agentTier = valueDes;
           break;
         case r'transactionType':
           final valueDes = serializers.deserialize(

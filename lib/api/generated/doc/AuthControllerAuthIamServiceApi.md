@@ -10,6 +10,7 @@ All URIs are relative to *http://localhost:8080*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**authenticateUser**](AuthControllerAuthIamServiceApi.md#authenticateuser) | **POST** /api/v1/auth/token | 
+[**getMyProfile**](AuthControllerAuthIamServiceApi.md#getmyprofile) | **GET** /api/v1/auth/me | Get current user profile
 [**refreshToken**](AuthControllerAuthIamServiceApi.md#refreshtoken) | **POST** /api/v1/auth/refresh | 
 [**revokeToken**](AuthControllerAuthIamServiceApi.md#revoketoken) | **POST** /api/v1/auth/revoke | 
 
@@ -51,6 +52,45 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getMyProfile**
+> MyProfileResponse getMyProfile()
+
+Get current user profile
+
+Returns the profile of the currently authenticated user. For external agents, includes linked agentId.
+
+### Example
+```dart
+import 'package:agent_api/api.dart';
+
+final api = AgentApi().getAuthControllerAuthIamServiceApi();
+
+try {
+    final response = api.getMyProfile();
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling AuthControllerAuthIamServiceApi->getMyProfile: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**MyProfileResponse**](MyProfileResponse.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

@@ -53,6 +53,7 @@ import 'package:agent_api/src/model/jom_pay_external_request.dart';
 import 'package:agent_api/src/model/kyc_verify_response.dart';
 import 'package:agent_api/src/model/maker_proposal_request.dart';
 import 'package:agent_api/src/model/my_kad_verify_request.dart';
+import 'package:agent_api/src/model/my_profile_response.dart';
 import 'package:agent_api/src/model/pin_purchase_command.dart';
 import 'package:agent_api/src/model/pin_purchase_response.dart';
 import 'package:agent_api/src/model/refresh_token_request.dart';
@@ -124,6 +125,7 @@ part 'serializers.g.dart';
   KycVerifyResponse,
   MakerProposalRequest,
   MyKadVerifyRequest,
+  MyProfileResponse,
   PinPurchaseCommand,
   PinPurchaseResponse,
   RefreshTokenRequest,

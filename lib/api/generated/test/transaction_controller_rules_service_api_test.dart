@@ -2,11 +2,11 @@ import 'package:test/test.dart';
 import 'package:agent_api/agent_api.dart';
 
 
-/// tests for TransactionControllerSwitchAdapterServiceApi
+/// tests for TransactionControllerRulesServiceApi
 void main() {
-  final instance = AgentApi().getTransactionControllerSwitchAdapterServiceApi();
+  final instance = AgentApi().getTransactionControllerRulesServiceApi();
 
-  group(TransactionControllerSwitchAdapterServiceApi, () {
+  group(TransactionControllerRulesServiceApi, () {
     //Future<TransactionQuoteResponse> getTransactionQuote(TransactionQuoteRequest transactionQuoteRequest) async
     test('test getTransactionQuote', () async {
       // TODO

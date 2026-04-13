@@ -55,7 +55,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(EsspExternalRequest.serializer)
       ..add(EsspExternalRequestCurrencyEnum.serializer)
       ..add(FeeConfigRequest.serializer)
-      ..add(FeeConfigRequestAgentTypeEnum.serializer)
+      ..add(FeeConfigRequestAgentTierEnum.serializer)
       ..add(FeeConfigRequestCurrencyEnum.serializer)
       ..add(FeeConfigRequestFeeTypeEnum.serializer)
       ..add(FeeConfigRequestTransactionTypeEnum.serializer)
@@ -75,6 +75,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(MakerProposalRequest.serializer)
       ..add(MakerProposalRequestActionEnum.serializer)
       ..add(MyKadVerifyRequest.serializer)
+      ..add(MyProfileResponse.serializer)
+      ..add(MyProfileResponseUserTypeEnum.serializer)
       ..add(PinPurchaseCommand.serializer)
       ..add(PinPurchaseResponse.serializer)
       ..add(RefreshTokenRequest.serializer)
@@ -102,6 +104,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(TransactionQuoteRequest.serializer)
       ..add(TransactionQuoteRequestBillerRoutingEnum.serializer)
       ..add(TransactionQuoteRequestFundingSourceEnum.serializer)
+      ..add(TransactionQuoteRequestServiceCodeEnum.serializer)
       ..add(TransactionQuoteResponse.serializer)
       ..add(TransactionResponse.serializer)
       ..add(TransactionResponseStatusEnum.serializer)
@@ -125,6 +128,9 @@ Serializers _$serializers = (Serializers().toBuilder()
           const FullType(BuiltList,
               const [const FullType(DashboardResponseDailyStatsInner)]),
           () => ListBuilder<DashboardResponseDailyStatsInner>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(TransactionResponse)]),

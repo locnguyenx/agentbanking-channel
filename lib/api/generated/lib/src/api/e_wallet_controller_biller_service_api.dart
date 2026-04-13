@@ -37,6 +37,7 @@ class EWalletControllerBillerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BuiltMap<String, JsonObject>] as data
   /// Throws [DioException] if API call or serialization fails
+  @Deprecated('This operation has been deprecated')
   Future<Response<BuiltMap<String, JsonObject>>> topup1({ 
     required EWalletTopupExternalRequest eWalletTopupExternalRequest,
     CancelToken? cancelToken,

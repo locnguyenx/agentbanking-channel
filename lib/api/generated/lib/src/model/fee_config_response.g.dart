@@ -73,7 +73,7 @@ class _$FeeConfigResponse extends FeeConfigResponse {
   @override
   final String? feeConfigId;
   @override
-  final String? agentType;
+  final String? agentTier;
   @override
   final String? transactionType;
   @override
@@ -95,7 +95,7 @@ class _$FeeConfigResponse extends FeeConfigResponse {
 
   _$FeeConfigResponse._(
       {this.feeConfigId,
-      this.agentType,
+      this.agentTier,
       this.transactionType,
       this.feeType,
       this.feeAmount,
@@ -117,7 +117,7 @@ class _$FeeConfigResponse extends FeeConfigResponse {
     if (identical(other, this)) return true;
     return other is FeeConfigResponse &&
         feeConfigId == other.feeConfigId &&
-        agentType == other.agentType &&
+        agentTier == other.agentTier &&
         transactionType == other.transactionType &&
         feeType == other.feeType &&
         feeAmount == other.feeAmount &&
@@ -131,7 +131,7 @@ class _$FeeConfigResponse extends FeeConfigResponse {
   int get hashCode {
     var _$hash = 0;
     _$hash = $jc(_$hash, feeConfigId.hashCode);
-    _$hash = $jc(_$hash, agentType.hashCode);
+    _$hash = $jc(_$hash, agentTier.hashCode);
     _$hash = $jc(_$hash, transactionType.hashCode);
     _$hash = $jc(_$hash, feeType.hashCode);
     _$hash = $jc(_$hash, feeAmount.hashCode);
@@ -147,7 +147,7 @@ class _$FeeConfigResponse extends FeeConfigResponse {
   String toString() {
     return (newBuiltValueToStringHelper(r'FeeConfigResponse')
           ..add('feeConfigId', feeConfigId)
-          ..add('agentType', agentType)
+          ..add('agentTier', agentTier)
           ..add('transactionType', transactionType)
           ..add('feeType', feeType)
           ..add('feeAmount', feeAmount)
@@ -167,9 +167,9 @@ class FeeConfigResponseBuilder
   String? get feeConfigId => _$this._feeConfigId;
   set feeConfigId(String? feeConfigId) => _$this._feeConfigId = feeConfigId;
 
-  String? _agentType;
-  String? get agentType => _$this._agentType;
-  set agentType(String? agentType) => _$this._agentType = agentType;
+  String? _agentTier;
+  String? get agentTier => _$this._agentTier;
+  set agentTier(String? agentTier) => _$this._agentTier = agentTier;
 
   String? _transactionType;
   String? get transactionType => _$this._transactionType;
@@ -209,7 +209,7 @@ class FeeConfigResponseBuilder
     final $v = _$v;
     if ($v != null) {
       _feeConfigId = $v.feeConfigId;
-      _agentType = $v.agentType;
+      _agentTier = $v.agentTier;
       _transactionType = $v.transactionType;
       _feeType = $v.feeType;
       _feeAmount = $v.feeAmount;
@@ -239,7 +239,7 @@ class FeeConfigResponseBuilder
     final _$result = _$v ??
         _$FeeConfigResponse._(
           feeConfigId: feeConfigId,
-          agentType: agentType,
+          agentTier: agentTier,
           transactionType: transactionType,
           feeType: feeType,
           feeAmount: feeAmount,

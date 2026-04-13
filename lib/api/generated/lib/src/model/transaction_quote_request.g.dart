@@ -6,6 +6,134 @@ part of 'transaction_quote_request.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_CASH_WITHDRAWAL =
+    const TransactionQuoteRequestServiceCodeEnum._('CASH_WITHDRAWAL');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_CASH_DEPOSIT =
+    const TransactionQuoteRequestServiceCodeEnum._('CASH_DEPOSIT');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_BILL_PAYMENT =
+    const TransactionQuoteRequestServiceCodeEnum._('BILL_PAYMENT');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_DUITNOW_TRANSFER =
+    const TransactionQuoteRequestServiceCodeEnum._('DUITNOW_TRANSFER');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_CASHLESS_PAYMENT =
+    const TransactionQuoteRequestServiceCodeEnum._('CASHLESS_PAYMENT');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_PIN_BASED_PURCHASE =
+    const TransactionQuoteRequestServiceCodeEnum._('PIN_BASED_PURCHASE');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_PREPAID_TOPUP =
+    const TransactionQuoteRequestServiceCodeEnum._('PREPAID_TOPUP');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_EWALLET_WITHDRAWAL =
+    const TransactionQuoteRequestServiceCodeEnum._('EWALLET_WITHDRAWAL');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_EWALLET_TOPUP =
+    const TransactionQuoteRequestServiceCodeEnum._('EWALLET_TOPUP');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_ESSP_PURCHASE =
+    const TransactionQuoteRequestServiceCodeEnum._('ESSP_PURCHASE');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_PIN_PURCHASE =
+    const TransactionQuoteRequestServiceCodeEnum._('PIN_PURCHASE');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_RETAIL_SALE =
+    const TransactionQuoteRequestServiceCodeEnum._('RETAIL_SALE');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_HYBRID_CASHBACK =
+    const TransactionQuoteRequestServiceCodeEnum._('HYBRID_CASHBACK');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_BALANCE_INQUIRY =
+    const TransactionQuoteRequestServiceCodeEnum._('BALANCE_INQUIRY');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_JOMPAY =
+    const TransactionQuoteRequestServiceCodeEnum._('JOMPAY');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_ASTRO_RPN =
+    const TransactionQuoteRequestServiceCodeEnum._('ASTRO_RPN');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_TM_RPN =
+    const TransactionQuoteRequestServiceCodeEnum._('TM_RPN');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_CELCOM_TOPUP =
+    const TransactionQuoteRequestServiceCodeEnum._('CELCOM_TOPUP');
+const TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnum_m1TOPUP =
+    const TransactionQuoteRequestServiceCodeEnum._('m1TOPUP');
+
+TransactionQuoteRequestServiceCodeEnum
+    _$transactionQuoteRequestServiceCodeEnumValueOf(String name) {
+  switch (name) {
+    case 'CASH_WITHDRAWAL':
+      return _$transactionQuoteRequestServiceCodeEnum_CASH_WITHDRAWAL;
+    case 'CASH_DEPOSIT':
+      return _$transactionQuoteRequestServiceCodeEnum_CASH_DEPOSIT;
+    case 'BILL_PAYMENT':
+      return _$transactionQuoteRequestServiceCodeEnum_BILL_PAYMENT;
+    case 'DUITNOW_TRANSFER':
+      return _$transactionQuoteRequestServiceCodeEnum_DUITNOW_TRANSFER;
+    case 'CASHLESS_PAYMENT':
+      return _$transactionQuoteRequestServiceCodeEnum_CASHLESS_PAYMENT;
+    case 'PIN_BASED_PURCHASE':
+      return _$transactionQuoteRequestServiceCodeEnum_PIN_BASED_PURCHASE;
+    case 'PREPAID_TOPUP':
+      return _$transactionQuoteRequestServiceCodeEnum_PREPAID_TOPUP;
+    case 'EWALLET_WITHDRAWAL':
+      return _$transactionQuoteRequestServiceCodeEnum_EWALLET_WITHDRAWAL;
+    case 'EWALLET_TOPUP':
+      return _$transactionQuoteRequestServiceCodeEnum_EWALLET_TOPUP;
+    case 'ESSP_PURCHASE':
+      return _$transactionQuoteRequestServiceCodeEnum_ESSP_PURCHASE;
+    case 'PIN_PURCHASE':
+      return _$transactionQuoteRequestServiceCodeEnum_PIN_PURCHASE;
+    case 'RETAIL_SALE':
+      return _$transactionQuoteRequestServiceCodeEnum_RETAIL_SALE;
+    case 'HYBRID_CASHBACK':
+      return _$transactionQuoteRequestServiceCodeEnum_HYBRID_CASHBACK;
+    case 'BALANCE_INQUIRY':
+      return _$transactionQuoteRequestServiceCodeEnum_BALANCE_INQUIRY;
+    case 'JOMPAY':
+      return _$transactionQuoteRequestServiceCodeEnum_JOMPAY;
+    case 'ASTRO_RPN':
+      return _$transactionQuoteRequestServiceCodeEnum_ASTRO_RPN;
+    case 'TM_RPN':
+      return _$transactionQuoteRequestServiceCodeEnum_TM_RPN;
+    case 'CELCOM_TOPUP':
+      return _$transactionQuoteRequestServiceCodeEnum_CELCOM_TOPUP;
+    case 'm1TOPUP':
+      return _$transactionQuoteRequestServiceCodeEnum_m1TOPUP;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<TransactionQuoteRequestServiceCodeEnum>
+    _$transactionQuoteRequestServiceCodeEnumValues = BuiltSet<
+        TransactionQuoteRequestServiceCodeEnum>(const <TransactionQuoteRequestServiceCodeEnum>[
+  _$transactionQuoteRequestServiceCodeEnum_CASH_WITHDRAWAL,
+  _$transactionQuoteRequestServiceCodeEnum_CASH_DEPOSIT,
+  _$transactionQuoteRequestServiceCodeEnum_BILL_PAYMENT,
+  _$transactionQuoteRequestServiceCodeEnum_DUITNOW_TRANSFER,
+  _$transactionQuoteRequestServiceCodeEnum_CASHLESS_PAYMENT,
+  _$transactionQuoteRequestServiceCodeEnum_PIN_BASED_PURCHASE,
+  _$transactionQuoteRequestServiceCodeEnum_PREPAID_TOPUP,
+  _$transactionQuoteRequestServiceCodeEnum_EWALLET_WITHDRAWAL,
+  _$transactionQuoteRequestServiceCodeEnum_EWALLET_TOPUP,
+  _$transactionQuoteRequestServiceCodeEnum_ESSP_PURCHASE,
+  _$transactionQuoteRequestServiceCodeEnum_PIN_PURCHASE,
+  _$transactionQuoteRequestServiceCodeEnum_RETAIL_SALE,
+  _$transactionQuoteRequestServiceCodeEnum_HYBRID_CASHBACK,
+  _$transactionQuoteRequestServiceCodeEnum_BALANCE_INQUIRY,
+  _$transactionQuoteRequestServiceCodeEnum_JOMPAY,
+  _$transactionQuoteRequestServiceCodeEnum_ASTRO_RPN,
+  _$transactionQuoteRequestServiceCodeEnum_TM_RPN,
+  _$transactionQuoteRequestServiceCodeEnum_CELCOM_TOPUP,
+  _$transactionQuoteRequestServiceCodeEnum_m1TOPUP,
+]);
+
 const TransactionQuoteRequestFundingSourceEnum
     _$transactionQuoteRequestFundingSourceEnum_CARD_EMV =
     const TransactionQuoteRequestFundingSourceEnum._('CARD_EMV');
@@ -88,12 +216,81 @@ final BuiltSet<TransactionQuoteRequestBillerRoutingEnum>
   _$transactionQuoteRequestBillerRoutingEnum_OFF_US,
 ]);
 
+Serializer<TransactionQuoteRequestServiceCodeEnum>
+    _$transactionQuoteRequestServiceCodeEnumSerializer =
+    _$TransactionQuoteRequestServiceCodeEnumSerializer();
 Serializer<TransactionQuoteRequestFundingSourceEnum>
     _$transactionQuoteRequestFundingSourceEnumSerializer =
     _$TransactionQuoteRequestFundingSourceEnumSerializer();
 Serializer<TransactionQuoteRequestBillerRoutingEnum>
     _$transactionQuoteRequestBillerRoutingEnumSerializer =
     _$TransactionQuoteRequestBillerRoutingEnumSerializer();
+
+class _$TransactionQuoteRequestServiceCodeEnumSerializer
+    implements PrimitiveSerializer<TransactionQuoteRequestServiceCodeEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'CASH_WITHDRAWAL': 'CASH_WITHDRAWAL',
+    'CASH_DEPOSIT': 'CASH_DEPOSIT',
+    'BILL_PAYMENT': 'BILL_PAYMENT',
+    'DUITNOW_TRANSFER': 'DUITNOW_TRANSFER',
+    'CASHLESS_PAYMENT': 'CASHLESS_PAYMENT',
+    'PIN_BASED_PURCHASE': 'PIN_BASED_PURCHASE',
+    'PREPAID_TOPUP': 'PREPAID_TOPUP',
+    'EWALLET_WITHDRAWAL': 'EWALLET_WITHDRAWAL',
+    'EWALLET_TOPUP': 'EWALLET_TOPUP',
+    'ESSP_PURCHASE': 'ESSP_PURCHASE',
+    'PIN_PURCHASE': 'PIN_PURCHASE',
+    'RETAIL_SALE': 'RETAIL_SALE',
+    'HYBRID_CASHBACK': 'HYBRID_CASHBACK',
+    'BALANCE_INQUIRY': 'BALANCE_INQUIRY',
+    'JOMPAY': 'JOMPAY',
+    'ASTRO_RPN': 'ASTRO_RPN',
+    'TM_RPN': 'TM_RPN',
+    'CELCOM_TOPUP': 'CELCOM_TOPUP',
+    'm1TOPUP': 'M1_TOPUP',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'CASH_WITHDRAWAL': 'CASH_WITHDRAWAL',
+    'CASH_DEPOSIT': 'CASH_DEPOSIT',
+    'BILL_PAYMENT': 'BILL_PAYMENT',
+    'DUITNOW_TRANSFER': 'DUITNOW_TRANSFER',
+    'CASHLESS_PAYMENT': 'CASHLESS_PAYMENT',
+    'PIN_BASED_PURCHASE': 'PIN_BASED_PURCHASE',
+    'PREPAID_TOPUP': 'PREPAID_TOPUP',
+    'EWALLET_WITHDRAWAL': 'EWALLET_WITHDRAWAL',
+    'EWALLET_TOPUP': 'EWALLET_TOPUP',
+    'ESSP_PURCHASE': 'ESSP_PURCHASE',
+    'PIN_PURCHASE': 'PIN_PURCHASE',
+    'RETAIL_SALE': 'RETAIL_SALE',
+    'HYBRID_CASHBACK': 'HYBRID_CASHBACK',
+    'BALANCE_INQUIRY': 'BALANCE_INQUIRY',
+    'JOMPAY': 'JOMPAY',
+    'ASTRO_RPN': 'ASTRO_RPN',
+    'TM_RPN': 'TM_RPN',
+    'CELCOM_TOPUP': 'CELCOM_TOPUP',
+    'M1_TOPUP': 'm1TOPUP',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[
+    TransactionQuoteRequestServiceCodeEnum
+  ];
+  @override
+  final String wireName = 'TransactionQuoteRequestServiceCodeEnum';
+
+  @override
+  Object serialize(Serializers serializers,
+          TransactionQuoteRequestServiceCodeEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  TransactionQuoteRequestServiceCodeEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      TransactionQuoteRequestServiceCodeEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
 
 class _$TransactionQuoteRequestFundingSourceEnumSerializer
     implements PrimitiveSerializer<TransactionQuoteRequestFundingSourceEnum> {
@@ -171,7 +368,7 @@ class _$TransactionQuoteRequestBillerRoutingEnumSerializer
 
 class _$TransactionQuoteRequest extends TransactionQuoteRequest {
   @override
-  final String serviceCode;
+  final TransactionQuoteRequestServiceCodeEnum serviceCode;
   @override
   final String amount;
   @override
@@ -241,9 +438,11 @@ class TransactionQuoteRequestBuilder
         Builder<TransactionQuoteRequest, TransactionQuoteRequestBuilder> {
   _$TransactionQuoteRequest? _$v;
 
-  String? _serviceCode;
-  String? get serviceCode => _$this._serviceCode;
-  set serviceCode(String? serviceCode) => _$this._serviceCode = serviceCode;
+  TransactionQuoteRequestServiceCodeEnum? _serviceCode;
+  TransactionQuoteRequestServiceCodeEnum? get serviceCode =>
+      _$this._serviceCode;
+  set serviceCode(TransactionQuoteRequestServiceCodeEnum? serviceCode) =>
+      _$this._serviceCode = serviceCode;
 
   String? _amount;
   String? get amount => _$this._amount;

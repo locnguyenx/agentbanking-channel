@@ -12,13 +12,13 @@ import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/transaction_quote_request.dart';
 import 'package:agent_api/src/model/transaction_quote_response.dart';
 
-class TransactionControllerSwitchAdapterServiceApi {
+class TransactionControllerRulesServiceApi {
 
   final Dio _dio;
 
   final Serializers _serializers;
 
-  const TransactionControllerSwitchAdapterServiceApi(this._dio, this._serializers);
+  const TransactionControllerRulesServiceApi(this._dio, this._serializers);
 
   /// getTransactionQuote
   /// 

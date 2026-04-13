@@ -12,15 +12,17 @@ part 'transaction_quote_request.g.dart';
 /// TransactionQuoteRequest
 ///
 /// Properties:
-/// * [serviceCode] 
+/// * [serviceCode] - Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
 /// * [amount] 
 /// * [agentId] 
 /// * [fundingSource] 
 /// * [billerRouting] 
 @BuiltValue()
 abstract class TransactionQuoteRequest implements Built<TransactionQuoteRequest, TransactionQuoteRequestBuilder> {
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
   @BuiltValueField(wireName: r'serviceCode')
-  String get serviceCode;
+  TransactionQuoteRequestServiceCodeEnum get serviceCode;
+  // enum serviceCodeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  BALANCE_INQUIRY,  JOMPAY,  ASTRO_RPN,  TM_RPN,  CELCOM_TOPUP,  M1_TOPUP,  };
 
   @BuiltValueField(wireName: r'amount')
   String get amount;
@@ -62,7 +64,7 @@ class _$TransactionQuoteRequestSerializer implements PrimitiveSerializer<Transac
     yield r'serviceCode';
     yield serializers.serialize(
       object.serviceCode,
-      specifiedType: const FullType(String),
+      specifiedType: const FullType(TransactionQuoteRequestServiceCodeEnum),
     );
     yield r'amount';
     yield serializers.serialize(
@@ -112,8 +114,8 @@ class _$TransactionQuoteRequestSerializer implements PrimitiveSerializer<Transac
         case r'serviceCode':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(TransactionQuoteRequestServiceCodeEnum),
+          ) as TransactionQuoteRequestServiceCodeEnum;
           result.serviceCode = valueDes;
           break;
         case r'amount':
@@ -171,6 +173,74 @@ class _$TransactionQuoteRequestSerializer implements PrimitiveSerializer<Transac
     );
     return result.build();
   }
+}
+
+class TransactionQuoteRequestServiceCodeEnum extends EnumClass {
+
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'CASH_WITHDRAWAL')
+  static const TransactionQuoteRequestServiceCodeEnum CASH_WITHDRAWAL = _$transactionQuoteRequestServiceCodeEnum_CASH_WITHDRAWAL;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'CASH_DEPOSIT')
+  static const TransactionQuoteRequestServiceCodeEnum CASH_DEPOSIT = _$transactionQuoteRequestServiceCodeEnum_CASH_DEPOSIT;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'BILL_PAYMENT')
+  static const TransactionQuoteRequestServiceCodeEnum BILL_PAYMENT = _$transactionQuoteRequestServiceCodeEnum_BILL_PAYMENT;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'DUITNOW_TRANSFER')
+  static const TransactionQuoteRequestServiceCodeEnum DUITNOW_TRANSFER = _$transactionQuoteRequestServiceCodeEnum_DUITNOW_TRANSFER;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'CASHLESS_PAYMENT')
+  static const TransactionQuoteRequestServiceCodeEnum CASHLESS_PAYMENT = _$transactionQuoteRequestServiceCodeEnum_CASHLESS_PAYMENT;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'PIN_BASED_PURCHASE')
+  static const TransactionQuoteRequestServiceCodeEnum PIN_BASED_PURCHASE = _$transactionQuoteRequestServiceCodeEnum_PIN_BASED_PURCHASE;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'PREPAID_TOPUP')
+  static const TransactionQuoteRequestServiceCodeEnum PREPAID_TOPUP = _$transactionQuoteRequestServiceCodeEnum_PREPAID_TOPUP;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'EWALLET_WITHDRAWAL')
+  static const TransactionQuoteRequestServiceCodeEnum EWALLET_WITHDRAWAL = _$transactionQuoteRequestServiceCodeEnum_EWALLET_WITHDRAWAL;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'EWALLET_TOPUP')
+  static const TransactionQuoteRequestServiceCodeEnum EWALLET_TOPUP = _$transactionQuoteRequestServiceCodeEnum_EWALLET_TOPUP;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'ESSP_PURCHASE')
+  static const TransactionQuoteRequestServiceCodeEnum ESSP_PURCHASE = _$transactionQuoteRequestServiceCodeEnum_ESSP_PURCHASE;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'PIN_PURCHASE')
+  static const TransactionQuoteRequestServiceCodeEnum PIN_PURCHASE = _$transactionQuoteRequestServiceCodeEnum_PIN_PURCHASE;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'RETAIL_SALE')
+  static const TransactionQuoteRequestServiceCodeEnum RETAIL_SALE = _$transactionQuoteRequestServiceCodeEnum_RETAIL_SALE;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'HYBRID_CASHBACK')
+  static const TransactionQuoteRequestServiceCodeEnum HYBRID_CASHBACK = _$transactionQuoteRequestServiceCodeEnum_HYBRID_CASHBACK;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'BALANCE_INQUIRY')
+  static const TransactionQuoteRequestServiceCodeEnum BALANCE_INQUIRY = _$transactionQuoteRequestServiceCodeEnum_BALANCE_INQUIRY;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'JOMPAY')
+  static const TransactionQuoteRequestServiceCodeEnum JOMPAY = _$transactionQuoteRequestServiceCodeEnum_JOMPAY;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'ASTRO_RPN')
+  static const TransactionQuoteRequestServiceCodeEnum ASTRO_RPN = _$transactionQuoteRequestServiceCodeEnum_ASTRO_RPN;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'TM_RPN')
+  static const TransactionQuoteRequestServiceCodeEnum TM_RPN = _$transactionQuoteRequestServiceCodeEnum_TM_RPN;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'CELCOM_TOPUP')
+  static const TransactionQuoteRequestServiceCodeEnum CELCOM_TOPUP = _$transactionQuoteRequestServiceCodeEnum_CELCOM_TOPUP;
+  /// Service code for the transaction. Legacy codes (JOMPAY, ASTRO_RPN, TM_RPN, CELCOM_TOPUP, M1_TOPUP) are mapped to canonical types.
+  @BuiltValueEnumConst(wireName: r'M1_TOPUP')
+  static const TransactionQuoteRequestServiceCodeEnum m1TOPUP = _$transactionQuoteRequestServiceCodeEnum_m1TOPUP;
+
+  static Serializer<TransactionQuoteRequestServiceCodeEnum> get serializer => _$transactionQuoteRequestServiceCodeEnumSerializer;
+
+  const TransactionQuoteRequestServiceCodeEnum._(String name): super(name);
+
+  static BuiltSet<TransactionQuoteRequestServiceCodeEnum> get values => _$transactionQuoteRequestServiceCodeEnumValues;
+  static TransactionQuoteRequestServiceCodeEnum valueOf(String name) => _$transactionQuoteRequestServiceCodeEnumValueOf(name);
 }
 
 class TransactionQuoteRequestFundingSourceEnum extends EnumClass {

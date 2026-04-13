@@ -28,6 +28,8 @@ const TransactionType _$PIN_PURCHASE = const TransactionType._('PIN_PURCHASE');
 const TransactionType _$RETAIL_SALE = const TransactionType._('RETAIL_SALE');
 const TransactionType _$HYBRID_CASHBACK =
     const TransactionType._('HYBRID_CASHBACK');
+const TransactionType _$BALANCE_INQUIRY =
+    const TransactionType._('BALANCE_INQUIRY');
 
 TransactionType _$valueOf(String name) {
   switch (name) {
@@ -57,6 +59,8 @@ TransactionType _$valueOf(String name) {
       return _$RETAIL_SALE;
     case 'HYBRID_CASHBACK':
       return _$HYBRID_CASHBACK;
+    case 'BALANCE_INQUIRY':
+      return _$BALANCE_INQUIRY;
     default:
       throw ArgumentError(name);
   }
@@ -77,6 +81,7 @@ final BuiltSet<TransactionType> _$values =
   _$PIN_PURCHASE,
   _$RETAIL_SALE,
   _$HYBRID_CASHBACK,
+  _$BALANCE_INQUIRY,
 ]);
 
 class _$TransactionTypeMeta {
@@ -94,6 +99,7 @@ class _$TransactionTypeMeta {
   TransactionType get PIN_PURCHASE => _$PIN_PURCHASE;
   TransactionType get RETAIL_SALE => _$RETAIL_SALE;
   TransactionType get HYBRID_CASHBACK => _$HYBRID_CASHBACK;
+  TransactionType get BALANCE_INQUIRY => _$BALANCE_INQUIRY;
   TransactionType valueOf(String name) => _$valueOf(name);
   BuiltSet<TransactionType> get values => _$values;
 }
@@ -122,6 +128,7 @@ class _$TransactionTypeSerializer
     'PIN_PURCHASE': 'PIN_PURCHASE',
     'RETAIL_SALE': 'RETAIL_SALE',
     'HYBRID_CASHBACK': 'HYBRID_CASHBACK',
+    'BALANCE_INQUIRY': 'BALANCE_INQUIRY',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'CASH_WITHDRAWAL': 'CASH_WITHDRAWAL',
@@ -137,6 +144,7 @@ class _$TransactionTypeSerializer
     'PIN_PURCHASE': 'PIN_PURCHASE',
     'RETAIL_SALE': 'RETAIL_SALE',
     'HYBRID_CASHBACK': 'HYBRID_CASHBACK',
+    'BALANCE_INQUIRY': 'BALANCE_INQUIRY',
   };
 
   @override

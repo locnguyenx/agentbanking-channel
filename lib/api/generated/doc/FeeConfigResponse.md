@@ -9,7 +9,7 @@ import 'package:agent_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **feeConfigId** | **String** |  | [optional] 
-**agentType** | **String** |  | [optional] 
+**agentTier** | **String** |  | [optional] 
 **transactionType** | **String** |  | [optional] 
 **feeType** | **String** |  | [optional] 
 **feeAmount** | **String** |  | [optional] 

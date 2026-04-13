@@ -12,8 +12,8 @@ part 'fee_config_request.g.dart';
 /// FeeConfigRequest
 ///
 /// Properties:
-/// * [agentType] 
-/// * [transactionType] 
+/// * [agentTier] 
+/// * [transactionType] - Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
 /// * [feeType] 
 /// * [feeAmount] 
 /// * [percentage] 
@@ -24,13 +24,14 @@ part 'fee_config_request.g.dart';
 /// * [effectiveTo] 
 @BuiltValue()
 abstract class FeeConfigRequest implements Built<FeeConfigRequest, FeeConfigRequestBuilder> {
-  @BuiltValueField(wireName: r'agentType')
-  FeeConfigRequestAgentTypeEnum get agentType;
-  // enum agentTypeEnum {  MICRO,  STANDARD,  PREMIER,  };
+  @BuiltValueField(wireName: r'agentTier')
+  FeeConfigRequestAgentTierEnum get agentTier;
+  // enum agentTierEnum {  MICRO,  STANDARD,  PREMIER,  };
 
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueField(wireName: r'transactionType')
   FeeConfigRequestTransactionTypeEnum get transactionType;
-  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BALANCE_INQUIRY,  DUITNOW_TRANSFER,  JOMPAY,  CELCOM_TOPUP,  M1_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  };
+  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BALANCE_INQUIRY,  DUITNOW_TRANSFER,  BILL_PAYMENT,  JOMPAY,  ASTRO_RPN,  TM_RPN,  EPF_PAYMENT,  PREPAID_TOPUP,  CELCOM_TOPUP,  M1_TOPUP,  SARAWAK_PAY_WITHDRAWAL,  SARAWAK_PAY_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  RETAIL_SALE,  HYBRID_CASHBACK,  };
 
   @BuiltValueField(wireName: r'feeType')
   FeeConfigRequestFeeTypeEnum get feeType;
@@ -81,10 +82,10 @@ class _$FeeConfigRequestSerializer implements PrimitiveSerializer<FeeConfigReque
     FeeConfigRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'agentType';
+    yield r'agentTier';
     yield serializers.serialize(
-      object.agentType,
-      specifiedType: const FullType(FeeConfigRequestAgentTypeEnum),
+      object.agentTier,
+      specifiedType: const FullType(FeeConfigRequestAgentTierEnum),
     );
     yield r'transactionType';
     yield serializers.serialize(
@@ -164,12 +165,12 @@ class _$FeeConfigRequestSerializer implements PrimitiveSerializer<FeeConfigReque
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
-        case r'agentType':
+        case r'agentTier':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(FeeConfigRequestAgentTypeEnum),
-          ) as FeeConfigRequestAgentTypeEnum;
-          result.agentType = valueDes;
+            specifiedType: const FullType(FeeConfigRequestAgentTierEnum),
+          ) as FeeConfigRequestAgentTierEnum;
+          result.agentTier = valueDes;
           break;
         case r'transactionType':
           final valueDes = serializers.deserialize(
@@ -263,43 +264,91 @@ class _$FeeConfigRequestSerializer implements PrimitiveSerializer<FeeConfigReque
   }
 }
 
-class FeeConfigRequestAgentTypeEnum extends EnumClass {
+class FeeConfigRequestAgentTierEnum extends EnumClass {
 
   @BuiltValueEnumConst(wireName: r'MICRO')
-  static const FeeConfigRequestAgentTypeEnum MICRO = _$feeConfigRequestAgentTypeEnum_MICRO;
+  static const FeeConfigRequestAgentTierEnum MICRO = _$feeConfigRequestAgentTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
-  static const FeeConfigRequestAgentTypeEnum STANDARD = _$feeConfigRequestAgentTypeEnum_STANDARD;
+  static const FeeConfigRequestAgentTierEnum STANDARD = _$feeConfigRequestAgentTierEnum_STANDARD;
   @BuiltValueEnumConst(wireName: r'PREMIER')
-  static const FeeConfigRequestAgentTypeEnum PREMIER = _$feeConfigRequestAgentTypeEnum_PREMIER;
+  static const FeeConfigRequestAgentTierEnum PREMIER = _$feeConfigRequestAgentTierEnum_PREMIER;
 
-  static Serializer<FeeConfigRequestAgentTypeEnum> get serializer => _$feeConfigRequestAgentTypeEnumSerializer;
+  static Serializer<FeeConfigRequestAgentTierEnum> get serializer => _$feeConfigRequestAgentTierEnumSerializer;
 
-  const FeeConfigRequestAgentTypeEnum._(String name): super(name);
+  const FeeConfigRequestAgentTierEnum._(String name): super(name);
 
-  static BuiltSet<FeeConfigRequestAgentTypeEnum> get values => _$feeConfigRequestAgentTypeEnumValues;
-  static FeeConfigRequestAgentTypeEnum valueOf(String name) => _$feeConfigRequestAgentTypeEnumValueOf(name);
+  static BuiltSet<FeeConfigRequestAgentTierEnum> get values => _$feeConfigRequestAgentTierEnumValues;
+  static FeeConfigRequestAgentTierEnum valueOf(String name) => _$feeConfigRequestAgentTierEnumValueOf(name);
 }
 
 class FeeConfigRequestTransactionTypeEnum extends EnumClass {
 
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'CASH_WITHDRAWAL')
   static const FeeConfigRequestTransactionTypeEnum CASH_WITHDRAWAL = _$feeConfigRequestTransactionTypeEnum_CASH_WITHDRAWAL;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'CASH_DEPOSIT')
   static const FeeConfigRequestTransactionTypeEnum CASH_DEPOSIT = _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'BALANCE_INQUIRY')
   static const FeeConfigRequestTransactionTypeEnum BALANCE_INQUIRY = _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'DUITNOW_TRANSFER')
   static const FeeConfigRequestTransactionTypeEnum DUITNOW_TRANSFER = _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'BILL_PAYMENT')
+  static const FeeConfigRequestTransactionTypeEnum BILL_PAYMENT = _$feeConfigRequestTransactionTypeEnum_BILL_PAYMENT;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'JOMPAY')
   static const FeeConfigRequestTransactionTypeEnum JOMPAY = _$feeConfigRequestTransactionTypeEnum_JOMPAY;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'ASTRO_RPN')
+  static const FeeConfigRequestTransactionTypeEnum ASTRO_RPN = _$feeConfigRequestTransactionTypeEnum_ASTRO_RPN;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'TM_RPN')
+  static const FeeConfigRequestTransactionTypeEnum TM_RPN = _$feeConfigRequestTransactionTypeEnum_TM_RPN;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'EPF_PAYMENT')
+  static const FeeConfigRequestTransactionTypeEnum EPF_PAYMENT = _$feeConfigRequestTransactionTypeEnum_EPF_PAYMENT;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'PREPAID_TOPUP')
+  static const FeeConfigRequestTransactionTypeEnum PREPAID_TOPUP = _$feeConfigRequestTransactionTypeEnum_PREPAID_TOPUP;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'CELCOM_TOPUP')
   static const FeeConfigRequestTransactionTypeEnum CELCOM_TOPUP = _$feeConfigRequestTransactionTypeEnum_CELCOM_TOPUP;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'M1_TOPUP')
   static const FeeConfigRequestTransactionTypeEnum m1TOPUP = _$feeConfigRequestTransactionTypeEnum_m1TOPUP;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'SARAWAK_PAY_WITHDRAWAL')
+  static const FeeConfigRequestTransactionTypeEnum SARAWAK_PAY_WITHDRAWAL = _$feeConfigRequestTransactionTypeEnum_SARAWAK_PAY_WITHDRAWAL;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'SARAWAK_PAY_TOPUP')
+  static const FeeConfigRequestTransactionTypeEnum SARAWAK_PAY_TOPUP = _$feeConfigRequestTransactionTypeEnum_SARAWAK_PAY_TOPUP;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'ESSP_PURCHASE')
   static const FeeConfigRequestTransactionTypeEnum ESSP_PURCHASE = _$feeConfigRequestTransactionTypeEnum_ESSP_PURCHASE;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'PIN_PURCHASE')
   static const FeeConfigRequestTransactionTypeEnum PIN_PURCHASE = _$feeConfigRequestTransactionTypeEnum_PIN_PURCHASE;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'CASHLESS_PAYMENT')
+  static const FeeConfigRequestTransactionTypeEnum CASHLESS_PAYMENT = _$feeConfigRequestTransactionTypeEnum_CASHLESS_PAYMENT;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'PIN_BASED_PURCHASE')
+  static const FeeConfigRequestTransactionTypeEnum PIN_BASED_PURCHASE = _$feeConfigRequestTransactionTypeEnum_PIN_BASED_PURCHASE;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'EWALLET_WITHDRAWAL')
+  static const FeeConfigRequestTransactionTypeEnum EWALLET_WITHDRAWAL = _$feeConfigRequestTransactionTypeEnum_EWALLET_WITHDRAWAL;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'EWALLET_TOPUP')
+  static const FeeConfigRequestTransactionTypeEnum EWALLET_TOPUP = _$feeConfigRequestTransactionTypeEnum_EWALLET_TOPUP;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'RETAIL_SALE')
+  static const FeeConfigRequestTransactionTypeEnum RETAIL_SALE = _$feeConfigRequestTransactionTypeEnum_RETAIL_SALE;
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'HYBRID_CASHBACK')
+  static const FeeConfigRequestTransactionTypeEnum HYBRID_CASHBACK = _$feeConfigRequestTransactionTypeEnum_HYBRID_CASHBACK;
 
   static Serializer<FeeConfigRequestTransactionTypeEnum> get serializer => _$feeConfigRequestTransactionTypeEnumSerializer;
 

@@ -38,6 +38,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CashBackResponse] as data
   /// Throws [DioException] if API call or serialization fails
+  @Deprecated('This operation has been deprecated')
   Future<Response<CashBackResponse>> processCashBack({ 
     required CashBackCommand cashBackCommand,
     CancelToken? cancelToken,
@@ -139,6 +140,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [PinPurchaseResponse] as data
   /// Throws [DioException] if API call or serialization fails
+  @Deprecated('This operation has been deprecated')
   Future<Response<PinPurchaseResponse>> processPinPurchase({ 
     required PinPurchaseCommand pinPurchaseCommand,
     CancelToken? cancelToken,
@@ -240,6 +242,7 @@ class MerchantControllerLedgerServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [RetailSaleResponse] as data
   /// Throws [DioException] if API call or serialization fails
+  @Deprecated('This operation has been deprecated')
   Future<Response<RetailSaleResponse>> processRetailSale({ 
     required RetailSaleCommand retailSaleCommand,
     CancelToken? cancelToken,

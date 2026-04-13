@@ -609,7 +609,7 @@ class LedgerControllerLedgerServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/backoffice/transactions';
+    final _path = r'/api/v1/backoffice/ledger-transactions';
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{
