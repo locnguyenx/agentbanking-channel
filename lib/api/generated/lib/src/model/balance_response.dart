@@ -12,34 +12,18 @@ part 'balance_response.g.dart';
 ///
 /// Properties:
 /// * [agentId] 
-/// * [availableBalance] 
-/// * [ledgerBalance] 
-/// * [pendingBalance] 
+/// * [balance] 
 /// * [currency] 
-/// * [lastTransactionId] 
-/// * [lastUpdated] 
 @BuiltValue()
 abstract class BalanceResponse implements Built<BalanceResponse, BalanceResponseBuilder> {
   @BuiltValueField(wireName: r'agentId')
   String? get agentId;
 
-  @BuiltValueField(wireName: r'availableBalance')
-  String? get availableBalance;
-
-  @BuiltValueField(wireName: r'ledgerBalance')
-  String? get ledgerBalance;
-
-  @BuiltValueField(wireName: r'pendingBalance')
-  String? get pendingBalance;
+  @BuiltValueField(wireName: r'balance')
+  num? get balance;
 
   @BuiltValueField(wireName: r'currency')
   String? get currency;
-
-  @BuiltValueField(wireName: r'lastTransactionId')
-  String? get lastTransactionId;
-
-  @BuiltValueField(wireName: r'lastUpdated')
-  DateTime? get lastUpdated;
 
   BalanceResponse._();
 
@@ -71,25 +55,11 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
         specifiedType: const FullType(String),
       );
     }
-    if (object.availableBalance != null) {
-      yield r'availableBalance';
+    if (object.balance != null) {
+      yield r'balance';
       yield serializers.serialize(
-        object.availableBalance,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.ledgerBalance != null) {
-      yield r'ledgerBalance';
-      yield serializers.serialize(
-        object.ledgerBalance,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.pendingBalance != null) {
-      yield r'pendingBalance';
-      yield serializers.serialize(
-        object.pendingBalance,
-        specifiedType: const FullType(String),
+        object.balance,
+        specifiedType: const FullType(num),
       );
     }
     if (object.currency != null) {
@@ -97,20 +67,6 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
       yield serializers.serialize(
         object.currency,
         specifiedType: const FullType(String),
-      );
-    }
-    if (object.lastTransactionId != null) {
-      yield r'lastTransactionId';
-      yield serializers.serialize(
-        object.lastTransactionId,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.lastUpdated != null) {
-      yield r'lastUpdated';
-      yield serializers.serialize(
-        object.lastUpdated,
-        specifiedType: const FullType(DateTime),
       );
     }
   }
@@ -143,26 +99,12 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
           ) as String;
           result.agentId = valueDes;
           break;
-        case r'availableBalance':
+        case r'balance':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.availableBalance = valueDes;
-          break;
-        case r'ledgerBalance':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.ledgerBalance = valueDes;
-          break;
-        case r'pendingBalance':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.pendingBalance = valueDes;
+            specifiedType: const FullType(num),
+          ) as num;
+          result.balance = valueDes;
           break;
         case r'currency':
           final valueDes = serializers.deserialize(
@@ -170,20 +112,6 @@ class _$BalanceResponseSerializer implements PrimitiveSerializer<BalanceResponse
             specifiedType: const FullType(String),
           ) as String;
           result.currency = valueDes;
-          break;
-        case r'lastTransactionId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.lastTransactionId = valueDes;
-          break;
-        case r'lastUpdated':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.lastUpdated = valueDes;
           break;
         default:
           unhandled.add(key);

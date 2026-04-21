@@ -59,10 +59,10 @@ abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilde
   String? get address;
 
   @BuiltValueField(wireName: r'createdAt')
-  DateTime? get createdAt;
+  String? get createdAt;
 
   @BuiltValueField(wireName: r'updatedAt')
-  DateTime? get updatedAt;
+  String? get updatedAt;
 
   AgentResponse._();
 
@@ -161,14 +161,14 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
       yield r'createdAt';
       yield serializers.serialize(
         object.createdAt,
-        specifiedType: const FullType(DateTime),
+        specifiedType: const FullType(String),
       );
     }
     if (object.updatedAt != null) {
       yield r'updatedAt';
       yield serializers.serialize(
         object.updatedAt,
-        specifiedType: const FullType(DateTime),
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -267,15 +267,15 @@ class _$AgentResponseSerializer implements PrimitiveSerializer<AgentResponse> {
         case r'createdAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
+            specifiedType: const FullType(String),
+          ) as String;
           result.createdAt = valueDes;
           break;
         case r'updatedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
+            specifiedType: const FullType(String),
+          ) as String;
           result.updatedAt = valueDes;
           break;
         default:

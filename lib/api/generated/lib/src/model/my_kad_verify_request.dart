@@ -24,7 +24,7 @@ abstract class MyKadVerifyRequest implements Built<MyKadVerifyRequest, MyKadVeri
 
   /// Full name from MyKad
   @BuiltValueField(wireName: r'name')
-  String get name;
+  String? get name;
 
   @BuiltValueField(wireName: r'dateOfBirth')
   Date? get dateOfBirth;
@@ -60,11 +60,13 @@ class _$MyKadVerifyRequestSerializer implements PrimitiveSerializer<MyKadVerifyR
       object.mykadNumber,
       specifiedType: const FullType(String),
     );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
+    if (object.name != null) {
+      yield r'name';
+      yield serializers.serialize(
+        object.name,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.dateOfBirth != null) {
       yield r'dateOfBirth';
       yield serializers.serialize(

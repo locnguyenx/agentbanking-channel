@@ -13,10 +13,11 @@ part 'transaction_start_request.g.dart';
 /// TransactionStartRequest
 ///
 /// Properties:
+/// * [idempotencyKey] - Unique key to prevent duplicate transactions.
 /// * [transactionType] 
 /// * [agentId] - Unique identifier of the agent
 /// * [amount] - Transaction amount in MYR
-/// * [idempotencyKey] - Optional unique key to prevent duplicate transactions. If not provided, server will generate one.
+/// * [fundingSource] - Source of funds for the transaction.
 /// * [pan] - Card number (PAN) - required for CASH_WITHDRAWAL
 /// * [pinBlock] - Encrypted PIN block - required for CASH_WITHDRAWAL
 /// * [customerCardMasked] - Masked card number for display (e.g., 411111******1111)
@@ -34,21 +35,26 @@ part 'transaction_start_request.g.dart';
 /// * [agentTier] - Agent tier level
 @BuiltValue()
 abstract class TransactionStartRequest implements Built<TransactionStartRequest, TransactionStartRequestBuilder> {
+  /// Unique key to prevent duplicate transactions.
+  @BuiltValueField(wireName: r'idempotencyKey')
+  String get idempotencyKey;
+
   @BuiltValueField(wireName: r'transactionType')
   TransactionType get transactionType;
   // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  };
 
   /// Unique identifier of the agent
   @BuiltValueField(wireName: r'agentId')
-  String get agentId;
+  String? get agentId;
 
   /// Transaction amount in MYR
   @BuiltValueField(wireName: r'amount')
   double get amount;
 
-  /// Optional unique key to prevent duplicate transactions. If not provided, server will generate one.
-  @BuiltValueField(wireName: r'idempotencyKey')
-  String get idempotencyKey;
+  /// Source of funds for the transaction.
+  @BuiltValueField(wireName: r'fundingSource')
+  TransactionStartRequestFundingSourceEnum get fundingSource;
+  // enum fundingSourceEnum {  CASH,  ACCOUNT,  MOBILE,  };
 
   /// Card number (PAN) - required for CASH_WITHDRAWAL
   @BuiltValueField(wireName: r'pan')
@@ -136,25 +142,32 @@ class _$TransactionStartRequestSerializer implements PrimitiveSerializer<Transac
     TransactionStartRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    yield r'idempotencyKey';
+    yield serializers.serialize(
+      object.idempotencyKey,
+      specifiedType: const FullType(String),
+    );
     yield r'transactionType';
     yield serializers.serialize(
       object.transactionType,
       specifiedType: const FullType(TransactionType),
     );
-    yield r'agentId';
-    yield serializers.serialize(
-      object.agentId,
-      specifiedType: const FullType(String),
-    );
+    if (object.agentId != null) {
+      yield r'agentId';
+      yield serializers.serialize(
+        object.agentId,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'amount';
     yield serializers.serialize(
       object.amount,
       specifiedType: const FullType(double),
     );
-    yield r'idempotencyKey';
+    yield r'fundingSource';
     yield serializers.serialize(
-      object.idempotencyKey,
-      specifiedType: const FullType(String),
+      object.fundingSource,
+      specifiedType: const FullType(TransactionStartRequestFundingSourceEnum),
     );
     if (object.pan != null) {
       yield r'pan';
@@ -284,6 +297,13 @@ class _$TransactionStartRequestSerializer implements PrimitiveSerializer<Transac
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'idempotencyKey':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.idempotencyKey = valueDes;
+          break;
         case r'transactionType':
           final valueDes = serializers.deserialize(
             value,
@@ -305,12 +325,12 @@ class _$TransactionStartRequestSerializer implements PrimitiveSerializer<Transac
           ) as double;
           result.amount = valueDes;
           break;
-        case r'idempotencyKey':
+        case r'fundingSource':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.idempotencyKey = valueDes;
+            specifiedType: const FullType(TransactionStartRequestFundingSourceEnum),
+          ) as TransactionStartRequestFundingSourceEnum;
+          result.fundingSource = valueDes;
           break;
         case r'pan':
           final valueDes = serializers.deserialize(
@@ -444,6 +464,26 @@ class _$TransactionStartRequestSerializer implements PrimitiveSerializer<Transac
     );
     return result.build();
   }
+}
+
+class TransactionStartRequestFundingSourceEnum extends EnumClass {
+
+  /// Source of funds for the transaction.
+  @BuiltValueEnumConst(wireName: r'CASH')
+  static const TransactionStartRequestFundingSourceEnum CASH = _$transactionStartRequestFundingSourceEnum_CASH;
+  /// Source of funds for the transaction.
+  @BuiltValueEnumConst(wireName: r'ACCOUNT')
+  static const TransactionStartRequestFundingSourceEnum ACCOUNT = _$transactionStartRequestFundingSourceEnum_ACCOUNT;
+  /// Source of funds for the transaction.
+  @BuiltValueEnumConst(wireName: r'MOBILE')
+  static const TransactionStartRequestFundingSourceEnum MOBILE = _$transactionStartRequestFundingSourceEnum_MOBILE;
+
+  static Serializer<TransactionStartRequestFundingSourceEnum> get serializer => _$transactionStartRequestFundingSourceEnumSerializer;
+
+  const TransactionStartRequestFundingSourceEnum._(String name): super(name);
+
+  static BuiltSet<TransactionStartRequestFundingSourceEnum> get values => _$transactionStartRequestFundingSourceEnumValues;
+  static TransactionStartRequestFundingSourceEnum valueOf(String name) => _$transactionStartRequestFundingSourceEnumValueOf(name);
 }
 
 class TransactionStartRequestProxyTypeEnum extends EnumClass {

@@ -8,32 +8,29 @@ part of 'settlement_response.dart';
 
 class _$SettlementResponse extends SettlementResponse {
   @override
-  final String? settlementId;
+  final BuiltList<BuiltMap<String, JsonObject?>>? transactions;
   @override
-  final String? agentId;
+  final num? totalDebits;
+  @override
+  final num? totalCredits;
+  @override
+  final num? totalCommissions;
+  @override
+  final num? netAmount;
   @override
   final Date? date;
-  @override
-  final int? totalTransactions;
-  @override
-  final String? totalAmount;
-  @override
-  final String? commission;
-  @override
-  final String? status;
 
   factory _$SettlementResponse(
           [void Function(SettlementResponseBuilder)? updates]) =>
       (SettlementResponseBuilder()..update(updates))._build();
 
   _$SettlementResponse._(
-      {this.settlementId,
-      this.agentId,
-      this.date,
-      this.totalTransactions,
-      this.totalAmount,
-      this.commission,
-      this.status})
+      {this.transactions,
+      this.totalDebits,
+      this.totalCredits,
+      this.totalCommissions,
+      this.netAmount,
+      this.date})
       : super._();
   @override
   SettlementResponse rebuild(
@@ -48,25 +45,23 @@ class _$SettlementResponse extends SettlementResponse {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is SettlementResponse &&
-        settlementId == other.settlementId &&
-        agentId == other.agentId &&
-        date == other.date &&
-        totalTransactions == other.totalTransactions &&
-        totalAmount == other.totalAmount &&
-        commission == other.commission &&
-        status == other.status;
+        transactions == other.transactions &&
+        totalDebits == other.totalDebits &&
+        totalCredits == other.totalCredits &&
+        totalCommissions == other.totalCommissions &&
+        netAmount == other.netAmount &&
+        date == other.date;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, settlementId.hashCode);
-    _$hash = $jc(_$hash, agentId.hashCode);
+    _$hash = $jc(_$hash, transactions.hashCode);
+    _$hash = $jc(_$hash, totalDebits.hashCode);
+    _$hash = $jc(_$hash, totalCredits.hashCode);
+    _$hash = $jc(_$hash, totalCommissions.hashCode);
+    _$hash = $jc(_$hash, netAmount.hashCode);
     _$hash = $jc(_$hash, date.hashCode);
-    _$hash = $jc(_$hash, totalTransactions.hashCode);
-    _$hash = $jc(_$hash, totalAmount.hashCode);
-    _$hash = $jc(_$hash, commission.hashCode);
-    _$hash = $jc(_$hash, status.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -74,13 +69,12 @@ class _$SettlementResponse extends SettlementResponse {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'SettlementResponse')
-          ..add('settlementId', settlementId)
-          ..add('agentId', agentId)
-          ..add('date', date)
-          ..add('totalTransactions', totalTransactions)
-          ..add('totalAmount', totalAmount)
-          ..add('commission', commission)
-          ..add('status', status))
+          ..add('transactions', transactions)
+          ..add('totalDebits', totalDebits)
+          ..add('totalCredits', totalCredits)
+          ..add('totalCommissions', totalCommissions)
+          ..add('netAmount', netAmount)
+          ..add('date', date))
         .toString();
   }
 }
@@ -89,34 +83,32 @@ class SettlementResponseBuilder
     implements Builder<SettlementResponse, SettlementResponseBuilder> {
   _$SettlementResponse? _$v;
 
-  String? _settlementId;
-  String? get settlementId => _$this._settlementId;
-  set settlementId(String? settlementId) => _$this._settlementId = settlementId;
+  ListBuilder<BuiltMap<String, JsonObject?>>? _transactions;
+  ListBuilder<BuiltMap<String, JsonObject?>> get transactions =>
+      _$this._transactions ??= ListBuilder<BuiltMap<String, JsonObject?>>();
+  set transactions(ListBuilder<BuiltMap<String, JsonObject?>>? transactions) =>
+      _$this._transactions = transactions;
 
-  String? _agentId;
-  String? get agentId => _$this._agentId;
-  set agentId(String? agentId) => _$this._agentId = agentId;
+  num? _totalDebits;
+  num? get totalDebits => _$this._totalDebits;
+  set totalDebits(num? totalDebits) => _$this._totalDebits = totalDebits;
+
+  num? _totalCredits;
+  num? get totalCredits => _$this._totalCredits;
+  set totalCredits(num? totalCredits) => _$this._totalCredits = totalCredits;
+
+  num? _totalCommissions;
+  num? get totalCommissions => _$this._totalCommissions;
+  set totalCommissions(num? totalCommissions) =>
+      _$this._totalCommissions = totalCommissions;
+
+  num? _netAmount;
+  num? get netAmount => _$this._netAmount;
+  set netAmount(num? netAmount) => _$this._netAmount = netAmount;
 
   Date? _date;
   Date? get date => _$this._date;
   set date(Date? date) => _$this._date = date;
-
-  int? _totalTransactions;
-  int? get totalTransactions => _$this._totalTransactions;
-  set totalTransactions(int? totalTransactions) =>
-      _$this._totalTransactions = totalTransactions;
-
-  String? _totalAmount;
-  String? get totalAmount => _$this._totalAmount;
-  set totalAmount(String? totalAmount) => _$this._totalAmount = totalAmount;
-
-  String? _commission;
-  String? get commission => _$this._commission;
-  set commission(String? commission) => _$this._commission = commission;
-
-  String? _status;
-  String? get status => _$this._status;
-  set status(String? status) => _$this._status = status;
 
   SettlementResponseBuilder() {
     SettlementResponse._defaults(this);
@@ -125,13 +117,12 @@ class SettlementResponseBuilder
   SettlementResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _settlementId = $v.settlementId;
-      _agentId = $v.agentId;
+      _transactions = $v.transactions?.toBuilder();
+      _totalDebits = $v.totalDebits;
+      _totalCredits = $v.totalCredits;
+      _totalCommissions = $v.totalCommissions;
+      _netAmount = $v.netAmount;
       _date = $v.date;
-      _totalTransactions = $v.totalTransactions;
-      _totalAmount = $v.totalAmount;
-      _commission = $v.commission;
-      _status = $v.status;
       _$v = null;
     }
     return this;
@@ -151,16 +142,28 @@ class SettlementResponseBuilder
   SettlementResponse build() => _build();
 
   _$SettlementResponse _build() {
-    final _$result = _$v ??
-        _$SettlementResponse._(
-          settlementId: settlementId,
-          agentId: agentId,
-          date: date,
-          totalTransactions: totalTransactions,
-          totalAmount: totalAmount,
-          commission: commission,
-          status: status,
-        );
+    _$SettlementResponse _$result;
+    try {
+      _$result = _$v ??
+          _$SettlementResponse._(
+            transactions: _transactions?.build(),
+            totalDebits: totalDebits,
+            totalCredits: totalCredits,
+            totalCommissions: totalCommissions,
+            netAmount: netAmount,
+            date: date,
+          );
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'transactions';
+        _transactions?.build();
+      } catch (e) {
+        throw BuiltValueNestedFieldError(
+            r'SettlementResponse', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }

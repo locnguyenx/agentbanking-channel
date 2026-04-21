@@ -155,9 +155,9 @@ class _$AgentResponse extends AgentResponse {
   @override
   final String? address;
   @override
-  final DateTime? createdAt;
+  final String? createdAt;
   @override
-  final DateTime? updatedAt;
+  final String? updatedAt;
 
   factory _$AgentResponse([void Function(AgentResponseBuilder)? updates]) =>
       (AgentResponseBuilder()..update(updates))._build();
@@ -285,13 +285,13 @@ class AgentResponseBuilder
   String? get address => _$this._address;
   set address(String? address) => _$this._address = address;
 
-  DateTime? _createdAt;
-  DateTime? get createdAt => _$this._createdAt;
-  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
+  String? _createdAt;
+  String? get createdAt => _$this._createdAt;
+  set createdAt(String? createdAt) => _$this._createdAt = createdAt;
 
-  DateTime? _updatedAt;
-  DateTime? get updatedAt => _$this._updatedAt;
-  set updatedAt(DateTime? updatedAt) => _$this._updatedAt = updatedAt;
+  String? _updatedAt;
+  String? get updatedAt => _$this._updatedAt;
+  set updatedAt(String? updatedAt) => _$this._updatedAt = updatedAt;
 
   AgentResponseBuilder() {
     AgentResponse._defaults(this);

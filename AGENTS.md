@@ -73,7 +73,7 @@ To decouple the app from specific vendor SDKs (e.g., Sunmi, Pax, Aisino), all ha
 1.  **TLS & Pinning:** Mandatory TLS 1.2+ for all `dio` client traffic. API Certificate SHA-256 hashes are pinned to reject Man-In-The-Middle attacks.
 2.  **Display Obfuscation:** The Flutter app is restricted with `WindowManager.LayoutParams.FLAG_SECURE` on native Android, preventing OS-level screenshots or screen recordings.
 3.  **Encrypted PIN Processing:** The app **never** renders a virtual keyboard for PINs. It strictly delegates PIN capture to the HSM (Hardware Security Module) built into the POS device, which returns an encrypted DUKPT PIN-Block.
-4.  **Zero PII Logging:** A custom Logger intercepts all logs. Regex parsers proactively redact strings matching 16-digit PANs or 12-digit MyKads before writing to console/Crashlytics.
+4.  **Zero PII Logging:** A custom Logger intercepts all logs. Regex parsers proactively redact strings matching 16-digit PAN-INTLs or 12-digit MyKads before writing to console/Crashlytics.
 
 ### 3.2 Anti-Smurfing & Compliance Locks
 When the Backend Rule Engine returns an `ERR_COMPLIANCE_FREEZE` code:
@@ -107,11 +107,9 @@ When the Backend Rule Engine returns an `ERR_COMPLIANCE_FREEZE` code:
 * Rounding: `HALF_UP` to 2 decimal places.
 * Currency: Always `MYR` — validate on all endpoints.
 
-### Audit Trail
-
 ### Security
 * PINs: Hardware-level encryption via HSM. DUKPT PIN blocks. Never decrypted outside HSM.
-* PAN: Masked in all responses and logs (first 6, last 4 digits).
+* PAN: this is ATM card number, don't need to mask, treat it as normal account number. In case of Internation Card, the card number will be store in another field
 * MyKad: Encrypted at rest (AES-256). Never in plaintext logs.
 * TLS 1.2+ for all external traffic.
 * mTLS for internal service-to-service communication.

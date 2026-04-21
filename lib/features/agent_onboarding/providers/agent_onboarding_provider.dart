@@ -9,6 +9,7 @@ import 'package:agent_api/agent_api.dart';
 final agentOnboardingRepositoryProvider = Provider<AgentOnboardingRepository>((ref) {
   return AgentOnboardingRepository(
     agentApi: ref.watch(agentApiProvider),
+    onboardingApi: ref.watch(agentOnboardingApiProvider),
   );
 });
 
@@ -170,9 +171,9 @@ class AgentOnboardingNotifier extends StateNotifier<AgentOnboardingState> {
       }
 
       // BDD Feature 10 S10.2: AML Flag -> Manual Review based on backend status
-      if (response.status == AgentResponseStatusEnum.PENDING) {
+      if (response.status == 'PENDING') {
         state = state.copyWith(status: AgentOnboardingStatus.manualReview);
-      } else if (response.status == AgentResponseStatusEnum.ACTIVE) {
+      } else if (response.status == 'ACTIVE' || response.status == 'SUCCESS') {
         state = state.copyWith(status: AgentOnboardingStatus.activated);
       } else {
         state = state.copyWith(status: AgentOnboardingStatus.activated); // Default success

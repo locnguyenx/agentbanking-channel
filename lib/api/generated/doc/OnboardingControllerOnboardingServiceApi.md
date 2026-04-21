@@ -9,9 +9,9 @@ All URIs are relative to *http://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**biometricMatch**](OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
+[**biometricMatch**](OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/onboarding/biometric-match | 
 [**getKycReviewQueue**](OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
-[**submitApplication**](OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
+[**submitApplicationLegacy**](OnboardingControllerOnboardingServiceApi.md#submitapplicationlegacy) | **POST** /api/v1/onboarding/submit-application-legacy | 
 [**verifyMyKad**](OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
 [**verifyMyKadKyc**](OnboardingControllerOnboardingServiceApi.md#verifymykadkyc) | **POST** /api/v1/kyc/verify | 
 
@@ -100,10 +100,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **submitApplication**
-> ApplicationSubmitResponse submitApplication(applicationSubmitRequest)
+# **submitApplicationLegacy**
+> ApplicationSubmitResponse submitApplicationLegacy(applicationSubmitRequest)
 
 
+
+DEPRECATED: Use /api/v1/onboarding/submit-application instead.
 
 ### Example
 ```dart
@@ -113,10 +115,10 @@ final api = AgentApi().getOnboardingControllerOnboardingServiceApi();
 final ApplicationSubmitRequest applicationSubmitRequest = ; // ApplicationSubmitRequest | 
 
 try {
-    final response = api.submitApplication(applicationSubmitRequest);
+    final response = api.submitApplicationLegacy(applicationSubmitRequest);
     print(response);
 } on DioException catch (e) {
-    print('Exception when calling OnboardingControllerOnboardingServiceApi->submitApplication: $e\n');
+    print('Exception when calling OnboardingControllerOnboardingServiceApi->submitApplicationLegacy: $e\n');
 }
 ```
 

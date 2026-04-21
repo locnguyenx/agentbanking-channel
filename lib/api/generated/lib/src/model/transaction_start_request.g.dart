@@ -6,6 +6,38 @@ part of 'transaction_start_request.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const TransactionStartRequestFundingSourceEnum
+    _$transactionStartRequestFundingSourceEnum_CASH =
+    const TransactionStartRequestFundingSourceEnum._('CASH');
+const TransactionStartRequestFundingSourceEnum
+    _$transactionStartRequestFundingSourceEnum_ACCOUNT =
+    const TransactionStartRequestFundingSourceEnum._('ACCOUNT');
+const TransactionStartRequestFundingSourceEnum
+    _$transactionStartRequestFundingSourceEnum_MOBILE =
+    const TransactionStartRequestFundingSourceEnum._('MOBILE');
+
+TransactionStartRequestFundingSourceEnum
+    _$transactionStartRequestFundingSourceEnumValueOf(String name) {
+  switch (name) {
+    case 'CASH':
+      return _$transactionStartRequestFundingSourceEnum_CASH;
+    case 'ACCOUNT':
+      return _$transactionStartRequestFundingSourceEnum_ACCOUNT;
+    case 'MOBILE':
+      return _$transactionStartRequestFundingSourceEnum_MOBILE;
+    default:
+      throw ArgumentError(name);
+  }
+}
+
+final BuiltSet<TransactionStartRequestFundingSourceEnum>
+    _$transactionStartRequestFundingSourceEnumValues = BuiltSet<
+        TransactionStartRequestFundingSourceEnum>(const <TransactionStartRequestFundingSourceEnum>[
+  _$transactionStartRequestFundingSourceEnum_CASH,
+  _$transactionStartRequestFundingSourceEnum_ACCOUNT,
+  _$transactionStartRequestFundingSourceEnum_MOBILE,
+]);
+
 const TransactionStartRequestProxyTypeEnum
     _$transactionStartRequestProxyTypeEnum_IC =
     const TransactionStartRequestProxyTypeEnum._('IC');
@@ -76,12 +108,49 @@ final BuiltSet<TransactionStartRequestAgentTierEnum>
   _$transactionStartRequestAgentTierEnum_PREMIER,
 ]);
 
+Serializer<TransactionStartRequestFundingSourceEnum>
+    _$transactionStartRequestFundingSourceEnumSerializer =
+    _$TransactionStartRequestFundingSourceEnumSerializer();
 Serializer<TransactionStartRequestProxyTypeEnum>
     _$transactionStartRequestProxyTypeEnumSerializer =
     _$TransactionStartRequestProxyTypeEnumSerializer();
 Serializer<TransactionStartRequestAgentTierEnum>
     _$transactionStartRequestAgentTierEnumSerializer =
     _$TransactionStartRequestAgentTierEnumSerializer();
+
+class _$TransactionStartRequestFundingSourceEnumSerializer
+    implements PrimitiveSerializer<TransactionStartRequestFundingSourceEnum> {
+  static const Map<String, Object> _toWire = const <String, Object>{
+    'CASH': 'CASH',
+    'ACCOUNT': 'ACCOUNT',
+    'MOBILE': 'MOBILE',
+  };
+  static const Map<Object, String> _fromWire = const <Object, String>{
+    'CASH': 'CASH',
+    'ACCOUNT': 'ACCOUNT',
+    'MOBILE': 'MOBILE',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[
+    TransactionStartRequestFundingSourceEnum
+  ];
+  @override
+  final String wireName = 'TransactionStartRequestFundingSourceEnum';
+
+  @override
+  Object serialize(Serializers serializers,
+          TransactionStartRequestFundingSourceEnum object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  TransactionStartRequestFundingSourceEnum deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      TransactionStartRequestFundingSourceEnum.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
+}
 
 class _$TransactionStartRequestProxyTypeEnumSerializer
     implements PrimitiveSerializer<TransactionStartRequestProxyTypeEnum> {
@@ -155,13 +224,15 @@ class _$TransactionStartRequestAgentTierEnumSerializer
 
 class _$TransactionStartRequest extends TransactionStartRequest {
   @override
+  final String idempotencyKey;
+  @override
   final TransactionType transactionType;
   @override
-  final String agentId;
+  final String? agentId;
   @override
   final double amount;
   @override
-  final String idempotencyKey;
+  final TransactionStartRequestFundingSourceEnum fundingSource;
   @override
   final String? pan;
   @override
@@ -198,10 +269,11 @@ class _$TransactionStartRequest extends TransactionStartRequest {
       (TransactionStartRequestBuilder()..update(updates))._build();
 
   _$TransactionStartRequest._(
-      {required this.transactionType,
-      required this.agentId,
+      {required this.idempotencyKey,
+      required this.transactionType,
+      this.agentId,
       required this.amount,
-      required this.idempotencyKey,
+      required this.fundingSource,
       this.pan,
       this.pinBlock,
       this.customerCardMasked,
@@ -231,10 +303,11 @@ class _$TransactionStartRequest extends TransactionStartRequest {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is TransactionStartRequest &&
+        idempotencyKey == other.idempotencyKey &&
         transactionType == other.transactionType &&
         agentId == other.agentId &&
         amount == other.amount &&
-        idempotencyKey == other.idempotencyKey &&
+        fundingSource == other.fundingSource &&
         pan == other.pan &&
         pinBlock == other.pinBlock &&
         customerCardMasked == other.customerCardMasked &&
@@ -255,10 +328,11 @@ class _$TransactionStartRequest extends TransactionStartRequest {
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, idempotencyKey.hashCode);
     _$hash = $jc(_$hash, transactionType.hashCode);
     _$hash = $jc(_$hash, agentId.hashCode);
     _$hash = $jc(_$hash, amount.hashCode);
-    _$hash = $jc(_$hash, idempotencyKey.hashCode);
+    _$hash = $jc(_$hash, fundingSource.hashCode);
     _$hash = $jc(_$hash, pan.hashCode);
     _$hash = $jc(_$hash, pinBlock.hashCode);
     _$hash = $jc(_$hash, customerCardMasked.hashCode);
@@ -281,10 +355,11 @@ class _$TransactionStartRequest extends TransactionStartRequest {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'TransactionStartRequest')
+          ..add('idempotencyKey', idempotencyKey)
           ..add('transactionType', transactionType)
           ..add('agentId', agentId)
           ..add('amount', amount)
-          ..add('idempotencyKey', idempotencyKey)
+          ..add('fundingSource', fundingSource)
           ..add('pan', pan)
           ..add('pinBlock', pinBlock)
           ..add('customerCardMasked', customerCardMasked)
@@ -309,6 +384,11 @@ class TransactionStartRequestBuilder
         Builder<TransactionStartRequest, TransactionStartRequestBuilder> {
   _$TransactionStartRequest? _$v;
 
+  String? _idempotencyKey;
+  String? get idempotencyKey => _$this._idempotencyKey;
+  set idempotencyKey(String? idempotencyKey) =>
+      _$this._idempotencyKey = idempotencyKey;
+
   TransactionType? _transactionType;
   TransactionType? get transactionType => _$this._transactionType;
   set transactionType(TransactionType? transactionType) =>
@@ -322,10 +402,11 @@ class TransactionStartRequestBuilder
   double? get amount => _$this._amount;
   set amount(double? amount) => _$this._amount = amount;
 
-  String? _idempotencyKey;
-  String? get idempotencyKey => _$this._idempotencyKey;
-  set idempotencyKey(String? idempotencyKey) =>
-      _$this._idempotencyKey = idempotencyKey;
+  TransactionStartRequestFundingSourceEnum? _fundingSource;
+  TransactionStartRequestFundingSourceEnum? get fundingSource =>
+      _$this._fundingSource;
+  set fundingSource(TransactionStartRequestFundingSourceEnum? fundingSource) =>
+      _$this._fundingSource = fundingSource;
 
   String? _pan;
   String? get pan => _$this._pan;
@@ -400,10 +481,11 @@ class TransactionStartRequestBuilder
   TransactionStartRequestBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _idempotencyKey = $v.idempotencyKey;
       _transactionType = $v.transactionType;
       _agentId = $v.agentId;
       _amount = $v.amount;
-      _idempotencyKey = $v.idempotencyKey;
+      _fundingSource = $v.fundingSource;
       _pan = $v.pan;
       _pinBlock = $v.pinBlock;
       _customerCardMasked = $v.customerCardMasked;
@@ -440,14 +522,15 @@ class TransactionStartRequestBuilder
   _$TransactionStartRequest _build() {
     final _$result = _$v ??
         _$TransactionStartRequest._(
-          transactionType: BuiltValueNullFieldError.checkNotNull(
-              transactionType, r'TransactionStartRequest', 'transactionType'),
-          agentId: BuiltValueNullFieldError.checkNotNull(
-              agentId, r'TransactionStartRequest', 'agentId'),
-          amount: BuiltValueNullFieldError.checkNotNull(
-              amount, r'TransactionStartRequest', 'amount'),
           idempotencyKey: BuiltValueNullFieldError.checkNotNull(
               idempotencyKey, r'TransactionStartRequest', 'idempotencyKey'),
+          transactionType: BuiltValueNullFieldError.checkNotNull(
+              transactionType, r'TransactionStartRequest', 'transactionType'),
+          agentId: agentId,
+          amount: BuiltValueNullFieldError.checkNotNull(
+              amount, r'TransactionStartRequest', 'amount'),
+          fundingSource: BuiltValueNullFieldError.checkNotNull(
+              fundingSource, r'TransactionStartRequest', 'fundingSource'),
           pan: pan,
           pinBlock: pinBlock,
           customerCardMasked: customerCardMasked,

@@ -9,7 +9,7 @@ class MockCardReader implements ICardReader {
   Future<CardData?> readCard() async {
     await Future.delayed(const Duration(milliseconds: 50));
     return CardData(
-      maskedPan: '411111******1111',
+      pan: '4111222233334444', // Return full PAN as per new guidelines
       cardToken: 'MOCK_TOKEN_EYJ123',
     );
   }

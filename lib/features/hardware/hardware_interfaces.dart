@@ -51,8 +51,8 @@ class MyKadData {
 }
 
 class CardData {
-  final String maskedPan;
+  final String pan;
   final String cardToken; // Provided by Secure Element/HSM
 
-  CardData({required this.maskedPan, required this.cardToken});
+  CardData({required this.pan, required this.cardToken});
 }

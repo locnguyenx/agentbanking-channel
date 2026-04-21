@@ -190,6 +190,28 @@ class _$TransactionStatusResponse extends TransactionStatusResponse {
   final TransactionStatusResponseActionCodeEnum? actionCode;
   @override
   final DateTime? completedAt;
+  @override
+  final String? agentTier;
+  @override
+  final String? billerCode;
+  @override
+  final String? customerCardMasked;
+  @override
+  final String? destinationAccount;
+  @override
+  final JsonObject? errorDetails;
+  @override
+  final double? geofenceLat;
+  @override
+  final double? geofenceLng;
+  @override
+  final String? pendingReason;
+  @override
+  final String? ref1;
+  @override
+  final String? ref2;
+  @override
+  final String? targetBin;
 
   factory _$TransactionStatusResponse(
           [void Function(TransactionStatusResponseBuilder)? updates]) =>
@@ -205,7 +227,18 @@ class _$TransactionStatusResponse extends TransactionStatusResponse {
       this.errorCode,
       this.errorMessage,
       this.actionCode,
-      this.completedAt})
+      this.completedAt,
+      this.agentTier,
+      this.billerCode,
+      this.customerCardMasked,
+      this.destinationAccount,
+      this.errorDetails,
+      this.geofenceLat,
+      this.geofenceLng,
+      this.pendingReason,
+      this.ref1,
+      this.ref2,
+      this.targetBin})
       : super._();
   @override
   TransactionStatusResponse rebuild(
@@ -229,7 +262,18 @@ class _$TransactionStatusResponse extends TransactionStatusResponse {
         errorCode == other.errorCode &&
         errorMessage == other.errorMessage &&
         actionCode == other.actionCode &&
-        completedAt == other.completedAt;
+        completedAt == other.completedAt &&
+        agentTier == other.agentTier &&
+        billerCode == other.billerCode &&
+        customerCardMasked == other.customerCardMasked &&
+        destinationAccount == other.destinationAccount &&
+        errorDetails == other.errorDetails &&
+        geofenceLat == other.geofenceLat &&
+        geofenceLng == other.geofenceLng &&
+        pendingReason == other.pendingReason &&
+        ref1 == other.ref1 &&
+        ref2 == other.ref2 &&
+        targetBin == other.targetBin;
   }
 
   @override
@@ -245,6 +289,17 @@ class _$TransactionStatusResponse extends TransactionStatusResponse {
     _$hash = $jc(_$hash, errorMessage.hashCode);
     _$hash = $jc(_$hash, actionCode.hashCode);
     _$hash = $jc(_$hash, completedAt.hashCode);
+    _$hash = $jc(_$hash, agentTier.hashCode);
+    _$hash = $jc(_$hash, billerCode.hashCode);
+    _$hash = $jc(_$hash, customerCardMasked.hashCode);
+    _$hash = $jc(_$hash, destinationAccount.hashCode);
+    _$hash = $jc(_$hash, errorDetails.hashCode);
+    _$hash = $jc(_$hash, geofenceLat.hashCode);
+    _$hash = $jc(_$hash, geofenceLng.hashCode);
+    _$hash = $jc(_$hash, pendingReason.hashCode);
+    _$hash = $jc(_$hash, ref1.hashCode);
+    _$hash = $jc(_$hash, ref2.hashCode);
+    _$hash = $jc(_$hash, targetBin.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -261,7 +316,18 @@ class _$TransactionStatusResponse extends TransactionStatusResponse {
           ..add('errorCode', errorCode)
           ..add('errorMessage', errorMessage)
           ..add('actionCode', actionCode)
-          ..add('completedAt', completedAt))
+          ..add('completedAt', completedAt)
+          ..add('agentTier', agentTier)
+          ..add('billerCode', billerCode)
+          ..add('customerCardMasked', customerCardMasked)
+          ..add('destinationAccount', destinationAccount)
+          ..add('errorDetails', errorDetails)
+          ..add('geofenceLat', geofenceLat)
+          ..add('geofenceLng', geofenceLng)
+          ..add('pendingReason', pendingReason)
+          ..add('ref1', ref1)
+          ..add('ref2', ref2)
+          ..add('targetBin', targetBin))
         .toString();
   }
 }
@@ -315,6 +381,54 @@ class TransactionStatusResponseBuilder
   DateTime? get completedAt => _$this._completedAt;
   set completedAt(DateTime? completedAt) => _$this._completedAt = completedAt;
 
+  String? _agentTier;
+  String? get agentTier => _$this._agentTier;
+  set agentTier(String? agentTier) => _$this._agentTier = agentTier;
+
+  String? _billerCode;
+  String? get billerCode => _$this._billerCode;
+  set billerCode(String? billerCode) => _$this._billerCode = billerCode;
+
+  String? _customerCardMasked;
+  String? get customerCardMasked => _$this._customerCardMasked;
+  set customerCardMasked(String? customerCardMasked) =>
+      _$this._customerCardMasked = customerCardMasked;
+
+  String? _destinationAccount;
+  String? get destinationAccount => _$this._destinationAccount;
+  set destinationAccount(String? destinationAccount) =>
+      _$this._destinationAccount = destinationAccount;
+
+  JsonObject? _errorDetails;
+  JsonObject? get errorDetails => _$this._errorDetails;
+  set errorDetails(JsonObject? errorDetails) =>
+      _$this._errorDetails = errorDetails;
+
+  double? _geofenceLat;
+  double? get geofenceLat => _$this._geofenceLat;
+  set geofenceLat(double? geofenceLat) => _$this._geofenceLat = geofenceLat;
+
+  double? _geofenceLng;
+  double? get geofenceLng => _$this._geofenceLng;
+  set geofenceLng(double? geofenceLng) => _$this._geofenceLng = geofenceLng;
+
+  String? _pendingReason;
+  String? get pendingReason => _$this._pendingReason;
+  set pendingReason(String? pendingReason) =>
+      _$this._pendingReason = pendingReason;
+
+  String? _ref1;
+  String? get ref1 => _$this._ref1;
+  set ref1(String? ref1) => _$this._ref1 = ref1;
+
+  String? _ref2;
+  String? get ref2 => _$this._ref2;
+  set ref2(String? ref2) => _$this._ref2 = ref2;
+
+  String? _targetBin;
+  String? get targetBin => _$this._targetBin;
+  set targetBin(String? targetBin) => _$this._targetBin = targetBin;
+
   TransactionStatusResponseBuilder() {
     TransactionStatusResponse._defaults(this);
   }
@@ -332,6 +446,17 @@ class TransactionStatusResponseBuilder
       _errorMessage = $v.errorMessage;
       _actionCode = $v.actionCode;
       _completedAt = $v.completedAt;
+      _agentTier = $v.agentTier;
+      _billerCode = $v.billerCode;
+      _customerCardMasked = $v.customerCardMasked;
+      _destinationAccount = $v.destinationAccount;
+      _errorDetails = $v.errorDetails;
+      _geofenceLat = $v.geofenceLat;
+      _geofenceLng = $v.geofenceLng;
+      _pendingReason = $v.pendingReason;
+      _ref1 = $v.ref1;
+      _ref2 = $v.ref2;
+      _targetBin = $v.targetBin;
       _$v = null;
     }
     return this;
@@ -363,6 +488,17 @@ class TransactionStatusResponseBuilder
           errorMessage: errorMessage,
           actionCode: actionCode,
           completedAt: completedAt,
+          agentTier: agentTier,
+          billerCode: billerCode,
+          customerCardMasked: customerCardMasked,
+          destinationAccount: destinationAccount,
+          errorDetails: errorDetails,
+          geofenceLat: geofenceLat,
+          geofenceLng: geofenceLng,
+          pendingReason: pendingReason,
+          ref1: ref1,
+          ref2: ref2,
+          targetBin: targetBin,
         );
     replace(_$result);
     return _$result;

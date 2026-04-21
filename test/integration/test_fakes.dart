@@ -32,7 +32,7 @@ class FakeCardReader implements ICardReader {
   bool shouldFail = false;
 
   FakeCardReader({this.cardDataToReturn, this.shouldFail = false}) {
-    cardDataToReturn ??= CardData(maskedPan: '411111******1111', cardToken: 'FAKE_TOKEN');
+    cardDataToReturn ??= CardData(pan: '4111222233334444', cardToken: 'FAKE_TOKEN');
   }
 
   @override

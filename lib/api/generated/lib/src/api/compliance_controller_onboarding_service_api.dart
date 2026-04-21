@@ -8,6 +8,7 @@ import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
+import 'package:agent_api/src/model/compliance_status_response.dart';
 import 'package:agent_api/src/model/error_response.dart';
 
 class ComplianceControllerOnboardingServiceApi {
@@ -29,9 +30,9 @@ class ComplianceControllerOnboardingServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [String] as data
+  /// Returns a [Future] containing a [Response] with a [ComplianceStatusResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<String>> getComplianceStatus({ 
+  Future<Response<ComplianceStatusResponse>> getComplianceStatus({ 
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -66,11 +67,14 @@ class ComplianceControllerOnboardingServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    String? _responseData;
+    ComplianceStatusResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : rawResponse as String;
+      _responseData = rawResponse == null ? null : _serializers.deserialize(
+        rawResponse,
+        specifiedType: const FullType(ComplianceStatusResponse),
+      ) as ComplianceStatusResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -82,7 +86,7 @@ class ComplianceControllerOnboardingServiceApi {
       );
     }
 
-    return Response<String>(
+    return Response<ComplianceStatusResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

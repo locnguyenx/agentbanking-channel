@@ -139,7 +139,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **listAgents**
-> BuiltList<AgentResponse> listAgents(page, size)
+> AgentListResponse listAgents(page, size)
 
 
 
@@ -168,7 +168,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltList&lt;AgentResponse&gt;**](AgentResponse.md)
+[**AgentListResponse**](AgentListResponse.md)
 
 ### Authorization
 

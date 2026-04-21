@@ -9,13 +9,14 @@ All URIs are relative to *http://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**checkerApproveResolution**](ResolutionControllerOrchestratorServiceApi.md#checkerapproveresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-approve | Checker approves proposed resolution
-[**checkerRejectResolution**](ResolutionControllerOrchestratorServiceApi.md#checkerrejectresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-reject | Checker rejects proposed resolution
-[**makerProposeResolution**](ResolutionControllerOrchestratorServiceApi.md#makerproposeresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/maker-propose | Maker proposes resolution for a transaction
+[**checkerApproveTransaction**](ResolutionControllerOrchestratorServiceApi.md#checkerapprovetransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-approve | Checker approves proposed resolution
+[**checkerRejectTransaction**](ResolutionControllerOrchestratorServiceApi.md#checkerrejecttransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-reject | Checker rejects proposed resolution
+[**listTransactions**](ResolutionControllerOrchestratorServiceApi.md#listtransactions) | **GET** /api/v1/backoffice/transactions | 
+[**makerProposeTransaction**](ResolutionControllerOrchestratorServiceApi.md#makerproposetransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/maker-propose | Maker proposes resolution for a transaction
 
 
-# **checkerApproveResolution**
-> ResolutionResponse checkerApproveResolution(workflowId, checkerActionRequest)
+# **checkerApproveTransaction**
+> ResolutionResponse checkerApproveTransaction(workflowId, checkerActionRequest)
 
 Checker approves proposed resolution
 
@@ -30,10 +31,10 @@ final String workflowId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
 final CheckerActionRequest checkerActionRequest = ; // CheckerActionRequest | 
 
 try {
-    final response = api.checkerApproveResolution(workflowId, checkerActionRequest);
+    final response = api.checkerApproveTransaction(workflowId, checkerActionRequest);
     print(response);
 } on DioException catch (e) {
-    print('Exception when calling ResolutionControllerOrchestratorServiceApi->checkerApproveResolution: $e\n');
+    print('Exception when calling ResolutionControllerOrchestratorServiceApi->checkerApproveTransaction: $e\n');
 }
 ```
 
@@ -59,8 +60,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **checkerRejectResolution**
-> ResolutionResponse checkerRejectResolution(workflowId, checkerActionRequest)
+# **checkerRejectTransaction**
+> ResolutionResponse checkerRejectTransaction(workflowId, checkerActionRequest)
 
 Checker rejects proposed resolution
 
@@ -75,10 +76,10 @@ final String workflowId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
 final CheckerActionRequest checkerActionRequest = ; // CheckerActionRequest | 
 
 try {
-    final response = api.checkerRejectResolution(workflowId, checkerActionRequest);
+    final response = api.checkerRejectTransaction(workflowId, checkerActionRequest);
     print(response);
 } on DioException catch (e) {
-    print('Exception when calling ResolutionControllerOrchestratorServiceApi->checkerRejectResolution: $e\n');
+    print('Exception when calling ResolutionControllerOrchestratorServiceApi->checkerRejectTransaction: $e\n');
 }
 ```
 
@@ -104,8 +105,49 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **makerProposeResolution**
-> ResolutionResponse makerProposeResolution(workflowId, makerProposalRequest)
+# **listTransactions**
+> BackofficeTransactionListResponse listTransactions(status)
+
+
+
+### Example
+```dart
+import 'package:agent_api/api.dart';
+
+final api = AgentApi().getResolutionControllerOrchestratorServiceApi();
+final String status = status_example; // String | 
+
+try {
+    final response = api.listTransactions(status);
+    print(response);
+} on DioException catch (e) {
+    print('Exception when calling ResolutionControllerOrchestratorServiceApi->listTransactions: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **status** | **String**|  | [optional] 
+
+### Return type
+
+[**BackofficeTransactionListResponse**](BackofficeTransactionListResponse.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **makerProposeTransaction**
+> ResolutionResponse makerProposeTransaction(workflowId, makerProposalRequest)
 
 Maker proposes resolution for a transaction
 
@@ -120,10 +162,10 @@ final String workflowId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String |
 final MakerProposalRequest makerProposalRequest = ; // MakerProposalRequest | 
 
 try {
-    final response = api.makerProposeResolution(workflowId, makerProposalRequest);
+    final response = api.makerProposeTransaction(workflowId, makerProposalRequest);
     print(response);
 } on DioException catch (e) {
-    print('Exception when calling ResolutionControllerOrchestratorServiceApi->makerProposeResolution: $e\n');
+    print('Exception when calling ResolutionControllerOrchestratorServiceApi->makerProposeTransaction: $e\n');
 }
 ```
 

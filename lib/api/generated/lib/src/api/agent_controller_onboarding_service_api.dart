@@ -9,11 +9,11 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
+import 'package:agent_api/src/model/agent_list_response.dart';
 import 'package:agent_api/src/model/agent_response.dart';
 import 'package:agent_api/src/model/create_agent_external_request.dart';
 import 'package:agent_api/src/model/error_response.dart';
 import 'package:agent_api/src/model/update_agent_request.dart';
-import 'package:built_collection/built_collection.dart';
 
 class AgentControllerOnboardingServiceApi {
 
@@ -271,9 +271,9 @@ class AgentControllerOnboardingServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BuiltList<AgentResponse>] as data
+  /// Returns a [Future] containing a [Response] with a [AgentListResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BuiltList<AgentResponse>>> listAgents({ 
+  Future<Response<AgentListResponse>> listAgents({ 
     int? page = 0,
     int? size = 20,
     CancelToken? cancelToken,
@@ -316,14 +316,14 @@ class AgentControllerOnboardingServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BuiltList<AgentResponse>? _responseData;
+    AgentListResponse? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BuiltList, [FullType(AgentResponse)]),
-      ) as BuiltList<AgentResponse>;
+        specifiedType: const FullType(AgentListResponse),
+      ) as AgentListResponse;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -335,7 +335,7 @@ class AgentControllerOnboardingServiceApi {
       );
     }
 
-    return Response<BuiltList<AgentResponse>>(
+    return Response<AgentListResponse>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

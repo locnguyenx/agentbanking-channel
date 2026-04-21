@@ -78,7 +78,7 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
   }
 
   @override
-  Future<Response<BalanceResponse>> balanceInquiry({
+  Future<Response<BalanceInquiry200Response>> balanceInquiry({
     required BalanceInquiryExternalRequest balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -90,10 +90,10 @@ class MockLedgerApi extends Mock implements LedgerControllerLedgerServiceApi {
     lastBalanceInquiryRequest = balanceInquiryExternalRequest;
     return Response(
       requestOptions: RequestOptions(path: ''),
-      data: BalanceResponse((b) => b
-        ..availableBalance = '1000.0'
+      data: BalanceInquiry200Response((b) => b
+        ..balance = 1000.0
         ..currency = 'MYR'
-        ..lastTransactionId = 'REF_123'
+        ..status = 'SUCCESS'
       ),
       statusCode: 200,
     );

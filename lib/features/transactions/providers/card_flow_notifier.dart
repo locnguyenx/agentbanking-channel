@@ -69,10 +69,14 @@ class CardFlowNotifier extends StateNotifier<TransactionState> with CardFlowMixi
 
     if (result == null || !_mounted) return;
 
-    await _executeFinal(pinBlock: result.pinBlock, cardToken: result.cardToken);
+    await _executeFinal(
+      pinBlock: result.pinBlock,
+      cardToken: result.cardToken,
+      pan: result.pan,
+    );
   }
 
-  Future<void> _executeFinal({String? pinBlock, String? cardToken}) async {
+  Future<void> _executeFinal({String? pinBlock, String? cardToken, String? pan}) async {
     if (!_mounted) return;
     state = state.copyWith(status: TransactionStatus.processing);
     final agentId = ref.read(authProvider).user?.agentId ?? 'AGENT-123';
@@ -80,6 +84,7 @@ class CardFlowNotifier extends StateNotifier<TransactionState> with CardFlowMixi
       final txResult = await repository.executeTransaction(TransactionExecutionRequest(
         quoteId: state.quote!.quoteId,
         fundingSource: state.fundingSource!,
+        pan: pan,
         pinBlock: pinBlock,
         cardToken: cardToken,
         serviceCode: state.serviceCode,

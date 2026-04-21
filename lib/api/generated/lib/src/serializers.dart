@@ -14,10 +14,16 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:agent_api/src/date_serializer.dart';
 import 'package:agent_api/src/model/date.dart';
 
+import 'package:agent_api/src/model/agent_list_response.dart';
 import 'package:agent_api/src/model/agent_response.dart';
+import 'package:agent_api/src/model/agent_stats.dart';
 import 'package:agent_api/src/model/agent_user_status_response.dart';
 import 'package:agent_api/src/model/application_submit_request.dart';
 import 'package:agent_api/src/model/application_submit_response.dart';
+import 'package:agent_api/src/model/audit_log_record.dart';
+import 'package:agent_api/src/model/backoffice_audit_log_list_response.dart';
+import 'package:agent_api/src/model/backoffice_transaction_list_response.dart';
+import 'package:agent_api/src/model/balance_inquiry200_response.dart';
 import 'package:agent_api/src/model/balance_inquiry_external_request.dart';
 import 'package:agent_api/src/model/balance_inquiry_request.dart';
 import 'package:agent_api/src/model/balance_response.dart';
@@ -28,6 +34,9 @@ import 'package:agent_api/src/model/cash_back_response.dart';
 import 'package:agent_api/src/model/change_password_request.dart';
 import 'package:agent_api/src/model/change_password_response.dart';
 import 'package:agent_api/src/model/checker_action_request.dart';
+import 'package:agent_api/src/model/checker_approve_action_legacy_request.dart';
+import 'package:agent_api/src/model/checker_approve_request.dart';
+import 'package:agent_api/src/model/compliance_status_response.dart';
 import 'package:agent_api/src/model/create_agent_external_request.dart';
 import 'package:agent_api/src/model/create_agent_user_request.dart';
 import 'package:agent_api/src/model/dashboard_response.dart';
@@ -52,6 +61,8 @@ import 'package:agent_api/src/model/geo_location.dart';
 import 'package:agent_api/src/model/jom_pay_external_request.dart';
 import 'package:agent_api/src/model/kyc_verify_response.dart';
 import 'package:agent_api/src/model/maker_proposal_request.dart';
+import 'package:agent_api/src/model/maker_propose_action_legacy_request.dart';
+import 'package:agent_api/src/model/maker_propose_request.dart';
 import 'package:agent_api/src/model/my_kad_verify_request.dart';
 import 'package:agent_api/src/model/my_profile_response.dart';
 import 'package:agent_api/src/model/pin_purchase_command.dart';
@@ -68,6 +79,8 @@ import 'package:agent_api/src/model/retail_sale_response.dart';
 import 'package:agent_api/src/model/reversal_request.dart';
 import 'package:agent_api/src/model/revoke_token_request.dart';
 import 'package:agent_api/src/model/settlement_response.dart';
+import 'package:agent_api/src/model/submission_request.dart';
+import 'package:agent_api/src/model/submission_response.dart';
 import 'package:agent_api/src/model/token_request.dart';
 import 'package:agent_api/src/model/token_response.dart';
 import 'package:agent_api/src/model/topup_external_request.dart';
@@ -86,10 +99,16 @@ import 'package:agent_api/src/model/withdrawal_external_request.dart';
 part 'serializers.g.dart';
 
 @SerializersFor([
+  AgentListResponse,
   AgentResponse,
+  AgentStats,
   AgentUserStatusResponse,
   ApplicationSubmitRequest,
   ApplicationSubmitResponse,
+  AuditLogRecord,
+  BackofficeAuditLogListResponse,
+  BackofficeTransactionListResponse,
+  BalanceInquiry200Response,
   BalanceInquiryExternalRequest,
   BalanceInquiryRequest,
   BalanceResponse,
@@ -100,6 +119,9 @@ part 'serializers.g.dart';
   ChangePasswordRequest,
   ChangePasswordResponse,
   CheckerActionRequest,
+  CheckerApproveActionLegacyRequest,
+  CheckerApproveRequest,
+  ComplianceStatusResponse,
   CreateAgentExternalRequest,
   CreateAgentUserRequest,
   DashboardResponse,
@@ -124,6 +146,8 @@ part 'serializers.g.dart';
   JomPayExternalRequest,
   KycVerifyResponse,
   MakerProposalRequest,
+  MakerProposeActionLegacyRequest,
+  MakerProposeRequest,
   MyKadVerifyRequest,
   MyProfileResponse,
   PinPurchaseCommand,
@@ -140,6 +164,8 @@ part 'serializers.g.dart';
   ReversalRequest,
   RevokeTokenRequest,
   SettlementResponse,
+  SubmissionRequest,
+  SubmissionResponse,
   TokenRequest,
   TokenResponse,
   TopupExternalRequest,
@@ -161,8 +187,8 @@ Serializers serializers = (_$serializers.toBuilder()
         () => MapBuilder<String, String>(),
       )
       ..addBuilderFactory(
-        const FullType(BuiltList, [FullType(AgentResponse)]),
-        () => ListBuilder<AgentResponse>(),
+        const FullType(BuiltMap, [FullType(String), FullType.nullable(JsonObject)]),
+        () => MapBuilder<String, JsonObject>(),
       )
       ..addBuilderFactory(
         const FullType(BuiltMap, [FullType(String), FullType(JsonObject)]),

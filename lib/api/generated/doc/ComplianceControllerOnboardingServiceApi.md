@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **getComplianceStatus**
-> String getComplianceStatus()
+> ComplianceStatusResponse getComplianceStatus()
 
 
 
@@ -36,7 +36,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**String**
+[**ComplianceStatusResponse**](ComplianceStatusResponse.md)
 
 ### Authorization
 

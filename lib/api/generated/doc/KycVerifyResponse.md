@@ -10,6 +10,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **verificationId** | **String** |  | [optional] 
 **status** | **String** |  | [optional] 
+**fullName** | **String** |  | [optional] 
+**dateOfBirth** | **String** |  | [optional] 
+**age** | **int** |  | [optional] 
+**amlStatus** | **String** |  | [optional] 
 **message** | **String** |  | [optional] 
 **kycLevel** | **String** |  | [optional] 
 **expiresAt** | [**DateTime**](DateTime.md) |  | [optional] 

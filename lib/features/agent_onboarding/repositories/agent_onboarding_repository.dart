@@ -3,10 +3,14 @@ import 'package:dio/dio.dart';
 
 class AgentOnboardingRepository {
   final AgentControllerOnboardingServiceApi agentApi;
+  final AgentOnboardingControllerOnboardingServiceApi onboardingApi;
 
-  AgentOnboardingRepository({required this.agentApi});
+  AgentOnboardingRepository({
+    required this.agentApi, 
+    required this.onboardingApi,
+  });
 
-  Future<AgentResponse?> submitOnboarding({
+  Future<SubmissionResponse?> submitOnboarding({
     required String mykadNumber,
     required String ssmNumber,
     required String businessName,
@@ -14,17 +18,18 @@ class AgentOnboardingRepository {
     double lat = 3.1390,
     double lng = 101.6869,
   }) async {
-    final request = CreateAgentExternalRequest((b) => b
+    final request = SubmissionRequest((b) => b
       ..mykadNumber = mykadNumber
-      ..agentCode = ssmNumber // Using SSM as agent code for simplification
-      ..businessName = businessName
+      ..ssmBusinessName = businessName
+      ..ssmOwnerName = businessName // Simplified for migration
+      ..extractedName = businessName
       ..phoneNumber = phoneNumber
       ..merchantGpsLat = lat
       ..merchantGpsLng = lng
-      ..tier = CreateAgentExternalRequestTierEnum.STANDARD
+      ..agentTier = SubmissionRequestAgentTierEnum.STANDARD
     );
 
-    final response = await agentApi.createAgent(createAgentExternalRequest: request);
+    final response = await onboardingApi.submitApplication(submissionRequest: request);
     return response.data;
   }
 

@@ -8,10 +8,11 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**idempotencyKey** | **String** | Unique key to prevent duplicate transactions. | 
 **transactionType** | [**TransactionType**](TransactionType.md) |  | 
-**agentId** | **String** | Unique identifier of the agent | 
+**agentId** | **String** | Unique identifier of the agent | [optional] 
 **amount** | **double** | Transaction amount in MYR | 
-**idempotencyKey** | **String** | Optional unique key to prevent duplicate transactions. If not provided, server will generate one. | 
+**fundingSource** | **String** | Source of funds for the transaction. | 
 **pan** | **String** | Card number (PAN) - required for CASH_WITHDRAWAL | [optional] 
 **pinBlock** | **String** | Encrypted PIN block - required for CASH_WITHDRAWAL | [optional] 
 **customerCardMasked** | **String** | Masked card number for display (e.g., 411111******1111) | [optional] 

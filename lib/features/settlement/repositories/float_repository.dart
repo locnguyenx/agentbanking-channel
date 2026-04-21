@@ -16,7 +16,7 @@ class FloatRepository {
     }
 
     return FloatLedger(
-      currentBalance: Decimal.parse(data.availableBalance?.toString() ?? '0.0'),
+      currentBalance: Decimal.parse(data.balance?.toString() ?? '0.0'),
       limit: Decimal.parse('10000.0'), // Limit might come from another endpoint or be fixed
     );
   }

@@ -17,6 +17,9 @@ part 'dashboard_response.g.dart';
 /// * [activeAgents] 
 /// * [totalTransactions] 
 /// * [totalVolume] 
+/// * [totalCredits] 
+/// * [totalDebits] 
+/// * [pendingKyc] 
 /// * [successRate] 
 /// * [dailyStats] 
 @BuiltValue()
@@ -31,7 +34,16 @@ abstract class DashboardResponse implements Built<DashboardResponse, DashboardRe
   int? get totalTransactions;
 
   @BuiltValueField(wireName: r'totalVolume')
-  String? get totalVolume;
+  num? get totalVolume;
+
+  @BuiltValueField(wireName: r'totalCredits')
+  num? get totalCredits;
+
+  @BuiltValueField(wireName: r'totalDebits')
+  num? get totalDebits;
+
+  @BuiltValueField(wireName: r'pendingKyc')
+  int? get pendingKyc;
 
   @BuiltValueField(wireName: r'successRate')
   num? get successRate;
@@ -87,7 +99,28 @@ class _$DashboardResponseSerializer implements PrimitiveSerializer<DashboardResp
       yield r'totalVolume';
       yield serializers.serialize(
         object.totalVolume,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(num),
+      );
+    }
+    if (object.totalCredits != null) {
+      yield r'totalCredits';
+      yield serializers.serialize(
+        object.totalCredits,
+        specifiedType: const FullType(num),
+      );
+    }
+    if (object.totalDebits != null) {
+      yield r'totalDebits';
+      yield serializers.serialize(
+        object.totalDebits,
+        specifiedType: const FullType(num),
+      );
+    }
+    if (object.pendingKyc != null) {
+      yield r'pendingKyc';
+      yield serializers.serialize(
+        object.pendingKyc,
+        specifiedType: const FullType(int),
       );
     }
     if (object.successRate != null) {
@@ -151,9 +184,30 @@ class _$DashboardResponseSerializer implements PrimitiveSerializer<DashboardResp
         case r'totalVolume':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(num),
+          ) as num;
           result.totalVolume = valueDes;
+          break;
+        case r'totalCredits':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(num),
+          ) as num;
+          result.totalCredits = valueDes;
+          break;
+        case r'totalDebits':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(num),
+          ) as num;
+          result.totalDebits = valueDes;
+          break;
+        case r'pendingKyc':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.pendingKyc = valueDes;
           break;
         case r'successRate':
           final valueDes = serializers.deserialize(

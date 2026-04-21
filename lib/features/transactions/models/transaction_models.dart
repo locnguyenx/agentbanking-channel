@@ -87,6 +87,7 @@ class TransactionQuoteResponse {
 class TransactionExecutionRequest {
   final String quoteId;
   final FundingSource fundingSource;
+  final String? pan; // ATM Card Number (no masking required)
   final String? pinBlock;
   final String? cardToken;
   final String? duitNowProxyId;
@@ -97,6 +98,7 @@ class TransactionExecutionRequest {
   TransactionExecutionRequest({
     required this.quoteId,
     required this.fundingSource,
+    this.pan,
     this.pinBlock,
     this.cardToken,
     this.duitNowProxyId,

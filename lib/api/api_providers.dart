@@ -56,3 +56,8 @@ final orchestratorApiProvider = Provider<OrchestratorControllerOrchestratorServi
   final dio = ref.watch(dioProvider);
   return OrchestratorControllerOrchestratorServiceApi(dio, standardSerializers);
 });
+
+final agentOnboardingApiProvider = Provider<AgentOnboardingControllerOnboardingServiceApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  return AgentOnboardingControllerOnboardingServiceApi(dio, standardSerializers);
+});

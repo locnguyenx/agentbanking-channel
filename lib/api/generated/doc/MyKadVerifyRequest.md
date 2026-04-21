@@ -9,7 +9,7 @@ import 'package:agent_api/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **mykadNumber** | **String** | MyKad number (12 digits) | 
-**name** | **String** | Full name from MyKad | 
+**name** | **String** | Full name from MyKad | [optional] 
 **dateOfBirth** | [**Date**](Date.md) |  | [optional] 
 **address** | **String** |  | [optional] 
 

@@ -74,8 +74,7 @@ class _$ForceResolveRequest extends ForceResolveRequest {
           [void Function(ForceResolveRequestBuilder)? updates]) =>
       (ForceResolveRequestBuilder()..update(updates))._build();
 
-  _$ForceResolveRequest._(
-      {required this.action, required this.reason})
+  _$ForceResolveRequest._({required this.action, required this.reason})
       : super._();
   @override
   ForceResolveRequest rebuild(

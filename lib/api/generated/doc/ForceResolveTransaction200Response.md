@@ -8,6 +8,8 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**action** | **String** |  | 
+**reason** | **String** |  | [optional] 
 **status** | **String** |  | [optional] 
 **message** | **String** |  | [optional] 
 

@@ -129,6 +129,18 @@ class MockTransactionRepository extends Fake implements TransactionRepository {
   Future<model.TransactionExecutionResponse> Function(model.TransactionExecutionRequest, String)? executeTransactionStub;
   Future<String> Function(String, String)? performProxyEnquiryStub;
   Future<model.TransactionExecutionResponse> Function(model.TransactionExecutionRequest, String)? balanceInquiryStub;
+  Future<Map<String, dynamic>> Function(String)? getDuitNowStatusStub;
+
+  @override
+  Future<Map<String, dynamic>> getDuitNowStatus(String referenceId) async {
+    if (getDuitNowStatusStub != null) return getDuitNowStatusStub!(referenceId);
+    return {
+      'status': 'SUCCESS',
+      'transactionId': 'TXN_ID_123',
+      'netToMerchant': 49.75,
+      'mdrAmount': 0.25,
+    };
+  }
 
   @override
   Future<model.TransactionQuoteResponse> getQuote(model.TransactionQuoteRequest request) async {
@@ -167,15 +179,6 @@ class MockTransactionRepository extends Fake implements TransactionRepository {
     );
   }
 
-  @override
-  Future<Map<String, dynamic>> getDuitNowStatus(String referenceId) async {
-    return {
-      'status': 'SUCCESS',
-      'transactionId': 'TXN_ID_123',
-      'netToMerchant': 49.75,
-      'mdrAmount': 0.25,
-    };
-  }
 
   @override
   Future<String> performProxyEnquiry(String proxyId, String proxyType) async {
@@ -343,23 +346,30 @@ class FakeKycRepository extends Fake implements KycRepository {
 
 class FakeAgentOnboardingRepository extends Fake implements AgentOnboardingRepository {
   @override
+  agent_api.AgentControllerOnboardingServiceApi get agentApi => throw UnimplementedError();
+
+  @override
+  agent_api.AgentOnboardingControllerOnboardingServiceApi get onboardingApi => throw UnimplementedError();
+
+  @override
   Future<bool> requestOtp(String phone) async => true;
   @override
   Future<bool> verifyOtp(String phone, String otp) async => otp == '123456';
   @override
-  Future<agent_api.AgentResponse?> submitOnboarding({
+  Future<agent_api.SubmissionResponse?> submitOnboarding({
     required String mykadNumber,
     required String ssmNumber,
     required String businessName,
     required String phoneNumber,
-    double? lat,
-    double? lng,
+    double lat = 3.1390,
+    double lng = 101.6869,
   }) async {
-    return agent_api.AgentResponse((b) => b
-      ..status = agent_api.AgentResponseStatusEnum.ACTIVE
-      ..tier = agent_api.AgentResponseTierEnum.MICRO
+    return agent_api.SubmissionResponse((b) => b
+      ..status = 'ACTIVE'
+      ..applicationId = 'APP_BDD_123'
     );
   }
 
-
+  @override
+  Future<agent_api.AgentResponse?> getAgentStatus(String agentId) async => null;
 }

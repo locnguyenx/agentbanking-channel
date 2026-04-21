@@ -85,7 +85,7 @@ void main() {
     });
 
     test('getComplianceStatus hits /api/v1/compliance/status', () async {
-      mockDio.setResponse('/api/v1/compliance/status', 'UNLOCKED');
+      mockDio.setResponse('/api/v1/compliance/status', {'status': 'UNLOCKED'});
 
       final status = await transactionRepo.getComplianceStatus();
 
@@ -96,9 +96,7 @@ void main() {
   group('FloatRepository Contract Tests', () {
     test('getFloatStatus hits /api/v1/agent/balance', () async {
       mockDio.setResponse('/api/v1/agent/balance.*', {
-        'availableBalance': '5000.0',
-        'ledgerBalance': '5000.0',
-        'pendingBalance': '0.0',
+        'balance': 5000.0,
         'currency': 'MYR',
       });
 

@@ -72,7 +72,8 @@ class MockCardReader extends Fake implements ICardReader {
   @override
   Future<bool> isAvailable() async => true;
   @override
-  Future<CardData?> readCard() async => CardData(maskedPan: '123', cardToken: 'tk');
+  @override
+  Future<CardData?> readCard() async => CardData(pan: '1234567890123456', cardToken: 'tk');
 }
 
 class MockPinPad extends Fake implements IPinPad {

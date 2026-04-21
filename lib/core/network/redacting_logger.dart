@@ -18,7 +18,6 @@ class RedactingLogger extends Interceptor {
 
   // Regex patterns for PII
   static final RegExp _myKadRegex = RegExp(r'\b\d{6}-?\d{2}-?\d{4}\b|\b\d{12}\b');
-  static final RegExp _panRegex = RegExp(r'\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b');
   static final RegExp _cvvKeyRegex = RegExp(r'"cvv"\s*:\s*"\d{3,4}"', caseSensitive: false);
   static final RegExp _pinBlockKeyRegex = RegExp(r'"pinBlock"\s*:\s*"[^"]+"', caseSensitive: false);
 
@@ -38,15 +37,8 @@ class RedactingLogger extends Interceptor {
       return s;
     });
 
-    // 2. Mask PAN (Card Number) - Show first 4 and last 4
-    redacted = redacted.replaceAllMapped(_panRegex, (match) {
-      final s = match.group(0)!;
-      final clean = s.replaceAll(RegExp(r'[ -]'), '');
-      if (clean.length == 16) {
-        return '${clean.substring(0, 4)} **** **** ${clean.substring(12)}';
-      }
-      return '**** **** **** ****';
-    });
+    // 2. PAN (Card Number) is no longer masked (treated as normal account number)
+    // accordance with AGENTS.md § 3.3 Security
 
     // 3. Mask CVV and PIN Block fields specifically in JSON-like strings
     redacted = redacted.replaceAllMapped(_cvvKeyRegex, (match) => '"cvv": "***"');

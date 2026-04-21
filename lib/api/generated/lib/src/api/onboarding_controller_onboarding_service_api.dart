@@ -48,7 +48,7 @@ class OnboardingControllerOnboardingServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/kyc/biometric';
+    final _path = r'/api/v1/onboarding/biometric-match';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{
@@ -215,8 +215,8 @@ class OnboardingControllerOnboardingServiceApi {
     );
   }
 
-  /// submitApplication
-  /// 
+  /// submitApplicationLegacy
+  /// DEPRECATED: Use /api/v1/onboarding/submit-application instead.
   ///
   /// Parameters:
   /// * [applicationSubmitRequest] 
@@ -229,7 +229,8 @@ class OnboardingControllerOnboardingServiceApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ApplicationSubmitResponse] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ApplicationSubmitResponse>> submitApplication({ 
+  @Deprecated('This operation has been deprecated')
+  Future<Response<ApplicationSubmitResponse>> submitApplicationLegacy({ 
     required ApplicationSubmitRequest applicationSubmitRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -238,7 +239,7 @@ class OnboardingControllerOnboardingServiceApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/api/v1/onboarding/submit-application';
+    final _path = r'/api/v1/onboarding/submit-application-legacy';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{

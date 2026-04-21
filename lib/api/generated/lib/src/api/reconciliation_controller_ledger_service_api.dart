@@ -9,10 +9,9 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
-import 'package:agent_api/src/model/discrepancy_checker_action_request.dart';
-import 'package:agent_api/src/model/discrepancy_maker_action_request.dart';
+import 'package:agent_api/src/model/checker_approve_action_legacy_request.dart';
 import 'package:agent_api/src/model/error_response.dart';
-import 'package:agent_api/src/model/transaction_response.dart';
+import 'package:agent_api/src/model/maker_propose_action_legacy_request.dart';
 
 class ReconciliationControllerLedgerServiceApi {
 
@@ -22,12 +21,12 @@ class ReconciliationControllerLedgerServiceApi {
 
   const ReconciliationControllerLedgerServiceApi(this._dio, this._serializers);
 
-  /// checkerApprove
-  /// 
+  /// checkerApproveActionLegacy
+  /// DEPRECATED: Use /api/v1/backoffice/discrepancy/checker-approve instead.
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [discrepancyCheckerActionRequest] 
+  /// * [checkerApproveActionLegacyRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,11 +34,12 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
+  /// Returns a [Future]
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> checkerApprove({ 
+  @Deprecated('This operation has been deprecated')
+  Future<Response<void>> checkerApproveActionLegacy({ 
     required String caseId,
-    required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
+    CheckerApproveActionLegacyRequest? checkerApproveActionLegacyRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -70,8 +70,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(DiscrepancyCheckerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
+      const _type = FullType(CheckerApproveActionLegacyRequest);
+      _bodyData = checkerApproveActionLegacyRequest == null ? null : _serializers.serialize(checkerApproveActionLegacyRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -94,43 +94,15 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TransactionResponse? _responseData;
-
-    try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _response.requestOptions,
-        response: _response,
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    return Response<TransactionResponse>(
-      data: _responseData,
-      headers: _response.headers,
-      isRedirect: _response.isRedirect,
-      requestOptions: _response.requestOptions,
-      redirects: _response.redirects,
-      statusCode: _response.statusCode,
-      statusMessage: _response.statusMessage,
-      extra: _response.extra,
-    );
+    return _response;
   }
 
-  /// checkerReject
-  /// 
+  /// checkerRejectActionLegacy
+  /// DEPRECATED: Use /api/v1/backoffice/transactions/{workflowId}/checker-reject instead.
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [discrepancyCheckerActionRequest] 
+  /// * [checkerApproveActionLegacyRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -138,11 +110,12 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
+  /// Returns a [Future]
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> checkerReject({ 
+  @Deprecated('This operation has been deprecated')
+  Future<Response<void>> checkerRejectActionLegacy({ 
     required String caseId,
-    required DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest,
+    CheckerApproveActionLegacyRequest? checkerApproveActionLegacyRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -173,8 +146,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(DiscrepancyCheckerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyCheckerActionRequest, specifiedType: _type);
+      const _type = FullType(CheckerApproveActionLegacyRequest);
+      _bodyData = checkerApproveActionLegacyRequest == null ? null : _serializers.serialize(checkerApproveActionLegacyRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -197,43 +170,15 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TransactionResponse? _responseData;
-
-    try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _response.requestOptions,
-        response: _response,
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    return Response<TransactionResponse>(
-      data: _responseData,
-      headers: _response.headers,
-      isRedirect: _response.isRedirect,
-      requestOptions: _response.requestOptions,
-      redirects: _response.redirects,
-      statusCode: _response.statusCode,
-      statusMessage: _response.statusMessage,
-      extra: _response.extra,
-    );
+    return _response;
   }
 
-  /// makerPropose
-  /// 
+  /// makerProposeActionLegacy
+  /// DEPRECATED: Use /api/v1/backoffice/discrepancy/maker-propose instead.
   ///
   /// Parameters:
   /// * [caseId] 
-  /// * [discrepancyMakerActionRequest] 
+  /// * [makerProposeActionLegacyRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -241,11 +186,12 @@ class ReconciliationControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [TransactionResponse] as data
+  /// Returns a [Future]
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<TransactionResponse>> makerPropose({ 
+  @Deprecated('This operation has been deprecated')
+  Future<Response<void>> makerProposeActionLegacy({ 
     required String caseId,
-    required DiscrepancyMakerActionRequest discrepancyMakerActionRequest,
+    MakerProposeActionLegacyRequest? makerProposeActionLegacyRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -276,8 +222,8 @@ class ReconciliationControllerLedgerServiceApi {
     dynamic _bodyData;
 
     try {
-      const _type = FullType(DiscrepancyMakerActionRequest);
-      _bodyData = _serializers.serialize(discrepancyMakerActionRequest, specifiedType: _type);
+      const _type = FullType(MakerProposeActionLegacyRequest);
+      _bodyData = makerProposeActionLegacyRequest == null ? null : _serializers.serialize(makerProposeActionLegacyRequest, specifiedType: _type);
 
     } catch(error, stackTrace) {
       throw DioException(
@@ -300,35 +246,7 @@ class ReconciliationControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    TransactionResponse? _responseData;
-
-    try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(TransactionResponse),
-      ) as TransactionResponse;
-
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _response.requestOptions,
-        response: _response,
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    return Response<TransactionResponse>(
-      data: _responseData,
-      headers: _response.headers,
-      isRedirect: _response.isRedirect,
-      requestOptions: _response.requestOptions,
-      redirects: _response.redirects,
-      statusCode: _response.statusCode,
-      statusMessage: _response.statusMessage,
-      extra: _response.extra,
-    );
+    return _response;
   }
 
 }

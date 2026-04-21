@@ -13,11 +13,15 @@ class FakeScanner implements IMyKadScanner {
 }
 
 class FakeAgentOnboardingRepository implements AgentOnboardingRepository {
-  AgentResponse? nextResponse;
+  SubmissionResponse? nextResponse;
+  AgentResponse? nextAgentStatus;
   bool nextOtpResult = true;
   
   @override
   AgentControllerOnboardingServiceApi get agentApi => throw UnimplementedError();
+
+  @override
+  AgentOnboardingControllerOnboardingServiceApi get onboardingApi => throw UnimplementedError();
 
   @override
   Future<bool> requestOtp(String phoneNumber) async => nextOtpResult;
@@ -26,7 +30,7 @@ class FakeAgentOnboardingRepository implements AgentOnboardingRepository {
   Future<bool> verifyOtp(String phoneNumber, String otp) async => nextOtpResult;
 
   @override
-  Future<AgentResponse?> submitOnboarding({
+  Future<SubmissionResponse?> submitOnboarding({
     required String mykadNumber,
     required String ssmNumber,
     required String businessName,
@@ -39,7 +43,7 @@ class FakeAgentOnboardingRepository implements AgentOnboardingRepository {
 
   @override
   Future<AgentResponse?> getAgentStatus(String agentId) async {
-    return nextResponse;
+    return nextAgentStatus;
   }
 }
 
@@ -103,7 +107,7 @@ void main() {
       phoneNumber: '0123456789',
       otpVerified: true,
     );
-    fakeRepo.nextResponse = AgentResponse((b) => b..status = AgentResponseStatusEnum.ACTIVE);
+    fakeRepo.nextResponse = SubmissionResponse((b) => b..status = 'ACTIVE');
 
     await notifier.submitOnboarding('202301012345');
 
@@ -117,7 +121,7 @@ void main() {
       phoneNumber: '0123456789',
       otpVerified: true,
     );
-    fakeRepo.nextResponse = AgentResponse((b) => b..status = AgentResponseStatusEnum.PENDING);
+    fakeRepo.nextResponse = SubmissionResponse((b) => b..status = 'PENDING');
 
     await notifier.submitOnboarding('AML999');
 

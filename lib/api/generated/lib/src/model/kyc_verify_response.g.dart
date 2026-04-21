@@ -12,6 +12,8 @@ const KycVerifyResponseStatusEnum _$kycVerifyResponseStatusEnum_PENDING =
     const KycVerifyResponseStatusEnum._('PENDING');
 const KycVerifyResponseStatusEnum _$kycVerifyResponseStatusEnum_FAILED =
     const KycVerifyResponseStatusEnum._('FAILED');
+const KycVerifyResponseStatusEnum _$kycVerifyResponseStatusEnum_FOUND =
+    const KycVerifyResponseStatusEnum._('FOUND');
 
 KycVerifyResponseStatusEnum _$kycVerifyResponseStatusEnumValueOf(String name) {
   switch (name) {
@@ -21,6 +23,8 @@ KycVerifyResponseStatusEnum _$kycVerifyResponseStatusEnumValueOf(String name) {
       return _$kycVerifyResponseStatusEnum_PENDING;
     case 'FAILED':
       return _$kycVerifyResponseStatusEnum_FAILED;
+    case 'FOUND':
+      return _$kycVerifyResponseStatusEnum_FOUND;
     default:
       throw ArgumentError(name);
   }
@@ -32,6 +36,7 @@ final BuiltSet<KycVerifyResponseStatusEnum>
   _$kycVerifyResponseStatusEnum_VERIFIED,
   _$kycVerifyResponseStatusEnum_PENDING,
   _$kycVerifyResponseStatusEnum_FAILED,
+  _$kycVerifyResponseStatusEnum_FOUND,
 ]);
 
 const KycVerifyResponseKycLevelEnum _$kycVerifyResponseKycLevelEnum_BASIC =
@@ -77,11 +82,13 @@ class _$KycVerifyResponseStatusEnumSerializer
     'VERIFIED': 'VERIFIED',
     'PENDING': 'PENDING',
     'FAILED': 'FAILED',
+    'FOUND': 'FOUND',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'VERIFIED': 'VERIFIED',
     'PENDING': 'PENDING',
     'FAILED': 'FAILED',
+    'FOUND': 'FOUND',
   };
 
   @override
@@ -140,6 +147,14 @@ class _$KycVerifyResponse extends KycVerifyResponse {
   @override
   final KycVerifyResponseStatusEnum? status;
   @override
+  final String? fullName;
+  @override
+  final String? dateOfBirth;
+  @override
+  final int? age;
+  @override
+  final String? amlStatus;
+  @override
   final String? message;
   @override
   final KycVerifyResponseKycLevelEnum? kycLevel;
@@ -153,6 +168,10 @@ class _$KycVerifyResponse extends KycVerifyResponse {
   _$KycVerifyResponse._(
       {this.verificationId,
       this.status,
+      this.fullName,
+      this.dateOfBirth,
+      this.age,
+      this.amlStatus,
       this.message,
       this.kycLevel,
       this.expiresAt})
@@ -171,6 +190,10 @@ class _$KycVerifyResponse extends KycVerifyResponse {
     return other is KycVerifyResponse &&
         verificationId == other.verificationId &&
         status == other.status &&
+        fullName == other.fullName &&
+        dateOfBirth == other.dateOfBirth &&
+        age == other.age &&
+        amlStatus == other.amlStatus &&
         message == other.message &&
         kycLevel == other.kycLevel &&
         expiresAt == other.expiresAt;
@@ -181,6 +204,10 @@ class _$KycVerifyResponse extends KycVerifyResponse {
     var _$hash = 0;
     _$hash = $jc(_$hash, verificationId.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
+    _$hash = $jc(_$hash, fullName.hashCode);
+    _$hash = $jc(_$hash, dateOfBirth.hashCode);
+    _$hash = $jc(_$hash, age.hashCode);
+    _$hash = $jc(_$hash, amlStatus.hashCode);
     _$hash = $jc(_$hash, message.hashCode);
     _$hash = $jc(_$hash, kycLevel.hashCode);
     _$hash = $jc(_$hash, expiresAt.hashCode);
@@ -193,6 +220,10 @@ class _$KycVerifyResponse extends KycVerifyResponse {
     return (newBuiltValueToStringHelper(r'KycVerifyResponse')
           ..add('verificationId', verificationId)
           ..add('status', status)
+          ..add('fullName', fullName)
+          ..add('dateOfBirth', dateOfBirth)
+          ..add('age', age)
+          ..add('amlStatus', amlStatus)
           ..add('message', message)
           ..add('kycLevel', kycLevel)
           ..add('expiresAt', expiresAt))
@@ -212,6 +243,22 @@ class KycVerifyResponseBuilder
   KycVerifyResponseStatusEnum? _status;
   KycVerifyResponseStatusEnum? get status => _$this._status;
   set status(KycVerifyResponseStatusEnum? status) => _$this._status = status;
+
+  String? _fullName;
+  String? get fullName => _$this._fullName;
+  set fullName(String? fullName) => _$this._fullName = fullName;
+
+  String? _dateOfBirth;
+  String? get dateOfBirth => _$this._dateOfBirth;
+  set dateOfBirth(String? dateOfBirth) => _$this._dateOfBirth = dateOfBirth;
+
+  int? _age;
+  int? get age => _$this._age;
+  set age(int? age) => _$this._age = age;
+
+  String? _amlStatus;
+  String? get amlStatus => _$this._amlStatus;
+  set amlStatus(String? amlStatus) => _$this._amlStatus = amlStatus;
 
   String? _message;
   String? get message => _$this._message;
@@ -235,6 +282,10 @@ class KycVerifyResponseBuilder
     if ($v != null) {
       _verificationId = $v.verificationId;
       _status = $v.status;
+      _fullName = $v.fullName;
+      _dateOfBirth = $v.dateOfBirth;
+      _age = $v.age;
+      _amlStatus = $v.amlStatus;
       _message = $v.message;
       _kycLevel = $v.kycLevel;
       _expiresAt = $v.expiresAt;
@@ -261,6 +312,10 @@ class KycVerifyResponseBuilder
         _$KycVerifyResponse._(
           verificationId: verificationId,
           status: status,
+          fullName: fullName,
+          dateOfBirth: dateOfBirth,
+          age: age,
+          amlStatus: amlStatus,
           message: message,
           kycLevel: kycLevel,
           expiresAt: expiresAt,

@@ -115,7 +115,7 @@ void main() {
     expect(notifier.state.status, MerchantStatus.waitingCard);
 
     // 2. Process Card
-    mockCardReader.nextCardData = CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X');
+    mockCardReader.nextCardData = CardData(pan: '4111222233334444', cardToken: 'TOKEN-X');
     mockPinPad.nextPin = '123456';
     
     mockRepo.nextRetailSaleResponse = RetailSaleResponse(
@@ -140,7 +140,7 @@ void main() {
     expect(notifier.state.status, MerchantStatus.waitingCard);
     expect(notifier.state.amount, Decimal.parse('150.0'));
 
-    mockCardReader.nextCardData = CardData(maskedPan: '4111********1111', cardToken: 'TOKEN-X');
+    mockCardReader.nextCardData = CardData(pan: '4111222233334444', cardToken: 'TOKEN-X');
     mockPinPad.nextPin = '123456';
 
     mockRepo.nextCashbackResponse = CashbackResponse(

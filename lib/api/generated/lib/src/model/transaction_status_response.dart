@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -22,6 +23,17 @@ part 'transaction_status_response.g.dart';
 /// * [errorMessage] - Human-readable error message
 /// * [actionCode] - Recommended action for failed transactions
 /// * [completedAt] - Timestamp when transaction completed
+/// * [agentTier] 
+/// * [billerCode] 
+/// * [customerCardMasked] 
+/// * [destinationAccount] 
+/// * [errorDetails] 
+/// * [geofenceLat] 
+/// * [geofenceLng] 
+/// * [pendingReason] 
+/// * [ref1] 
+/// * [ref2] 
+/// * [targetBin] 
 @BuiltValue()
 abstract class TransactionStatusResponse implements Built<TransactionStatusResponse, TransactionStatusResponseBuilder> {
   /// Current workflow status
@@ -66,6 +78,39 @@ abstract class TransactionStatusResponse implements Built<TransactionStatusRespo
   @BuiltValueField(wireName: r'completedAt')
   DateTime? get completedAt;
 
+  @BuiltValueField(wireName: r'agentTier')
+  String? get agentTier;
+
+  @BuiltValueField(wireName: r'billerCode')
+  String? get billerCode;
+
+  @BuiltValueField(wireName: r'customerCardMasked')
+  String? get customerCardMasked;
+
+  @BuiltValueField(wireName: r'destinationAccount')
+  String? get destinationAccount;
+
+  @BuiltValueField(wireName: r'errorDetails')
+  JsonObject? get errorDetails;
+
+  @BuiltValueField(wireName: r'geofenceLat')
+  double? get geofenceLat;
+
+  @BuiltValueField(wireName: r'geofenceLng')
+  double? get geofenceLng;
+
+  @BuiltValueField(wireName: r'pendingReason')
+  String? get pendingReason;
+
+  @BuiltValueField(wireName: r'ref1')
+  String? get ref1;
+
+  @BuiltValueField(wireName: r'ref2')
+  String? get ref2;
+
+  @BuiltValueField(wireName: r'targetBin')
+  String? get targetBin;
+
   TransactionStatusResponse._();
 
   factory TransactionStatusResponse([void updates(TransactionStatusResponseBuilder b)]) = _$TransactionStatusResponse;
@@ -107,7 +152,7 @@ class _$TransactionStatusResponseSerializer implements PrimitiveSerializer<Trans
       yield r'transactionType';
       yield serializers.serialize(
         object.transactionType,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.amount != null) {
@@ -128,35 +173,112 @@ class _$TransactionStatusResponseSerializer implements PrimitiveSerializer<Trans
       yield r'referenceNumber';
       yield serializers.serialize(
         object.referenceNumber,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.errorCode != null) {
       yield r'errorCode';
       yield serializers.serialize(
         object.errorCode,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.errorMessage != null) {
       yield r'errorMessage';
       yield serializers.serialize(
         object.errorMessage,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.actionCode != null) {
       yield r'actionCode';
       yield serializers.serialize(
         object.actionCode,
-        specifiedType: const FullType(TransactionStatusResponseActionCodeEnum),
+        specifiedType: const FullType.nullable(TransactionStatusResponseActionCodeEnum),
       );
     }
     if (object.completedAt != null) {
       yield r'completedAt';
       yield serializers.serialize(
         object.completedAt,
-        specifiedType: const FullType(DateTime),
+        specifiedType: const FullType.nullable(DateTime),
+      );
+    }
+    if (object.agentTier != null) {
+      yield r'agentTier';
+      yield serializers.serialize(
+        object.agentTier,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.billerCode != null) {
+      yield r'billerCode';
+      yield serializers.serialize(
+        object.billerCode,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.customerCardMasked != null) {
+      yield r'customerCardMasked';
+      yield serializers.serialize(
+        object.customerCardMasked,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.destinationAccount != null) {
+      yield r'destinationAccount';
+      yield serializers.serialize(
+        object.destinationAccount,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.errorDetails != null) {
+      yield r'errorDetails';
+      yield serializers.serialize(
+        object.errorDetails,
+        specifiedType: const FullType.nullable(JsonObject),
+      );
+    }
+    if (object.geofenceLat != null) {
+      yield r'geofenceLat';
+      yield serializers.serialize(
+        object.geofenceLat,
+        specifiedType: const FullType.nullable(double),
+      );
+    }
+    if (object.geofenceLng != null) {
+      yield r'geofenceLng';
+      yield serializers.serialize(
+        object.geofenceLng,
+        specifiedType: const FullType.nullable(double),
+      );
+    }
+    if (object.pendingReason != null) {
+      yield r'pendingReason';
+      yield serializers.serialize(
+        object.pendingReason,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.ref1 != null) {
+      yield r'ref1';
+      yield serializers.serialize(
+        object.ref1,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.ref2 != null) {
+      yield r'ref2';
+      yield serializers.serialize(
+        object.ref2,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
+    if (object.targetBin != null) {
+      yield r'targetBin';
+      yield serializers.serialize(
+        object.targetBin,
+        specifiedType: const FullType.nullable(String),
       );
     }
   }
@@ -199,8 +321,9 @@ class _$TransactionStatusResponseSerializer implements PrimitiveSerializer<Trans
         case r'transactionType':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.transactionType = valueDes;
           break;
         case r'amount':
@@ -220,37 +343,130 @@ class _$TransactionStatusResponseSerializer implements PrimitiveSerializer<Trans
         case r'referenceNumber':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.referenceNumber = valueDes;
           break;
         case r'errorCode':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.errorCode = valueDes;
           break;
         case r'errorMessage':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.errorMessage = valueDes;
           break;
         case r'actionCode':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(TransactionStatusResponseActionCodeEnum),
-          ) as TransactionStatusResponseActionCodeEnum;
+            specifiedType: const FullType.nullable(TransactionStatusResponseActionCodeEnum),
+          ) as TransactionStatusResponseActionCodeEnum?;
+          if (valueDes == null) continue;
           result.actionCode = valueDes;
           break;
         case r'completedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
+            specifiedType: const FullType.nullable(DateTime),
+          ) as DateTime?;
+          if (valueDes == null) continue;
           result.completedAt = valueDes;
+          break;
+        case r'agentTier':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.agentTier = valueDes;
+          break;
+        case r'billerCode':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.billerCode = valueDes;
+          break;
+        case r'customerCardMasked':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.customerCardMasked = valueDes;
+          break;
+        case r'destinationAccount':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.destinationAccount = valueDes;
+          break;
+        case r'errorDetails':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(JsonObject),
+          ) as JsonObject?;
+          if (valueDes == null) continue;
+          result.errorDetails = valueDes;
+          break;
+        case r'geofenceLat':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(double),
+          ) as double?;
+          if (valueDes == null) continue;
+          result.geofenceLat = valueDes;
+          break;
+        case r'geofenceLng':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(double),
+          ) as double?;
+          if (valueDes == null) continue;
+          result.geofenceLng = valueDes;
+          break;
+        case r'pendingReason':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.pendingReason = valueDes;
+          break;
+        case r'ref1':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.ref1 = valueDes;
+          break;
+        case r'ref2':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.ref2 = valueDes;
+          break;
+        case r'targetBin':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.targetBin = valueDes;
           break;
         default:
           unhandled.add(key);

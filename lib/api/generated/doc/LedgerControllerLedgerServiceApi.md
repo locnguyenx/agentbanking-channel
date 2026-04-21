@@ -19,7 +19,7 @@ Method | HTTP request | Description
 
 
 # **balanceInquiry**
-> BalanceResponse balanceInquiry(balanceInquiryExternalRequest)
+> BalanceInquiry200Response balanceInquiry(balanceInquiryExternalRequest)
 
 
 
@@ -46,7 +46,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BalanceResponse**](BalanceResponse.md)
+[**BalanceInquiry200Response**](BalanceInquiry200Response.md)
 
 ### Authorization
 

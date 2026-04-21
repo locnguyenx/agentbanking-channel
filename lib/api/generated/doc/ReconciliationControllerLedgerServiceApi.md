@@ -9,15 +9,17 @@ All URIs are relative to *http://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**checkerApprove**](ReconciliationControllerLedgerServiceApi.md#checkerapprove) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
-[**checkerReject**](ReconciliationControllerLedgerServiceApi.md#checkerreject) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
-[**makerPropose**](ReconciliationControllerLedgerServiceApi.md#makerpropose) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
+[**checkerApproveActionLegacy**](ReconciliationControllerLedgerServiceApi.md#checkerapproveactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
+[**checkerRejectActionLegacy**](ReconciliationControllerLedgerServiceApi.md#checkerrejectactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
+[**makerProposeActionLegacy**](ReconciliationControllerLedgerServiceApi.md#makerproposeactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
 
 
-# **checkerApprove**
-> TransactionResponse checkerApprove(caseId, discrepancyCheckerActionRequest)
+# **checkerApproveActionLegacy**
+> checkerApproveActionLegacy(caseId, checkerApproveActionLegacyRequest)
 
 
+
+DEPRECATED: Use /api/v1/backoffice/discrepancy/checker-approve instead.
 
 ### Example
 ```dart
@@ -25,13 +27,12 @@ import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
 final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
+final CheckerApproveActionLegacyRequest checkerApproveActionLegacyRequest = ; // CheckerApproveActionLegacyRequest | 
 
 try {
-    final response = api.checkerApprove(caseId, discrepancyCheckerActionRequest);
-    print(response);
+    api.checkerApproveActionLegacy(caseId, checkerApproveActionLegacyRequest);
 } on DioException catch (e) {
-    print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerApprove: $e\n');
+    print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerApproveActionLegacy: $e\n');
 }
 ```
 
@@ -40,11 +41,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **discrepancyCheckerActionRequest** | [**DiscrepancyCheckerActionRequest**](DiscrepancyCheckerActionRequest.md)|  | 
+ **checkerApproveActionLegacyRequest** | [**CheckerApproveActionLegacyRequest**](CheckerApproveActionLegacyRequest.md)|  | [optional] 
 
 ### Return type
 
-[**TransactionResponse**](TransactionResponse.md)
+void (empty response body)
 
 ### Authorization
 
@@ -57,10 +58,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **checkerReject**
-> TransactionResponse checkerReject(caseId, discrepancyCheckerActionRequest)
+# **checkerRejectActionLegacy**
+> checkerRejectActionLegacy(caseId, checkerApproveActionLegacyRequest)
 
 
+
+DEPRECATED: Use /api/v1/backoffice/transactions/{workflowId}/checker-reject instead.
 
 ### Example
 ```dart
@@ -68,13 +71,12 @@ import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
 final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final DiscrepancyCheckerActionRequest discrepancyCheckerActionRequest = ; // DiscrepancyCheckerActionRequest | 
+final CheckerApproveActionLegacyRequest checkerApproveActionLegacyRequest = ; // CheckerApproveActionLegacyRequest | 
 
 try {
-    final response = api.checkerReject(caseId, discrepancyCheckerActionRequest);
-    print(response);
+    api.checkerRejectActionLegacy(caseId, checkerApproveActionLegacyRequest);
 } on DioException catch (e) {
-    print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerReject: $e\n');
+    print('Exception when calling ReconciliationControllerLedgerServiceApi->checkerRejectActionLegacy: $e\n');
 }
 ```
 
@@ -83,11 +85,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **discrepancyCheckerActionRequest** | [**DiscrepancyCheckerActionRequest**](DiscrepancyCheckerActionRequest.md)|  | 
+ **checkerApproveActionLegacyRequest** | [**CheckerApproveActionLegacyRequest**](CheckerApproveActionLegacyRequest.md)|  | [optional] 
 
 ### Return type
 
-[**TransactionResponse**](TransactionResponse.md)
+void (empty response body)
 
 ### Authorization
 
@@ -100,10 +102,12 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **makerPropose**
-> TransactionResponse makerPropose(caseId, discrepancyMakerActionRequest)
+# **makerProposeActionLegacy**
+> makerProposeActionLegacy(caseId, makerProposeActionLegacyRequest)
 
 
+
+DEPRECATED: Use /api/v1/backoffice/discrepancy/maker-propose instead.
 
 ### Example
 ```dart
@@ -111,13 +115,12 @@ import 'package:agent_api/api.dart';
 
 final api = AgentApi().getReconciliationControllerLedgerServiceApi();
 final String caseId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final DiscrepancyMakerActionRequest discrepancyMakerActionRequest = ; // DiscrepancyMakerActionRequest | 
+final MakerProposeActionLegacyRequest makerProposeActionLegacyRequest = ; // MakerProposeActionLegacyRequest | 
 
 try {
-    final response = api.makerPropose(caseId, discrepancyMakerActionRequest);
-    print(response);
+    api.makerProposeActionLegacy(caseId, makerProposeActionLegacyRequest);
 } on DioException catch (e) {
-    print('Exception when calling ReconciliationControllerLedgerServiceApi->makerPropose: $e\n');
+    print('Exception when calling ReconciliationControllerLedgerServiceApi->makerProposeActionLegacy: $e\n');
 }
 ```
 
@@ -126,11 +129,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **caseId** | **String**|  | 
- **discrepancyMakerActionRequest** | [**DiscrepancyMakerActionRequest**](DiscrepancyMakerActionRequest.md)|  | 
+ **makerProposeActionLegacyRequest** | [**MakerProposeActionLegacyRequest**](MakerProposeActionLegacyRequest.md)|  | [optional] 
 
 ### Return type
 
-[**TransactionResponse**](TransactionResponse.md)
+void (empty response body)
 
 ### Authorization
 

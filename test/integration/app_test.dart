@@ -69,7 +69,7 @@ class FakeCardReader extends Fake implements ICardReader {
   Future<bool> isAvailable() async => true;
   @override
   Future<CardData?> readCard() async {
-    return CardData(maskedPan: '123456******7890', cardToken: 'FAKE_TOKEN');
+    return CardData(pan: '1234567890123456', cardToken: 'FAKE_TOKEN');
   }
 }
 

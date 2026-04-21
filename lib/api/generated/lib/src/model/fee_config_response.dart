@@ -19,8 +19,8 @@ part 'fee_config_response.g.dart';
 /// * [feeAmount] 
 /// * [percentage] 
 /// * [status] 
-/// * [effectiveFrom] 
-/// * [effectiveTo] 
+/// * [createdAt] - ISO-8601 date-time
+/// * [updatedAt] - ISO-8601 date-time
 @BuiltValue()
 abstract class FeeConfigResponse implements Built<FeeConfigResponse, FeeConfigResponseBuilder> {
   @BuiltValueField(wireName: r'feeConfigId')
@@ -43,13 +43,15 @@ abstract class FeeConfigResponse implements Built<FeeConfigResponse, FeeConfigRe
 
   @BuiltValueField(wireName: r'status')
   FeeConfigResponseStatusEnum? get status;
-  // enum statusEnum {  CREATED,  ACTIVE,  INACTIVE,  };
+  // enum statusEnum {  ACTIVE,  INACTIVE,  SUSPENDED,  PENDING,  };
 
-  @BuiltValueField(wireName: r'effectiveFrom')
-  DateTime? get effectiveFrom;
+  /// ISO-8601 date-time
+  @BuiltValueField(wireName: r'createdAt')
+  String? get createdAt;
 
-  @BuiltValueField(wireName: r'effectiveTo')
-  DateTime? get effectiveTo;
+  /// ISO-8601 date-time
+  @BuiltValueField(wireName: r'updatedAt')
+  String? get updatedAt;
 
   FeeConfigResponse._();
 
@@ -123,18 +125,18 @@ class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResp
         specifiedType: const FullType(FeeConfigResponseStatusEnum),
       );
     }
-    if (object.effectiveFrom != null) {
-      yield r'effectiveFrom';
+    if (object.createdAt != null) {
+      yield r'createdAt';
       yield serializers.serialize(
-        object.effectiveFrom,
-        specifiedType: const FullType(DateTime),
+        object.createdAt,
+        specifiedType: const FullType(String),
       );
     }
-    if (object.effectiveTo != null) {
-      yield r'effectiveTo';
+    if (object.updatedAt != null) {
+      yield r'updatedAt';
       yield serializers.serialize(
-        object.effectiveTo,
-        specifiedType: const FullType(DateTime),
+        object.updatedAt,
+        specifiedType: const FullType(String),
       );
     }
   }
@@ -209,19 +211,19 @@ class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResp
           ) as FeeConfigResponseStatusEnum;
           result.status = valueDes;
           break;
-        case r'effectiveFrom':
+        case r'createdAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.effectiveFrom = valueDes;
+            specifiedType: const FullType(String),
+          ) as String;
+          result.createdAt = valueDes;
           break;
-        case r'effectiveTo':
+        case r'updatedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(DateTime),
-          ) as DateTime;
-          result.effectiveTo = valueDes;
+            specifiedType: const FullType(String),
+          ) as String;
+          result.updatedAt = valueDes;
           break;
         default:
           unhandled.add(key);
@@ -254,12 +256,14 @@ class _$FeeConfigResponseSerializer implements PrimitiveSerializer<FeeConfigResp
 
 class FeeConfigResponseStatusEnum extends EnumClass {
 
-  @BuiltValueEnumConst(wireName: r'CREATED')
-  static const FeeConfigResponseStatusEnum CREATED = _$feeConfigResponseStatusEnum_CREATED;
   @BuiltValueEnumConst(wireName: r'ACTIVE')
   static const FeeConfigResponseStatusEnum ACTIVE = _$feeConfigResponseStatusEnum_ACTIVE;
   @BuiltValueEnumConst(wireName: r'INACTIVE')
   static const FeeConfigResponseStatusEnum INACTIVE = _$feeConfigResponseStatusEnum_INACTIVE;
+  @BuiltValueEnumConst(wireName: r'SUSPENDED')
+  static const FeeConfigResponseStatusEnum SUSPENDED = _$feeConfigResponseStatusEnum_SUSPENDED;
+  @BuiltValueEnumConst(wireName: r'PENDING')
+  static const FeeConfigResponseStatusEnum PENDING = _$feeConfigResponseStatusEnum_PENDING;
 
   static Serializer<FeeConfigResponseStatusEnum> get serializer => _$feeConfigResponseStatusEnumSerializer;
 

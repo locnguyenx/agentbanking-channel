@@ -11,7 +11,10 @@ Name | Type | Description | Notes
 **totalAgents** | **int** |  | [optional] 
 **activeAgents** | **int** |  | [optional] 
 **totalTransactions** | **int** |  | [optional] 
-**totalVolume** | **String** |  | [optional] 
+**totalVolume** | **num** |  | [optional] 
+**totalCredits** | **num** |  | [optional] 
+**totalDebits** | **num** |  | [optional] 
+**pendingKyc** | **int** |  | [optional] 
 **successRate** | **num** |  | [optional] 
 **dailyStats** | [**BuiltList&lt;DashboardResponseDailyStatsInner&gt;**](DashboardResponseDailyStatsInner.md) |  | [optional] 
 

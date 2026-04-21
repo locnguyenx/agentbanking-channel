@@ -70,6 +70,7 @@ Class | Method | HTTP request | Description
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**getAgent**](doc/AgentControllerOnboardingServiceApi.md#getagent) | **GET** /api/v1/backoffice/agents/{id} | 
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**listAgents**](doc/AgentControllerOnboardingServiceApi.md#listagents) | **GET** /api/v1/backoffice/agents | 
 [*AgentControllerOnboardingServiceApi*](doc/AgentControllerOnboardingServiceApi.md) | [**updateAgent**](doc/AgentControllerOnboardingServiceApi.md#updateagent) | **PUT** /api/v1/backoffice/agents/{id} | 
+[*AgentOnboardingControllerOnboardingServiceApi*](doc/AgentOnboardingControllerOnboardingServiceApi.md) | [**submitApplication**](doc/AgentOnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
 [*AuditLogControllerOnboardingServiceApi*](doc/AuditLogControllerOnboardingServiceApi.md) | [**getAuditLogs**](doc/AuditLogControllerOnboardingServiceApi.md#getauditlogs) | **GET** /api/v1/backoffice/audit-logs | 
 [*AuthControllerAuthIamServiceApi*](doc/AuthControllerAuthIamServiceApi.md) | [**authenticateUser**](doc/AuthControllerAuthIamServiceApi.md#authenticateuser) | **POST** /api/v1/auth/token | 
 [*AuthControllerAuthIamServiceApi*](doc/AuthControllerAuthIamServiceApi.md) | [**getMyProfile**](doc/AuthControllerAuthIamServiceApi.md#getmyprofile) | **GET** /api/v1/auth/me | Get current user profile
@@ -79,6 +80,8 @@ Class | Method | HTTP request | Description
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**payBill**](doc/BillerControllerBillerServiceApi.md#paybill) | **POST** /api/v1/bill/pay | 
 [*BillerControllerBillerServiceApi*](doc/BillerControllerBillerServiceApi.md) | [**topup**](doc/BillerControllerBillerServiceApi.md#topup) | **POST** /api/v1/topup | 
 [*ComplianceControllerOnboardingServiceApi*](doc/ComplianceControllerOnboardingServiceApi.md) | [**getComplianceStatus**](doc/ComplianceControllerOnboardingServiceApi.md#getcompliancestatus) | **GET** /api/v1/compliance/status | 
+[*DiscrepancyControllerApi*](doc/DiscrepancyControllerApi.md) | [**checkerApprove**](doc/DiscrepancyControllerApi.md#checkerapprove) | **POST** /api/v1/backoffice/discrepancy/checker-approve | 
+[*DiscrepancyControllerApi*](doc/DiscrepancyControllerApi.md) | [**makerPropose**](doc/DiscrepancyControllerApi.md#makerpropose) | **POST** /api/v1/backoffice/discrepancy/maker-propose | 
 [*EWalletControllerBillerServiceApi*](doc/EWalletControllerBillerServiceApi.md) | [**topup1**](doc/EWalletControllerBillerServiceApi.md#topup1) | **POST** /api/v1/ewallet/topup | 
 [*EWalletControllerBillerServiceApi*](doc/EWalletControllerBillerServiceApi.md) | [**withdrawal**](doc/EWalletControllerBillerServiceApi.md#withdrawal) | **POST** /api/v1/ewallet/withdraw | 
 [*EsspControllerBillerServiceApi*](doc/EsspControllerBillerServiceApi.md) | [**purchase**](doc/EsspControllerBillerServiceApi.md#purchase) | **POST** /api/v1/essp/purchase | 
@@ -92,23 +95,24 @@ Class | Method | HTTP request | Description
 [*MerchantControllerLedgerServiceApi*](doc/MerchantControllerLedgerServiceApi.md) | [**processCashBack**](doc/MerchantControllerLedgerServiceApi.md#processcashback) | **POST** /api/v1/retail/cashback | 
 [*MerchantControllerLedgerServiceApi*](doc/MerchantControllerLedgerServiceApi.md) | [**processPinPurchase**](doc/MerchantControllerLedgerServiceApi.md#processpinpurchase) | **POST** /api/v1/retail/pin-purchase | 
 [*MerchantControllerLedgerServiceApi*](doc/MerchantControllerLedgerServiceApi.md) | [**processRetailSale**](doc/MerchantControllerLedgerServiceApi.md#processretailsale) | **POST** /api/v1/retail/sale | 
-[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**biometricMatch**](doc/OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/kyc/biometric | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**biometricMatch**](doc/OnboardingControllerOnboardingServiceApi.md#biometricmatch) | **POST** /api/v1/onboarding/biometric-match | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**getKycReviewQueue**](doc/OnboardingControllerOnboardingServiceApi.md#getkycreviewqueue) | **GET** /api/v1/backoffice/kyc/review-queue | 
-[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**submitApplication**](doc/OnboardingControllerOnboardingServiceApi.md#submitapplication) | **POST** /api/v1/onboarding/submit-application | 
+[*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**submitApplicationLegacy**](doc/OnboardingControllerOnboardingServiceApi.md#submitapplicationlegacy) | **POST** /api/v1/onboarding/submit-application-legacy | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKad**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykad) | **POST** /api/v1/onboarding/verify-mykad | 
 [*OnboardingControllerOnboardingServiceApi*](doc/OnboardingControllerOnboardingServiceApi.md) | [**verifyMyKadKyc**](doc/OnboardingControllerOnboardingServiceApi.md#verifymykadkyc) | **POST** /api/v1/kyc/verify | 
 [*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**forceResolveTransaction**](doc/OrchestratorControllerOrchestratorServiceApi.md#forceresolvetransaction) | **POST** /api/v1/transactions/{workflowId}/force-resolve | Force resolve a stuck transaction workflow
 [*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**getTransactionStatus**](doc/OrchestratorControllerOrchestratorServiceApi.md#gettransactionstatus) | **GET** /api/v1/transactions/{workflowId}/status | Get transaction workflow status
 [*OrchestratorControllerOrchestratorServiceApi*](doc/OrchestratorControllerOrchestratorServiceApi.md) | [**startTransaction**](doc/OrchestratorControllerOrchestratorServiceApi.md#starttransaction) | **POST** /api/v1/transactions | Start a new transaction via Temporal SAGA orchestration
-[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerApprove**](doc/ReconciliationControllerLedgerServiceApi.md#checkerapprove) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
-[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerReject**](doc/ReconciliationControllerLedgerServiceApi.md#checkerreject) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
-[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**makerPropose**](doc/ReconciliationControllerLedgerServiceApi.md#makerpropose) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
-[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerApproveResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerapproveresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-approve | Checker approves proposed resolution
-[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerRejectResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerrejectresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-reject | Checker rejects proposed resolution
-[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**makerProposeResolution**](doc/ResolutionControllerOrchestratorServiceApi.md#makerproposeresolution) | **POST** /api/v1/backoffice/transactions/{workflowId}/maker-propose | Maker proposes resolution for a transaction
+[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerApproveActionLegacy**](doc/ReconciliationControllerLedgerServiceApi.md#checkerapproveactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-approve | 
+[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**checkerRejectActionLegacy**](doc/ReconciliationControllerLedgerServiceApi.md#checkerrejectactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/checker-reject | 
+[*ReconciliationControllerLedgerServiceApi*](doc/ReconciliationControllerLedgerServiceApi.md) | [**makerProposeActionLegacy**](doc/ReconciliationControllerLedgerServiceApi.md#makerproposeactionlegacy) | **POST** /api/v1/backoffice/discrepancy/{caseId}/maker-action | 
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerApproveTransaction**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerapprovetransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-approve | Checker approves proposed resolution
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**checkerRejectTransaction**](doc/ResolutionControllerOrchestratorServiceApi.md#checkerrejecttransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/checker-reject | Checker rejects proposed resolution
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**listTransactions**](doc/ResolutionControllerOrchestratorServiceApi.md#listtransactions) | **GET** /api/v1/backoffice/transactions | 
+[*ResolutionControllerOrchestratorServiceApi*](doc/ResolutionControllerOrchestratorServiceApi.md) | [**makerProposeTransaction**](doc/ResolutionControllerOrchestratorServiceApi.md#makerproposetransaction) | **POST** /api/v1/backoffice/transactions/{workflowId}/maker-propose | Maker proposes resolution for a transaction
 [*RulesControllerRulesServiceApi*](doc/RulesControllerRulesServiceApi.md) | [**createFeeConfig**](doc/RulesControllerRulesServiceApi.md#createfeeconfig) | **POST** /api/v1/rules/fees | 
-[*SwitchControllerBillerServiceApi*](doc/SwitchControllerBillerServiceApi.md) | [**duitNowTransfer**](doc/SwitchControllerBillerServiceApi.md#duitnowtransfer) | **POST** /api/v1/transfer/duitnow | 
 [*SwitchControllerBillerServiceApi*](doc/SwitchControllerBillerServiceApi.md) | [**proxyEnquiry**](doc/SwitchControllerBillerServiceApi.md#proxyenquiry) | **GET** /api/v1/transfer/proxy/enquiry | 
+[*SwitchControllerSwitchAdapterServiceApi*](doc/SwitchControllerSwitchAdapterServiceApi.md) | [**duitNowTransfer**](doc/SwitchControllerSwitchAdapterServiceApi.md#duitnowtransfer) | **POST** /api/v1/transfer/duitnow | 
 [*TransactionControllerRulesServiceApi*](doc/TransactionControllerRulesServiceApi.md) | [**getTransactionQuote**](doc/TransactionControllerRulesServiceApi.md#gettransactionquote) | **POST** /api/v1/transactions/quote | 
 [*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**changePassword**](doc/UserManagementControllerAuthIamServiceApi.md#changepassword) | **POST** /api/v1/auth/password/change | 
 [*UserManagementControllerAuthIamServiceApi*](doc/UserManagementControllerAuthIamServiceApi.md) | [**createAgentUser**](doc/UserManagementControllerAuthIamServiceApi.md#createagentuser) | **POST** /api/v1/backoffice/agents/{agentId}/create-user | 
@@ -119,10 +123,16 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AgentListResponse](doc/AgentListResponse.md)
  - [AgentResponse](doc/AgentResponse.md)
+ - [AgentStats](doc/AgentStats.md)
  - [AgentUserStatusResponse](doc/AgentUserStatusResponse.md)
  - [ApplicationSubmitRequest](doc/ApplicationSubmitRequest.md)
  - [ApplicationSubmitResponse](doc/ApplicationSubmitResponse.md)
+ - [AuditLogRecord](doc/AuditLogRecord.md)
+ - [BackofficeAuditLogListResponse](doc/BackofficeAuditLogListResponse.md)
+ - [BackofficeTransactionListResponse](doc/BackofficeTransactionListResponse.md)
+ - [BalanceInquiry200Response](doc/BalanceInquiry200Response.md)
  - [BalanceInquiryExternalRequest](doc/BalanceInquiryExternalRequest.md)
  - [BalanceInquiryRequest](doc/BalanceInquiryRequest.md)
  - [BalanceResponse](doc/BalanceResponse.md)
@@ -133,6 +143,9 @@ Class | Method | HTTP request | Description
  - [ChangePasswordRequest](doc/ChangePasswordRequest.md)
  - [ChangePasswordResponse](doc/ChangePasswordResponse.md)
  - [CheckerActionRequest](doc/CheckerActionRequest.md)
+ - [CheckerApproveActionLegacyRequest](doc/CheckerApproveActionLegacyRequest.md)
+ - [CheckerApproveRequest](doc/CheckerApproveRequest.md)
+ - [ComplianceStatusResponse](doc/ComplianceStatusResponse.md)
  - [CreateAgentExternalRequest](doc/CreateAgentExternalRequest.md)
  - [CreateAgentUserRequest](doc/CreateAgentUserRequest.md)
  - [DashboardResponse](doc/DashboardResponse.md)
@@ -157,6 +170,8 @@ Class | Method | HTTP request | Description
  - [JomPayExternalRequest](doc/JomPayExternalRequest.md)
  - [KycVerifyResponse](doc/KycVerifyResponse.md)
  - [MakerProposalRequest](doc/MakerProposalRequest.md)
+ - [MakerProposeActionLegacyRequest](doc/MakerProposeActionLegacyRequest.md)
+ - [MakerProposeRequest](doc/MakerProposeRequest.md)
  - [MyKadVerifyRequest](doc/MyKadVerifyRequest.md)
  - [MyProfileResponse](doc/MyProfileResponse.md)
  - [PinPurchaseCommand](doc/PinPurchaseCommand.md)
@@ -173,6 +188,8 @@ Class | Method | HTTP request | Description
  - [ReversalRequest](doc/ReversalRequest.md)
  - [RevokeTokenRequest](doc/RevokeTokenRequest.md)
  - [SettlementResponse](doc/SettlementResponse.md)
+ - [SubmissionRequest](doc/SubmissionRequest.md)
+ - [SubmissionResponse](doc/SubmissionResponse.md)
  - [TokenRequest](doc/TokenRequest.md)
  - [TokenResponse](doc/TokenResponse.md)
  - [TopupExternalRequest](doc/TopupExternalRequest.md)

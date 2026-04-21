@@ -74,13 +74,14 @@ class TransactionRepository {
         ..transactionType = transactionType
         ..agentId = agentId
         ..amount = request.amount?.toDouble() ?? 0.0
+        ..fundingSource = _mapFundingSource(request.fundingSource)
         ..idempotencyKey = effectiveKey
         ..geofenceLat = double.tryParse(request.metadata?['geofenceLat'] ?? '')
         ..geofenceLng = double.tryParse(request.metadata?['geofenceLng'] ?? '')
         // Type-specific field mapping
-        ..pan = request.metadata?['customerCardMasked']
+        ..pan = request.pan
         ..pinBlock = request.pinBlock
-        ..customerCardMasked = request.metadata?['customerCardMasked']
+        ..customerCardMasked = request.pan // No longer masked
         ..destinationAccount = request.metadata?['destinationAccount']
         ..billerCode = request.metadata?['billerCode']
         ..ref1 = request.metadata?['accountNumber'] ?? request.metadata?['ref1']
@@ -189,9 +190,9 @@ class TransactionRepository {
     final data = response.data;
     
     return models.TransactionExecutionResponse(
-      status: data?.currency != null ? 'SUCCESS' : 'UNKNOWN',
-      referenceId: data?.lastTransactionId ?? '',
-      balance: data?.availableBalance != null ? Decimal.parse(data!.availableBalance!.toString()) : null,
+      status: data?.status ?? (data?.currency != null ? 'SUCCESS' : 'UNKNOWN'),
+      referenceId: '', // Inline response doesn't have a transaction ID
+      balance: data?.balance != null ? Decimal.parse(data!.balance!.toString()) : null,
       currency: data?.currency,
     );
   }
@@ -225,6 +226,23 @@ class TransactionRepository {
       case 'MYKAD': return models.FundingSource.DUITNOW_MYKAD;
       case 'BRN': return models.FundingSource.DUITNOW_BRN;
       default: return models.FundingSource.DUITNOW_MOBILE;
+    }
+  }
+
+  TransactionStartRequestFundingSourceEnum _mapFundingSource(models.FundingSource source) {
+    switch (source) {
+      case models.FundingSource.CASH:
+        return TransactionStartRequestFundingSourceEnum.CASH;
+      case models.FundingSource.CARD_EMV:
+      case models.FundingSource.MYKAD_BIOMETRIC:
+        return TransactionStartRequestFundingSourceEnum.ACCOUNT;
+      case models.FundingSource.DUITNOW_MOBILE:
+      case models.FundingSource.DUITNOW_MYKAD:
+      case models.FundingSource.DUITNOW_BRN:
+      case models.FundingSource.DUITNOW_QR:
+        return TransactionStartRequestFundingSourceEnum.MOBILE;
+      default:
+        return TransactionStartRequestFundingSourceEnum.CASH;
     }
   }
 
@@ -301,7 +319,7 @@ class TransactionRepository {
 
   Future<String> getComplianceStatus() async {
     final response = await complianceApi.getComplianceStatus();
-    return response.data ?? 'UNLOCKED';
+    return response.data?.status?.name ?? 'UNLOCKED';
   }
 }
 

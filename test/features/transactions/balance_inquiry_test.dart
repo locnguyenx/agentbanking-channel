@@ -41,7 +41,7 @@ class FakeCardReader extends mockito.Fake implements ICardReader {
   @override
   Future<CardData?> readCard() async {
     await Future.delayed(const Duration(milliseconds: 50));
-    return CardData(maskedPan: '123456******7890', cardToken: 'TOK-123');
+    return CardData(pan: '1234567890123456', cardToken: 'TOK-123');
   }
 }
 
@@ -105,7 +105,7 @@ class ManualFloatNotifier extends FloatNotifier {
 
 class ManualMockLedgerApi extends mockito.Mock implements api.LedgerControllerLedgerServiceApi {
   @override
-  Future<Response<api.BalanceResponse>> balanceInquiry({
+  Future<Response<api.BalanceInquiry200Response>> balanceInquiry({
     api.BalanceInquiryExternalRequest? balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -116,7 +116,7 @@ class ManualMockLedgerApi extends mockito.Mock implements api.LedgerControllerLe
   }) async {
     return super.noSuchMethod(
       Invocation.method(#balanceInquiry, [], {#balanceInquiryExternalRequest: balanceInquiryExternalRequest}),
-      returnValue: Future.value(Response<api.BalanceResponse>(requestOptions: RequestOptions(path: ''))),
+      returnValue: Future.value(Response<api.BalanceInquiry200Response>(requestOptions: RequestOptions(path: ''))),
     );
   }
 
@@ -176,10 +176,10 @@ void main() {
   });
 
   testWidgets('Balance Inquiry follows full card flow and shows success', (tester) async {
-    final balanceResponse = api.BalanceResponse((b) => b
-      ..availableBalance = '1234.56'
+    final balanceResponse = api.BalanceInquiry200Response((b) => b
+      ..balance = 1234.56
       ..currency = 'MYR'
-      ..lastTransactionId = 'TXN-123'
+      ..status = 'SUCCESS'
     );
 
     mockito.when(mockLedgerApi.balanceInquiry(

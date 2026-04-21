@@ -15,8 +15,8 @@ Name | Type | Description | Notes
 **feeAmount** | **String** |  | [optional] 
 **percentage** | **String** |  | [optional] 
 **status** | **String** |  | [optional] 
-**effectiveFrom** | [**DateTime**](DateTime.md) |  | [optional] 
-**effectiveTo** | [**DateTime**](DateTime.md) |  | [optional] 
+**createdAt** | **String** | ISO-8601 date-time | [optional] 
+**updatedAt** | **String** | ISO-8601 date-time | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

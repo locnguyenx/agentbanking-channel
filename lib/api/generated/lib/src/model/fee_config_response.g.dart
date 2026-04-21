@@ -6,21 +6,25 @@ part of 'fee_config_response.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-const FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnum_CREATED =
-    const FeeConfigResponseStatusEnum._('CREATED');
 const FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnum_ACTIVE =
     const FeeConfigResponseStatusEnum._('ACTIVE');
 const FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnum_INACTIVE =
     const FeeConfigResponseStatusEnum._('INACTIVE');
+const FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnum_SUSPENDED =
+    const FeeConfigResponseStatusEnum._('SUSPENDED');
+const FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnum_PENDING =
+    const FeeConfigResponseStatusEnum._('PENDING');
 
 FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnumValueOf(String name) {
   switch (name) {
-    case 'CREATED':
-      return _$feeConfigResponseStatusEnum_CREATED;
     case 'ACTIVE':
       return _$feeConfigResponseStatusEnum_ACTIVE;
     case 'INACTIVE':
       return _$feeConfigResponseStatusEnum_INACTIVE;
+    case 'SUSPENDED':
+      return _$feeConfigResponseStatusEnum_SUSPENDED;
+    case 'PENDING':
+      return _$feeConfigResponseStatusEnum_PENDING;
     default:
       throw ArgumentError(name);
   }
@@ -29,9 +33,10 @@ FeeConfigResponseStatusEnum _$feeConfigResponseStatusEnumValueOf(String name) {
 final BuiltSet<FeeConfigResponseStatusEnum>
     _$feeConfigResponseStatusEnumValues =
     BuiltSet<FeeConfigResponseStatusEnum>(const <FeeConfigResponseStatusEnum>[
-  _$feeConfigResponseStatusEnum_CREATED,
   _$feeConfigResponseStatusEnum_ACTIVE,
   _$feeConfigResponseStatusEnum_INACTIVE,
+  _$feeConfigResponseStatusEnum_SUSPENDED,
+  _$feeConfigResponseStatusEnum_PENDING,
 ]);
 
 Serializer<FeeConfigResponseStatusEnum>
@@ -41,14 +46,16 @@ Serializer<FeeConfigResponseStatusEnum>
 class _$FeeConfigResponseStatusEnumSerializer
     implements PrimitiveSerializer<FeeConfigResponseStatusEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
-    'CREATED': 'CREATED',
     'ACTIVE': 'ACTIVE',
     'INACTIVE': 'INACTIVE',
+    'SUSPENDED': 'SUSPENDED',
+    'PENDING': 'PENDING',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
-    'CREATED': 'CREATED',
     'ACTIVE': 'ACTIVE',
     'INACTIVE': 'INACTIVE',
+    'SUSPENDED': 'SUSPENDED',
+    'PENDING': 'PENDING',
   };
 
   @override
@@ -85,9 +92,9 @@ class _$FeeConfigResponse extends FeeConfigResponse {
   @override
   final FeeConfigResponseStatusEnum? status;
   @override
-  final DateTime? effectiveFrom;
+  final String? createdAt;
   @override
-  final DateTime? effectiveTo;
+  final String? updatedAt;
 
   factory _$FeeConfigResponse(
           [void Function(FeeConfigResponseBuilder)? updates]) =>
@@ -101,8 +108,8 @@ class _$FeeConfigResponse extends FeeConfigResponse {
       this.feeAmount,
       this.percentage,
       this.status,
-      this.effectiveFrom,
-      this.effectiveTo})
+      this.createdAt,
+      this.updatedAt})
       : super._();
   @override
   FeeConfigResponse rebuild(void Function(FeeConfigResponseBuilder) updates) =>
@@ -123,8 +130,8 @@ class _$FeeConfigResponse extends FeeConfigResponse {
         feeAmount == other.feeAmount &&
         percentage == other.percentage &&
         status == other.status &&
-        effectiveFrom == other.effectiveFrom &&
-        effectiveTo == other.effectiveTo;
+        createdAt == other.createdAt &&
+        updatedAt == other.updatedAt;
   }
 
   @override
@@ -137,8 +144,8 @@ class _$FeeConfigResponse extends FeeConfigResponse {
     _$hash = $jc(_$hash, feeAmount.hashCode);
     _$hash = $jc(_$hash, percentage.hashCode);
     _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, effectiveFrom.hashCode);
-    _$hash = $jc(_$hash, effectiveTo.hashCode);
+    _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, updatedAt.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -153,8 +160,8 @@ class _$FeeConfigResponse extends FeeConfigResponse {
           ..add('feeAmount', feeAmount)
           ..add('percentage', percentage)
           ..add('status', status)
-          ..add('effectiveFrom', effectiveFrom)
-          ..add('effectiveTo', effectiveTo))
+          ..add('createdAt', createdAt)
+          ..add('updatedAt', updatedAt))
         .toString();
   }
 }
@@ -192,14 +199,13 @@ class FeeConfigResponseBuilder
   FeeConfigResponseStatusEnum? get status => _$this._status;
   set status(FeeConfigResponseStatusEnum? status) => _$this._status = status;
 
-  DateTime? _effectiveFrom;
-  DateTime? get effectiveFrom => _$this._effectiveFrom;
-  set effectiveFrom(DateTime? effectiveFrom) =>
-      _$this._effectiveFrom = effectiveFrom;
+  String? _createdAt;
+  String? get createdAt => _$this._createdAt;
+  set createdAt(String? createdAt) => _$this._createdAt = createdAt;
 
-  DateTime? _effectiveTo;
-  DateTime? get effectiveTo => _$this._effectiveTo;
-  set effectiveTo(DateTime? effectiveTo) => _$this._effectiveTo = effectiveTo;
+  String? _updatedAt;
+  String? get updatedAt => _$this._updatedAt;
+  set updatedAt(String? updatedAt) => _$this._updatedAt = updatedAt;
 
   FeeConfigResponseBuilder() {
     FeeConfigResponse._defaults(this);
@@ -215,8 +221,8 @@ class FeeConfigResponseBuilder
       _feeAmount = $v.feeAmount;
       _percentage = $v.percentage;
       _status = $v.status;
-      _effectiveFrom = $v.effectiveFrom;
-      _effectiveTo = $v.effectiveTo;
+      _createdAt = $v.createdAt;
+      _updatedAt = $v.updatedAt;
       _$v = null;
     }
     return this;
@@ -245,8 +251,8 @@ class FeeConfigResponseBuilder
           feeAmount: feeAmount,
           percentage: percentage,
           status: status,
-          effectiveFrom: effectiveFrom,
-          effectiveTo: effectiveTo,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         );
     replace(_$result);
     return _$result;

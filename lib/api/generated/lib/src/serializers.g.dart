@@ -7,15 +7,21 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (Serializers().toBuilder()
+      ..add(AgentListResponse.serializer)
       ..add(AgentResponse.serializer)
       ..add(AgentResponseStatusEnum.serializer)
       ..add(AgentResponseTierEnum.serializer)
+      ..add(AgentStats.serializer)
       ..add(AgentUserStatusResponse.serializer)
       ..add(AgentUserStatusResponseStatusEnum.serializer)
       ..add(ApplicationSubmitRequest.serializer)
       ..add(ApplicationSubmitRequestTierEnum.serializer)
       ..add(ApplicationSubmitResponse.serializer)
       ..add(ApplicationSubmitResponseStatusEnum.serializer)
+      ..add(AuditLogRecord.serializer)
+      ..add(BackofficeAuditLogListResponse.serializer)
+      ..add(BackofficeTransactionListResponse.serializer)
+      ..add(BalanceInquiry200Response.serializer)
       ..add(BalanceInquiryExternalRequest.serializer)
       ..add(BalanceInquiryRequest.serializer)
       ..add(BalanceResponse.serializer)
@@ -27,6 +33,10 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ChangePasswordRequest.serializer)
       ..add(ChangePasswordResponse.serializer)
       ..add(CheckerActionRequest.serializer)
+      ..add(CheckerApproveActionLegacyRequest.serializer)
+      ..add(CheckerApproveRequest.serializer)
+      ..add(ComplianceStatusResponse.serializer)
+      ..add(ComplianceStatusResponseStatusEnum.serializer)
       ..add(CreateAgentExternalRequest.serializer)
       ..add(CreateAgentExternalRequestTierEnum.serializer)
       ..add(CreateAgentUserRequest.serializer)
@@ -64,6 +74,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ForceResolveRequest.serializer)
       ..add(ForceResolveRequestActionEnum.serializer)
       ..add(ForceResolveTransaction200Response.serializer)
+      ..add(ForceResolveTransaction200ResponseActionEnum.serializer)
       ..add(ForgotPasswordRequest.serializer)
       ..add(ForgotPasswordResponse.serializer)
       ..add(GeoLocation.serializer)
@@ -74,6 +85,8 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(KycVerifyResponseStatusEnum.serializer)
       ..add(MakerProposalRequest.serializer)
       ..add(MakerProposalRequestActionEnum.serializer)
+      ..add(MakerProposeActionLegacyRequest.serializer)
+      ..add(MakerProposeRequest.serializer)
       ..add(MyKadVerifyRequest.serializer)
       ..add(MyProfileResponse.serializer)
       ..add(MyProfileResponseUserTypeEnum.serializer)
@@ -93,6 +106,9 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(ReversalRequest.serializer)
       ..add(RevokeTokenRequest.serializer)
       ..add(SettlementResponse.serializer)
+      ..add(SubmissionRequest.serializer)
+      ..add(SubmissionRequestAgentTierEnum.serializer)
+      ..add(SubmissionResponse.serializer)
       ..add(TokenRequest.serializer)
       ..add(TokenRequestGrantTypeEnum.serializer)
       ..add(TokenResponse.serializer)
@@ -110,6 +126,7 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(TransactionResponseStatusEnum.serializer)
       ..add(TransactionStartRequest.serializer)
       ..add(TransactionStartRequestAgentTierEnum.serializer)
+      ..add(TransactionStartRequestFundingSourceEnum.serializer)
       ..add(TransactionStartRequestProxyTypeEnum.serializer)
       ..add(TransactionStartResponse.serializer)
       ..add(TransactionStartResponseStatusEnum.serializer)
@@ -124,6 +141,28 @@ Serializers _$serializers = (Serializers().toBuilder()
       ..add(UserResponseUserTypeEnum.serializer)
       ..add(WithdrawalExternalRequest.serializer)
       ..add(WithdrawalExternalRequestCurrencyEnum.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(AgentResponse)]),
+          () => ListBuilder<AgentResponse>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(AuditLogRecord)]),
+          () => ListBuilder<AuditLogRecord>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(BuiltMap, const [
+              const FullType(String),
+              const FullType.nullable(JsonObject)
+            ])
+          ]),
+          () => ListBuilder<BuiltMap<String, JsonObject?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(BuiltMap, const [
+              const FullType(String),
+              const FullType.nullable(JsonObject)
+            ])
+          ]),
+          () => ListBuilder<BuiltMap<String, JsonObject?>>())
       ..addBuilderFactory(
           const FullType(BuiltList,
               const [const FullType(DashboardResponseDailyStatsInner)]),

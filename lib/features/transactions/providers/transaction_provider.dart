@@ -344,6 +344,18 @@ class TransactionNotifier extends StateNotifier<TransactionState> {
     }
   }
 
+  Future<void> recordMyKadScan(String icNumber, String name) async {
+    if (!_mounted) return;
+    final updatedMetadata = Map<String, String>.from(state.metadata?.cast<String, String>() ?? {});
+    updatedMetadata['myKadReference'] = icNumber;
+    updatedMetadata['myKadName'] = name;
+    
+    state = state.copyWith(
+      status: TransactionStatus.waitingConsent,
+      metadata: updatedMetadata,
+    );
+  }
+
   void debugSetState(TransactionState newState) {
     state = newState;
   }

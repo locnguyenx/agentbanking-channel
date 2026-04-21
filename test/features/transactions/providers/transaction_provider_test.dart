@@ -88,7 +88,8 @@ class ManualMockComplianceNotifier extends ComplianceNotifier {
 
 class ManualCardReader implements ICardReader {
   @override
-  Future<CardData?> readCard() async => CardData(maskedPan: '123', cardToken: 'tk');
+  @override
+  Future<CardData?> readCard() async => CardData(pan: '1234567890123456', cardToken: 'tk');
   @override
   Future<bool> isAvailable() async => true;
 }

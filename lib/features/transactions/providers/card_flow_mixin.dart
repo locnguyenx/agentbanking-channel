@@ -34,7 +34,11 @@ mixin CardFlowMixin {
         return null;
       }
 
-      return CardPinResult(cardToken: cardData.cardToken, pinBlock: pinBlock);
+      return CardPinResult(
+        cardToken: cardData.cardToken,
+        pinBlock: pinBlock,
+        pan: cardData.pan,
+      );
     } catch (e) {
       if (isMounted) {
         updateState(TransactionStatus.failed, error: e.toString());
@@ -47,6 +51,11 @@ mixin CardFlowMixin {
 class CardPinResult {
   final String cardToken;
   final String pinBlock;
+  final String pan; // ATM Card Number
 
-  CardPinResult({required this.cardToken, required this.pinBlock});
+  CardPinResult({
+    required this.cardToken,
+    required this.pinBlock,
+    required this.pan,
+  });
 }

@@ -10,7 +10,7 @@ class _$MyKadVerifyRequest extends MyKadVerifyRequest {
   @override
   final String mykadNumber;
   @override
-  final String name;
+  final String? name;
   @override
   final Date? dateOfBirth;
   @override
@@ -21,10 +21,7 @@ class _$MyKadVerifyRequest extends MyKadVerifyRequest {
       (MyKadVerifyRequestBuilder()..update(updates))._build();
 
   _$MyKadVerifyRequest._(
-      {required this.mykadNumber,
-      required this.name,
-      this.dateOfBirth,
-      this.address})
+      {required this.mykadNumber, this.name, this.dateOfBirth, this.address})
       : super._();
   @override
   MyKadVerifyRequest rebuild(
@@ -121,8 +118,7 @@ class MyKadVerifyRequestBuilder
         _$MyKadVerifyRequest._(
           mykadNumber: BuiltValueNullFieldError.checkNotNull(
               mykadNumber, r'MyKadVerifyRequest', 'mykadNumber'),
-          name: BuiltValueNullFieldError.checkNotNull(
-              name, r'MyKadVerifyRequest', 'name'),
+          name: name,
           dateOfBirth: dateOfBirth,
           address: address,
         );

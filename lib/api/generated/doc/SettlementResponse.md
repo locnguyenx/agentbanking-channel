@@ -8,13 +8,12 @@ import 'package:agent_api/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**settlementId** | **String** |  | [optional] 
-**agentId** | **String** |  | [optional] 
+**transactions** | [**BuiltList&lt;BuiltMap&lt;String, JsonObject&gt;&gt;**](BuiltMap.md) |  | [optional] 
+**totalDebits** | **num** |  | [optional] 
+**totalCredits** | **num** |  | [optional] 
+**totalCommissions** | **num** |  | [optional] 
+**netAmount** | **num** |  | [optional] 
 **date** | [**Date**](Date.md) |  | [optional] 
-**totalTransactions** | **int** |  | [optional] 
-**totalAmount** | **String** |  | [optional] 
-**commission** | **String** |  | [optional] 
-**status** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

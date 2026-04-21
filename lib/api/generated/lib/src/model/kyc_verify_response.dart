@@ -14,6 +14,10 @@ part 'kyc_verify_response.g.dart';
 /// Properties:
 /// * [verificationId] 
 /// * [status] 
+/// * [fullName] 
+/// * [dateOfBirth] 
+/// * [age] 
+/// * [amlStatus] 
 /// * [message] 
 /// * [kycLevel] 
 /// * [expiresAt] 
@@ -24,7 +28,19 @@ abstract class KycVerifyResponse implements Built<KycVerifyResponse, KycVerifyRe
 
   @BuiltValueField(wireName: r'status')
   KycVerifyResponseStatusEnum? get status;
-  // enum statusEnum {  VERIFIED,  PENDING,  FAILED,  };
+  // enum statusEnum {  VERIFIED,  PENDING,  FAILED,  FOUND,  };
+
+  @BuiltValueField(wireName: r'fullName')
+  String? get fullName;
+
+  @BuiltValueField(wireName: r'dateOfBirth')
+  String? get dateOfBirth;
+
+  @BuiltValueField(wireName: r'age')
+  int? get age;
+
+  @BuiltValueField(wireName: r'amlStatus')
+  String? get amlStatus;
 
   @BuiltValueField(wireName: r'message')
   String? get message;
@@ -71,6 +87,34 @@ class _$KycVerifyResponseSerializer implements PrimitiveSerializer<KycVerifyResp
       yield serializers.serialize(
         object.status,
         specifiedType: const FullType(KycVerifyResponseStatusEnum),
+      );
+    }
+    if (object.fullName != null) {
+      yield r'fullName';
+      yield serializers.serialize(
+        object.fullName,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.dateOfBirth != null) {
+      yield r'dateOfBirth';
+      yield serializers.serialize(
+        object.dateOfBirth,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.age != null) {
+      yield r'age';
+      yield serializers.serialize(
+        object.age,
+        specifiedType: const FullType(int),
+      );
+    }
+    if (object.amlStatus != null) {
+      yield r'amlStatus';
+      yield serializers.serialize(
+        object.amlStatus,
+        specifiedType: const FullType(String),
       );
     }
     if (object.message != null) {
@@ -131,6 +175,34 @@ class _$KycVerifyResponseSerializer implements PrimitiveSerializer<KycVerifyResp
           ) as KycVerifyResponseStatusEnum;
           result.status = valueDes;
           break;
+        case r'fullName':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.fullName = valueDes;
+          break;
+        case r'dateOfBirth':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.dateOfBirth = valueDes;
+          break;
+        case r'age':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(int),
+          ) as int;
+          result.age = valueDes;
+          break;
+        case r'amlStatus':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.amlStatus = valueDes;
+          break;
         case r'message':
           final valueDes = serializers.deserialize(
             value,
@@ -189,6 +261,8 @@ class KycVerifyResponseStatusEnum extends EnumClass {
   static const KycVerifyResponseStatusEnum PENDING = _$kycVerifyResponseStatusEnum_PENDING;
   @BuiltValueEnumConst(wireName: r'FAILED')
   static const KycVerifyResponseStatusEnum FAILED = _$kycVerifyResponseStatusEnum_FAILED;
+  @BuiltValueEnumConst(wireName: r'FOUND')
+  static const KycVerifyResponseStatusEnum FOUND = _$kycVerifyResponseStatusEnum_FOUND;
 
   static Serializer<KycVerifyResponseStatusEnum> get serializer => _$kycVerifyResponseStatusEnumSerializer;
 

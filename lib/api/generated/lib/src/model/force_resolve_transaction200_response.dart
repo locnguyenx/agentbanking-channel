@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -11,10 +12,19 @@ part 'force_resolve_transaction200_response.g.dart';
 /// ForceResolveTransaction200Response
 ///
 /// Properties:
+/// * [action] 
+/// * [reason] 
 /// * [status] 
 /// * [message] 
 @BuiltValue()
 abstract class ForceResolveTransaction200Response implements Built<ForceResolveTransaction200Response, ForceResolveTransaction200ResponseBuilder> {
+  @BuiltValueField(wireName: r'action')
+  ForceResolveTransaction200ResponseActionEnum get action;
+  // enum actionEnum {  MANUAL_RETRY,  MANUAL_CANCEL,  MANUAL_COMPLETE,  };
+
+  @BuiltValueField(wireName: r'reason')
+  String? get reason;
+
   @BuiltValueField(wireName: r'status')
   String? get status;
 
@@ -44,6 +54,18 @@ class _$ForceResolveTransaction200ResponseSerializer implements PrimitiveSeriali
     ForceResolveTransaction200Response object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    yield r'action';
+    yield serializers.serialize(
+      object.action,
+      specifiedType: const FullType(ForceResolveTransaction200ResponseActionEnum),
+    );
+    if (object.reason != null) {
+      yield r'reason';
+      yield serializers.serialize(
+        object.reason,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.status != null) {
       yield r'status';
       yield serializers.serialize(
@@ -81,6 +103,20 @@ class _$ForceResolveTransaction200ResponseSerializer implements PrimitiveSeriali
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'action':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(ForceResolveTransaction200ResponseActionEnum),
+          ) as ForceResolveTransaction200ResponseActionEnum;
+          result.action = valueDes;
+          break;
+        case r'reason':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.reason = valueDes;
+          break;
         case r'status':
           final valueDes = serializers.deserialize(
             value,
@@ -122,5 +158,22 @@ class _$ForceResolveTransaction200ResponseSerializer implements PrimitiveSeriali
     );
     return result.build();
   }
+}
+
+class ForceResolveTransaction200ResponseActionEnum extends EnumClass {
+
+  @BuiltValueEnumConst(wireName: r'MANUAL_RETRY')
+  static const ForceResolveTransaction200ResponseActionEnum MANUAL_RETRY = _$forceResolveTransaction200ResponseActionEnum_MANUAL_RETRY;
+  @BuiltValueEnumConst(wireName: r'MANUAL_CANCEL')
+  static const ForceResolveTransaction200ResponseActionEnum MANUAL_CANCEL = _$forceResolveTransaction200ResponseActionEnum_MANUAL_CANCEL;
+  @BuiltValueEnumConst(wireName: r'MANUAL_COMPLETE')
+  static const ForceResolveTransaction200ResponseActionEnum MANUAL_COMPLETE = _$forceResolveTransaction200ResponseActionEnum_MANUAL_COMPLETE;
+
+  static Serializer<ForceResolveTransaction200ResponseActionEnum> get serializer => _$forceResolveTransaction200ResponseActionEnumSerializer;
+
+  const ForceResolveTransaction200ResponseActionEnum._(String name): super(name);
+
+  static BuiltSet<ForceResolveTransaction200ResponseActionEnum> get values => _$forceResolveTransaction200ResponseActionEnumValues;
+  static ForceResolveTransaction200ResponseActionEnum valueOf(String name) => _$forceResolveTransaction200ResponseActionEnumValueOf(name);
 }
 

@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **getAuditLogs**
-> BuiltMap<String, JsonObject> getAuditLogs(entityType, fromDate, toDate, page, size)
+> BackofficeAuditLogListResponse getAuditLogs(entityType, fromDate, toDate, page, size)
 
 
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**BuiltMap&lt;String, JsonObject&gt;**](JsonObject.md)
+[**BackofficeAuditLogListResponse**](BackofficeAuditLogListResponse.md)
 
 ### Authorization
 

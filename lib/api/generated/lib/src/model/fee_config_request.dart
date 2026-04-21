@@ -31,7 +31,7 @@ abstract class FeeConfigRequest implements Built<FeeConfigRequest, FeeConfigRequ
   /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueField(wireName: r'transactionType')
   FeeConfigRequestTransactionTypeEnum get transactionType;
-  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  DUITNOW_TRANSFER,  BILL_PAYMENT,  JOMPAY,  ASTRO_RPN,  TM_RPN,  EPF_PAYMENT,  PREPAID_TOPUP,  CELCOM_TOPUP,  M1_TOPUP,  SARAWAK_PAY_WITHDRAWAL,  SARAWAK_PAY_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  RETAIL_SALE,  HYBRID_CASHBACK,  };
+  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BALANCE_INQUIRY,  DUITNOW_TRANSFER,  BILL_PAYMENT,  JOMPAY,  ASTRO_RPN,  TM_RPN,  EPF_PAYMENT,  PREPAID_TOPUP,  CELCOM_TOPUP,  M1_TOPUP,  SARAWAK_PAY_WITHDRAWAL,  SARAWAK_PAY_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  RETAIL_SALE,  HYBRID_CASHBACK,  };
 
   @BuiltValueField(wireName: r'feeType')
   FeeConfigRequestFeeTypeEnum get feeType;
@@ -289,7 +289,9 @@ class FeeConfigRequestTransactionTypeEnum extends EnumClass {
   /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'CASH_DEPOSIT')
   static const FeeConfigRequestTransactionTypeEnum CASH_DEPOSIT = _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT;
-
+  /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
+  @BuiltValueEnumConst(wireName: r'BALANCE_INQUIRY')
+  static const FeeConfigRequestTransactionTypeEnum BALANCE_INQUIRY = _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY;
   /// Transaction type. JOMPAY, ASTRO_RPN, TM_RPN map to BILL_PAYMENT. CELCOM_TOPUP, M1_TOPUP map to PREPAID_TOPUP.
   @BuiltValueEnumConst(wireName: r'DUITNOW_TRANSFER')
   static const FeeConfigRequestTransactionTypeEnum DUITNOW_TRANSFER = _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER;

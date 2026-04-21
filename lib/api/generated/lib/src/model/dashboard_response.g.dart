@@ -14,7 +14,13 @@ class _$DashboardResponse extends DashboardResponse {
   @override
   final int? totalTransactions;
   @override
-  final String? totalVolume;
+  final num? totalVolume;
+  @override
+  final num? totalCredits;
+  @override
+  final num? totalDebits;
+  @override
+  final int? pendingKyc;
   @override
   final num? successRate;
   @override
@@ -29,6 +35,9 @@ class _$DashboardResponse extends DashboardResponse {
       this.activeAgents,
       this.totalTransactions,
       this.totalVolume,
+      this.totalCredits,
+      this.totalDebits,
+      this.pendingKyc,
       this.successRate,
       this.dailyStats})
       : super._();
@@ -48,6 +57,9 @@ class _$DashboardResponse extends DashboardResponse {
         activeAgents == other.activeAgents &&
         totalTransactions == other.totalTransactions &&
         totalVolume == other.totalVolume &&
+        totalCredits == other.totalCredits &&
+        totalDebits == other.totalDebits &&
+        pendingKyc == other.pendingKyc &&
         successRate == other.successRate &&
         dailyStats == other.dailyStats;
   }
@@ -59,6 +71,9 @@ class _$DashboardResponse extends DashboardResponse {
     _$hash = $jc(_$hash, activeAgents.hashCode);
     _$hash = $jc(_$hash, totalTransactions.hashCode);
     _$hash = $jc(_$hash, totalVolume.hashCode);
+    _$hash = $jc(_$hash, totalCredits.hashCode);
+    _$hash = $jc(_$hash, totalDebits.hashCode);
+    _$hash = $jc(_$hash, pendingKyc.hashCode);
     _$hash = $jc(_$hash, successRate.hashCode);
     _$hash = $jc(_$hash, dailyStats.hashCode);
     _$hash = $jf(_$hash);
@@ -72,6 +87,9 @@ class _$DashboardResponse extends DashboardResponse {
           ..add('activeAgents', activeAgents)
           ..add('totalTransactions', totalTransactions)
           ..add('totalVolume', totalVolume)
+          ..add('totalCredits', totalCredits)
+          ..add('totalDebits', totalDebits)
+          ..add('pendingKyc', pendingKyc)
           ..add('successRate', successRate)
           ..add('dailyStats', dailyStats))
         .toString();
@@ -95,9 +113,21 @@ class DashboardResponseBuilder
   set totalTransactions(int? totalTransactions) =>
       _$this._totalTransactions = totalTransactions;
 
-  String? _totalVolume;
-  String? get totalVolume => _$this._totalVolume;
-  set totalVolume(String? totalVolume) => _$this._totalVolume = totalVolume;
+  num? _totalVolume;
+  num? get totalVolume => _$this._totalVolume;
+  set totalVolume(num? totalVolume) => _$this._totalVolume = totalVolume;
+
+  num? _totalCredits;
+  num? get totalCredits => _$this._totalCredits;
+  set totalCredits(num? totalCredits) => _$this._totalCredits = totalCredits;
+
+  num? _totalDebits;
+  num? get totalDebits => _$this._totalDebits;
+  set totalDebits(num? totalDebits) => _$this._totalDebits = totalDebits;
+
+  int? _pendingKyc;
+  int? get pendingKyc => _$this._pendingKyc;
+  set pendingKyc(int? pendingKyc) => _$this._pendingKyc = pendingKyc;
 
   num? _successRate;
   num? get successRate => _$this._successRate;
@@ -120,6 +150,9 @@ class DashboardResponseBuilder
       _activeAgents = $v.activeAgents;
       _totalTransactions = $v.totalTransactions;
       _totalVolume = $v.totalVolume;
+      _totalCredits = $v.totalCredits;
+      _totalDebits = $v.totalDebits;
+      _pendingKyc = $v.pendingKyc;
       _successRate = $v.successRate;
       _dailyStats = $v.dailyStats?.toBuilder();
       _$v = null;
@@ -149,6 +182,9 @@ class DashboardResponseBuilder
             activeAgents: activeAgents,
             totalTransactions: totalTransactions,
             totalVolume: totalVolume,
+            totalCredits: totalCredits,
+            totalDebits: totalDebits,
+            pendingKyc: pendingKyc,
             successRate: successRate,
             dailyStats: _dailyStats?.build(),
           );

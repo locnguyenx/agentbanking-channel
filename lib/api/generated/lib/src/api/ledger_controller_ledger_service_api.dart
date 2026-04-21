@@ -9,6 +9,7 @@ import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
 
 import 'package:agent_api/src/api_util.dart';
+import 'package:agent_api/src/model/balance_inquiry200_response.dart';
 import 'package:agent_api/src/model/balance_inquiry_external_request.dart';
 import 'package:agent_api/src/model/balance_response.dart';
 import 'package:agent_api/src/model/dashboard_response.dart';
@@ -40,9 +41,9 @@ class LedgerControllerLedgerServiceApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [BalanceResponse] as data
+  /// Returns a [Future] containing a [Response] with a [BalanceInquiry200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BalanceResponse>> balanceInquiry({ 
+  Future<Response<BalanceInquiry200Response>> balanceInquiry({ 
     required BalanceInquiryExternalRequest balanceInquiryExternalRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -98,14 +99,14 @@ class LedgerControllerLedgerServiceApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    BalanceResponse? _responseData;
+    BalanceInquiry200Response? _responseData;
 
     try {
       final rawResponse = _response.data;
       _responseData = rawResponse == null ? null : _serializers.deserialize(
         rawResponse,
-        specifiedType: const FullType(BalanceResponse),
-      ) as BalanceResponse;
+        specifiedType: const FullType(BalanceInquiry200Response),
+      ) as BalanceInquiry200Response;
 
     } catch (error, stackTrace) {
       throw DioException(
@@ -117,7 +118,7 @@ class LedgerControllerLedgerServiceApi {
       );
     }
 
-    return Response<BalanceResponse>(
+    return Response<BalanceInquiry200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

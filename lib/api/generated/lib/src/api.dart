@@ -10,10 +10,12 @@ import 'package:agent_api/src/auth/basic_auth.dart';
 import 'package:agent_api/src/auth/bearer_auth.dart';
 import 'package:agent_api/src/auth/oauth.dart';
 import 'package:agent_api/src/api/agent_controller_onboarding_service_api.dart';
+import 'package:agent_api/src/api/agent_onboarding_controller_onboarding_service_api.dart';
 import 'package:agent_api/src/api/audit_log_controller_onboarding_service_api.dart';
 import 'package:agent_api/src/api/auth_controller_auth_iam_service_api.dart';
 import 'package:agent_api/src/api/biller_controller_biller_service_api.dart';
 import 'package:agent_api/src/api/compliance_controller_onboarding_service_api.dart';
+import 'package:agent_api/src/api/discrepancy_controller_api.dart';
 import 'package:agent_api/src/api/e_wallet_controller_biller_service_api.dart';
 import 'package:agent_api/src/api/essp_controller_biller_service_api.dart';
 import 'package:agent_api/src/api/ledger_controller_ledger_service_api.dart';
@@ -24,6 +26,7 @@ import 'package:agent_api/src/api/reconciliation_controller_ledger_service_api.d
 import 'package:agent_api/src/api/resolution_controller_orchestrator_service_api.dart';
 import 'package:agent_api/src/api/rules_controller_rules_service_api.dart';
 import 'package:agent_api/src/api/switch_controller_biller_service_api.dart';
+import 'package:agent_api/src/api/switch_controller_switch_adapter_service_api.dart';
 import 'package:agent_api/src/api/transaction_controller_rules_service_api.dart';
 import 'package:agent_api/src/api/user_management_controller_auth_iam_service_api.dart';
 
@@ -87,6 +90,12 @@ class AgentApi {
     return AgentControllerOnboardingServiceApi(dio, serializers);
   }
 
+  /// Get AgentOnboardingControllerOnboardingServiceApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AgentOnboardingControllerOnboardingServiceApi getAgentOnboardingControllerOnboardingServiceApi() {
+    return AgentOnboardingControllerOnboardingServiceApi(dio, serializers);
+  }
+
   /// Get AuditLogControllerOnboardingServiceApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   AuditLogControllerOnboardingServiceApi getAuditLogControllerOnboardingServiceApi() {
@@ -109,6 +118,12 @@ class AgentApi {
   /// by doing that all interceptors will not be executed
   ComplianceControllerOnboardingServiceApi getComplianceControllerOnboardingServiceApi() {
     return ComplianceControllerOnboardingServiceApi(dio, serializers);
+  }
+
+  /// Get DiscrepancyControllerApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  DiscrepancyControllerApi getDiscrepancyControllerApi() {
+    return DiscrepancyControllerApi(dio, serializers);
   }
 
   /// Get EWalletControllerBillerServiceApi instance, base route and serializer can be overridden by a given but be careful,
@@ -169,6 +184,12 @@ class AgentApi {
   /// by doing that all interceptors will not be executed
   SwitchControllerBillerServiceApi getSwitchControllerBillerServiceApi() {
     return SwitchControllerBillerServiceApi(dio, serializers);
+  }
+
+  /// Get SwitchControllerSwitchAdapterServiceApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  SwitchControllerSwitchAdapterServiceApi getSwitchControllerSwitchAdapterServiceApi() {
+    return SwitchControllerSwitchAdapterServiceApi(dio, serializers);
   }
 
   /// Get TransactionControllerRulesServiceApi instance, base route and serializer can be overridden by a given but be careful,

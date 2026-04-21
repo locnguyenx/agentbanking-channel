@@ -83,7 +83,7 @@ class _$ErrorResponseErrorSerializer implements PrimitiveSerializer<ErrorRespons
       yield r'trace_id';
       yield serializers.serialize(
         object.traceId,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.timestamp != null) {
@@ -140,8 +140,9 @@ class _$ErrorResponseErrorSerializer implements PrimitiveSerializer<ErrorRespons
         case r'trace_id':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
           result.traceId = valueDes;
           break;
         case r'timestamp':

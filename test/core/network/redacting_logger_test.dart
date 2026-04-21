@@ -22,10 +22,10 @@ void main() {
       expect(result, contains('900101******'));
     });
 
-    test('redacts 16-digit Credit Card PAN', () {
+    test('no longer redacts 16-digit Credit Card PAN', () {
       const input = 'Payment with card 4111-2222-3333-4444';
       final result = logger.redact(input);
-      expect(result, contains('4111 **** **** 4444'));
+      expect(result, contains('4111-2222-3333-4444'));
     });
 
     test('does not redact non-PII numbers', () {

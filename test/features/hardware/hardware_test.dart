@@ -6,8 +6,8 @@ void main() {
     test('MockCardReader returns masked PAN correctly', () async {
       final reader = MockCardReader();
       final data = await reader.readCard();
-      expect(data?.maskedPan, startsWith('411111'));
-      expect(data?.maskedPan, endsWith('1111'));
+      expect(data?.pan, startsWith('411122'));
+      expect(data?.pan, endsWith('4444'));
     });
 
     test('MockPinPad returns encrypted PIN block', () async {
