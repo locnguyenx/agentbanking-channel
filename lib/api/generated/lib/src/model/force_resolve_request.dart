@@ -12,23 +12,18 @@ part 'force_resolve_request.g.dart';
 /// ForceResolveRequest
 ///
 /// Properties:
-/// * [action] - Action to take - RETRY to retry, ABORT to cancel
+/// * [action] - Action to take - COMMIT to complete, REVERSE to cancel
 /// * [reason] - Reason for force resolve
-/// * [adminId] - ID of the admin performing the action
 @BuiltValue()
 abstract class ForceResolveRequest implements Built<ForceResolveRequest, ForceResolveRequestBuilder> {
-  /// Action to take - RETRY to retry, ABORT to cancel
+  /// Action to take - COMMIT to complete, REVERSE to cancel
   @BuiltValueField(wireName: r'action')
   ForceResolveRequestActionEnum get action;
-  // enum actionEnum {  RETRY,  ABORT,  };
+  // enum actionEnum {  COMMIT,  REVERSE,  };
 
   /// Reason for force resolve
   @BuiltValueField(wireName: r'reason')
-  String? get reason;
-
-  /// ID of the admin performing the action
-  @BuiltValueField(wireName: r'adminId')
-  String get adminId;
+  String get reason;
 
   ForceResolveRequest._();
 
@@ -58,16 +53,9 @@ class _$ForceResolveRequestSerializer implements PrimitiveSerializer<ForceResolv
       object.action,
       specifiedType: const FullType(ForceResolveRequestActionEnum),
     );
-    if (object.reason != null) {
-      yield r'reason';
-      yield serializers.serialize(
-        object.reason,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'adminId';
+    yield r'reason';
     yield serializers.serialize(
-      object.adminId,
+      object.reason,
       specifiedType: const FullType(String),
     );
   }
@@ -107,13 +95,6 @@ class _$ForceResolveRequestSerializer implements PrimitiveSerializer<ForceResolv
           ) as String;
           result.reason = valueDes;
           break;
-        case r'adminId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.adminId = valueDes;
-          break;
         default:
           unhandled.add(key);
           unhandled.add(value);
@@ -145,12 +126,12 @@ class _$ForceResolveRequestSerializer implements PrimitiveSerializer<ForceResolv
 
 class ForceResolveRequestActionEnum extends EnumClass {
 
-  /// Action to take - RETRY to retry, ABORT to cancel
-  @BuiltValueEnumConst(wireName: r'RETRY')
-  static const ForceResolveRequestActionEnum RETRY = _$forceResolveRequestActionEnum_RETRY;
-  /// Action to take - RETRY to retry, ABORT to cancel
-  @BuiltValueEnumConst(wireName: r'ABORT')
-  static const ForceResolveRequestActionEnum ABORT = _$forceResolveRequestActionEnum_ABORT;
+  /// Action to take - COMMIT to complete, REVERSE to cancel
+  @BuiltValueEnumConst(wireName: r'COMMIT')
+  static const ForceResolveRequestActionEnum COMMIT = _$forceResolveRequestActionEnum_COMMIT;
+  /// Action to take - COMMIT to complete, REVERSE to cancel
+  @BuiltValueEnumConst(wireName: r'REVERSE')
+  static const ForceResolveRequestActionEnum REVERSE = _$forceResolveRequestActionEnum_REVERSE;
 
   static Serializer<ForceResolveRequestActionEnum> get serializer => _$forceResolveRequestActionEnumSerializer;
 

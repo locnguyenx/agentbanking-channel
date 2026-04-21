@@ -13,10 +13,9 @@ final floatRepositoryProvider = Provider<FloatRepository>((ref) {
 
 final floatProvider = StateNotifierProvider<FloatNotifier, FloatLedger>((ref) {
   final repository = ref.watch(floatRepositoryProvider);
-  final authState = ref.watch(authProvider);
-  final agentId = authState.user?.agentId;
+  // US-CA-21 fix: Use .select to only rebuild if agentId actually changes
+  final agentId = ref.watch(authProvider.select((s) => s.user?.agentId));
   
-  // Notifier handles its own timer/polling
   return FloatNotifier(repository, agentId);
 });
 
@@ -25,6 +24,7 @@ class FloatNotifier extends StateNotifier<FloatLedger> {
   final String? _agentId;
   final bool startTimer;
   bool _mounted = true;
+  bool _isFetching = false;
   Timer? timer;
 
   FloatNotifier(this._repository, this._agentId, {this.startTimer = true}) : super(FloatLedger(
@@ -52,8 +52,9 @@ class FloatNotifier extends StateNotifier<FloatLedger> {
 
   Future<void> fetchLatestBalance() async {
     if (_agentId == null) return;
-    if (!_mounted) return;
+    if (!_mounted || _isFetching) return;
     
+    _isFetching = true;
     try {
       final ledger = await _repository.getFloatStatus(_agentId!);
       if (_mounted) {
@@ -61,6 +62,8 @@ class FloatNotifier extends StateNotifier<FloatLedger> {
       }
     } catch (e) {
       // Handle error
+    } finally {
+      _isFetching = false;
     }
   }
 

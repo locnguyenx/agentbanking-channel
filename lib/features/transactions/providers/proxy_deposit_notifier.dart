@@ -77,9 +77,12 @@ class ProxyDepositNotifier extends StateNotifier<TransactionState> with Transact
 
     while (_isPolling && _mounted && retries < 3) {
       try {
+        final identifier = metadata?['identifier'] ?? metadata?['destinationAccount'] ?? '';
+        final proxyType = metadata?['proxyType'] ?? (identifier.startsWith('01') ? 'MOBILE' : 'ACCOUNT');
+        
         final accountName = await repository.performProxyEnquiry(
-          metadata?['identifier'] ?? '',
-          'MOBILE',
+          identifier,
+          proxyType,
         );
         
         if (!_mounted) return;

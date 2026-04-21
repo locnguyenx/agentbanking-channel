@@ -28,7 +28,7 @@ abstract class TransactionQuoteRequest implements Built<TransactionQuoteRequest,
   String get amount;
 
   @BuiltValueField(wireName: r'agentId')
-  String get agentId;
+  String? get agentId;
 
   @BuiltValueField(wireName: r'fundingSource')
   TransactionQuoteRequestFundingSourceEnum get fundingSource;
@@ -71,11 +71,13 @@ class _$TransactionQuoteRequestSerializer implements PrimitiveSerializer<Transac
       object.amount,
       specifiedType: const FullType(String),
     );
-    yield r'agentId';
-    yield serializers.serialize(
-      object.agentId,
-      specifiedType: const FullType(String),
-    );
+    if (object.agentId != null) {
+      yield r'agentId';
+      yield serializers.serialize(
+        object.agentId,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'fundingSource';
     yield serializers.serialize(
       object.fundingSource,

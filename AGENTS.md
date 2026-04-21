@@ -96,6 +96,10 @@ When the Backend Rule Engine returns an `ERR_COMPLIANCE_FREEZE` code:
 * Make sure that all the tests are stablized first in the RED phase.
 * NEVER change the test to get PASSED in GREEN/REFACTOR phase instead of fixing production code
 
+**Output enforcement**
+* Generated log, console output during test execution must be placed in the `tmp/` directory. 
+* ALLOWED FULL ACCESS to `tmp/` directory.
+
 ## Banking-Specific Guidelines
 
 ### Money Handling

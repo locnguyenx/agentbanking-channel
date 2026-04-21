@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import '../../bdd_test_helper.dart';
 
 /// Usage: all STP workflows are disabled
 Future<void> allStpWorkflowsAreDisabled(WidgetTester tester) async {

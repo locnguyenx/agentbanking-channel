@@ -40,8 +40,8 @@ class DuitNowFlowNotifier extends StateNotifier<TransactionState> {
       final agentId = ref.read(authProvider).user?.agentId ?? 'AGENT_UNKNOWN';
       final result = await repository.initiateDuitNow(
         quoteId: state.quote!.quoteId,
-        proxyId: state.metadata?['duitNowProxyId'] ?? '',
-        proxyType: _proxyTypeFromFundingSource(state.fundingSource!),
+        proxyId: state.metadata?['duitNowProxyId'] ?? state.metadata?['destinationAccount'] ?? '',
+        proxyType: state.metadata?['proxyType'] ?? _proxyTypeFromFundingSource(state.fundingSource!),
         amount: state.amount ?? Decimal.zero,
         agentId: agentId,
       );

@@ -70,7 +70,7 @@ class MockAuthRepository extends Fake implements AuthRepository {
     return AuthUser(
       agentId: agentId, 
       name: 'BDD Tester', 
-      tier: 'PRO',
+      tier: 'MICRO',
       registeredLat: 3.1390,
       registeredLng: 101.6869,
     );
@@ -82,7 +82,7 @@ class MockAuthRepository extends Fake implements AuthRepository {
     final user = AuthUser(
       agentId: TestCredentials.username, 
       name: 'BDD Tester', 
-      tier: 'PRO',
+      tier: 'MICRO',
       registeredLat: 3.1390,
       registeredLng: 101.6869,
     );
@@ -355,7 +355,10 @@ class FakeAgentOnboardingRepository extends Fake implements AgentOnboardingRepos
     double? lat,
     double? lng,
   }) async {
-    return agent_api.AgentResponse((b) => b..status = agent_api.AgentResponseStatusEnum.ACTIVE);
+    return agent_api.AgentResponse((b) => b
+      ..status = agent_api.AgentResponseStatusEnum.ACTIVE
+      ..tier = agent_api.AgentResponseTierEnum.MICRO
+    );
   }
 
 

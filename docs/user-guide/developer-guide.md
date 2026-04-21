@@ -169,3 +169,34 @@ In your `providers`, configure the `Dio` instance with the API Gateway's base UR
 
 ---
 **Troubleshooting**: Run `flutter clean` then `flutter pub get`.
+
+## 8. System Parameters
+- The frequency for polling the transaction status (e.g., for DuitNow or Biller status checks) is primarily controlled in the `TransactionNotifier` located in `lib/features/transactions/providers/transaction_provider.dart`.
+```dart
+The default value is set to 2 seconds:
+ // lib/features/transactions/providers/transaction_provider.dart
+
+class TransactionNotifier extends StateNotifier<TransactionState> {
+  // ...
+  final Duration pollingInterval;
+
+  TransactionNotifier({
+    // ...
+    this.pollingInterval = const Duration(seconds: 2), // Here
+    this.cardTimerDelay = Duration.zero,
+  }) : super(TransactionState(status: TransactionStatus.idle)) {
+    // ...
+    _duitNowFlowNotifier = DuitNowFlowNotifier(
+      ref: ref,
+      repository: repository,
+      floatNotifier: floatNotifier,
+      reversalService: reversalService,
+      pollingInterval: pollingInterval, // Passed to sub-notifiers
+    );
+    // ...
+  }
+}
+```
+
+
+

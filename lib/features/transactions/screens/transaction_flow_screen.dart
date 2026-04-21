@@ -23,6 +23,9 @@ final fundingSourceProvider = StateProvider.autoDispose<FundingSource>((ref) => 
 // Provider for DuitNow Proxy ID
 final duitNowProxyProvider = StateProvider.autoDispose<String>((ref) => '');
 
+// Provider for Proxy Type (ACCOUNT or MOBILE)
+final proxyTypeProvider = StateProvider.autoDispose<String>((ref) => 'ACCOUNT');
+
 // Provider for metadata (e.g. destinationAccount)
 final transactionMetadataProvider = StateProvider<Map<String, String>>((ref) => {});
 
@@ -542,7 +545,42 @@ class TransactionFlowScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 24),
         if (serviceCode == 'CASH_DEPOSIT' || serviceCode == 'DUITNOW_TRANSFER') ...[
-          Text(serviceCode == 'DUITNOW_TRANSFER' ? 'DuitNow Proxy (Mobile/MyKad)' : 'Destination Account', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const Text('Identifier Type', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ChoiceChip(
+                label: const Text('Account Number'),
+                selected: ref.watch(proxyTypeProvider) == 'ACCOUNT',
+                onSelected: (selected) {
+                  if (selected) {
+                    ref.read(proxyTypeProvider.notifier).state = 'ACCOUNT';
+                    ref.read(transactionMetadataProvider.notifier).state = {
+                      ...ref.read(transactionMetadataProvider),
+                      'proxyType': 'ACCOUNT',
+                    };
+                  }
+                },
+              ),
+              ChoiceChip(
+                label: const Text('Mobile (DuitNow)'),
+                selected: ref.watch(proxyTypeProvider) == 'MOBILE',
+                onSelected: (selected) {
+                  if (selected) {
+                    ref.read(proxyTypeProvider.notifier).state = 'MOBILE';
+                    ref.read(transactionMetadataProvider.notifier).state = {
+                      ...ref.read(transactionMetadataProvider),
+                      'proxyType': 'MOBILE',
+                    };
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(serviceCode == 'DUITNOW_TRANSFER' ? 'DuitNow Proxy' : 'Destination Account', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 12),
           TextField(
             key: Key(serviceCode == 'DUITNOW_TRANSFER' ? 'field_duitnow_proxy' : 'field_destination_account'),
@@ -659,6 +697,7 @@ class TransactionFlowScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
+          flex: 2,
           child: Text(
             label, 
             style: TextStyle(color: Colors.grey, fontSize: small ? 11 : 14),
@@ -666,13 +705,16 @@ class TransactionFlowScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          value, 
-          textAlign: TextAlign.right,
-          style: TextStyle(
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
-            fontSize: small ? 11 : (isBold ? 18 : 14),
-            color: color,
+        Flexible(
+          flex: 3,
+          child: Text(
+            value, 
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+              fontSize: small ? 11 : (isBold ? 18 : 14),
+              color: color,
+            ),
           ),
         ),
       ],

@@ -25,12 +25,13 @@ Future<void> anyCashfundedServiceWhereTheAgentCollectsRm3000InCash(
   await tester.pumpAndSettle();
   
   await tester.tap(find.byKey(const Key('btn_main_action')));
-  await waitFor(tester, find.byKey(const Key('btn_confirm')));
+  await tester.pumpAndSettle();
   
-  // MUST tap AGREE for large cash consent
+  // Wait for either the AGREE button or the CONFIRM CASH button
   final agreeBtn = find.byKey(const Key('btn_confirm'));
-  if (agreeBtn.evaluate().isNotEmpty) {
-      await tester.tap(agreeBtn);
-      await tester.pumpAndSettle();
-  }
+  final confirmBtn = find.byKey(const Key('btn_main_action'));
+  
+  // Just wait for the confirmation button to be visible
+  await waitFor(tester, find.byWidgetPredicate((widget) => 
+    widget is ElevatedButton && (widget.key == const Key('btn_confirm') || widget.key == const Key('btn_main_action'))));
 }

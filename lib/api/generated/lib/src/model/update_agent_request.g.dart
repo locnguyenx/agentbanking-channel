@@ -10,8 +10,8 @@ const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_MICRO =
     const UpdateAgentRequestTierEnum._('MICRO');
 const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_STANDARD =
     const UpdateAgentRequestTierEnum._('STANDARD');
-const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_PREMIUM =
-    const UpdateAgentRequestTierEnum._('PREMIUM');
+const UpdateAgentRequestTierEnum _$updateAgentRequestTierEnum_PREMIER =
+    const UpdateAgentRequestTierEnum._('PREMIER');
 
 UpdateAgentRequestTierEnum _$updateAgentRequestTierEnumValueOf(String name) {
   switch (name) {
@@ -19,8 +19,8 @@ UpdateAgentRequestTierEnum _$updateAgentRequestTierEnumValueOf(String name) {
       return _$updateAgentRequestTierEnum_MICRO;
     case 'STANDARD':
       return _$updateAgentRequestTierEnum_STANDARD;
-    case 'PREMIUM':
-      return _$updateAgentRequestTierEnum_PREMIUM;
+    case 'PREMIER':
+      return _$updateAgentRequestTierEnum_PREMIER;
     default:
       throw ArgumentError(name);
   }
@@ -30,7 +30,7 @@ final BuiltSet<UpdateAgentRequestTierEnum> _$updateAgentRequestTierEnumValues =
     BuiltSet<UpdateAgentRequestTierEnum>(const <UpdateAgentRequestTierEnum>[
   _$updateAgentRequestTierEnum_MICRO,
   _$updateAgentRequestTierEnum_STANDARD,
-  _$updateAgentRequestTierEnum_PREMIUM,
+  _$updateAgentRequestTierEnum_PREMIER,
 ]);
 
 const UpdateAgentRequestStatusEnum _$updateAgentRequestStatusEnum_ACTIVE =
@@ -73,12 +73,12 @@ class _$UpdateAgentRequestTierEnumSerializer
   static const Map<String, Object> _toWire = const <String, Object>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
 
   @override

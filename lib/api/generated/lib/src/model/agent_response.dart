@@ -37,7 +37,7 @@ abstract class AgentResponse implements Built<AgentResponse, AgentResponseBuilde
 
   @BuiltValueField(wireName: r'tier')
   AgentResponseTierEnum? get tier;
-  // enum tierEnum {  MICRO,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  MICRO,  STANDARD,  PREMIER,  };
 
   @BuiltValueField(wireName: r'status')
   AgentResponseStatusEnum? get status;
@@ -313,8 +313,8 @@ class AgentResponseTierEnum extends EnumClass {
   static const AgentResponseTierEnum MICRO = _$agentResponseTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const AgentResponseTierEnum STANDARD = _$agentResponseTierEnum_STANDARD;
-  @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const AgentResponseTierEnum PREMIUM = _$agentResponseTierEnum_PREMIUM;
+  @BuiltValueEnumConst(wireName: r'PREMIER')
+  static const AgentResponseTierEnum PREMIER = _$agentResponseTierEnum_PREMIER;
 
   static Serializer<AgentResponseTierEnum> get serializer => _$agentResponseTierEnumSerializer;
 

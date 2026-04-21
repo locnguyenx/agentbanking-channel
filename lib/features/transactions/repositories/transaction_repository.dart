@@ -14,13 +14,13 @@ class TransactionRepository {
   final LedgerControllerLedgerServiceApi ledgerApi;
   final MerchantControllerLedgerServiceApi merchantApi;
   final BillerControllerBillerServiceApi billerApi;
-  final SwitchControllerSwitchAdapterServiceApi switchApi;
+  final SwitchControllerBillerServiceApi switchApi;
   final OnboardingControllerOnboardingServiceApi onboardingApi;
   final EsspControllerBillerServiceApi esspApi;
   final EWalletControllerBillerServiceApi ewalletApi;
-  final TransactionControllerSwitchAdapterServiceApi transactionApi;
+  final TransactionControllerRulesServiceApi transactionApi;
   final OrchestratorControllerOrchestratorServiceApi orchestratorApi;
-  final ComplianceControllerRulesServiceApi complianceApi;
+  final ComplianceControllerOnboardingServiceApi complianceApi;
   final Duration pollingInterval;
   final Dio _dio;
 
@@ -43,7 +43,7 @@ class TransactionRepository {
 
   Future<models.TransactionQuoteResponse> getQuote(models.TransactionQuoteRequest request) async {
     final apiRequest = TransactionQuoteRequest((b) => b
-      ..serviceCode = _mapServiceCodeToType(request.serviceCode).name
+      ..serviceCode = TransactionQuoteRequestServiceCodeEnum.valueOf(request.serviceCode ?? '')
       ..amount = request.amount.toString()
       ..agentId = request.agentId
       ..fundingSource = TransactionQuoteRequestFundingSourceEnum.valueOf(request.fundingSource.name)
@@ -87,7 +87,7 @@ class TransactionRepository {
         ..ref2 = request.metadata?['ref2']
         ..proxyType = request.metadata?['proxyType'] != null ? TransactionStartRequestProxyTypeEnum.valueOf(request.metadata!['proxyType']!) : null
         ..proxyValue = request.metadata?['proxyValue']
-        ..agentTier = TransactionStartRequestAgentTierEnum.tIER1 // Default for now
+        ..agentTier = TransactionStartRequestAgentTierEnum.MICRO // Default for now
       );
 
       final response = await orchestratorApi.startTransaction(transactionStartRequest: apiRequest);
@@ -110,6 +110,7 @@ class TransactionRepository {
 
   TransactionType _mapServiceCodeToType(String? serviceCode) {
     switch (serviceCode) {
+      case 'BALANCE_INQUIRY': return TransactionType.CASH_WITHDRAWAL; // Should not use TransactionType for BI, but providing a safe default if called
       case 'CASH_WITHDRAWAL': return TransactionType.CASH_WITHDRAWAL;
       case 'CASH_DEPOSIT': return TransactionType.CASH_DEPOSIT;
       case 'BILL_PAYMENT':

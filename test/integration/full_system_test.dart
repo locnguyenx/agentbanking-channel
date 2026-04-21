@@ -11,9 +11,13 @@ import 'package:agentbanking_channel/main.dart';
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/repositories/auth_repository.dart';
 import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
+import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/core/network/dio_provider.dart';
+
 import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
 import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+
 import 'test_fakes.dart';
 import '../setup/test_credentials.dart';
 
@@ -26,6 +30,24 @@ class FakeOfflineQueueService extends Fake implements OfflineQueueService {
   Future<void> init() async {}
   @override
   Future<void> enqueue(Map<String, dynamic> payload, String idempotencyKey) async {}
+}
+
+class FakeAuthRepository extends Fake implements AuthRepository {
+  @override
+  bool get isDeviceWhitelisted => true;
+
+  @override
+  SecureStorageManager get secureStorage => FakeSecureStorage();
+
+  @override
+  Future<AuthUser> login(String agentId, String password) async {
+    return AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'GOLD');
+  }
+
+  @override
+  Future<AuthUser> loginBiometric() async {
+    return AuthUser(agentId: TestCredentials.username, name: 'Test Agent', tier: 'GOLD');
+  }
 }
 
 void main() {
@@ -86,9 +108,13 @@ void main() {
       await tester.pumpWidget(ProviderScope(
         overrides: [
           offlineQueueServiceProvider.overrideWithValue(FakeOfflineQueueService()),
+          secureStorageManagerProvider.overrideWithValue(storage),
+          geolocatorProvider.overrideWithValue(FakeGeolocator()),
+          if (!isRealBackend) ...[
+            authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
+          ],
           if (isRealBackend) ...[
             dioProvider.overrideWithValue(dio),
-            secureStorageManagerProvider.overrideWithValue(storage),
             authRepositoryProvider.overrideWithValue(AuthRepository(
               secureStorage: storage,
               authApi: api.AuthControllerAuthIamServiceApi(dio, api.standardSerializers),

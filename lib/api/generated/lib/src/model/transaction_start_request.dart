@@ -36,7 +36,7 @@ part 'transaction_start_request.g.dart';
 abstract class TransactionStartRequest implements Built<TransactionStartRequest, TransactionStartRequestBuilder> {
   @BuiltValueField(wireName: r'transactionType')
   TransactionType get transactionType;
-  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  BALANCE_INQUIRY,  };
+  // enum transactionTypeEnum {  CASH_WITHDRAWAL,  CASH_DEPOSIT,  BILL_PAYMENT,  DUITNOW_TRANSFER,  CASHLESS_PAYMENT,  PIN_BASED_PURCHASE,  PREPAID_TOPUP,  EWALLET_WITHDRAWAL,  EWALLET_TOPUP,  ESSP_PURCHASE,  PIN_PURCHASE,  RETAIL_SALE,  HYBRID_CASHBACK,  };
 
   /// Unique identifier of the agent
   @BuiltValueField(wireName: r'agentId')
@@ -110,7 +110,7 @@ abstract class TransactionStartRequest implements Built<TransactionStartRequest,
   /// Agent tier level
   @BuiltValueField(wireName: r'agentTier')
   TransactionStartRequestAgentTierEnum? get agentTier;
-  // enum agentTierEnum {  TIER_1,  TIER_2,  TIER_3,  };
+  // enum agentTierEnum {  MICRO,  STANDARD,  PREMIER,  };
 
   TransactionStartRequest._();
 
@@ -472,14 +472,14 @@ class TransactionStartRequestProxyTypeEnum extends EnumClass {
 class TransactionStartRequestAgentTierEnum extends EnumClass {
 
   /// Agent tier level
-  @BuiltValueEnumConst(wireName: r'TIER_1')
-  static const TransactionStartRequestAgentTierEnum tIER1 = _$transactionStartRequestAgentTierEnum_tIER1;
+  @BuiltValueEnumConst(wireName: r'MICRO')
+  static const TransactionStartRequestAgentTierEnum MICRO = _$transactionStartRequestAgentTierEnum_MICRO;
   /// Agent tier level
-  @BuiltValueEnumConst(wireName: r'TIER_2')
-  static const TransactionStartRequestAgentTierEnum tIER2 = _$transactionStartRequestAgentTierEnum_tIER2;
+  @BuiltValueEnumConst(wireName: r'STANDARD')
+  static const TransactionStartRequestAgentTierEnum STANDARD = _$transactionStartRequestAgentTierEnum_STANDARD;
   /// Agent tier level
-  @BuiltValueEnumConst(wireName: r'TIER_3')
-  static const TransactionStartRequestAgentTierEnum tIER3 = _$transactionStartRequestAgentTierEnum_tIER3;
+  @BuiltValueEnumConst(wireName: r'PREMIER')
+  static const TransactionStartRequestAgentTierEnum PREMIER = _$transactionStartRequestAgentTierEnum_PREMIER;
 
   static Serializer<TransactionStartRequestAgentTierEnum> get serializer => _$transactionStartRequestAgentTierEnumSerializer;
 

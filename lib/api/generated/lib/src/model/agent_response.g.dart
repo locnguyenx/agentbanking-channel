@@ -10,8 +10,8 @@ const AgentResponseTierEnum _$agentResponseTierEnum_MICRO =
     const AgentResponseTierEnum._('MICRO');
 const AgentResponseTierEnum _$agentResponseTierEnum_STANDARD =
     const AgentResponseTierEnum._('STANDARD');
-const AgentResponseTierEnum _$agentResponseTierEnum_PREMIUM =
-    const AgentResponseTierEnum._('PREMIUM');
+const AgentResponseTierEnum _$agentResponseTierEnum_PREMIER =
+    const AgentResponseTierEnum._('PREMIER');
 
 AgentResponseTierEnum _$agentResponseTierEnumValueOf(String name) {
   switch (name) {
@@ -19,8 +19,8 @@ AgentResponseTierEnum _$agentResponseTierEnumValueOf(String name) {
       return _$agentResponseTierEnum_MICRO;
     case 'STANDARD':
       return _$agentResponseTierEnum_STANDARD;
-    case 'PREMIUM':
-      return _$agentResponseTierEnum_PREMIUM;
+    case 'PREMIER':
+      return _$agentResponseTierEnum_PREMIER;
     default:
       throw ArgumentError(name);
   }
@@ -30,7 +30,7 @@ final BuiltSet<AgentResponseTierEnum> _$agentResponseTierEnumValues =
     BuiltSet<AgentResponseTierEnum>(const <AgentResponseTierEnum>[
   _$agentResponseTierEnum_MICRO,
   _$agentResponseTierEnum_STANDARD,
-  _$agentResponseTierEnum_PREMIUM,
+  _$agentResponseTierEnum_PREMIER,
 ]);
 
 const AgentResponseStatusEnum _$agentResponseStatusEnum_ACTIVE =
@@ -75,12 +75,12 @@ class _$AgentResponseTierEnumSerializer
   static const Map<String, Object> _toWire = const <String, Object>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
 
   @override

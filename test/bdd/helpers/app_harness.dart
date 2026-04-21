@@ -202,9 +202,9 @@ class BddAppHarness {
             if (_isAuthenticated) {
               notifier.debugSetAuthenticated(
                 AuthUser(
-          agentId: TestCredentials.username,
+                  agentId: TestCredentials.username,
                   name: 'BDD Tester', 
-                  tier: 'PRO',
+                  tier: 'MICRO',
                   registeredLat: 3.1390,
                   registeredLng: 101.6869,
                 ),
@@ -229,9 +229,13 @@ class BddAppHarness {
           return FakeFloatRepository();
         }),
         floatProvider.overrideWith((ref) {
-          final repo = ref.watch(floatRepositoryProvider);
-          final authState = ref.watch(authProvider);
-          return FloatNotifier(repo, authState.user?.agentId, startTimer: false);
+          if (isRealBackend) {
+            final repo = ref.watch(floatRepositoryProvider);
+            final authState = ref.watch(authProvider);
+            return FloatNotifier(repo, authState.user?.agentId, startTimer: true);
+          }
+          // Use FakeFloatNotifier which has immediate state initialization
+          return FakeFloatNotifier();
         }),
 
         // Network

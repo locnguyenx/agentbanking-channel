@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:decimal/decimal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:dio/dio.dart';
 
 import 'package:agentbanking_channel/features/transactions/providers/transaction_provider.dart';
 import 'package:agentbanking_channel/features/transactions/models/transaction_models.dart';
-import 'package:agentbanking_channel/features/transactions/models/transaction_state.dart';
+import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
+
 import 'package:agentbanking_channel/features/auth/providers/auth_provider.dart';
 import 'package:agentbanking_channel/features/auth/models/auth_models.dart';
 import 'package:agentbanking_channel/features/compliance/providers/compliance_provider.dart';
@@ -18,6 +20,8 @@ import 'package:agentbanking_channel/core/network/dio_provider.dart';
 import 'package:agentbanking_channel/features/auth/repositories/auth_repository.dart';
 import 'package:agentbanking_channel/core/network/auth_interceptor.dart';
 import 'package:agentbanking_channel/core/offline/offline_queue_service.dart';
+import 'package:agentbanking_channel/core/network/geolocator_provider.dart';
+
 import 'package:agentbanking_channel/core/security/secure_storage_manager.dart';
 import 'package:agent_api/agent_api.dart' as api;
 import 'package:agentbanking_channel/features/settlement/providers/float_provider.dart';
@@ -64,11 +68,18 @@ void main() {
           )),
           geolocatorProvider.overrideWithValue(FakeGeolocator()),
           secureStorageManagerProvider.overrideWithValue(storage),
+          geolocatorProvider.overrideWithValue(FakeGeolocator()),
           dioProvider.overrideWithValue(dio),
         ]);
         await _ensureRealLogin(container);
       } else {
         container = ProviderContainer();
+      }
+
+      if (!isRealBackend) {
+        ref.stubProvider(complianceProvider, ComplianceState(isFrozen: false));
+        ref.stubProvider(authProvider, AuthState(status: AuthStatus.authenticated, user: AuthUser(agentId: 'AGENT-001', name: 'Test Agent', tier: '1')));
+        ref.stubProvider(eodTimerServiceProvider.notifier, FakeEodTimerService());
       }
 
       notifier = TransactionNotifier(

@@ -32,13 +32,13 @@ void main() {
       ledgerApi: LedgerControllerLedgerServiceApi(mockDio, standardSerializers),
       merchantApi: MerchantControllerLedgerServiceApi(mockDio, standardSerializers),
       billerApi: BillerControllerBillerServiceApi(mockDio, standardSerializers),
-      switchApi: SwitchControllerSwitchAdapterServiceApi(mockDio, standardSerializers),
+      switchApi: SwitchControllerBillerServiceApi(mockDio, standardSerializers),
       onboardingApi: OnboardingControllerOnboardingServiceApi(mockDio, standardSerializers),
       esspApi: EsspControllerBillerServiceApi(mockDio, standardSerializers),
       ewalletApi: EWalletControllerBillerServiceApi(mockDio, standardSerializers),
-      transactionApi: TransactionControllerSwitchAdapterServiceApi(mockDio, standardSerializers),
+      transactionApi: TransactionControllerRulesServiceApi(mockDio, standardSerializers),
       orchestratorApi: OrchestratorControllerOrchestratorServiceApi(mockDio, standardSerializers),
-      complianceApi: ComplianceControllerRulesServiceApi(mockDio, standardSerializers),
+      complianceApi: ComplianceControllerOnboardingServiceApi(mockDio, standardSerializers),
       dio: mockDio,
     );
     

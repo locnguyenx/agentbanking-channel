@@ -7,6 +7,7 @@ Future<void> theAgentSelectsEsspAndEntersTheCustomersNricAndEsspCertificateType(
   
   final esspBtn = find.byKey(const Key('btn_essp_service'));
   expect(esspBtn, findsOneWidget, reason: 'Dashboard eSSP button not found');
+  await tester.ensureVisible(esspBtn);
   await tester.tap(esspBtn);
   await tester.pumpAndSettle();
 

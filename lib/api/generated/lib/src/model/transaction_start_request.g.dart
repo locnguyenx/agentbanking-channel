@@ -45,24 +45,24 @@ final BuiltSet<TransactionStartRequestProxyTypeEnum>
 ]);
 
 const TransactionStartRequestAgentTierEnum
-    _$transactionStartRequestAgentTierEnum_tIER1 =
-    const TransactionStartRequestAgentTierEnum._('tIER1');
+    _$transactionStartRequestAgentTierEnum_MICRO =
+    const TransactionStartRequestAgentTierEnum._('MICRO');
 const TransactionStartRequestAgentTierEnum
-    _$transactionStartRequestAgentTierEnum_tIER2 =
-    const TransactionStartRequestAgentTierEnum._('tIER2');
+    _$transactionStartRequestAgentTierEnum_STANDARD =
+    const TransactionStartRequestAgentTierEnum._('STANDARD');
 const TransactionStartRequestAgentTierEnum
-    _$transactionStartRequestAgentTierEnum_tIER3 =
-    const TransactionStartRequestAgentTierEnum._('tIER3');
+    _$transactionStartRequestAgentTierEnum_PREMIER =
+    const TransactionStartRequestAgentTierEnum._('PREMIER');
 
 TransactionStartRequestAgentTierEnum
     _$transactionStartRequestAgentTierEnumValueOf(String name) {
   switch (name) {
-    case 'tIER1':
-      return _$transactionStartRequestAgentTierEnum_tIER1;
-    case 'tIER2':
-      return _$transactionStartRequestAgentTierEnum_tIER2;
-    case 'tIER3':
-      return _$transactionStartRequestAgentTierEnum_tIER3;
+    case 'MICRO':
+      return _$transactionStartRequestAgentTierEnum_MICRO;
+    case 'STANDARD':
+      return _$transactionStartRequestAgentTierEnum_STANDARD;
+    case 'PREMIER':
+      return _$transactionStartRequestAgentTierEnum_PREMIER;
     default:
       throw ArgumentError(name);
   }
@@ -71,9 +71,9 @@ TransactionStartRequestAgentTierEnum
 final BuiltSet<TransactionStartRequestAgentTierEnum>
     _$transactionStartRequestAgentTierEnumValues = BuiltSet<
         TransactionStartRequestAgentTierEnum>(const <TransactionStartRequestAgentTierEnum>[
-  _$transactionStartRequestAgentTierEnum_tIER1,
-  _$transactionStartRequestAgentTierEnum_tIER2,
-  _$transactionStartRequestAgentTierEnum_tIER3,
+  _$transactionStartRequestAgentTierEnum_MICRO,
+  _$transactionStartRequestAgentTierEnum_STANDARD,
+  _$transactionStartRequestAgentTierEnum_PREMIER,
 ]);
 
 Serializer<TransactionStartRequestProxyTypeEnum>
@@ -122,14 +122,14 @@ class _$TransactionStartRequestProxyTypeEnumSerializer
 class _$TransactionStartRequestAgentTierEnumSerializer
     implements PrimitiveSerializer<TransactionStartRequestAgentTierEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
-    'tIER1': 'TIER_1',
-    'tIER2': 'TIER_2',
-    'tIER3': 'TIER_3',
+    'MICRO': 'MICRO',
+    'STANDARD': 'STANDARD',
+    'PREMIER': 'PREMIER',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
-    'TIER_1': 'tIER1',
-    'TIER_2': 'tIER2',
-    'TIER_3': 'tIER3',
+    'MICRO': 'MICRO',
+    'STANDARD': 'STANDARD',
+    'PREMIER': 'PREMIER',
   };
 
   @override

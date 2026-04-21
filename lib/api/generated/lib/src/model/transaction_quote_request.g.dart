@@ -372,7 +372,7 @@ class _$TransactionQuoteRequest extends TransactionQuoteRequest {
   @override
   final String amount;
   @override
-  final String agentId;
+  final String? agentId;
   @override
   final TransactionQuoteRequestFundingSourceEnum fundingSource;
   @override
@@ -385,7 +385,7 @@ class _$TransactionQuoteRequest extends TransactionQuoteRequest {
   _$TransactionQuoteRequest._(
       {required this.serviceCode,
       required this.amount,
-      required this.agentId,
+      this.agentId,
       required this.fundingSource,
       this.billerRouting})
       : super._();
@@ -501,8 +501,7 @@ class TransactionQuoteRequestBuilder
               serviceCode, r'TransactionQuoteRequest', 'serviceCode'),
           amount: BuiltValueNullFieldError.checkNotNull(
               amount, r'TransactionQuoteRequest', 'amount'),
-          agentId: BuiltValueNullFieldError.checkNotNull(
-              agentId, r'TransactionQuoteRequest', 'agentId'),
+          agentId: agentId,
           fundingSource: BuiltValueNullFieldError.checkNotNull(
               fundingSource, r'TransactionQuoteRequest', 'fundingSource'),
           billerRouting: billerRouting,

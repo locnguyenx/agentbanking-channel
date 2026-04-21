@@ -50,9 +50,6 @@ class TransactionType extends EnumClass {
   /// Type of transaction to initiate. BILL_PAYMENT includes JOMPAY, ASTRO_RPN, TM_RPN. PREPAID_TOPUP includes CELCOM_TOPUP, M1_TOPUP.
   @BuiltValueEnumConst(wireName: r'HYBRID_CASHBACK')
   static const TransactionType HYBRID_CASHBACK = _$HYBRID_CASHBACK;
-  /// Type of transaction to initiate. BILL_PAYMENT includes JOMPAY, ASTRO_RPN, TM_RPN. PREPAID_TOPUP includes CELCOM_TOPUP, M1_TOPUP.
-  @BuiltValueEnumConst(wireName: r'BALANCE_INQUIRY')
-  static const TransactionType BALANCE_INQUIRY = _$BALANCE_INQUIRY;
 
   static Serializer<TransactionType> get serializer => _$transactionTypeSerializer;
 

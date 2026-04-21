@@ -17,9 +17,9 @@ final billerApiProvider = Provider<BillerControllerBillerServiceApi>((ref) {
   return BillerControllerBillerServiceApi(dio, standardSerializers);
 });
 
-final switchApiProvider = Provider<SwitchControllerSwitchAdapterServiceApi>((ref) {
+final switchApiProvider = Provider<SwitchControllerBillerServiceApi>((ref) {
   final dio = ref.watch(dioProvider);
-  return SwitchControllerSwitchAdapterServiceApi(dio, standardSerializers);
+  return SwitchControllerBillerServiceApi(dio, standardSerializers);
 });
 
 final onboardingApiProvider = Provider<OnboardingControllerOnboardingServiceApi>((ref) {
@@ -42,14 +42,14 @@ final ewalletApiProvider = Provider<EWalletControllerBillerServiceApi>((ref) {
   return EWalletControllerBillerServiceApi(dio, standardSerializers);
 });
 
-final transactionApiProvider = Provider<TransactionControllerSwitchAdapterServiceApi>((ref) {
+final transactionApiProvider = Provider<TransactionControllerRulesServiceApi>((ref) {
   final dio = ref.watch(dioProvider);
-  return TransactionControllerSwitchAdapterServiceApi(dio, standardSerializers);
+  return TransactionControllerRulesServiceApi(dio, standardSerializers);
 });
 
-final complianceApiProvider = Provider<ComplianceControllerRulesServiceApi>((ref) {
+final complianceApiProvider = Provider<ComplianceControllerOnboardingServiceApi>((ref) {
   final dio = ref.watch(dioProvider);
-  return ComplianceControllerRulesServiceApi(dio, standardSerializers);
+  return ComplianceControllerOnboardingServiceApi(dio, standardSerializers);
 });
 
 final orchestratorApiProvider = Provider<OrchestratorControllerOrchestratorServiceApi>((ref) {

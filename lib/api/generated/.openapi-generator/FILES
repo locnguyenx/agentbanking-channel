@@ -70,7 +70,6 @@ doc/RevokeTokenRequest.md
 doc/RulesControllerRulesServiceApi.md
 doc/SettlementResponse.md
 doc/SwitchControllerBillerServiceApi.md
-doc/SwitchControllerSwitchAdapterServiceApi.md
 doc/TokenRequest.md
 doc/TokenResponse.md
 doc/TopupExternalRequest.md
@@ -104,7 +103,6 @@ lib/src/api/reconciliation_controller_ledger_service_api.dart
 lib/src/api/resolution_controller_orchestrator_service_api.dart
 lib/src/api/rules_controller_rules_service_api.dart
 lib/src/api/switch_controller_biller_service_api.dart
-lib/src/api/switch_controller_switch_adapter_service_api.dart
 lib/src/api/transaction_controller_rules_service_api.dart
 lib/src/api/user_management_controller_auth_iam_service_api.dart
 lib/src/api_util.dart
@@ -185,7 +183,3 @@ lib/src/model/user_response.dart
 lib/src/model/withdrawal_external_request.dart
 lib/src/serializers.dart
 pubspec.yaml
-test/compliance_controller_onboarding_service_api_test.dart
-test/my_profile_response_test.dart
-test/switch_controller_biller_service_api_test.dart
-test/transaction_controller_rules_service_api_test.dart

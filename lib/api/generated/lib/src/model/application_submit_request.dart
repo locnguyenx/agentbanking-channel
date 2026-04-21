@@ -32,7 +32,7 @@ abstract class ApplicationSubmitRequest implements Built<ApplicationSubmitReques
 
   @BuiltValueField(wireName: r'tier')
   ApplicationSubmitRequestTierEnum get tier;
-  // enum tierEnum {  MICRO,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  MICRO,  STANDARD,  PREMIER,  };
 
   @BuiltValueField(wireName: r'mykadNumber')
   String get mykadNumber;
@@ -245,8 +245,8 @@ class ApplicationSubmitRequestTierEnum extends EnumClass {
   static const ApplicationSubmitRequestTierEnum MICRO = _$applicationSubmitRequestTierEnum_MICRO;
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const ApplicationSubmitRequestTierEnum STANDARD = _$applicationSubmitRequestTierEnum_STANDARD;
-  @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const ApplicationSubmitRequestTierEnum PREMIUM = _$applicationSubmitRequestTierEnum_PREMIUM;
+  @BuiltValueEnumConst(wireName: r'PREMIER')
+  static const ApplicationSubmitRequestTierEnum PREMIER = _$applicationSubmitRequestTierEnum_PREMIER;
 
   static Serializer<ApplicationSubmitRequestTierEnum> get serializer => _$applicationSubmitRequestTierEnumSerializer;
 

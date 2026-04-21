@@ -41,9 +41,7 @@ const FeeConfigRequestTransactionTypeEnum
 const FeeConfigRequestTransactionTypeEnum
     _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT =
     const FeeConfigRequestTransactionTypeEnum._('CASH_DEPOSIT');
-const FeeConfigRequestTransactionTypeEnum
-    _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY =
-    const FeeConfigRequestTransactionTypeEnum._('BALANCE_INQUIRY');
+
 const FeeConfigRequestTransactionTypeEnum
     _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER =
     const FeeConfigRequestTransactionTypeEnum._('DUITNOW_TRANSFER');
@@ -109,8 +107,7 @@ FeeConfigRequestTransactionTypeEnum
       return _$feeConfigRequestTransactionTypeEnum_CASH_WITHDRAWAL;
     case 'CASH_DEPOSIT':
       return _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT;
-    case 'BALANCE_INQUIRY':
-      return _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY;
+
     case 'DUITNOW_TRANSFER':
       return _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER;
     case 'BILL_PAYMENT':
@@ -159,7 +156,7 @@ final BuiltSet<FeeConfigRequestTransactionTypeEnum>
         FeeConfigRequestTransactionTypeEnum>(const <FeeConfigRequestTransactionTypeEnum>[
   _$feeConfigRequestTransactionTypeEnum_CASH_WITHDRAWAL,
   _$feeConfigRequestTransactionTypeEnum_CASH_DEPOSIT,
-  _$feeConfigRequestTransactionTypeEnum_BALANCE_INQUIRY,
+
   _$feeConfigRequestTransactionTypeEnum_DUITNOW_TRANSFER,
   _$feeConfigRequestTransactionTypeEnum_BILL_PAYMENT,
   _$feeConfigRequestTransactionTypeEnum_JOMPAY,

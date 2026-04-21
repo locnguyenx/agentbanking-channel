@@ -29,7 +29,7 @@ abstract class UpdateAgentRequest implements Built<UpdateAgentRequest, UpdateAge
   /// Agent tier level
   @BuiltValueField(wireName: r'tier')
   UpdateAgentRequestTierEnum get tier;
-  // enum tierEnum {  MICRO,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  MICRO,  STANDARD,  PREMIER,  };
 
   /// Merchant GPS latitude
   @BuiltValueField(wireName: r'merchantGpsLat')
@@ -239,8 +239,8 @@ class UpdateAgentRequestTierEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const UpdateAgentRequestTierEnum STANDARD = _$updateAgentRequestTierEnum_STANDARD;
   /// Agent tier level
-  @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const UpdateAgentRequestTierEnum PREMIUM = _$updateAgentRequestTierEnum_PREMIUM;
+  @BuiltValueEnumConst(wireName: r'PREMIER')
+  static const UpdateAgentRequestTierEnum PREMIER = _$updateAgentRequestTierEnum_PREMIER;
 
   static Serializer<UpdateAgentRequestTierEnum> get serializer => _$updateAgentRequestTierEnumSerializer;
 

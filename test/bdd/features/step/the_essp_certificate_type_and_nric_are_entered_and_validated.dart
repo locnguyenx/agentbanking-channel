@@ -7,6 +7,7 @@ Future<void> theEsspCertificateTypeAndNricAreEnteredAndValidated(
   await tester.pumpAndSettle();
   
   final esspBtn = find.byKey(const Key('btn_essp_service'));
+  await tester.ensureVisible(esspBtn);
   await tester.tap(esspBtn);
   await tester.pumpAndSettle();
 

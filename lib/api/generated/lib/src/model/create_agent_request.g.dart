@@ -10,8 +10,8 @@ const CreateAgentRequestTierEnum _$createAgentRequestTierEnum_BASIC =
     const CreateAgentRequestTierEnum._('BASIC');
 const CreateAgentRequestTierEnum _$createAgentRequestTierEnum_STANDARD =
     const CreateAgentRequestTierEnum._('STANDARD');
-const CreateAgentRequestTierEnum _$createAgentRequestTierEnum_PREMIUM =
-    const CreateAgentRequestTierEnum._('PREMIUM');
+const CreateAgentRequestTierEnum _$createAgentRequestTierEnum_PREMIER =
+    const CreateAgentRequestTierEnum._('PREMIER');
 
 CreateAgentRequestTierEnum _$createAgentRequestTierEnumValueOf(String name) {
   switch (name) {
@@ -19,8 +19,8 @@ CreateAgentRequestTierEnum _$createAgentRequestTierEnumValueOf(String name) {
       return _$createAgentRequestTierEnum_BASIC;
     case 'STANDARD':
       return _$createAgentRequestTierEnum_STANDARD;
-    case 'PREMIUM':
-      return _$createAgentRequestTierEnum_PREMIUM;
+    case 'PREMIER':
+      return _$createAgentRequestTierEnum_PREMIER;
     default:
       throw ArgumentError(name);
   }
@@ -30,7 +30,7 @@ final BuiltSet<CreateAgentRequestTierEnum> _$createAgentRequestTierEnumValues =
     BuiltSet<CreateAgentRequestTierEnum>(const <CreateAgentRequestTierEnum>[
   _$createAgentRequestTierEnum_BASIC,
   _$createAgentRequestTierEnum_STANDARD,
-  _$createAgentRequestTierEnum_PREMIUM,
+  _$createAgentRequestTierEnum_PREMIER,
 ]);
 
 Serializer<CreateAgentRequestTierEnum> _$createAgentRequestTierEnumSerializer =
@@ -41,12 +41,12 @@ class _$CreateAgentRequestTierEnumSerializer
   static const Map<String, Object> _toWire = const <String, Object>{
     'BASIC': 'BASIC',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'BASIC': 'BASIC',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
 
   @override

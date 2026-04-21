@@ -13,8 +13,8 @@ const ApplicationSubmitRequestTierEnum
     _$applicationSubmitRequestTierEnum_STANDARD =
     const ApplicationSubmitRequestTierEnum._('STANDARD');
 const ApplicationSubmitRequestTierEnum
-    _$applicationSubmitRequestTierEnum_PREMIUM =
-    const ApplicationSubmitRequestTierEnum._('PREMIUM');
+    _$applicationSubmitRequestTierEnum_PREMIER =
+    const ApplicationSubmitRequestTierEnum._('PREMIER');
 
 ApplicationSubmitRequestTierEnum _$applicationSubmitRequestTierEnumValueOf(
     String name) {
@@ -23,8 +23,8 @@ ApplicationSubmitRequestTierEnum _$applicationSubmitRequestTierEnumValueOf(
       return _$applicationSubmitRequestTierEnum_MICRO;
     case 'STANDARD':
       return _$applicationSubmitRequestTierEnum_STANDARD;
-    case 'PREMIUM':
-      return _$applicationSubmitRequestTierEnum_PREMIUM;
+    case 'PREMIER':
+      return _$applicationSubmitRequestTierEnum_PREMIER;
     default:
       throw ArgumentError(name);
   }
@@ -35,7 +35,7 @@ final BuiltSet<ApplicationSubmitRequestTierEnum>
         ApplicationSubmitRequestTierEnum>(const <ApplicationSubmitRequestTierEnum>[
   _$applicationSubmitRequestTierEnum_MICRO,
   _$applicationSubmitRequestTierEnum_STANDARD,
-  _$applicationSubmitRequestTierEnum_PREMIUM,
+  _$applicationSubmitRequestTierEnum_PREMIER,
 ]);
 
 Serializer<ApplicationSubmitRequestTierEnum>
@@ -47,12 +47,12 @@ class _$ApplicationSubmitRequestTierEnumSerializer
   static const Map<String, Object> _toWire = const <String, Object>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'MICRO': 'MICRO',
     'STANDARD': 'STANDARD',
-    'PREMIUM': 'PREMIUM',
+    'PREMIER': 'PREMIER',
   };
 
   @override

@@ -236,7 +236,7 @@ class MockBillerApi extends Mock implements BillerControllerBillerServiceApi {
   }
 }
 
-class MockSwitchApi extends Mock implements SwitchControllerSwitchAdapterServiceApi {
+class MockSwitchApi extends Mock implements SwitchControllerBillerServiceApi {
   @override
   Future<Response<TransactionResponse>> duitNowTransfer({
     required DuitNowRequest duitNowRequest,
@@ -260,9 +260,9 @@ class MockSwitchApi extends Mock implements SwitchControllerSwitchAdapterService
 
 class MockOnboardingApi extends Mock implements OnboardingControllerOnboardingServiceApi {}
 
-class MockComplianceApi extends Mock implements ComplianceControllerRulesServiceApi {}
+class MockComplianceApi extends Mock implements ComplianceControllerOnboardingServiceApi {}
 
-class MockTransactionApi extends Mock implements TransactionControllerSwitchAdapterServiceApi {}
+class MockTransactionApi extends Mock implements TransactionControllerRulesServiceApi {}
 
 class MockOrchestratorApi extends Fake implements OrchestratorControllerOrchestratorServiceApi {
   TransactionStartRequest? lastStartRequest;

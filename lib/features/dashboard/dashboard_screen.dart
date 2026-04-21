@@ -220,14 +220,25 @@ class DashboardScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Welcome back,', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: isTablet ? 16 : 14)),
-                  const SizedBox(height: 4),
-                  Text(name, style: TextStyle(color: Colors.white, fontSize: isTablet ? 32 : 24, fontWeight: FontWeight.bold)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back,', 
+                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: isTablet ? 16 : 14),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      name, 
+                      style: TextStyle(color: Colors.white, fontSize: isTablet ? 32 : 24, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 16),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: isTablet ? 16 : 12, vertical: isTablet ? 8 : 6),
                 decoration: BoxDecoration(

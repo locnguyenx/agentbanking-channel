@@ -30,7 +30,7 @@ abstract class CreateAgentRequest
 
   @BuiltValueField(wireName: r'tier')
   CreateAgentRequestTierEnum get tier;
-  // enum tierEnum {  BASIC,  STANDARD,  PREMIUM,  };
+  // enum tierEnum {  BASIC,  STANDARD,  PREMIER,  };
 
   @BuiltValueField(wireName: r'merchantGpsLat')
   num get merchantGpsLat;
@@ -215,9 +215,9 @@ class CreateAgentRequestTierEnum extends EnumClass {
   @BuiltValueEnumConst(wireName: r'STANDARD')
   static const CreateAgentRequestTierEnum STANDARD =
       _$createAgentRequestTierEnum_STANDARD;
-  @BuiltValueEnumConst(wireName: r'PREMIUM')
-  static const CreateAgentRequestTierEnum PREMIUM =
-      _$createAgentRequestTierEnum_PREMIUM;
+  @BuiltValueEnumConst(wireName: r'PREMIER')
+  static const CreateAgentRequestTierEnum PREMIER =
+      _$createAgentRequestTierEnum_PREMIER;
 
   static Serializer<CreateAgentRequestTierEnum> get serializer =>
       _$createAgentRequestTierEnumSerializer;

@@ -25,7 +25,6 @@ export 'package:agent_api/src/api/reconciliation_controller_ledger_service_api.d
 export 'package:agent_api/src/api/resolution_controller_orchestrator_service_api.dart';
 export 'package:agent_api/src/api/rules_controller_rules_service_api.dart';
 export 'package:agent_api/src/api/switch_controller_biller_service_api.dart';
-export 'package:agent_api/src/api/switch_controller_switch_adapter_service_api.dart';
 export 'package:agent_api/src/api/transaction_controller_rules_service_api.dart';
 export 'package:agent_api/src/api/user_management_controller_auth_iam_service_api.dart';
 

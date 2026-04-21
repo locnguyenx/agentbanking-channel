@@ -6,18 +6,18 @@ part of 'force_resolve_request.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-const ForceResolveRequestActionEnum _$forceResolveRequestActionEnum_RETRY =
-    const ForceResolveRequestActionEnum._('RETRY');
-const ForceResolveRequestActionEnum _$forceResolveRequestActionEnum_ABORT =
-    const ForceResolveRequestActionEnum._('ABORT');
+const ForceResolveRequestActionEnum _$forceResolveRequestActionEnum_COMMIT =
+    const ForceResolveRequestActionEnum._('COMMIT');
+const ForceResolveRequestActionEnum _$forceResolveRequestActionEnum_REVERSE =
+    const ForceResolveRequestActionEnum._('REVERSE');
 
 ForceResolveRequestActionEnum _$forceResolveRequestActionEnumValueOf(
     String name) {
   switch (name) {
-    case 'RETRY':
-      return _$forceResolveRequestActionEnum_RETRY;
-    case 'ABORT':
-      return _$forceResolveRequestActionEnum_ABORT;
+    case 'COMMIT':
+      return _$forceResolveRequestActionEnum_COMMIT;
+    case 'REVERSE':
+      return _$forceResolveRequestActionEnum_REVERSE;
     default:
       throw ArgumentError(name);
   }
@@ -26,8 +26,8 @@ ForceResolveRequestActionEnum _$forceResolveRequestActionEnumValueOf(
 final BuiltSet<ForceResolveRequestActionEnum>
     _$forceResolveRequestActionEnumValues = BuiltSet<
         ForceResolveRequestActionEnum>(const <ForceResolveRequestActionEnum>[
-  _$forceResolveRequestActionEnum_RETRY,
-  _$forceResolveRequestActionEnum_ABORT,
+  _$forceResolveRequestActionEnum_COMMIT,
+  _$forceResolveRequestActionEnum_REVERSE,
 ]);
 
 Serializer<ForceResolveRequestActionEnum>
@@ -37,12 +37,12 @@ Serializer<ForceResolveRequestActionEnum>
 class _$ForceResolveRequestActionEnumSerializer
     implements PrimitiveSerializer<ForceResolveRequestActionEnum> {
   static const Map<String, Object> _toWire = const <String, Object>{
-    'RETRY': 'RETRY',
-    'ABORT': 'ABORT',
+    'COMMIT': 'COMMIT',
+    'REVERSE': 'REVERSE',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
-    'RETRY': 'RETRY',
-    'ABORT': 'ABORT',
+    'COMMIT': 'COMMIT',
+    'REVERSE': 'REVERSE',
   };
 
   @override
@@ -68,16 +68,14 @@ class _$ForceResolveRequest extends ForceResolveRequest {
   @override
   final ForceResolveRequestActionEnum action;
   @override
-  final String? reason;
-  @override
-  final String adminId;
+  final String reason;
 
   factory _$ForceResolveRequest(
           [void Function(ForceResolveRequestBuilder)? updates]) =>
       (ForceResolveRequestBuilder()..update(updates))._build();
 
   _$ForceResolveRequest._(
-      {required this.action, this.reason, required this.adminId})
+      {required this.action, required this.reason})
       : super._();
   @override
   ForceResolveRequest rebuild(
@@ -93,8 +91,7 @@ class _$ForceResolveRequest extends ForceResolveRequest {
     if (identical(other, this)) return true;
     return other is ForceResolveRequest &&
         action == other.action &&
-        reason == other.reason &&
-        adminId == other.adminId;
+        reason == other.reason;
   }
 
   @override
@@ -102,7 +99,6 @@ class _$ForceResolveRequest extends ForceResolveRequest {
     var _$hash = 0;
     _$hash = $jc(_$hash, action.hashCode);
     _$hash = $jc(_$hash, reason.hashCode);
-    _$hash = $jc(_$hash, adminId.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -111,8 +107,7 @@ class _$ForceResolveRequest extends ForceResolveRequest {
   String toString() {
     return (newBuiltValueToStringHelper(r'ForceResolveRequest')
           ..add('action', action)
-          ..add('reason', reason)
-          ..add('adminId', adminId))
+          ..add('reason', reason))
         .toString();
   }
 }
@@ -129,10 +124,6 @@ class ForceResolveRequestBuilder
   String? get reason => _$this._reason;
   set reason(String? reason) => _$this._reason = reason;
 
-  String? _adminId;
-  String? get adminId => _$this._adminId;
-  set adminId(String? adminId) => _$this._adminId = adminId;
-
   ForceResolveRequestBuilder() {
     ForceResolveRequest._defaults(this);
   }
@@ -142,7 +133,6 @@ class ForceResolveRequestBuilder
     if ($v != null) {
       _action = $v.action;
       _reason = $v.reason;
-      _adminId = $v.adminId;
       _$v = null;
     }
     return this;
@@ -166,9 +156,8 @@ class ForceResolveRequestBuilder
         _$ForceResolveRequest._(
           action: BuiltValueNullFieldError.checkNotNull(
               action, r'ForceResolveRequest', 'action'),
-          reason: reason,
-          adminId: BuiltValueNullFieldError.checkNotNull(
-              adminId, r'ForceResolveRequest', 'adminId'),
+          reason: BuiltValueNullFieldError.checkNotNull(
+              reason, r'ForceResolveRequest', 'reason'),
         );
     replace(_$result);
     return _$result;
